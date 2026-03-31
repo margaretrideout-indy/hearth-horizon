@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, ArrowLeftRight, Target, Heart, Compass
+  LayoutDashboard, ArrowLeftRight, Target, Heart, Compass, HandHeart
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -11,6 +11,7 @@ const navItems = [
   { path: '/gap-analyzer', label: 'Gaps', icon: Target },
   { path: '/identity-anchor', label: 'Anchor', icon: Heart },
   { path: '/cultural-fit', label: 'Culture', icon: Compass },
+  { path: '/support', label: 'Support', icon: HandHeart },
 ];
 
 export default function MobileNav() {

@@ -11,6 +11,7 @@ import GapAnalyzer from './pages/GapAnalyzer';
 import IdentityAnchor from './pages/IdentityAnchor';
 import CulturalFit from './pages/CulturalFit';
 import AppLayout from './components/layout/AppLayout';
+import Support from './pages/Support';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -44,6 +45,7 @@ const AuthenticatedApp = () => {
         <Route path="/gap-analyzer" element={<GapAnalyzer />} />
         <Route path="/identity-anchor" element={<IdentityAnchor />} />
         <Route path="/cultural-fit" element={<CulturalFit />} />
+        <Route path="/support" element={<Support />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

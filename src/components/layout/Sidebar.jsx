@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, ArrowLeftRight, Target, Heart, Compass, 
-  ChevronLeft, ChevronRight, LogOut
+  ChevronLeft, ChevronRight, LogOut, HandHeart
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
@@ -13,6 +13,7 @@ const navItems = [
   { path: '/gap-analyzer', label: 'Gap Analyzer', icon: Target },
   { path: '/identity-anchor', label: 'Identity Anchor', icon: Heart },
   { path: '/cultural-fit', label: 'Cultural Fit', icon: Compass },
+  { path: '/support', label: 'Support Us', icon: HandHeart },
 ];
 
 export default function Sidebar({ collapsed, onToggle }) {

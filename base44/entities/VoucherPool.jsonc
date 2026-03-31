@@ -1,0 +1,40 @@
+{
+  "name": "VoucherPool",
+  "type": "object",
+  "properties": {
+    "sponsor_email": {
+      "type": "string",
+      "description": "Email of the user who sponsored this seat"
+    },
+    "amount_paid": {
+      "type": "number",
+      "description": "Amount paid by the sponsor in dollars"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "claimed"
+      ],
+      "default": "available",
+      "description": "Whether this voucher has been claimed"
+    },
+    "claimed_by": {
+      "type": "string",
+      "description": "Email of the user who claimed this voucher"
+    },
+    "claimed_date": {
+      "type": "string",
+      "description": "ISO date when the voucher was claimed"
+    },
+    "stripe_session_id": {
+      "type": "string",
+      "description": "Stripe session ID for this payment"
+    }
+  },
+  "required": [
+    "sponsor_email",
+    "amount_paid",
+    "status"
+  ]
+}
