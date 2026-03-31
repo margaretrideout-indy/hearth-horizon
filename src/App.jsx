@@ -12,6 +12,8 @@ import IdentityAnchor from './pages/IdentityAnchor';
 import CulturalFit from './pages/CulturalFit';
 import AppLayout from './components/layout/AppLayout';
 import Support from './pages/Support';
+import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentCancel from './pages/PaymentCancel';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -46,6 +48,8 @@ const AuthenticatedApp = () => {
         <Route path="/identity-anchor" element={<IdentityAnchor />} />
         <Route path="/cultural-fit" element={<CulturalFit />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/payment/success" element={<PaymentSuccess />} />
+        <Route path="/payment/cancel" element={<PaymentCancel />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

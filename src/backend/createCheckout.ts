@@ -1,29 +1,44 @@
 const STRIPE_SECRET_KEY = Deno.env.get("STRIPE_SECRET_KEY");
 
 Deno.serve(async (req) => {
-  const { amount, mode, successUrl, cancelUrl, userEmail } = await req.json();
+  const { tier, userEmail, successUrl, cancelUrl } = await req.json();
 
-  const origin = req.headers.get("origin") || "http://localhost:5173";
-  const amountCents = Math.round(amount * 100);
+  // Tier config: supporter=$3/month, sponsor=$5/month
+  const tiers: Record<string, { amount: number; name: string; description: string }> = {
+    supporter: {
+      amount: 300,
+      name: "The Supporter — Pivot Path",
+      description: "A $3/month contribution that keeps Pivot Path accessible for public-sector professionals.",
+    },
+    sponsor: {
+      amount: 500,
+      name: "The Sponsor — Pivot Path",
+      description: "A $5/month subscription that sponsors a seat for an educator who can't afford access.",
+    },
+  };
+
+  const config = tiers[tier];
+  if (!config) {
+    return Response.json({ error: "Invalid tier. Use 'supporter' or 'sponsor'." }, { status: 400 });
+  }
 
   const params: Record<string, string> = {
     "payment_method_types[]": "card",
     "line_items[0][price_data][currency]": "usd",
-    "line_items[0][price_data][unit_amount]": String(amountCents),
-    "line_items[0][price_data][product_data][name]": mode === "sponsor" ? "Sponsor a Seat — Pivot Path" : "Pivot Path Access",
-    "line_items[0][price_data][product_data][description]": mode === "sponsor"
-      ? "Your generosity funds access for a public-sector professional in need."
-      : "Support your own career transition journey.",
+    "line_items[0][price_data][unit_amount]": String(config.amount),
+    "line_items[0][price_data][recurring][interval]": "month",
+    "line_items[0][price_data][product_data][name]": config.name,
+    "line_items[0][price_data][product_data][description]": config.description,
     "line_items[0][quantity]": "1",
-    "mode": "payment",
-    "success_url": successUrl || `${origin}/support?success=true&mode=${mode}`,
-    "cancel_url": cancelUrl || `${origin}/support?canceled=true`,
+    "mode": "subscription",
+    "success_url": successUrl,
+    "cancel_url": cancelUrl,
   };
 
   if (userEmail) {
     params["customer_email"] = userEmail;
     params["metadata[user_email]"] = userEmail;
-    params["metadata[mode]"] = mode;
+    params["metadata[tier]"] = tier;
   }
 
   const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
