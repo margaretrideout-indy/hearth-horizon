@@ -1,0 +1,33 @@
+{
+  "name": "DailyCheckIn",
+  "type": "object",
+  "properties": {
+    "mood": {
+      "type": "string",
+      "enum": [
+        "hopeful",
+        "anxious",
+        "motivated",
+        "grieving",
+        "confident",
+        "uncertain"
+      ],
+      "description": "Current emotional state"
+    },
+    "reflection": {
+      "type": "string",
+      "description": "User's written reflection"
+    },
+    "prompt_used": {
+      "type": "string",
+      "description": "The prompt that was shown"
+    },
+    "gratitude_note": {
+      "type": "string",
+      "description": "Something they value about their journey"
+    }
+  },
+  "required": [
+    "mood"
+  ]
+}

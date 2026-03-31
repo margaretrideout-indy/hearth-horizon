@@ -1,0 +1,54 @@
+{
+  "name": "UserProfile",
+  "type": "object",
+  "properties": {
+    "current_role": {
+      "type": "string",
+      "description": "Current or most recent role title"
+    },
+    "sector": {
+      "type": "string",
+      "enum": [
+        "education",
+        "government",
+        "nonprofit",
+        "healthcare_public",
+        "social_services"
+      ],
+      "description": "Current sector"
+    },
+    "years_experience": {
+      "type": "number",
+      "description": "Years of experience in public sector"
+    },
+    "dream_role": {
+      "type": "string",
+      "description": "Target private-sector role"
+    },
+    "onboarding_complete": {
+      "type": "boolean",
+      "default": false
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of current skills"
+    },
+    "roadmap_stage": {
+      "type": "string",
+      "enum": [
+        "discovery",
+        "translation",
+        "bridging",
+        "launching"
+      ],
+      "default": "discovery"
+    }
+  },
+  "required": [
+    "current_role",
+    "sector"
+  ]
+}

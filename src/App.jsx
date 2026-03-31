@@ -5,7 +5,12 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-// Add page imports here
+import Dashboard from './pages/Dashboard';
+import SkillTranslator from './pages/SkillTranslator';
+import GapAnalyzer from './pages/GapAnalyzer';
+import IdentityAnchor from './pages/IdentityAnchor';
+import CulturalFit from './pages/CulturalFit';
+import AppLayout from './components/layout/AppLayout';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -33,7 +38,13 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
-      {/* Add your page Route elements here */}
+      <Route element={<AppLayout />}>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/translator" element={<SkillTranslator />} />
+        <Route path="/gap-analyzer" element={<GapAnalyzer />} />
+        <Route path="/identity-anchor" element={<IdentityAnchor />} />
+        <Route path="/cultural-fit" element={<CulturalFit />} />
+      </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

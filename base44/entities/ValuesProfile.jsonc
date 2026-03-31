@@ -1,0 +1,61 @@
+{
+  "name": "ValuesProfile",
+  "type": "object",
+  "properties": {
+    "non_negotiables": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Core values the user won't compromise on"
+    },
+    "preferred_archetypes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Company types that match user values"
+    },
+    "green_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Positive signals in job descriptions"
+    },
+    "red_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Warning signals in job descriptions"
+    },
+    "company_matches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "archetype": {
+            "type": "string"
+          },
+          "match_score": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string"
+          },
+          "examples": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "description": "Matched company archetypes"
+    }
+  },
+  "required": [
+    "non_negotiables"
+  ]
+}

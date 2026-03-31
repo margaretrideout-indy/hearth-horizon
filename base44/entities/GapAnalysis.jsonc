@@ -1,0 +1,77 @@
+{
+  "name": "GapAnalysis",
+  "type": "object",
+  "properties": {
+    "target_role": {
+      "type": "string",
+      "description": "The dream role being analyzed"
+    },
+    "required_skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "skill": {
+            "type": "string"
+          },
+          "current_level": {
+            "type": "string",
+            "enum": [
+              "none",
+              "beginner",
+              "intermediate",
+              "advanced"
+            ]
+          },
+          "required_level": {
+            "type": "string",
+            "enum": [
+              "beginner",
+              "intermediate",
+              "advanced",
+              "expert"
+            ]
+          },
+          "is_gap": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "recommended_certs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "readiness_score": {
+      "type": "number",
+      "description": "0-100 readiness percentage"
+    }
+  },
+  "required": [
+    "target_role"
+  ]
+}
