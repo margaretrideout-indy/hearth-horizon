@@ -5,6 +5,7 @@ import WelcomeHeader from '../components/dashboard/WelcomeHeader';
 import RoadmapProgress from '../components/dashboard/RoadmapProgress';
 import QuickActions from '../components/dashboard/QuickActions';
 import RecentActivity from '../components/dashboard/RecentActivity';
+import TargetUsers from '../components/dashboard/TargetUsers';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart } from 'lucide-react';
@@ -37,6 +38,8 @@ export default function Dashboard() {
         <h2 className="font-heading font-semibold text-xl mb-4">Continue Your Journey</h2>
         <QuickActions />
       </div>
+
+      <TargetUsers />
 
       <RecentActivity checkIns={checkIns} />
 
