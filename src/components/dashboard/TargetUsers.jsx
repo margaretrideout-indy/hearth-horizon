@@ -32,8 +32,8 @@ const personas = [
 export default function TargetUsers() {
   return (
     <div>
-      <h2 className="font-heading font-semibold text-xl mb-1">Who This Is For</h2>
-      <p className="text-sm text-muted-foreground mb-4">Your public-sector experience already has private-sector value — it just needs translation.</p>
+      <h2 className="font-heading font-semibold text-xl mb-1">You already speak the language</h2>
+      <p className="text-sm text-muted-foreground mb-4">Thirteen years of institutional wisdom doesn't disappear — it transforms. Here's how your sector speaks, and what the private world hears.</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {personas.map((p, i) => (
           <motion.div

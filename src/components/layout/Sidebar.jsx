@@ -8,12 +8,12 @@ import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/translator', label: 'Skill Translator', icon: ArrowLeftRight },
-  { path: '/gap-analyzer', label: 'Gap Analyzer', icon: Target },
-  { path: '/identity-anchor', label: 'Identity Anchor', icon: Heart },
-  { path: '/cultural-fit', label: 'Cultural Fit', icon: Compass },
-  { path: '/support', label: 'Support Us', icon: HandHeart },
+  { path: '/', label: 'The hearth', icon: LayoutDashboard },
+  { path: '/translator', label: 'Linguistic bridges', icon: ArrowLeftRight },
+  { path: '/gap-analyzer', label: 'The horizon', icon: Target },
+  { path: '/identity-anchor', label: 'The rootwork', icon: Heart },
+  { path: '/cultural-fit', label: 'The canopy', icon: Compass },
+  { path: '/support', label: 'The grove', icon: HandHeart },
 ];
 
 export default function Sidebar({ collapsed, onToggle }) {
@@ -31,8 +31,8 @@ export default function Sidebar({ collapsed, onToggle }) {
         </div>
         {!collapsed && (
           <div className="overflow-hidden">
-            <h1 className="font-heading font-semibold text-lg text-white leading-tight">Pivot Path</h1>
-            <p className="text-[10px] text-sidebar-foreground/60 uppercase tracking-widest">Career Architect</p>
+            <h1 className="font-heading font-semibold text-lg text-white leading-tight">Hearth & Horizon</h1>
+            <p className="text-[10px] text-sidebar-foreground/60 tracking-widest">Your sanctuary</p>
           </div>
         )}
       </div>

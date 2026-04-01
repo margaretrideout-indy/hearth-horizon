@@ -35,7 +35,7 @@ export default function Dashboard() {
       </Card>
 
       <div>
-        <h2 className="font-heading font-semibold text-xl mb-4">Continue Your Journey</h2>
+        <h2 className="font-heading font-semibold text-xl mb-4">Tend the fire</h2>
         <QuickActions />
       </div>
 
@@ -49,11 +49,11 @@ export default function Dashboard() {
           <Heart className="w-4 h-4 text-secondary" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-medium text-sm">Keep Pivot Path accessible</p>
-          <p className="text-xs text-muted-foreground mt-0.5">Pay what you can, or sponsor a seat for someone who can't.</p>
+          <p className="font-medium text-sm">The grove — a reciprocity model</p>
+          <p className="text-xs text-muted-foreground mt-0.5">One seat purchased sponsors a peer in financial transition. No one gets left behind.</p>
         </div>
         <Button asChild size="sm" variant="outline" className="shrink-0 border-secondary/40 text-secondary hover:bg-secondary/10">
-          <Link to="/support">Support us</Link>
+          <Link to="/support">Enter the grove</Link>
         </Button>
       </Card>
     </div>

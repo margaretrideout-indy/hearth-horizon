@@ -11,28 +11,28 @@ import VoucherPoolStatus from '../components/support/VoucherPoolStatus';
 const TIERS = [
   {
     id: 'supporter',
-    label: 'The Supporter',
+    label: 'The hearthkeeper',
     price: '$3 / month',
     amount: 3,
     icon: Heart,
     color: 'border-secondary bg-secondary/8',
     activeColor: 'border-secondary bg-secondary/15',
     iconColor: 'text-secondary',
-    description: 'A one-time or monthly contribution to keep Pivot Path accessible.',
-    perks: ['Unlimited PDF Uploads', 'Culture Filter'],
+    description: 'Tend the fire. A monthly contribution that keeps this sanctuary open for every public-sector professional who needs it.',
+    perks: ['Unlimited PDF uploads', 'Culture filter (schedule sovereignty)'],
   },
   {
     id: 'sponsor',
-    label: 'The Sponsor',
+    label: 'The grove',
     price: '$5 / month',
     amount: 5,
     icon: Gift,
     color: 'border-border bg-card',
     activeColor: 'border-secondary bg-secondary/15',
     iconColor: 'text-muted-foreground',
-    description: 'Sponsors a seat for an educator who can\'t afford access.',
-    perks: ['Everything in Supporter', 'Adds 1 sponsored seat to the pool monthly'],
-    badge: 'Community',
+    description: 'Reciprocity model — one seat purchased sponsors a peer in financial transition. No one gets left behind.',
+    perks: ['Everything in The hearthkeeper', 'Sponsors 1 peer seat monthly'],
+    badge: 'Reciprocity',
   },
 ];
 
@@ -71,8 +71,8 @@ export default function Support() {
   return (
     <div className="max-w-2xl mx-auto space-y-8">
       <div>
-        <h1 className="font-heading text-3xl font-semibold text-foreground mb-1">Support the Mission</h1>
-        <p className="text-muted-foreground">Help keep career transition tools accessible for public-sector professionals everywhere.</p>
+        <h1 className="font-heading text-3xl font-semibold text-foreground mb-1">Enter the grove</h1>
+        <p className="text-muted-foreground">This is a sanctuary, not a subscription service. Contribute what feels right, and help a colleague find their footing too.</p>
       </div>
 
       {/* Tier Selection */}
@@ -134,11 +134,11 @@ export default function Support() {
           ) : (
             <Heart className="w-4 h-4" />
           )}
-          {loading ? 'Redirecting to Stripe…' : `Start — ${tier?.price}`}
+          {loading ? 'Opening the path…' : `Tend the fire — ${tier?.price}`}
         </Button>
 
         <p className="text-center text-xs text-muted-foreground">
-          Secured by Stripe · Cancel anytime from your billing portal
+          Secured by Stripe · Cancel anytime · No pressure, ever
         </p>
       </Card>
 

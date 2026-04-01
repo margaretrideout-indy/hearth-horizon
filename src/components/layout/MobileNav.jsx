@@ -6,12 +6,12 @@ import {
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { path: '/', label: 'Home', icon: LayoutDashboard },
-  { path: '/translator', label: 'Skills', icon: ArrowLeftRight },
-  { path: '/gap-analyzer', label: 'Gaps', icon: Target },
-  { path: '/identity-anchor', label: 'Anchor', icon: Heart },
-  { path: '/cultural-fit', label: 'Culture', icon: Compass },
-  { path: '/support', label: 'Support', icon: HandHeart },
+  { path: '/', label: 'Hearth', icon: LayoutDashboard },
+  { path: '/translator', label: 'Bridges', icon: ArrowLeftRight },
+  { path: '/gap-analyzer', label: 'Horizon', icon: Target },
+  { path: '/identity-anchor', label: 'Rootwork', icon: Heart },
+  { path: '/cultural-fit', label: 'Canopy', icon: Compass },
+  { path: '/support', label: 'Grove', icon: HandHeart },
 ];
 
 export default function MobileNav() {
@@ -24,7 +24,7 @@ export default function MobileNav() {
           <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
             <Compass className="w-3.5 h-3.5 text-primary-foreground" />
           </div>
-          <span className="font-heading font-semibold text-sm">Pivot Path</span>
+          <span className="font-heading font-semibold text-sm">Hearth & Horizon</span>
         </div>
         <div className="flex gap-1">
           {navItems.map(item => {
