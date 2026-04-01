@@ -56,7 +56,9 @@ Their mood: ${selectedMood}
 The prompt they reflected on: "${currentPrompt}"
 Their reflection: "${reflection}"
 
-Provide a brief (2-3 sentences), warm, and encouraging response that validates their feelings and gently guides them forward. Be specific to their words. Do not use generic platitudes.`,
+Provide a brief (2-3 sentences), warm, and encouraging response that validates their feelings and gently guides them forward. Be specific to their words. Do not use generic platitudes.
+
+IMPORTANT: If their mood is "grieving", begin your response with exactly: "Thank you for being honest. It is natural to feel this way when moving between worlds. Your value is not tied to your title."`,
     });
 
     setAiResponse(response);
@@ -87,7 +89,7 @@ Provide a brief (2-3 sentences), warm, and encouraging response that validates t
           <Heart className="w-4 h-4 text-secondary" />
           <p className="text-sm text-secondary font-medium">Psychology-Led Support</p>
         </div>
-        <h1 className="font-heading text-3xl font-bold text-foreground mb-2">Identity Anchor</h1>
+        <h1 className="font-heading text-3xl font-bold text-foreground mb-2">The rootwork</h1>
         <p className="text-muted-foreground max-w-2xl">
           Career transitions aren't just professional — they're deeply personal. Take a moment to ground yourself in who you are and who you're becoming.
         </p>

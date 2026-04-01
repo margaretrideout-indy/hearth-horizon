@@ -6,16 +6,16 @@ import { motion } from 'framer-motion';
 const actions = [
   {
     path: '/translator',
-    label: 'Linguistic bridges',
-    description: 'Translate your service jargon into private-sector value',
+    label: 'The linguistic bridge',
+    description: 'Translate your institutional wisdom into private-sector value',
     icon: ArrowLeftRight,
     color: 'bg-primary/8 hover:bg-primary/15 border-primary/10',
     iconColor: 'text-primary'
   },
   {
     path: '/gap-analyzer',
-    label: 'View the horizon',
-    description: 'Discover what stands between you and your next chapter',
+    label: 'The bridge builder',
+    description: 'Analyse the path between your current roots and your new horizon',
     icon: Target,
     color: 'bg-secondary/8 hover:bg-secondary/15 border-secondary/10',
     iconColor: 'text-secondary'
@@ -30,8 +30,8 @@ const actions = [
   },
   {
     path: '/cultural-fit',
-    label: 'The canopy',
-    description: 'Filter for ethics, sovereignty, and schedule freedom',
+    label: 'Ecosystem alignment',
+    description: 'Filter for ethics, schedule sovereignty, and organisational values',
     icon: Compass,
     color: 'bg-blue-500/8 hover:bg-blue-500/15 border-blue-500/10',
     iconColor: 'text-blue-600'

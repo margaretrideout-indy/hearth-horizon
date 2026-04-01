@@ -39,7 +39,7 @@ export default function VoucherPoolStatus() {
       claimed_date: new Date().toISOString(),
     });
     queryClient.invalidateQueries({ queryKey: ['vouchers'] });
-    toast.success("Access granted! A sponsor is covering your Pivot Path journey. 🎉");
+    toast.success("Access granted. A fellow traveller has covered your seat. You don't walk this path alone.");
     setClaiming(false);
   };
 
@@ -50,8 +50,8 @@ export default function VoucherPoolStatus() {
           <Heart className="w-4 h-4 text-secondary" />
         </div>
         <div>
-          <h3 className="font-heading font-semibold">Voucher Pool</h3>
-          <p className="text-xs text-muted-foreground">Community-funded access</p>
+          <h3 className="font-heading font-semibold">The sponsored seat pool</h3>
+          <p className="text-xs text-muted-foreground">One seat purchased sponsors a peer in transition. No one walks the path alone.</p>
         </div>
       </div>
 
@@ -68,7 +68,7 @@ export default function VoucherPoolStatus() {
 
       {alreadyClaimed ? (
         <div className="rounded-xl bg-secondary/10 border border-secondary/20 p-3 text-center text-sm text-secondary font-medium">
-          ✓ You have a sponsored seat — your journey is covered
+          ✓ Your seat is sponsored — a peer in the grove has your back
         </div>
       ) : (
         <Button
@@ -82,7 +82,7 @@ export default function VoucherPoolStatus() {
           ) : (
             <Users className="w-4 h-4" />
           )}
-          {available.length === 0 ? "No seats available" : "Request Assistance"}
+          {available.length === 0 ? "No seats available right now" : "Request a sponsored seat"}
         </Button>
       )}
     </Card>

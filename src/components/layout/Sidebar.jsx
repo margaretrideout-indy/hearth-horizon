@@ -9,10 +9,10 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { path: '/', label: 'The hearth', icon: LayoutDashboard },
-  { path: '/translator', label: 'Linguistic bridges', icon: ArrowLeftRight },
-  { path: '/gap-analyzer', label: 'The horizon', icon: Target },
+  { path: '/translator', label: 'The linguistic bridge', icon: ArrowLeftRight },
+  { path: '/gap-analyzer', label: 'The bridge builder', icon: Target },
   { path: '/identity-anchor', label: 'The rootwork', icon: Heart },
-  { path: '/cultural-fit', label: 'The canopy', icon: Compass },
+  { path: '/cultural-fit', label: 'Ecosystem alignment', icon: Compass },
   { path: '/support', label: 'The grove', icon: HandHeart },
 ];
 

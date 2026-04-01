@@ -24,11 +24,11 @@ export default function CulturalFit() {
       <div>
         <div className="flex items-center gap-2 mb-1">
           <Compass className="w-4 h-4 text-secondary" />
-          <p className="text-sm text-secondary font-medium">Values & Cultural Fit</p>
+          <p className="text-sm text-secondary font-medium">Ecosystem alignment</p>
         </div>
-        <h1 className="font-heading text-3xl font-bold text-foreground mb-2">Find Your Cultural Fit</h1>
+        <h1 className="font-heading text-3xl font-bold text-foreground mb-2">Ecosystem alignment</h1>
         <p className="text-muted-foreground max-w-2xl">
-          Your next role should feel like home, not just a hustle. Define your values, discover matching companies, and learn to read between the lines of job postings.
+          Your next role should feel like home, not just a hustle. Define your values, discover matching organisations, and learn to read between the lines of job postings.
         </p>
       </div>
 

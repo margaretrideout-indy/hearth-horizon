@@ -27,7 +27,7 @@ export default function GapAnalyzer() {
     setIsAnalyzing(true);
 
     const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are a career transition expert. Analyze the skill gap for someone from the ${currentSector} sector who wants to become a "${dreamRole}" in the private sector.
+      prompt: `You are a career transition expert. Analyse the skill gap for someone from the ${currentSector} sector who wants to become a "${dreamRole}" in the private sector.
 
 Provide:
 1. Top 8 required skills with current and required proficiency levels
@@ -93,11 +93,11 @@ For each skill, assess what level a ${currentSector} professional typically has 
       <div>
         <div className="flex items-center gap-2 mb-1">
           <Target className="w-4 h-4 text-secondary" />
-          <p className="text-sm text-secondary font-medium">Skill Gap Analysis</p>
+          <p className="text-sm text-secondary font-medium">Skill gap analysis</p>
         </div>
-        <h1 className="font-heading text-3xl font-bold text-foreground mb-2">Gap Analyzer</h1>
+        <h1 className="font-heading text-3xl font-bold text-foreground mb-2">The bridge builder</h1>
         <p className="text-muted-foreground max-w-2xl">
-          Enter your dream role and we'll identify the top skills and certifications you need to bridge the gap.
+          Analyse the path between your current roots and your new horizon.
         </p>
       </div>
 
@@ -130,7 +130,7 @@ For each skill, assess what level a ${currentSector} professional typically has 
           </div>
           <Button onClick={handleAnalyze} disabled={!dreamRole.trim() || isAnalyzing} className="gap-2">
             {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-            Analyze
+            Analyse
           </Button>
         </div>
 
@@ -155,7 +155,7 @@ For each skill, assess what level a ${currentSector} professional typically has 
       {isAnalyzing && (
         <Card className="p-12 rounded-2xl text-center">
           <Loader2 className="w-8 h-8 animate-spin text-secondary mx-auto mb-4" />
-          <p className="font-heading font-semibold text-lg">Analyzing your transition path...</p>
+          <p className="font-heading font-semibold text-lg">Analysing your transition path...</p>
           <p className="text-sm text-muted-foreground mt-1">Mapping skills, certifications, and readiness</p>
         </Card>
       )}
@@ -167,7 +167,7 @@ For each skill, assess what level a ${currentSector} professional typically has 
       {/* Past Analyses */}
       {pastAnalyses.length > 0 && !analysis && (
         <div>
-          <h2 className="font-heading font-semibold text-xl mb-4">Past Analyses</h2>
+          <h2 className="font-heading font-semibold text-xl mb-4">Past analyses</h2>
           <div className="grid gap-3">
             {pastAnalyses.map(a => (
               <Card

@@ -7,10 +7,10 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { path: '/', label: 'Hearth', icon: LayoutDashboard },
-  { path: '/translator', label: 'Bridges', icon: ArrowLeftRight },
-  { path: '/gap-analyzer', label: 'Horizon', icon: Target },
+  { path: '/translator', label: 'Bridge', icon: ArrowLeftRight },
+  { path: '/gap-analyzer', label: 'Builder', icon: Target },
   { path: '/identity-anchor', label: 'Rootwork', icon: Heart },
-  { path: '/cultural-fit', label: 'Canopy', icon: Compass },
+  { path: '/cultural-fit', label: 'Ecosystem', icon: Compass },
   { path: '/support', label: 'Grove', icon: HandHeart },
 ];
 

@@ -67,11 +67,11 @@ Provide 3 different translations that would resonate with corporate recruiters. 
       <div>
         <div className="flex items-center gap-2 mb-1">
           <ArrowLeftRight className="w-4 h-4 text-secondary" />
-          <p className="text-sm text-secondary font-medium">Jargon-to-Value Engine</p>
+          <p className="text-sm text-secondary font-medium">Jargon-to-value engine</p>
         </div>
-        <h1 className="font-heading text-3xl font-bold text-foreground mb-2">Skill Translator</h1>
+        <h1 className="font-heading text-3xl font-bold text-foreground mb-2">The linguistic bridge</h1>
         <p className="text-muted-foreground max-w-2xl">
-          Enter any task or responsibility from your current role, and we'll translate it into language that resonates with private-sector hiring managers.
+          Thirteen years of institutional wisdom doesn't disappear — it transforms. Here is how your sector speaks, and what the private world hears.
         </p>
       </div>
 
