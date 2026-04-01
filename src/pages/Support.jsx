@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Gift, Loader2, CheckCircle, Upload, Filter } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Heart, Gift, Loader2, CheckCircle, Upload, Filter, Sprout } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 import VoucherPoolStatus from '../components/support/VoucherPoolStatus';
 
 const TIERS = [
@@ -23,14 +25,14 @@ const TIERS = [
   },
   {
     id: 'sponsor',
-    label: 'The grove',
+    label: 'The steward',
     price: '$5 / month',
     amount: 5,
     icon: Gift,
     color: 'border-border bg-card',
     activeColor: 'border-secondary bg-secondary/15',
     iconColor: 'text-muted-foreground',
-    description: 'Reciprocity model — one seat purchased sponsors a peer in financial transition. No one gets left behind.',
+    description: 'A reciprocity model — one monthly seat purchased sponsors a peer in financial transition. No one gets left behind.',
     perks: ['Everything in The hearthkeeper', 'Sponsors 1 peer seat monthly'],
     badge: 'Reciprocity',
   },
@@ -44,6 +46,9 @@ const PERK_ICONS = {
 export default function Support() {
   const [selectedTier, setSelectedTier] = useState('supporter');
   const [loading, setLoading] = useState(false);
+  const [seedAmount, setSeedAmount] = useState('');
+  const [seedLoading, setSeedLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
     queryKey: ['me'],
@@ -67,6 +72,26 @@ export default function Support() {
   };
 
   const tier = TIERS.find(t => t.id === selectedTier);
+
+  const handleSeedFund = async () => {
+    const amount = parseFloat(seedAmount);
+    if (!amount || amount <= 0) return;
+    setSeedLoading(true);
+    // Each $3 (or part thereof) sponsors one seat
+    const seats = Math.floor(amount / 3);
+    if (seats > 0) {
+      const vouchers = Array.from({ length: seats }, () => ({
+        sponsor_email: user?.email || 'anonymous',
+        amount_paid: 3,
+        status: 'available',
+      }));
+      await base44.entities.VoucherPool.bulkCreate(vouchers);
+      queryClient.invalidateQueries({ queryKey: ['vouchers'] });
+    }
+    toast.success(`Thank you. Your seed funds ${seats > 0 ? `${seats} sponsored seat${seats > 1 ? 's' : ''}` : 'the grove'} for a colleague in transition.`);
+    setSeedAmount('');
+    setSeedLoading(false);
+  };
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
@@ -104,10 +129,66 @@ export default function Support() {
         })}
       </div>
 
+      {/* Seed Fund */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="rounded-2xl border border-border/40 p-5 space-y-4"
+        style={{ background: 'hsl(280 22% 19%)' }}
+      >
+        <div className="flex items-start gap-3">
+          <div className="w-9 h-9 rounded-xl bg-secondary/15 flex items-center justify-center shrink-0 mt-0.5">
+            <Sprout className="w-4 h-4 text-secondary" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-0.5">
+              <h3 className="font-heading font-semibold text-foreground">Plant a seed</h3>
+              <Badge className="bg-secondary/15 text-secondary border-none text-xs">One-time</Badge>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              For those who have found their footing and wish to reach back. Choose your own amount to fund the Voucher Pool for others.
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <div>
+            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Amount ($ CAD)</label>
+            <Input
+              type="number"
+              min="1"
+              step="1"
+              placeholder="e.g., 15"
+              value={seedAmount}
+              onChange={e => setSeedAmount(e.target.value)}
+              className="bg-background/40"
+            />
+          </div>
+          {seedAmount && parseFloat(seedAmount) >= 3 && (
+            <p className="text-xs text-secondary">
+              ≈ {Math.floor(parseFloat(seedAmount) / 3)} sponsored seat{Math.floor(parseFloat(seedAmount) / 3) > 1 ? 's' : ''} added to the pool
+            </p>
+          )}
+          <Button
+            onClick={handleSeedFund}
+            disabled={!seedAmount || parseFloat(seedAmount) <= 0 || seedLoading}
+            variant="outline"
+            className="w-full gap-2 border-secondary/30 text-secondary hover:bg-secondary/10"
+          >
+            {seedLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sprout className="w-4 h-4" />}
+            Contribute to the grove
+          </Button>
+          <p className="text-center text-xs text-muted-foreground">
+            Your contribution directly funds access for a colleague in transition. Thank you for being a part of the mycelium.
+          </p>
+        </div>
+      </motion.div>
+
       {/* Checkout Card */}
       <Card className="p-6 rounded-2xl border-border/50 shadow-sm space-y-5">
         <div>
-          <h2 className="font-heading font-semibold text-lg">{tier?.label} — {tier?.price}</h2>
+          <h2 className="font-heading font-semibold text-lg">{tier?.label} <span className="text-muted-foreground font-normal">— {tier?.price}</span></h2>
           <p className="text-sm text-muted-foreground mt-1">{tier?.description}</p>
         </div>
 
