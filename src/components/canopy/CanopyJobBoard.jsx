@@ -45,9 +45,14 @@ export default function CanopyJobBoard() {
         <Trees className="w-4 h-4 text-secondary" />
         <p className="text-sm text-secondary font-medium">The canopy — curated roles</p>
       </div>
-      <p className="text-xs text-muted-foreground -mt-3">
-        Roles selected for alignment with public-sector expertise. Remote (Canada) only.
-      </p>
+      <div className="flex items-center gap-3 -mt-2 mb-1">
+        <p className="text-xs text-muted-foreground">
+          Roles selected for alignment with public-sector expertise. Remote (Canada) only.
+        </p>
+        <Badge className="text-xs bg-secondary/20 text-secondary border-secondary/30 shrink-0 whitespace-nowrap">
+          ✦ 3 New Canadian Roles Added Today
+        </Badge>
+      </div>
 
       <div className="space-y-4">
         {JOBS.map((job, i) => (
@@ -58,11 +63,11 @@ export default function CanopyJobBoard() {
             transition={{ delay: i * 0.1 }}
             onHoverStart={() => setHovered(job.id)}
             onHoverEnd={() => setHovered(null)}
-            className="relative rounded-2xl border border-border/40 p-5 transition-all duration-300 overflow-hidden"
+            className="relative rounded-2xl border border-border/40 p-5 sm:p-6 transition-all duration-300 overflow-hidden"
             style={{
               background: hovered === job.id
-                ? 'hsl(280 22% 20% / 0.95)'
-                : 'hsl(280 20% 18% / 0.7)',
+                ? 'rgba(45, 31, 52, 0.75)'
+                : 'rgba(45, 31, 52, 0.60)',
               backdropFilter: 'blur(12px)',
             }}
           >
@@ -73,7 +78,7 @@ export default function CanopyJobBoard() {
 
             <div className="flex items-start justify-between gap-3 mb-3">
               <div>
-                <h3 className="font-heading font-semibold text-foreground text-base leading-tight">{job.title}</h3>
+                <h3 className="font-heading text-foreground text-base leading-tight" style={{ fontWeight: 600 }}>{job.title}</h3>
                 <p className="text-sm text-muted-foreground mt-0.5">{job.org}</p>
               </div>
               <a

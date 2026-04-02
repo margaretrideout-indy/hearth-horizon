@@ -60,6 +60,9 @@ export default function SkillTranslator() {
     if (!taskInput.trim()) return;
     setIsLoading(true);
 
+    // Minimum 1-second loading state for UX feedback
+    await new Promise(r => setTimeout(r, 1000));
+
     const processedInput = sector === 'education'
       ? applyKeywordTranslation(taskInput)
       : taskInput;
@@ -107,14 +110,14 @@ Provide 3 different translations that would resonate with corporate recruiters. 
           <ArrowLeftRight className="w-4 h-4 text-secondary" />
           <p className="text-sm text-secondary font-medium">Jargon-to-value engine</p>
         </div>
-        <h1 className="font-heading text-3xl font-bold text-foreground mb-2">The linguistic bridge</h1>
+        <h1 className="font-heading text-3xl font-bold text-foreground mb-2" style={{ fontWeight: 600 }}>The linguistic bridge</h1>
         <p className="text-muted-foreground max-w-2xl">
           Thirteen years of institutional wisdom doesn't disappear — it transforms. Here is how your sector speaks, and what the private world hears.
         </p>
       </div>
 
       {/* Translation Input */}
-      <Card className="p-6 rounded-2xl">
+      <Card className="p-5 sm:p-6 rounded-2xl">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 items-end">
           {/* Left: Public Sector */}
           <div>

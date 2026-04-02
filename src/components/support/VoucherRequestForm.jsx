@@ -34,9 +34,11 @@ export default function VoucherRequestForm({ onClose }) {
         <div className="w-12 h-12 rounded-full bg-secondary/15 flex items-center justify-center mx-auto">
           <CheckCircle2 className="w-6 h-6 text-secondary" />
         </div>
-        <h3 className="font-heading font-semibold text-foreground">Your request is in the grove.</h3>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          Thank you for trusting us with your story. A sponsored seat may be waiting — we'll reach out within 48 hours.
+        <p
+          className="text-sm font-medium leading-relaxed"
+          style={{ color: '#006D77' }}
+        >
+          Thank you, Steward. We have received your request and will reach out to the Hearth shortly.
         </p>
         <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={onClose}>
           Close
@@ -113,6 +115,10 @@ export default function VoucherRequestForm({ onClose }) {
           {loading ? 'Sending…' : 'Submit request'}
         </Button>
       </div>
+
+      <p style={{ fontSize: '10px', fontStyle: 'italic', color: 'hsl(270 12% 55%)' }}>
+        Confidentiality is the foundation of our sanctuary. Your data is never shared.
+      </p>
     </motion.form>
   );
 }
