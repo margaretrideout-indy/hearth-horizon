@@ -8,6 +8,40 @@ import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import TranslationCard from '../components/translator/TranslationCard';
 
+const EDUCATION_TO_CORPORATE = {
+  'classroom management': 'team operations & performance leadership',
+  'lesson plan': 'programme design',
+  'lesson planning': 'programme design',
+  'curriculum': 'learning & development strategy',
+  'curriculum development': 'L&D programme development',
+  'student': 'stakeholder',
+  'students': 'stakeholders',
+  'teacher': 'facilitator',
+  'teaching': 'facilitation',
+  'grading': 'performance evaluation',
+  'assessment': 'performance assessment',
+  'ied': 'personalised development plan',
+  'iep': 'individualised development plan',
+  'parent communication': 'stakeholder engagement',
+  'professional development': 'continuous learning & upskilling',
+  'school board': 'executive leadership',
+  'principal': 'senior manager',
+  'superintendent': 'executive director',
+  'special education': 'inclusive programme design',
+  'differentiated instruction': 'adaptive delivery methodology',
+  'report card': 'performance review',
+  'extracurricular': 'volunteer initiatives',
+};
+
+function applyKeywordTranslation(input) {
+  let result = input;
+  Object.entries(EDUCATION_TO_CORPORATE).forEach(([edu, corp]) => {
+    const regex = new RegExp(`\\b${edu}\\b`, 'gi');
+    result = result.replace(regex, corp);
+  });
+  return result;
+}
+
 const SECTOR_OPTIONS = [
   { value: 'education', label: 'Education' },
   { value: 'government', label: 'Government' },
@@ -26,11 +60,15 @@ export default function SkillTranslator() {
     if (!taskInput.trim()) return;
     setIsLoading(true);
 
+    const processedInput = sector === 'education'
+      ? applyKeywordTranslation(taskInput)
+      : taskInput;
+
     const result = await base44.integrations.Core.InvokeLLM({
       prompt: `You are a career transition expert specializing in helping ${sector} professionals move to the private sector.
 
 Translate this public-sector task/skill into private-sector market-ready language:
-Task: "${taskInput}"
+Task: "${processedInput}"
 Sector: ${sector}
 
 Provide 3 different translations that would resonate with corporate recruiters. For each, explain the value it communicates.`,
@@ -54,7 +92,7 @@ Provide 3 different translations that would resonate with corporate recruiters. 
     });
 
     setTranslations(prev => [
-      { id: Date.now(), input: taskInput, results: result.translations },
+      { id: Date.now(), input: processedInput, results: result.translations },
       ...prev
     ]);
     setTaskInput('');

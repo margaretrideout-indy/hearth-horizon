@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Briefcase, ArrowUpRight, Trees } from 'lucide-react';
+import { MapPin, Briefcase, ArrowUpRight, Trees, DollarSign } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 const JOBS = [
@@ -101,7 +101,10 @@ export default function CanopyJobBoard() {
                   {tag}
                 </Badge>
               ))}
-              <span className="ml-auto text-xs text-secondary font-medium">{job.salary}</span>
+              <Badge className="ml-auto text-xs bg-secondary/15 text-secondary border-secondary/20 gap-1 py-0.5 shrink-0">
+                <DollarSign className="w-3 h-3" />
+                {job.salary}
+              </Badge>
             </div>
           </motion.div>
         ))}
