@@ -3,13 +3,15 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Heart, Users, Loader2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Heart, Users, Loader2, FileText } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import VoucherRequestForm from './VoucherRequestForm';
 
 export default function VoucherPoolStatus() {
   const queryClient = useQueryClient();
   const [claiming, setClaiming] = React.useState(false);
+  const [showForm, setShowForm] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['me'],
@@ -71,19 +73,39 @@ export default function VoucherPoolStatus() {
           ✓ Your seat is sponsored — a peer in the grove has your back
         </div>
       ) : (
-        <Button
-          onClick={handleClaim}
-          disabled={claiming || available.length === 0}
-          variant="outline"
-          className="w-full gap-2"
-        >
-          {claiming ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Users className="w-4 h-4" />
-          )}
-          {available.length === 0 ? "No seats available right now" : "Request a sponsored seat"}
-        </Button>
+        <div className="space-y-3">
+          <div className="flex gap-2">
+            <Button
+              onClick={handleClaim}
+              disabled={claiming || available.length === 0}
+              variant="outline"
+              className="flex-1 gap-2"
+            >
+              {claiming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Users className="w-4 h-4" />}
+              {available.length === 0 ? "No seats available" : "Claim a seat"}
+            </Button>
+            <Button
+              variant="ghost"
+              className="flex-1 gap-2 text-muted-foreground hover:text-foreground"
+              onClick={() => setShowForm(v => !v)}
+            >
+              <FileText className="w-4 h-4" />
+              Submit request
+            </Button>
+          </div>
+          <AnimatePresence>
+            {showForm && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden"
+              >
+                <VoucherRequestForm onClose={() => setShowForm(false)} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       )}
     </Card>
   );

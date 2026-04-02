@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, ArrowLeftRight, Target, Heart, Compass, HandHeart
+  LayoutDashboard, ArrowLeftRight, Target, Heart, Compass, HandHeart, Trees
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -11,6 +11,7 @@ const navItems = [
   { path: '/gap-analyzer', label: 'Builder', icon: Target },
   { path: '/identity-anchor', label: 'Rootwork', icon: Heart },
   { path: '/cultural-fit', label: 'Ecosystem', icon: Compass },
+  { path: '/canopy', label: 'Canopy', icon: Trees },
   { path: '/support', label: 'Grove', icon: HandHeart },
 ];
 

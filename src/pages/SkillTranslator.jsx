@@ -133,14 +133,22 @@ Provide 3 different translations that would resonate with corporate recruiters. 
           </div>
         </div>
 
-        <div className="mt-4 flex justify-center">
+        <div className="mt-4 flex items-center justify-center gap-3">
           <Button
             onClick={handleTranslate}
             disabled={!taskInput.trim() || isLoading}
             className="gap-2"
           >
             {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-            Translate Skill
+            Translate skill
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground text-xs"
+            onClick={() => setTaskInput('Classroom Management')}
+          >
+            Try an example
           </Button>
         </div>
       </Card>

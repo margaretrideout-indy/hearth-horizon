@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, ArrowLeftRight, Target, Heart, Compass, 
-  ChevronLeft, ChevronRight, LogOut, HandHeart
+  ChevronLeft, ChevronRight, LogOut, HandHeart, Trees
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
@@ -13,6 +13,7 @@ const navItems = [
   { path: '/gap-analyzer', label: 'The bridge builder', icon: Target },
   { path: '/identity-anchor', label: 'The rootwork', icon: Heart },
   { path: '/cultural-fit', label: 'Ecosystem alignment', icon: Compass },
+  { path: '/canopy', label: 'The canopy', icon: Trees },
   { path: '/support', label: 'The grove', icon: HandHeart },
 ];
 
