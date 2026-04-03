@@ -1,25 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '@/lib/AuthContext';
 import WelcomeHeader from '../components/dashboard/WelcomeHeader';
 import RoadmapProgress from '../components/dashboard/RoadmapProgress';
 import BrigidMessage from '../components/hearth/BrigidMessage';
 import HearthJournal from '../components/hearth/HearthJournal';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Heart } from 'lucide-react';
+import { Heart, LogIn } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function YourHearth() {
+  const { isAuthenticated, navigateToLogin } = useAuth();
+
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
     queryFn: () => base44.entities.UserProfile.list(),
     initialData: [],
+    enabled: isAuthenticated,
   });
 
   const { data: user } = useQuery({
     queryKey: ['me'],
     queryFn: () => base44.auth.me(),
+    enabled: isAuthenticated,
   });
 
   const profile = profiles[0] || null;
@@ -38,6 +43,44 @@ export default function YourHearth() {
       is_private: true,
     }).then(() => localStorage.setItem(welcomeKey, '1'));
   }, [user]);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="space-y-8">
+        <div className="space-y-4">
+          <div>
+            <p className="text-sm text-secondary font-medium mb-1">Welcome to</p>
+            <h1 className="font-heading text-4xl font-bold text-foreground mb-3">Hearth & Horizon</h1>
+            <p className="text-muted-foreground max-w-2xl text-lg leading-relaxed">
+              A sanctuary and toolkit for public-sector professionals grounding their history and mapping their horizon. Find your footing, translate your value, and build a bridge to your new horizon — without losing who you are.
+            </p>
+          </div>
+          <div className="flex gap-3 pt-4">
+            <Button onClick={navigateToLogin} className="gap-2">
+              <LogIn className="w-4 h-4" />
+              Sign In
+            </Button>
+            <Button onClick={navigateToLogin} variant="outline">
+              Create Account
+            </Button>
+          </div>
+        </div>
+
+        <Card className="p-6 rounded-2xl border-border/50 bg-card/50">
+          <div className="space-y-4">
+            <h2 className="font-heading text-2xl font-semibold">Join the Founding Forest</h2>
+            <p className="text-muted-foreground">
+              Be part of a community building a new way forward. Limited founding member spots at legacy rates.
+            </p>
+            <Button onClick={navigateToLogin} size="lg" className="w-full gap-2">
+              <Heart className="w-4 h-4" />
+              Join the Founding Forest
+            </Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">

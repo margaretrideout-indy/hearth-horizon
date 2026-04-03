@@ -20,10 +20,30 @@ import Embers from './pages/Embers';
 import AdminDashboard from './pages/AdminDashboard';
 import Contact from './pages/Contact';
 
-const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+// Component to protect routes that require authentication
+const ProtectedRoute = ({ element, requiredAuth = true }) => {
+  const { isAuthenticated, isLoadingAuth, navigateToLogin } = useAuth();
 
-  // Show loading spinner while checking app public settings or auth
+  if (isLoadingAuth) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (requiredAuth && !isAuthenticated) {
+    navigateToLogin();
+    return null;
+  }
+
+  return element;
+};
+
+const AuthenticatedApp = () => {
+  const { isLoadingAuth, isLoadingPublicSettings } = useAuth();
+
+  // Show loading spinner while checking auth
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
@@ -32,34 +52,30 @@ const AuthenticatedApp = () => {
     );
   }
 
-  // Handle authentication errors
-  if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
-      navigateToLogin();
-      return null;
-    }
-  }
-
-  // Render the main app
+  // Render the main app with public home and protected member areas
   return (
     <Routes>
       <Route element={<AppLayout />}>
+        {/* Public route - accessible to everyone */}
         <Route path="/" element={<YourHearth />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/translator" element={<SkillTranslator />} />
-        <Route path="/gap-analyzer" element={<GapAnalyzer />} />
-        <Route path="/identity-anchor" element={<IdentityAnchor />} />
-        <Route path="/cultural-fit" element={<CulturalFit />} />
-        <Route path="/support" element={<Support />} />
-        <Route path="/canopy" element={<Canopy />} />
+        
+        {/* Protected routes - require authentication */}
+        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} requiredAuth={true} />} />
+        <Route path="/translator" element={<ProtectedRoute element={<SkillTranslator />} requiredAuth={true} />} />
+        <Route path="/gap-analyzer" element={<ProtectedRoute element={<GapAnalyzer />} requiredAuth={true} />} />
+        <Route path="/identity-anchor" element={<ProtectedRoute element={<IdentityAnchor />} requiredAuth={true} />} />
+        <Route path="/cultural-fit" element={<ProtectedRoute element={<CulturalFit />} requiredAuth={true} />} />
+        <Route path="/support" element={<ProtectedRoute element={<Support />} requiredAuth={true} />} />
+        <Route path="/canopy" element={<ProtectedRoute element={<Canopy />} requiredAuth={true} />} />
+        <Route path="/embers" element={<ProtectedRoute element={<Embers />} requiredAuth={true} />} />
+        <Route path="/admin" element={<ProtectedRoute element={<AdminDashboard />} requiredAuth={true} />} />
+        
+        {/* Public contact page */}
+        <Route path="/contact" element={<Contact />} />
+        
+        {/* Payment routes - public but only triggered after auth */}
         <Route path="/payment/success" element={<PaymentSuccess />} />
         <Route path="/payment/cancel" element={<PaymentCancel />} />
-        <Route path="/embers" element={<Embers />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/contact" element={<Contact />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
