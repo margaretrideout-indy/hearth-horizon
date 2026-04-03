@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, LogIn, Download } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -23,22 +23,12 @@ export default function HeroSection({ onCTA, onLogin }) {
       <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full opacity-10 blur-3xl" style={{ background: 'hsl(35, 85%, 65%)' }} />
 
       <div className="relative max-w-4xl mx-auto px-4 py-24 md:py-32 space-y-8">
-        {/* Top right header links */}
-        <div className="absolute top-0 right-0 pt-4 pr-4 flex items-center gap-3">
-          <Link
-            to="/install"
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-          >
-            <Download className="w-3 h-3" />
+        {/* Header Navigation - Fixed at top right */}
+        <div className="fixed top-4 right-4 z-50 flex items-center gap-4">
+          <Link to="/install" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
             Install App
           </Link>
-          <Button
-            onClick={onLogin}
-            variant="outline"
-            size="sm"
-            className="gap-2"
-          >
-            <LogIn className="w-4 h-4" />
+          <Button onClick={onLogin} variant="outline" size="sm">
             Log In
           </Button>
         </div>
