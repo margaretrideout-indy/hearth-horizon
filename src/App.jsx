@@ -20,6 +20,7 @@ import Embers from './pages/Embers';
 import AdminDashboard from './pages/AdminDashboard';
 import Contact from './pages/Contact';
 import InstallApp from './pages/InstallApp';
+import Gateway from './pages/Gateway';
 
 // Component to protect routes that require authentication
 const ProtectedRoute = ({ element, requiredAuth = true }) => {
@@ -58,7 +59,10 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route element={<AppLayout />}>
-        {/* Public route - accessible to everyone */}
+        {/* Public gateway landing page */}
+        <Route path="/gateway" element={<Gateway />} />
+        
+        {/* Protected member home - redirects to /gateway if not authenticated */}
         <Route path="/" element={<YourHearth />} />
         
         {/* Protected routes - require authentication */}
