@@ -2,9 +2,10 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, ArrowLeftRight, Target, Heart, Compass,
-  ChevronLeft, ChevronRight, LogOut, HandHeart, Trees, Flame
+  ChevronLeft, ChevronRight, LogOut, HandHeart, Trees, Flame, Lock
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 
 const STANDALONE = { path: '/', label: 'Your Hearth', icon: LayoutDashboard };
@@ -28,8 +29,13 @@ const NAV_GROUPS = [
   },
 ];
 
+const ALLOWED_TIERS = ['Hearthkeeper', 'Steward', 'Patron'];
+
 export default function Sidebar({ collapsed, onToggle }) {
   const location = useLocation();
+  const { data: user } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
+  const userTier = user?.subscription_tier || 'Seedling';
+  const hasFullAccess = ALLOWED_TIERS.includes(userTier);
 
   return (
     <aside
@@ -157,7 +163,10 @@ export default function Sidebar({ collapsed, onToggle }) {
                       />
                     </span>
                     {!collapsed && (
-                      <span className="text-sm font-medium leading-tight">{item.label}</span>
+                      <span className="flex-1 text-sm font-medium leading-tight">{item.label}</span>
+                    )}
+                    {!collapsed && item.path === '/gap-analyzer' && !hasFullAccess && (
+                      <Lock className="w-3 h-3 opacity-40 shrink-0" />
                     )}
                   </Link>
                 );

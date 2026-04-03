@@ -51,6 +51,8 @@ export default function HearthJournal({ user }) {
         content: entryBody.trim(),
         is_pinned: false,
         is_bot: false,
+        subscription_tier: user.subscription_tier || 'Seedling',
+        sentiment_tag: sentimentTag,
       });
       queryClient.invalidateQueries({ queryKey: ['emberPosts'] });
       toast.success('Your words have been offered to the Embers.');

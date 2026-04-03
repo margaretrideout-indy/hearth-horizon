@@ -23,6 +23,14 @@
       "type": "boolean",
       "default": false,
       "description": "Posted by the AI Hearthkeeper bot"
+    },
+    "subscription_tier": {
+      "type": "string",
+      "description": "Author's subscription tier at time of posting"
+    },
+    "sentiment_tag": {
+      "type": "string",
+      "description": "Optional sentiment tag from Rootwork entry"
     }
   },
   "required": [

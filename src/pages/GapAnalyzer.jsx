@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Target, Loader2, Sparkles, Search } from 'lucide-react';
+import { Target, Loader2, Sparkles, Search, Flame } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import GapResults from '../components/gap/GapResults';
 import ResumeUploader from '../components/gap/ResumeUploader';
+import {
+  AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction
+} from '@/components/ui/alert-dialog';
+import { Link } from 'react-router-dom';
 
 const ROLE_SUGGESTIONS = [
   'Product Manager', 'Program Manager', 'UX Researcher', 'Learning & Development Manager',
@@ -16,12 +21,19 @@ const ROLE_SUGGESTIONS = [
   'Customer Success Manager', 'Community Manager', 'DEI Consultant',
 ];
 
+const ALLOWED_TIERS = ['Hearthkeeper', 'Steward', 'Patron'];
+
 export default function GapAnalyzer() {
   const [dreamRole, setDreamRole] = useState('');
   const [currentSector, setCurrentSector] = useState('education');
   const [analysis, setAnalysis] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const queryClient = useQueryClient();
+
+  const { data: user } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
+  const userTier = user?.subscription_tier || 'Seedling';
+  const hasAccess = ALLOWED_TIERS.includes(userTier);
 
   const handleAnalyze = async () => {
     if (!dreamRole.trim()) return;
@@ -95,7 +107,44 @@ For each skill, assess what level a ${currentSector} professional typically has 
   });
   const profile = profiles[0] || null;
 
+  if (!hasAccess) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6 max-w-md mx-auto">
+        <div className="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center">
+          <Flame className="w-7 h-7 text-secondary" />
+        </div>
+        <div>
+          <h1 className="font-heading text-2xl font-semibold mb-2">The Bridge Builder</h1>
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            The Bridge Builder requires a Hearthkeeper's flame to operate. Upgrade your tier to access skill gap analysis and resume tools.
+          </p>
+        </div>
+        <Button asChild className="gap-2">
+          <Link to="/support">Upgrade my tier</Link>
+        </Button>
+      </div>
+    );
+  }
+
   return (
+    <>
+    <AlertDialog open={showUpgradeDialog} onOpenChange={setShowUpgradeDialog}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Hearthkeeper's flame required</AlertDialogTitle>
+          <AlertDialogDescription>
+            The Bridge Builder requires a Hearthkeeper's flame to operate. Would you like to upgrade your tier?
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Not yet</AlertDialogCancel>
+          <AlertDialogAction asChild>
+            <Link to="/support">Upgrade my tier</Link>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
     <div className="space-y-8">
       {/* Header */}
       <div>
@@ -206,5 +255,6 @@ For each skill, assess what level a ${currentSector} professional typically has 
         </div>
       )}
     </div>
+    </>
   );
 }
