@@ -102,8 +102,24 @@ export default function Embers() {
     setSending(false);
   };
 
-  const pinned = posts.filter(p => p.is_pinned);
-  const feed = posts.filter(p => !p.is_pinned);
+  // Deduplicate all posts by ID
+  const uniquePosts = posts.filter((post, idx, arr) => arr.findIndex(p => p.id === post.id) === idx);
+
+  // Pinned: keep only one per unique content (most recent), from "The Hearth" author
+  const pinnedSeen = new Set();
+  const pinned = uniquePosts
+    .filter(p => p.is_pinned)
+    .sort((a, b) => new Date(b.created_date) - new Date(a.created_date))
+    .filter(p => {
+      const key = p.content.trim().toLowerCase().slice(0, 60);
+      if (pinnedSeen.has(key)) return false;
+      pinnedSeen.add(key);
+      return true;
+    })
+    .reverse(); // restore chronological order for display
+
+  // Feed: non-pinned, deduplicated by ID
+  const feed = uniquePosts.filter(p => !p.is_pinned);
 
   return (
     <div className="max-w-2xl mx-auto flex flex-col h-[calc(100vh-8rem)]">
