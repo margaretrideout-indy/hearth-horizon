@@ -51,23 +51,52 @@ export default function YourHearth() {
         {/* Hero Section */}
         <HeroSection onCTA={navigateToLogin} />
 
-        {/* Login/Signup CTA Section */}
+        {/* The Forest — public preview of dashboard features */}
         <div className="bg-background px-4 py-16 md:py-20">
-          <div className="max-w-4xl mx-auto space-y-6">
-            <div className="text-center space-y-4">
-              <h2 className="font-heading text-2xl md:text-3xl font-semibold text-foreground">Ready to begin?</h2>
-              <p className="text-muted-foreground max-w-xl mx-auto">
-                Join our community of public-sector professionals finding their footing in new horizons.
-              </p>
+          <div className="max-w-4xl mx-auto space-y-12">
+            <div className="text-center space-y-2">
+              <h2 className="font-heading text-2xl md:text-3xl font-semibold text-foreground">Explore the Forest</h2>
+              <p className="text-muted-foreground">Get a glimpse of what awaits inside</p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button onClick={navigateToLogin} size="lg" className="gap-2">
-                <LogIn className="w-4 h-4" />
-                Sign In
-              </Button>
-              <Button onClick={navigateToLogin} size="lg" variant="outline">
-                Create Account
-              </Button>
+
+            {/* Forest Sections Preview */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* The Grove */}
+              <Card className="p-6 rounded-2xl border-border/50 hover:border-secondary/30 transition-all cursor-pointer" onClick={navigateToLogin}>
+                <div className="space-y-3">
+                  <div className="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center">
+                    <Heart className="w-5 h-5 text-secondary" />
+                  </div>
+                  <h3 className="font-heading text-lg font-semibold text-foreground">The Grove</h3>
+                  <p className="text-sm text-muted-foreground">A reciprocity model where your contribution sponsors a peer seat. No one gets left behind.</p>
+                </div>
+              </Card>
+
+              {/* The Canopy */}
+              <Card className="p-6 rounded-2xl border-border/50 hover:border-primary/30 transition-all cursor-pointer" onClick={navigateToLogin}>
+                <div className="space-y-3">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Heart className="w-5 h-5 text-primary" />
+                  </div>
+                  <h3 className="font-heading text-lg font-semibold text-foreground">The Canopy</h3>
+                  <p className="text-sm text-muted-foreground">Curated job board and pathways for experienced professionals seeking autonomy and impact.</p>
+                </div>
+              </Card>
+
+              {/* The Embers */}
+              <Card className="p-6 rounded-2xl border-border/50 hover:border-accent/30 transition-all cursor-pointer" onClick={navigateToLogin}>
+                <div className="space-y-3">
+                  <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                    <Heart className="w-5 h-5 text-accent" />
+                  </div>
+                  <h3 className="font-heading text-lg font-semibold text-foreground">The Embers</h3>
+                  <p className="text-sm text-muted-foreground">A community campfire where members share reflections, lessons, and support on their journeys.</p>
+                </div>
+              </Card>
+            </div>
+
+            <div className="text-center text-sm text-muted-foreground/70">
+              Click any section above to explore (login required)
             </div>
           </div>
         </div>

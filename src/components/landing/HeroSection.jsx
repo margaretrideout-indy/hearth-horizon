@@ -43,7 +43,7 @@ export default function HeroSection({ onCTA }) {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl"
         >
-          You've spent years building your expertise, but now you're standing at a crossroads. Welcome to Hearth & Horizon—a sanctuary designed for professionals ready to transition from institutional roles into tech and remote work.
+          A sanctuary for public-sector professionals to anchor years of wisdom and find a high-autonomy ecosystem—without losing who they are.
         </motion.p>
 
         {/* CTA Button */}
