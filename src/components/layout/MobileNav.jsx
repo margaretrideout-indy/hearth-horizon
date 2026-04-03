@@ -1,16 +1,14 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, ArrowLeftRight, Target, Heart, Compass, HandHeart, Trees
+  LayoutDashboard, ArrowLeftRight, Target, Heart, Compass, HandHeart, Trees, Flame
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { path: '/', label: 'Hearth', icon: LayoutDashboard },
   { path: '/translator', label: 'Bridge', icon: ArrowLeftRight },
-  { path: '/gap-analyzer', label: 'Builder', icon: Target },
-  { path: '/identity-anchor', label: 'Rootwork', icon: Heart },
-  { path: '/cultural-fit', label: 'Ecosystem', icon: Compass },
+  { path: '/embers', label: 'Embers', icon: Flame },
   { path: '/canopy', label: 'Canopy', icon: Trees },
   { path: '/support', label: 'Grove', icon: HandHeart },
 ];

@@ -9,11 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import TranslationCard from '../components/translator/TranslationCard';
 
 const EDUCATION_TO_CORPORATE = {
+  // Education
   'classroom management': 'team operations & performance leadership',
   'lesson plan': 'programme design',
   'lesson planning': 'programme design',
   'curriculum': 'learning & development strategy',
   'curriculum development': 'L&D programme development',
+  'pedagogy': 'instructional design methodology',
   'student': 'stakeholder',
   'students': 'stakeholders',
   'teacher': 'facilitator',
@@ -22,6 +24,7 @@ const EDUCATION_TO_CORPORATE = {
   'assessment': 'performance assessment',
   'ied': 'personalised development plan',
   'iep': 'individualised development plan',
+  'iep management': 'client success & personalised programme management',
   'parent communication': 'stakeholder engagement',
   'professional development': 'continuous learning & upskilling',
   'school board': 'executive leadership',
@@ -31,12 +34,34 @@ const EDUCATION_TO_CORPORATE = {
   'differentiated instruction': 'adaptive delivery methodology',
   'report card': 'performance review',
   'extracurricular': 'volunteer initiatives',
+  'stakeholder engagement': 'cross-functional leadership & client success',
+  // Healthcare
+  'clinical workflows': 'operations management & process optimisation',
+  'clinical workflow': 'operations management & process optimisation',
+  'patient advocacy': 'client success & stakeholder relations',
+  'triage': 'strategic prioritisation & risk management',
+  'care coordination': 'cross-functional project coordination',
+  'care plan': 'strategic development plan',
+  'electronic health record': 'enterprise data management',
+  'patient outcomes': 'client success metrics',
+  'clinical': 'operational',
+  // Social Services
+  'case management': 'client portfolio management & strategic planning',
+  'crisis intervention': 'risk management & critical incident response',
+  'resource allocation': 'strategic resource planning & operations management',
+  'community outreach': 'stakeholder engagement & business development',
+  'intake assessment': 'client onboarding & needs analysis',
+  'service coordination': 'cross-functional programme delivery',
+  'advocacy': 'stakeholder relations & strategic communications',
 };
 
 function applyKeywordTranslation(input) {
   let result = input;
-  Object.entries(EDUCATION_TO_CORPORATE).forEach(([edu, corp]) => {
-    const regex = new RegExp(`\\b${edu}\\b`, 'gi');
+  // Sort by length descending so longer phrases match before shorter sub-phrases
+  const entries = Object.entries(EDUCATION_TO_CORPORATE).sort((a, b) => b[0].length - a[0].length);
+  entries.forEach(([pub, corp]) => {
+    const escaped = pub.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`\\b${escaped}\\b`, 'gi');
     result = result.replace(regex, corp);
   });
   return result;
@@ -63,18 +88,18 @@ export default function SkillTranslator() {
     // Minimum 1-second loading state for UX feedback
     await new Promise(r => setTimeout(r, 1000));
 
-    const processedInput = sector === 'education'
-      ? applyKeywordTranslation(taskInput)
-      : taskInput;
+    // Apply keyword mapping for all public-sector inputs, not just education
+    const processedInput = applyKeywordTranslation(taskInput);
 
     const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are a career transition expert specializing in helping ${sector} professionals move to the private sector.
+      prompt: `You are a career transition expert specializing in helping public service professionals and mission-driven leaders move to the private sector.
 
-Translate this public-sector task/skill into private-sector market-ready language:
+The user works in ${sector}. Translate this task/skill into private-sector, market-ready language:
 Task: "${processedInput}"
-Sector: ${sector}
 
-Provide 3 different translations that would resonate with corporate recruiters. For each, explain the value it communicates.`,
+Focus on translating into corporate strategy terms: Operations Management, Strategic Planning, Client Success, Cross-functional Leadership, and related corporate competencies.
+
+Provide 3 distinct translations that resonate with corporate recruiters. For each, explain the business value it communicates.`,
       response_json_schema: {
         type: "object",
         properties: {

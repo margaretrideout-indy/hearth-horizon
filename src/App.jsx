@@ -15,6 +15,8 @@ import Support from './pages/Support';
 import Canopy from './pages/Canopy';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentCancel from './pages/PaymentCancel';
+import Embers from './pages/Embers';
+import AdminDashboard from './pages/AdminDashboard';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -52,6 +54,8 @@ const AuthenticatedApp = () => {
         <Route path="/canopy" element={<Canopy />} />
         <Route path="/payment/success" element={<PaymentSuccess />} />
         <Route path="/payment/cancel" element={<PaymentCancel />} />
+        <Route path="/embers" element={<Embers />} />
+        <Route path="/admin" element={<AdminDashboard />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

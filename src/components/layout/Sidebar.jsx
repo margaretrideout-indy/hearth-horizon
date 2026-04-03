@@ -2,19 +2,20 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, ArrowLeftRight, Target, Heart, Compass, 
-  ChevronLeft, ChevronRight, LogOut, HandHeart, Trees
+  ChevronLeft, ChevronRight, LogOut, HandHeart, Trees, Flame
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { path: '/', label: 'The hearth', icon: LayoutDashboard },
-  { path: '/translator', label: 'The linguistic bridge', icon: ArrowLeftRight },
-  { path: '/gap-analyzer', label: 'The bridge builder', icon: Target },
-  { path: '/identity-anchor', label: 'The rootwork', icon: Heart },
-  { path: '/cultural-fit', label: 'Ecosystem alignment', icon: Compass },
-  { path: '/canopy', label: 'The canopy', icon: Trees },
-  { path: '/support', label: 'The grove', icon: HandHeart },
+  { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/translator', label: 'The Linguistic Bridge', icon: ArrowLeftRight },
+  { path: '/embers', label: 'The Embers', icon: Flame },
+  { path: '/canopy', label: 'The Canopy', icon: Trees },
+  { path: '/gap-analyzer', label: 'The Bridge Builder', icon: Target },
+  { path: '/identity-anchor', label: 'The Rootwork', icon: Heart },
+  { path: '/cultural-fit', label: 'Ecosystem Alignment', icon: Compass },
+  { path: '/support', label: 'The Grove', icon: HandHeart },
 ];
 
 export default function Sidebar({ collapsed, onToggle }) {

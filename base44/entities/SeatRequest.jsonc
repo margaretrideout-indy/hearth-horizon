@@ -1,0 +1,46 @@
+{
+  "name": "SeatRequest",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Requester's full name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Requester's email address"
+    },
+    "field": {
+      "type": "string",
+      "enum": [
+        "Education",
+        "Healthcare",
+        "Social Services",
+        "Other"
+      ],
+      "description": "Current professional field"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved"
+      ],
+      "default": "pending",
+      "description": "Admin approval status"
+    },
+    "approved_date": {
+      "type": "string",
+      "description": "ISO date of approval"
+    },
+    "approved_until": {
+      "type": "string",
+      "description": "ISO date access expires"
+    }
+  },
+  "required": [
+    "name",
+    "email",
+    "field"
+  ]
+}

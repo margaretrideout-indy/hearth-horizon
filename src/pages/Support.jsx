@@ -9,6 +9,7 @@ import { Heart, Gift, Loader2, CheckCircle, Upload, Filter, Sprout } from 'lucid
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import VoucherPoolStatus from '../components/support/VoucherPoolStatus';
+import SeedlingTierCard from '../components/support/SeedlingTierCard';
 
 const TIERS = [
   {
@@ -101,7 +102,8 @@ export default function Support() {
       </div>
 
       {/* Tier Selection */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <SeedlingTierCard isActive={selectedTier === 'seedling'} onClick={() => setSelectedTier('seedling')} />
         {TIERS.map((t) => {
           const TierIcon = t.icon;
           const isActive = selectedTier === t.id;
@@ -185,43 +187,36 @@ export default function Support() {
         </div>
       </motion.div>
 
-      {/* Checkout Card */}
-      <Card className="p-6 rounded-2xl border-border/50 shadow-sm space-y-5">
-        <div>
-          <h2 className="font-heading font-semibold text-lg">{tier?.label} <span className="text-muted-foreground font-normal">— {tier?.price}</span></h2>
-          <p className="text-sm text-muted-foreground mt-1">{tier?.description}</p>
-        </div>
+      {/* Checkout Card — only for paid tiers */}
+      {selectedTier !== 'seedling' && (
+        <Card className="p-6 rounded-2xl border-border/50 shadow-sm space-y-5">
+          <div>
+            <h2 className="font-heading font-semibold text-lg">{tier?.label} <span className="text-muted-foreground font-normal">— {tier?.price}</span></h2>
+            <p className="text-sm text-muted-foreground mt-1">{tier?.description}</p>
+          </div>
 
-        {/* Perks */}
-        <div className="space-y-2">
-          {tier?.perks.map(perk => {
-            const PerkIcon = PERK_ICONS[perk] || CheckCircle;
-            return (
-              <div key={perk} className="flex items-center gap-2 text-sm">
-                <PerkIcon className="w-4 h-4 text-secondary shrink-0" />
-                <span>{perk}</span>
-              </div>
-            );
-          })}
-        </div>
+          <div className="space-y-2">
+            {tier?.perks.map(perk => {
+              const PerkIcon = PERK_ICONS[perk] || CheckCircle;
+              return (
+                <div key={perk} className="flex items-center gap-2 text-sm">
+                  <PerkIcon className="w-4 h-4 text-secondary shrink-0" />
+                  <span>{perk}</span>
+                </div>
+              );
+            })}
+          </div>
 
-        <Button
-          onClick={handleCheckout}
-          disabled={loading}
-          className="w-full h-11 text-base gap-2"
-        >
-          {loading ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Heart className="w-4 h-4" />
-          )}
-          {loading ? 'Opening the path…' : `Tend the fire — ${tier?.price}`}
-        </Button>
+          <Button onClick={handleCheckout} disabled={loading} className="w-full h-11 text-base gap-2">
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Heart className="w-4 h-4" />}
+            {loading ? 'Opening the path…' : `Tend the fire — ${tier?.price}`}
+          </Button>
 
-        <p className="text-center text-xs text-muted-foreground">
-          Secured by Stripe · Cancel anytime · No pressure, ever
-        </p>
-      </Card>
+          <p className="text-center text-xs text-muted-foreground">
+            Secured by Stripe · Cancel anytime · No pressure, ever
+          </p>
+        </Card>
+      )}
 
       {/* Community Pool */}
       <VoucherPoolStatus />

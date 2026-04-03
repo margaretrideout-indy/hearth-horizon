@@ -1,0 +1,32 @@
+{
+  "name": "EmberPost",
+  "type": "object",
+  "properties": {
+    "author_name": {
+      "type": "string",
+      "description": "Display name of the author"
+    },
+    "author_email": {
+      "type": "string",
+      "description": "Email of the author"
+    },
+    "content": {
+      "type": "string",
+      "description": "Message content"
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false,
+      "description": "Pinned starter posts"
+    },
+    "is_bot": {
+      "type": "boolean",
+      "default": false,
+      "description": "Posted by the AI Hearthkeeper bot"
+    }
+  },
+  "required": [
+    "author_name",
+    "content"
+  ]
+}
