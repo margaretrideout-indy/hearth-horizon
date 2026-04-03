@@ -49,16 +49,29 @@ export default function CulturalFit() {
               <button
                 key={item.value}
                 onClick={() => setActiveTab(item.value)}
-                className="flex items-center justify-between w-full rounded-xl text-sm font-medium transition-all"
+                className="flex items-center justify-between w-full rounded-xl text-sm font-medium"
                 style={{
                   padding: '14px 16px',
                   textAlign: 'left',
-                  background: isActive ? 'hsla(280, 50%, 35%, 0.25)' : 'hsla(280, 20%, 18%, 0.5)',
+                  background: isActive ? 'hsla(280, 50%, 45%, 0.25)' : 'hsla(280, 20%, 18%, 0.5)',
                   boxShadow: isActive ? '0 0 14px 0 hsla(280, 65%, 55%, 0.2)' : 'none',
                   color: isActive ? 'hsl(183, 80%, 70%)' : 'hsl(270, 15%, 70%)',
                   border: isActive ? '1px solid hsla(280, 50%, 55%, 0.3)' : '1px solid hsla(280, 20%, 30%, 0.3)',
                   borderLeftWidth: '3px',
                   borderLeftColor: isActive ? 'hsl(var(--secondary))' : 'transparent',
+                  transition: 'background 0.3s ease, box-shadow 0.3s ease',
+                }}
+                onMouseEnter={e => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = 'hsla(280, 20%, 28%, 0.5)';
+                    e.currentTarget.style.boxShadow = '0 0 10px rgba(0, 128, 128, 0.5)';
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = 'hsla(280, 20%, 18%, 0.5)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }
                 }}
               >
                 <span>{item.label}</span>
@@ -89,7 +102,7 @@ export default function CulturalFit() {
                 <button
                   key={item.value}
                   onClick={() => setActiveTab(item.value)}
-                  className="rounded-md text-sm font-medium transition-all"
+                  className="rounded-md text-sm font-medium"
                   style={{
                     flexShrink: 0,
                     whiteSpace: 'nowrap',
@@ -101,6 +114,19 @@ export default function CulturalFit() {
                     background: isActive ? 'hsl(var(--background))' : 'transparent',
                     color: isActive ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))',
                     boxShadow: isActive ? '0 1px 4px rgba(0,0,0,0.2)' : 'none',
+                    transition: 'background 0.3s ease, box-shadow 0.3s ease',
+                  }}
+                  onMouseEnter={e => {
+                    if (!isActive) {
+                      e.currentTarget.style.background = 'hsla(0, 0%, 100%, 0.08)';
+                      e.currentTarget.style.boxShadow = '0 0 10px rgba(0, 128, 128, 0.5)';
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (!isActive) {
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }
                   }}
                 >
                   {item.label}
