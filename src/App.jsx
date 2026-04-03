@@ -19,6 +19,7 @@ import PaymentCancel from './pages/PaymentCancel';
 import Embers from './pages/Embers';
 import AdminDashboard from './pages/AdminDashboard';
 import Contact from './pages/Contact';
+import InstallApp from './pages/InstallApp';
 
 // Component to protect routes that require authentication
 const ProtectedRoute = ({ element, requiredAuth = true }) => {
@@ -73,6 +74,9 @@ const AuthenticatedApp = () => {
         
         {/* Public contact page */}
         <Route path="/contact" element={<Contact />} />
+        
+        {/* Public install app guide */}
+        <Route path="/install-app" element={<InstallApp />} />
         
         {/* Payment routes - public but only triggered after auth */}
         <Route path="/payment/success" element={<PaymentSuccess />} />

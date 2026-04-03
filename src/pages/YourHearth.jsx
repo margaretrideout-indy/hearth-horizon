@@ -6,6 +6,7 @@ import WelcomeHeader from '../components/dashboard/WelcomeHeader';
 import RoadmapProgress from '../components/dashboard/RoadmapProgress';
 import BrigidMessage from '../components/hearth/BrigidMessage';
 import HearthJournal from '../components/hearth/HearthJournal';
+import InstallBanner from '../components/hearth/InstallBanner';
 import HeroSection from '../components/landing/HeroSection';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -143,6 +144,7 @@ export default function YourHearth() {
 
   return (
     <div className="space-y-8">
+      <InstallBanner />
       <WelcomeHeader profile={profile} />
 
       {profile?.brigid_checkin_message && (
