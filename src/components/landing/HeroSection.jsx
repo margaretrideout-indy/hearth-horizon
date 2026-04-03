@@ -54,7 +54,9 @@ export default function HeroSection({ onCTA }) {
           className="pt-4"
         >
           <Button
-            onClick={onCTA}
+            onClick={() => {
+              if (onCTA) onCTA();
+            }}
             size="lg"
             className="gap-2 h-12 px-8 text-base font-medium"
           >
