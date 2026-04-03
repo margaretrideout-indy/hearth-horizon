@@ -7,27 +7,23 @@ import {
 import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
 
+const STANDALONE = { path: '/', label: 'Your Hearth', icon: LayoutDashboard };
+
 const NAV_GROUPS = [
-  {
-    label: 'individual',
-    items: [
-      { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-      { path: '/canopy', label: 'The Canopy', icon: Trees },
-    ],
-  },
-  {
-    label: 'transition',
-    items: [
-      { path: '/translator', label: 'The Linguistic Bridge', icon: ArrowLeftRight },
-      { path: '/gap-analyzer', label: 'The Bridge Builder', icon: Target },
-      { path: '/identity-anchor', label: 'The Rootwork', icon: Heart },
-    ],
-  },
   {
     label: 'community',
     items: [
       { path: '/support', label: 'The Grove', icon: HandHeart },
       { path: '/embers', label: 'The Embers', icon: Flame },
+    ],
+  },
+  {
+    label: 'transition',
+    items: [
+      { path: '/canopy', label: 'The Canopy', icon: Trees },
+      { path: '/translator', label: 'The Linguistic Bridge', icon: ArrowLeftRight },
+      { path: '/gap-analyzer', label: 'The Bridge Builder', icon: Target },
+      { path: '/identity-anchor', label: 'The Rootwork', icon: Heart },
       { path: '/cultural-fit', label: 'Ecosystem Alignment', icon: Compass },
     ],
   },
@@ -64,6 +60,33 @@ export default function Sidebar({ collapsed, onToggle }) {
 
       {/* Navigation Groups */}
       <nav className="flex-1 py-4 px-2 overflow-y-auto">
+        {/* Standalone: Your Hearth */}
+        <div style={{ marginBottom: '24px' }}>
+          {(() => {
+            const item = STANDALONE;
+            const isActive = location.pathname === item.path;
+            return (
+              <Link
+                to={item.path}
+                className={`flex items-center gap-3 rounded-xl transition-all duration-200 ${collapsed ? 'justify-center' : ''}`}
+                style={{
+                  padding: '10px 12px',
+                  background: isActive ? 'hsla(183, 80%, 38%, 0.12)' : 'transparent',
+                  boxShadow: isActive ? '0 0 12px 0 hsla(183, 80%, 38%, 0.25), inset 0 0 0 1px hsla(183, 80%, 38%, 0.2)' : 'none',
+                  color: isActive ? 'hsl(183, 80%, 75%)' : 'hsla(270, 15%, 75%, 0.7)',
+                }}
+                onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = 'hsla(183, 80%, 38%, 0.07)'; e.currentTarget.style.color = 'hsl(270, 20%, 92%)'; }}}
+                onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'hsla(270, 15%, 75%, 0.7)'; }}}
+              >
+                <span className="flex items-center justify-center flex-shrink-0 rounded-lg" style={{ padding: '12px', width: '20px', height: '20px' }}>
+                  <item.icon style={{ width: '20px', height: '20px', color: isActive ? 'hsl(183, 80%, 55%)' : 'inherit', filter: isActive ? 'drop-shadow(0 0 4px hsla(183, 80%, 55%, 0.6))' : 'none', flexShrink: 0 }} />
+                </span>
+                {!collapsed && <span className="text-sm font-medium leading-tight">{item.label}</span>}
+              </Link>
+            );
+          })()}
+        </div>
+
         {NAV_GROUPS.map((group, gi) => (
           <div key={group.label} style={{ marginBottom: gi < NAV_GROUPS.length - 1 ? '24px' : 0 }}>
             {/* Group label */}

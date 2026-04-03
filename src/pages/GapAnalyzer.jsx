@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import GapResults from '../components/gap/GapResults';
+import ResumeUploader from '../components/gap/ResumeUploader';
 
 const ROLE_SUGGESTIONS = [
   'Product Manager', 'Program Manager', 'UX Researcher', 'Learning & Development Manager',
@@ -87,6 +88,13 @@ For each skill, assess what level a ${currentSector} professional typically has 
     initialData: [],
   });
 
+  const { data: profiles } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: () => base44.entities.UserProfile.list(),
+    initialData: [],
+  });
+  const profile = profiles[0] || null;
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -163,6 +171,11 @@ For each skill, assess what level a ${currentSector} professional typically has 
       {analysis && !isAnalyzing && (
         <GapResults analysis={analysis} />
       )}
+
+      {/* Resume Upload */}
+      <Card className="p-6 rounded-2xl">
+        <ResumeUploader profileId={profile?.id} />
+      </Card>
 
       {/* Past Analyses */}
       {pastAnalyses.length > 0 && !analysis && (

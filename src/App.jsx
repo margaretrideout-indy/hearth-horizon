@@ -6,6 +6,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Dashboard from './pages/Dashboard';
+import YourHearth from './pages/YourHearth';
 import SkillTranslator from './pages/SkillTranslator';
 import GapAnalyzer from './pages/GapAnalyzer';
 import IdentityAnchor from './pages/IdentityAnchor';
@@ -45,7 +46,8 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route element={<AppLayout />}>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<YourHearth />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/translator" element={<SkillTranslator />} />
         <Route path="/gap-analyzer" element={<GapAnalyzer />} />
         <Route path="/identity-anchor" element={<IdentityAnchor />} />

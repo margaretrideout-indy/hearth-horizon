@@ -45,6 +45,18 @@
         "launching"
       ],
       "default": "discovery"
+    },
+    "resume_file": {
+      "type": "string",
+      "description": "URL of the uploaded resume PDF"
+    },
+    "bridge_analysis": {
+      "type": "string",
+      "description": "AI-generated transferable skills analysis from resume"
+    },
+    "brigid_checkin_message": {
+      "type": "string",
+      "description": "Supportive message from Brigid if user has been Weathering"
     }
   },
   "required": [

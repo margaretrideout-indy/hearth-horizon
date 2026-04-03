@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Heart, Loader2, Send, RefreshCw } from 'lucide-react';
@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import MoodSelector from '../components/anchor/MoodSelector';
 import PromptCard from '../components/anchor/PromptCard';
 import CheckInHistory from '../components/anchor/CheckInHistory';
+import JournalEntry from '../components/rootwork/JournalEntry';
 
 const PROMPTS = [
   "What's one value from your current role that you want to carry into your next chapter?",
@@ -23,6 +24,9 @@ const PROMPTS = [
 ];
 
 export default function IdentityAnchor() {
+  const [user, setUser] = useState(null);
+  useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
+
   const [selectedMood, setSelectedMood] = useState(null);
   const [reflection, setReflection] = useState('');
   const [currentPrompt, setCurrentPrompt] = useState(
@@ -139,6 +143,14 @@ IMPORTANT: If their mood is "grieving", begin your response with exactly: "Thank
             <p className="font-heading font-semibold">Your Anchor Response</p>
           </div>
           <p className="text-foreground leading-relaxed">{aiResponse}</p>
+        </Card>
+      )}
+
+      {/* Journal Entry */}
+      {user && (
+        <Card className="p-6 rounded-2xl">
+          <h2 className="font-heading font-semibold text-lg mb-4">Your Logbook Entry</h2>
+          <JournalEntry user={user} />
         </Card>
       )}
 

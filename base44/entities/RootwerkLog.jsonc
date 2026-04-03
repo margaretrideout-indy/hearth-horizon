@@ -1,0 +1,38 @@
+{
+  "name": "RootwerkLog",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID of the user who created this entry"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user"
+    },
+    "entry_body": {
+      "type": "string",
+      "description": "The journal entry text"
+    },
+    "sentiment_tag": {
+      "type": "string",
+      "enum": [
+        "Rooted",
+        "Reaching",
+        "Weathering",
+        "Blooming"
+      ],
+      "description": "Emotional state tag for the entry"
+    },
+    "is_private": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this entry is private or shared to the Embers feed"
+    }
+  },
+  "required": [
+    "user_id",
+    "entry_body",
+    "sentiment_tag"
+  ]
+}
