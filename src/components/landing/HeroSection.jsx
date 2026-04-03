@@ -1,6 +1,7 @@
 import React from 'react';
-import { ArrowRight, LogIn } from 'lucide-react';
+import { ArrowRight, LogIn, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 export default function HeroSection({ onCTA, onLogin }) {
@@ -22,8 +23,15 @@ export default function HeroSection({ onCTA, onLogin }) {
       <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full opacity-10 blur-3xl" style={{ background: 'hsl(35, 85%, 65%)' }} />
 
       <div className="relative max-w-4xl mx-auto px-4 py-24 md:py-32 space-y-8">
-        {/* Top right login button */}
-        <div className="absolute top-0 right-0 pt-4 pr-4">
+        {/* Top right header links */}
+        <div className="absolute top-0 right-0 pt-4 pr-4 flex items-center gap-3">
+          <Link
+            to="/install"
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+          >
+            <Download className="w-3 h-3" />
+            Install App
+          </Link>
           <Button
             onClick={onLogin}
             variant="outline"
