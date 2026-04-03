@@ -28,7 +28,7 @@ export default function InstallBanner() {
       className="mb-6"
     >
       <Link
-        to="/install-app"
+        to="/install"
         className="block relative overflow-hidden rounded-lg border border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5 p-4 hover:border-primary/50 transition-all group"
       >
         <div className="flex items-center gap-3 pr-8">

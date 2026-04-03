@@ -76,7 +76,7 @@ const AuthenticatedApp = () => {
         <Route path="/contact" element={<Contact />} />
         
         {/* Public install app guide */}
-        <Route path="/install-app" element={<InstallApp />} />
+        <Route path="/install" element={<InstallApp />} />
         
         {/* Payment routes - public but only triggered after auth */}
         <Route path="/payment/success" element={<PaymentSuccess />} />
