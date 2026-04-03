@@ -18,8 +18,12 @@ export default function PaymentSuccess() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    // Mark user as premium
-    base44.auth.updateMe({ role: 'premium' }).then(() => {
+    // Update subscription tier based on tier param and unlock full Bridge Builder access
+    const newTier = tier === 'sponsor' ? 'Steward' : 'Hearthkeeper';
+    base44.auth.updateMe({
+      subscription_tier: newTier,
+      seedling_upload_count: 0, // reset on upgrade
+    }).then(() => {
       queryClient.invalidateQueries({ queryKey: ['me'] });
     });
 

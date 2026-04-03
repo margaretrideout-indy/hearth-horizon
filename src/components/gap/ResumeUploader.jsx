@@ -6,7 +6,7 @@ import { Upload, Loader2, Sparkles, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
-export default function ResumeUploader({ profileId }) {
+export default function ResumeUploader({ profileId, isPaid, uploadCount, onUploadSuccess }) {
   const [uploading, setUploading] = useState(false);
   const [analysis, setAnalysis] = useState('');
   const inputRef = useRef(null);
@@ -47,6 +47,13 @@ Focus on strategic, operational, and leadership competencies. Write in a warm, a
         bridge_analysis: result,
       });
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+    }
+
+    // If Seedling, increment their upload count
+    if (!isPaid) {
+      await base44.auth.updateMe({ seedling_upload_count: (uploadCount || 0) + 1 });
+      queryClient.invalidateQueries({ queryKey: ['me'] });
+      if (onUploadSuccess) onUploadSuccess();
     }
 
     setUploading(false);

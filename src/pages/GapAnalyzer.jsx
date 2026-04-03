@@ -21,7 +21,8 @@ const ROLE_SUGGESTIONS = [
   'Customer Success Manager', 'Community Manager', 'DEI Consultant',
 ];
 
-const ALLOWED_TIERS = ['Hearthkeeper', 'Steward', 'Patron'];
+const PAID_TIERS = ['Hearthkeeper', 'Steward', 'Patron'];
+const SEEDLING_MONTHLY_LIMIT = 2;
 
 export default function GapAnalyzer() {
   const [dreamRole, setDreamRole] = useState('');
@@ -33,7 +34,11 @@ export default function GapAnalyzer() {
 
   const { data: user } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
   const userTier = user?.subscription_tier || 'Seedling';
-  const hasAccess = ALLOWED_TIERS.includes(userTier);
+  const isPaid = PAID_TIERS.includes(userTier);
+  const uploadCount = user?.seedling_upload_count || 0;
+  const seedlingHasUploadsLeft = uploadCount < SEEDLING_MONTHLY_LIMIT;
+  // Paid users always have access; Seedlings have access if they haven't hit the limit
+  const hasAccess = isPaid || seedlingHasUploadsLeft;
 
   const handleAnalyze = async () => {
     if (!dreamRole.trim()) return;
@@ -116,7 +121,7 @@ For each skill, assess what level a ${currentSector} professional typically has 
         <div>
           <h1 className="font-heading text-2xl font-semibold mb-2">The Bridge Builder</h1>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            The Bridge Builder requires a Hearthkeeper's flame to operate. Upgrade your tier to access skill gap analysis and resume tools.
+            The Bridge Builder's complex translation tools require a Hearthkeeper's flame to operate. Seedling tiers receive two complimentary bridge crossings (PDF uploads) per month. To continue building your bridge, please upgrade your tier.
           </p>
         </div>
         <Button asChild className="gap-2">
@@ -223,7 +228,17 @@ For each skill, assess what level a ${currentSector} professional typically has 
 
       {/* Resume Upload */}
       <Card className="p-6 rounded-2xl">
-        <ResumeUploader profileId={profile?.id} />
+        <ResumeUploader
+          profileId={profile?.id}
+          isPaid={isPaid}
+          uploadCount={uploadCount}
+          onUploadSuccess={() => queryClient.invalidateQueries({ queryKey: ['me'] })}
+        />
+        {!isPaid && (
+          <p className="text-xs text-muted-foreground mt-3">
+            {SEEDLING_MONTHLY_LIMIT - uploadCount} bridge crossing{SEEDLING_MONTHLY_LIMIT - uploadCount !== 1 ? 's' : ''} remaining this month.
+          </p>
+        )}
       </Card>
 
       {/* Past Analyses */}
