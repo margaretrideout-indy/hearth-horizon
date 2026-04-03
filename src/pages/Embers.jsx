@@ -182,7 +182,7 @@ export default function Embers() {
   const feed = uniquePosts.filter(p => !p.is_pinned);
 
   return (
-    <div className="max-w-2xl mx-auto flex flex-col" style={{ height: 'calc(100vh - 6rem)', marginBottom: '60px', paddingBottom: '80px' }}>
+    <div className="max-w-2xl mx-auto flex flex-col" style={{ height: 'calc(100dvh - 14rem)' }}>
       {/* Header */}
       <div className="mb-3 shrink-0">
         <div className="flex items-center gap-2 mb-1">

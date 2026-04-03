@@ -29,7 +29,7 @@ export default function AppLayout() {
         )}
         style={{ maxWidth: '100vw', overflowX: 'hidden' }}
       >
-        <div className="p-4 md:p-8 max-w-6xl mx-auto pb-24 lg:pb-8" style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
+        <div className="p-4 md:p-8 max-w-6xl mx-auto pb-32 lg:pb-8" style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
           <Outlet />
           <GlobalFooter />
         </div>
