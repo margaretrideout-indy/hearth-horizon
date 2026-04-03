@@ -11,19 +11,18 @@ const STANDALONE = { path: '/', label: 'Your Hearth', icon: LayoutDashboard };
 
 const NAV_GROUPS = [
   {
-    label: 'community',
+    label: 'COMMUNITY',
     items: [
       { path: '/support', label: 'The Grove', icon: HandHeart },
       { path: '/embers', label: 'The Embers', icon: Flame },
     ],
   },
   {
-    label: 'transition',
+    label: 'TRANSITION',
     items: [
       { path: '/canopy', label: 'The Canopy', icon: Trees },
       { path: '/translator', label: 'The Linguistic Bridge', icon: ArrowLeftRight },
       { path: '/gap-analyzer', label: 'The Bridge Builder', icon: Target },
-      { path: '/identity-anchor', label: 'The Rootwork', icon: Heart },
       { path: '/cultural-fit', label: 'Ecosystem Alignment', icon: Compass },
     ],
   },
@@ -95,8 +94,10 @@ export default function Sidebar({ collapsed, onToggle }) {
                 className="px-3 mb-2 font-medium tracking-widest"
                 style={{
                   fontSize: '0.7rem',
-                  letterSpacing: '0.1em',
-                  color: 'hsla(280, 60%, 72%, 0.7)',
+                  letterSpacing: '0.12em',
+                  color: 'hsl(280, 65%, 72%)',
+                  textTransform: 'uppercase',
+                  fontWeight: 600,
                 }}
               >
                 {group.label}
