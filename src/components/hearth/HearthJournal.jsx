@@ -19,9 +19,24 @@ const SENTIMENT_TAGS = [
 
 const SENTIMENT_MAP = Object.fromEntries(SENTIMENT_TAGS.map(s => [s.value, s]));
 
+const DAILY_PROMPTS = [
+  { day: 'Sunday',    theme: 'Rest & Reciprocity',    prompt: 'Indigenous methodologies remind us to rest as part of the cycle. What did you do today to tend to your own internal hearth?' },
+  { day: 'Monday',    theme: 'The Curriculum of Life', prompt: 'If your years of public-sector experience were a Masterclass for the private sector, what would the title of the first module be?' },
+  { day: 'Tuesday',   theme: 'Ecosystem Mapping',      prompt: 'Which kind of organization in your new territory felt most like "home" today — and what made it feel that way?' },
+  { day: 'Wednesday', theme: 'The Bridge Phrase',      prompt: 'Take one task you did today and translate it into private-sector language. How does it feel to say it that way?' },
+  { day: 'Thursday',  theme: 'Schedule Sovereignty',   prompt: 'What would "sovereignty" look like in your workday next year? Describe a morning where you truly own your time.' },
+  { day: 'Friday',    theme: 'Community Embers',       prompt: 'What is one piece of unspoken wisdom you gathered this week that a fellow Seedling or Hearthkeeper might need to hear?' },
+  { day: 'Saturday',  theme: 'The Horizon View',       prompt: 'Step away from the resume for a moment. When you look at your new career horizon, what is the one thing you are most excited to learn — not just do?' },
+];
+
+function getDailyPrompt() {
+  return DAILY_PROMPTS[new Date().getDay()];
+}
+
 export default function HearthJournal({ user }) {
   const [entryBody, setEntryBody] = useState('');
   const [sentimentTag, setSentimentTag] = useState('Rooted');
+  const dailyPrompt = getDailyPrompt();
   const [isPrivate, setIsPrivate] = useState(true);
   const [saving, setSaving] = useState(false);
   const queryClient = useQueryClient();
@@ -90,12 +105,15 @@ export default function HearthJournal({ user }) {
           }}
         >
           <div>
-            <label className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-3 block">Your reflection</label>
+            <div className="flex items-baseline justify-between mb-3">
+              <label className="text-xs uppercase tracking-widest text-muted-foreground/60">Your reflection</label>
+              <span className="text-[10px] text-muted-foreground/35 italic">{dailyPrompt.day} · {dailyPrompt.theme}</span>
+            </div>
             <Textarea
-              placeholder="Take your time. There are no wrong answers here…"
+              placeholder={dailyPrompt.prompt}
               value={entryBody}
               onChange={e => setEntryBody(e.target.value)}
-              className="min-h-[160px] text-base resize-none border-0 bg-transparent focus-visible:ring-0 placeholder:text-muted-foreground/30 text-foreground/90 leading-relaxed"
+              className="min-h-[160px] text-base resize-none border-0 bg-transparent focus-visible:ring-0 placeholder:text-muted-foreground/25 text-foreground/90 leading-relaxed"
               style={{
                 background: 'hsla(280, 20%, 8%, 0.4)',
                 borderRadius: '0.75rem',
