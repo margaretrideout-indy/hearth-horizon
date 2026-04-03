@@ -72,7 +72,7 @@ export default function Support() {
   const handleCheckout = async () => {
     setLoading(true);
     const origin = window.location.origin;
-    const res = await base44.functions.createCheckout({
+    const res = await base44.functions.invoke("createCheckout", {
       tier: selectedTier,
       userEmail: user?.email,
       successUrl: `${origin}/payment/success?tier=${selectedTier}`,
