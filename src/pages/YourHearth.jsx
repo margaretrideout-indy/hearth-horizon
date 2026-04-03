@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/lib/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import WelcomeHeader from '../components/dashboard/WelcomeHeader';
 import RoadmapProgress from '../components/dashboard/RoadmapProgress';
 import BrigidMessage from '../components/hearth/BrigidMessage';
@@ -14,30 +13,6 @@ import { Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function YourHearth() {
-  const { isAuthenticated, isLoadingAuth } = useAuth();
-  const navigate = useNavigate();
-
-  // Redirect unauthenticated users to /gateway
-  useEffect(() => {
-    if (!isLoadingAuth && !isAuthenticated) {
-      navigate('/gateway');
-    }
-  }, [isAuthenticated, isLoadingAuth, navigate]);
-
-  // Show loading while checking auth
-  if (isLoadingAuth) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  // Don't render if not authenticated (redirecting)
-  if (!isAuthenticated) {
-    return null;
-  }
-
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
     queryFn: () => base44.entities.UserProfile.list(),

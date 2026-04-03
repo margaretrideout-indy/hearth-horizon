@@ -24,7 +24,8 @@ import Gateway from './pages/Gateway';
 
 // Component to protect routes that require authentication
 const ProtectedRoute = ({ element, requiredAuth = true }) => {
-  const { isAuthenticated, isLoadingAuth, navigateToLogin } = useAuth();
+  const { isAuthenticated, isLoadingAuth } = useAuth();
+  const navigate = require('react-router-dom').useNavigate();
 
   if (isLoadingAuth) {
     return (
@@ -35,7 +36,7 @@ const ProtectedRoute = ({ element, requiredAuth = true }) => {
   }
 
   if (requiredAuth && !isAuthenticated) {
-    navigateToLogin();
+    navigate('/gateway');
     return null;
   }
 
@@ -62,8 +63,8 @@ const AuthenticatedApp = () => {
         {/* Public gateway landing page */}
         <Route path="/gateway" element={<Gateway />} />
         
-        {/* Protected member home - redirects to /gateway if not authenticated */}
-        <Route path="/" element={<YourHearth />} />
+        {/* Protected member home - requires authentication */}
+        <Route path="/" element={<ProtectedRoute element={<YourHearth />} requiredAuth={true} />} />
         
         {/* Protected routes - require authentication */}
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} requiredAuth={true} />} />

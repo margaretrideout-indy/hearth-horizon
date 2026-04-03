@@ -15,7 +15,13 @@ export default function Gateway() {
 
   const handleEnterForest = () => {
     import('@/api/base44Client').then(m => {
-      m.base44.auth.redirectToLogin(window.location.href);
+      m.base44.auth.redirectToLogin('/');
+    });
+  };
+
+  const handleJoinFoundingForest = () => {
+    import('@/api/base44Client').then(m => {
+      m.base44.auth.redirectToLogin('/');
     });
   };
 
@@ -161,7 +167,7 @@ export default function Gateway() {
             <p className="text-muted-foreground text-lg">
               Be among the first to access Hearth & Horizon at our legacy founding member rate. Limited to the first 25 members.
             </p>
-            <Button onClick={handleEnterForest} size="lg" className="w-full sm:w-auto gap-2 mt-2">
+            <Button onClick={handleJoinFoundingForest} size="lg" className="w-full sm:w-auto gap-2 mt-2">
               <Heart className="w-4 h-4" />
               Join the Founding Forest
             </Button>
