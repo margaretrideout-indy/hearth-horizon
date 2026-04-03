@@ -6,6 +6,7 @@ import WelcomeHeader from '../components/dashboard/WelcomeHeader';
 import RoadmapProgress from '../components/dashboard/RoadmapProgress';
 import BrigidMessage from '../components/hearth/BrigidMessage';
 import HearthJournal from '../components/hearth/HearthJournal';
+import HeroSection from '../components/landing/HeroSection';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart, LogIn } from 'lucide-react';
@@ -46,38 +47,49 @@ export default function YourHearth() {
 
   if (!isAuthenticated) {
     return (
-      <div className="space-y-8">
-        <div className="space-y-4">
-          <div>
-            <p className="text-sm text-secondary font-medium mb-1">Welcome to</p>
-            <h1 className="font-heading text-4xl font-bold text-foreground mb-3">Hearth & Horizon</h1>
-            <p className="text-muted-foreground max-w-2xl text-lg leading-relaxed">
-              A sanctuary and toolkit for public-sector professionals grounding their history and mapping their horizon. Find your footing, translate your value, and build a bridge to your new horizon — without losing who you are.
-            </p>
-          </div>
-          <div className="flex gap-3 pt-4">
-            <Button onClick={navigateToLogin} className="gap-2">
-              <LogIn className="w-4 h-4" />
-              Sign In
-            </Button>
-            <Button onClick={navigateToLogin} variant="outline">
-              Create Account
-            </Button>
+      <div className="space-y-0">
+        {/* Hero Section */}
+        <HeroSection onCTA={navigateToLogin} />
+
+        {/* Login/Signup CTA Section */}
+        <div className="bg-background px-4 py-16 md:py-20">
+          <div className="max-w-4xl mx-auto space-y-6">
+            <div className="text-center space-y-4">
+              <h2 className="font-heading text-2xl md:text-3xl font-semibold text-foreground">Ready to begin?</h2>
+              <p className="text-muted-foreground max-w-xl mx-auto">
+                Join our community of public-sector professionals finding their footing in new horizons.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button onClick={navigateToLogin} size="lg" className="gap-2">
+                <LogIn className="w-4 h-4" />
+                Sign In
+              </Button>
+              <Button onClick={navigateToLogin} size="lg" variant="outline">
+                Create Account
+              </Button>
+            </div>
           </div>
         </div>
 
-        <Card className="p-6 rounded-2xl border-border/50 bg-card/50">
-          <div className="space-y-4">
-            <h2 className="font-heading text-2xl font-semibold">Join the Founding Forest</h2>
-            <p className="text-muted-foreground">
-              Be part of a community building a new way forward. Limited founding member spots at legacy rates.
-            </p>
-            <Button onClick={navigateToLogin} size="lg" className="w-full gap-2">
-              <Heart className="w-4 h-4" />
-              Join the Founding Forest
-            </Button>
-          </div>
-        </Card>
+        {/* Founding Forest CTA */}
+        <div className="bg-background px-4 py-12 md:py-16">
+          <Card className="p-8 rounded-2xl border-secondary/30 bg-gradient-to-br from-secondary/10 to-secondary/5">
+            <div className="max-w-2xl mx-auto space-y-4 text-center">
+              <h2 className="font-heading text-3xl font-semibold text-foreground">Join the Founding Forest</h2>
+              <p className="text-muted-foreground text-lg">
+                Be among the first to access Hearth & Horizon at our legacy founding member rate. Limited to the first 25 members.
+              </p>
+              <Button onClick={navigateToLogin} size="lg" className="w-full sm:w-auto gap-2 mt-2">
+                <Heart className="w-4 h-4" />
+                Join the Founding Forest
+              </Button>
+              <p className="text-xs text-muted-foreground/70 italic">
+                Founding rate locked for the first 25 members. After that, standard pricing applies.
+              </p>
+            </div>
+          </Card>
+        </div>
       </div>
     );
   }
