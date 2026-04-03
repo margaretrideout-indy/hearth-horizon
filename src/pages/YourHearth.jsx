@@ -13,6 +13,8 @@ import { Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function YourHearth() {
+  const { isAuthenticated } = useAuth();
+
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
     queryFn: () => base44.entities.UserProfile.list(),
