@@ -42,7 +42,7 @@ function isFounderPost(post) {
   return post.author_name?.toLowerCase().includes('margaret');
 }
 
-function ChatBubble({ post, isOwn, currentUserTier }) {
+function ChatBubble({ post, isOwn, currentUserTier, currentUserIsFoundingSeedling }) {
   const founder = isFounderPost(post);
   const sentiment = post.sentiment_tag;
 
@@ -57,12 +57,13 @@ function ChatBubble({ post, isOwn, currentUserTier }) {
         {post.is_pinned && <Pin className="w-2.5 h-2.5 text-secondary shrink-0" />}
         <span className="text-[10px] font-medium text-muted-foreground/70">
           {post.author_name}
+          {post.is_founding_member && <span className="ml-1">🍃</span>}
         </span>
         {isOwn && currentUserTier && (
-          <SubscriptionBadge tier={currentUserTier} isFounder={founder} />
+          <SubscriptionBadge tier={currentUserTier} isFounder={founder} isFoundingSeedling={currentUserIsFoundingSeedling} />
         )}
         {!isOwn && (
-          <SubscriptionBadge tier={post.subscription_tier || 'Seedling'} isFounder={founder} />
+          <SubscriptionBadge tier={post.subscription_tier || 'Seedling'} isFounder={founder} isFoundingSeedling={post.is_founding_member} />
         )}
         {sentiment && (
           <span
@@ -154,6 +155,7 @@ export default function Embers() {
       is_pinned: false,
       is_bot: false,
       subscription_tier: user.subscription_tier || 'Seedling',
+      is_founding_member: user.is_founding_member || false,
     });
     queryClient.invalidateQueries({ queryKey: ['emberPosts'] });
     setMessage('');
@@ -229,6 +231,7 @@ export default function Embers() {
               post={post}
               isOwn={post.author_email === user?.email}
               currentUserTier={user?.subscription_tier}
+              currentUserIsFoundingSeedling={user?.is_founding_member}
             />
           ))}
         </AnimatePresence>

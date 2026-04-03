@@ -15,17 +15,21 @@ export default function CompanyMatcher({ valuesProfile }) {
     setIsLoading(true);
 
     const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are a career culture expert. A public-sector professional has these non-negotiable values: ${valuesProfile.non_negotiables.join(', ')}.
+      prompt: `You are a career culture expert specialising in Canadian public-sector transitions. A professional has these non-negotiable values: ${valuesProfile.non_negotiables.join(', ')}.
 
-Generate 5 "Company Archetypes" that match their values. Each archetype should represent a type of company, not a specific company.
+Generate 5 "Company Archetypes" that match their values. Each archetype should represent a type of organization, not a single company.
 
 For each archetype, provide:
-- A descriptive archetype name (e.g., "Mission-Driven EdTech", "B-Corp Social Enterprise")
-- A match score (70-98)
-- A brief description of why this fits
-- 3 real-world example companies
+- A descriptive archetype name (e.g., "Diverse Nonprofit", "Public Sector Innovation Lab", "B-Corp Social Enterprise", "Sustainable Tech")
+- A Horizon Alignment Score (70-98)
+- A brief description of why this fits their values
+- 3 real-world example organizations, prioritising Canadian examples such as:
+  - Diverse Nonprofit: United Way Canada, Indigenous Clean Energy, Ecojustice
+  - Public Sector Innovation: Code for Canada, Ontario Digital Service, BC Digital Service
+  - B-Corp: Lush (NA), Cheekbone Beauty, Beau's Brewing
+  - Sustainable Tech: Shopify (Sustainability), Carbon Engineering, Hopper
 
-Focus on companies that would appeal to someone with public-sector ethics. Steer away from aggressive growth-at-all-costs cultures.`,
+Focus on mission-driven cultures that would resonate with someone coming from public service. Steer away from aggressive growth-at-all-costs cultures.`,
       response_json_schema: {
         type: "object",
         properties: {
@@ -70,7 +74,7 @@ Focus on companies that would appeal to someone with public-sector ethics. Steer
       <Card className="p-6 rounded-2xl">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="font-heading font-semibold text-lg">Company DNA Matcher</h2>
+            <h2 className="font-heading font-semibold text-lg" style={{ color: 'hsl(183, 80%, 55%)' }}>Potential New Territories</h2>
             <p className="text-sm text-muted-foreground">
               Based on your {valuesProfile.non_negotiables.length} non-negotiable values
             </p>
@@ -113,12 +117,15 @@ Focus on companies that would appeal to someone with public-sector ethics. Steer
                       <Building2 className="w-5 h-5 text-secondary" />
                     </div>
                     <div>
-                      <h3 className="font-heading font-semibold text-sm">{match.archetype}</h3>
+                      <h3 className="font-heading font-semibold text-sm" style={{ color: 'hsl(183, 80%, 55%)' }}>{match.archetype}</h3>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1 bg-secondary/10 px-2 py-1 rounded-lg">
-                    <Star className="w-3 h-3 text-secondary fill-secondary" />
-                    <span className="text-sm font-semibold text-secondary">{match.match_score}%</span>
+                  <div className="flex flex-col items-end gap-0.5">
+                    <div className="flex items-center gap-1 px-2 py-1 rounded-lg" style={{ background: 'hsla(280, 65%, 72%, 0.12)', border: '1px solid hsla(280, 65%, 72%, 0.25)' }}>
+                      <Star className="w-3 h-3 fill-current" style={{ color: 'hsl(280, 65%, 72%)' }} />
+                      <span className="text-sm font-semibold" style={{ color: 'hsl(280, 65%, 72%)' }}>{match.match_score}%</span>
+                    </div>
+                    <span className="text-[9px] text-muted-foreground/50 tracking-wide">Horizon Alignment</span>
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground mb-3 leading-relaxed">{match.description}</p>

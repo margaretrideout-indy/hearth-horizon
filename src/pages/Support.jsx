@@ -10,13 +10,16 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import VoucherPoolStatus from '../components/support/VoucherPoolStatus';
 import SeedlingTierCard from '../components/support/SeedlingTierCard';
+import FoundingCounter, { useFoundingCount } from '../components/support/FoundingCounter';
 
-const TIERS = [
+const FOUNDING_TIERS = [
   {
     id: 'supporter',
-    label: 'The hearthkeeper',
+    label: 'The Hearthkeeper',
     price: '$5 / month',
     amount: 5,
+    founding_price: '$3 / month',
+    founding_amount: 3,
     icon: Heart,
     color: 'border-secondary bg-secondary/8',
     activeColor: 'border-secondary bg-secondary/15',
@@ -26,15 +29,17 @@ const TIERS = [
   },
   {
     id: 'sponsor',
-    label: 'The steward',
+    label: 'The Steward',
     price: '$8 / month',
     amount: 8,
+    founding_price: '$5 / month',
+    founding_amount: 5,
     icon: Gift,
     color: 'border-border bg-card',
     activeColor: 'border-secondary bg-secondary/15',
     iconColor: 'text-muted-foreground',
-    description: 'A reciprocity model — your $8/month sponsors a peer seat for someone in financial transition. No one gets left behind.',
-    perks: ['Everything in The hearthkeeper', 'Sponsors 1 peer seat monthly'],
+    description: 'A reciprocity model — your contribution sponsors a peer seat for someone in financial transition. No one gets left behind.',
+    perks: ['Everything in The Hearthkeeper', 'Sponsors 1 peer seat monthly'],
     badge: 'Reciprocity',
   },
 ];
@@ -50,6 +55,14 @@ export default function Support() {
   const [seedAmount, setSeedAmount] = useState('');
   const [seedLoading, setSeedLoading] = useState(false);
   const queryClient = useQueryClient();
+  const { isFoundingActive, spotsLeft } = useFoundingCount();
+
+  // Pick pricing based on founding status
+  const TIERS = FOUNDING_TIERS.map(t => ({
+    ...t,
+    price: isFoundingActive ? t.founding_price : t.price,
+    amount: isFoundingActive ? t.founding_amount : t.amount,
+  }));
 
   const { data: user } = useQuery({
     queryKey: ['me'],
@@ -209,12 +222,27 @@ export default function Support() {
 
           <Button onClick={handleCheckout} disabled={loading} className="w-full h-11 text-base gap-2">
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Heart className="w-4 h-4" />}
-            {loading ? 'Opening the path…' : `Tend the fire — ${tier?.price}`}
+            {loading
+              ? 'Opening the path…'
+              : isFoundingActive
+              ? `Founding Member Rate (Locked) — ${tier?.price}`
+              : `Standard Membership — ${tier?.price}`}
           </Button>
+
+          {isFoundingActive && (
+            <p className="text-center text-xs font-medium" style={{ color: 'hsl(152, 60%, 48%)' }}>
+              🍃 Founding Forest: <strong>{spotsLeft}</strong> spot{spotsLeft !== 1 ? 's' : ''} remaining at our legacy rate.
+            </p>
+          )}
 
           <p className="text-center text-xs text-muted-foreground">
             Secured by Stripe · Cancel anytime · No pressure, ever
           </p>
+          {isFoundingActive && (
+            <p className="text-center text-[10px] text-muted-foreground/50 italic">
+              Founding rate locked for the first 25 members.
+            </p>
+          )}
         </Card>
       )}
 

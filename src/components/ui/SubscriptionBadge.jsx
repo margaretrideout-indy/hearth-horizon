@@ -42,10 +42,23 @@ const BADGE_CONFIG = {
     style: { fontWeight: 600 },
     glow: '0 0 6px 1px hsla(280, 65%, 72%, 0.45)',
   },
+  FoundingSeedling: {
+    emoji: '🍃',
+    label: 'Founding Seedling',
+    color: 'hsl(152, 60%, 48%)',
+    bg: 'hsla(152, 60%, 48%, 0.12)',
+    border: 'hsla(152, 60%, 48%, 0.4)',
+    style: { fontWeight: 600 },
+    glow: '0 0 6px 1px hsla(152, 60%, 48%, 0.35)',
+  },
 };
 
-export default function SubscriptionBadge({ tier, isFounder }) {
-  const config = isFounder ? BADGE_CONFIG.Founder : BADGE_CONFIG[tier] || BADGE_CONFIG.Seedling;
+export default function SubscriptionBadge({ tier, isFounder, isFoundingSeedling }) {
+  const config = isFoundingSeedling
+    ? BADGE_CONFIG.FoundingSeedling
+    : isFounder
+    ? BADGE_CONFIG.Founder
+    : BADGE_CONFIG[tier] || BADGE_CONFIG.Seedling;
 
   return (
     <span

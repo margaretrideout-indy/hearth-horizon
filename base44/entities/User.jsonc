@@ -25,6 +25,16 @@
       "type": "integer",
       "default": 0,
       "description": "Number of Bridge Builder PDF uploads used this month (Seedling tier only)"
+    },
+    "is_founding_member": {
+      "type": "boolean",
+      "default": false,
+      "description": "True for the first 25 members who completed a paid checkout"
+    },
+    "founding_member_number": {
+      "type": "integer",
+      "description": "Sequential number (1\u201325) assigned to founding members"
     }
-  }
+  },
+  "required": []
 }

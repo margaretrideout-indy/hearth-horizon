@@ -20,12 +20,25 @@ export default function PaymentSuccess() {
   useEffect(() => {
     // Update subscription tier based on tier param and unlock full Bridge Builder access
     const newTier = tier === 'sponsor' ? 'Steward' : 'Hearthkeeper';
-    base44.auth.updateMe({
-      subscription_tier: newTier,
-      seedling_upload_count: 0, // reset on upgrade
-    }).then(() => {
+
+    const assignTier = async () => {
+      // Count existing founding members to determine if this user qualifies
+      const allUsers = await base44.entities.User.list();
+      const foundingCount = allUsers.filter(u => u.is_founding_member).length;
+      const isFoundingMember = foundingCount < 25;
+      const foundingNumber = isFoundingMember ? foundingCount + 1 : undefined;
+
+      const update = {
+        subscription_tier: newTier,
+        seedling_upload_count: 0,
+        ...(isFoundingMember && { is_founding_member: true, founding_member_number: foundingNumber }),
+      };
+      await base44.auth.updateMe(update);
       queryClient.invalidateQueries({ queryKey: ['me'] });
-    });
+      queryClient.invalidateQueries({ queryKey: ['foundingCount'] });
+    };
+
+    assignTier();
 
     // If sponsor, add a voucher to the pool
     if (tier === 'sponsor') {
