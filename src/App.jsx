@@ -61,10 +61,10 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route element={<AppLayout />}>
         {/* Public gateway landing page */}
-        <Route path="/gateway" element={<Gateway />} />
+        <Route path="/" element={<Gateway />} />
         
         {/* Protected member home - requires authentication */}
-        <Route path="/" element={<ProtectedRoute element={<YourHearth />} requiredAuth={true} />} />
+        <Route path="/hearth" element={<ProtectedRoute element={<YourHearth />} requiredAuth={true} />} />
         
         {/* Protected routes - require authentication */}
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} requiredAuth={true} />} />
