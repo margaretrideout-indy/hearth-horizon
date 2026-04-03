@@ -60,7 +60,7 @@ export default function GlobalFooter() {
     <>
       <footer
         className="mt-16 py-6 border-t border-border/20 text-center space-y-2"
-        style={{ position: 'relative' }}
+        style={{ position: 'relative', lineHeight: 1.6 }}
       >
         <p
           className="text-xs text-muted-foreground/50"

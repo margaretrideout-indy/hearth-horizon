@@ -102,7 +102,7 @@ Focus on mission-driven cultures that would resonate with someone coming from pu
       )}
 
       {!isLoading && matches.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
           {matches.map((match, i) => (
             <motion.div
               key={i}
@@ -110,7 +110,7 @@ Focus on mission-driven cultures that would resonate with someone coming from pu
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
             >
-              <Card className="p-5 rounded-2xl h-full hover:shadow-md transition-shadow">
+              <Card className="p-5 rounded-2xl h-full hover:shadow-md transition-shadow" style={{ flex: '1 1 280px', minWidth: 0 }}>
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center">

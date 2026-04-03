@@ -27,7 +27,7 @@ export default function CulturalFit() {
   const [activeTab, setActiveTab] = useState(valuesProfile ? 'matcher' : 'compass');
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
       {/* Header */}
       <div>
         <div className="flex items-center gap-2 mb-1">
@@ -41,8 +41,8 @@ export default function CulturalFit() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        {/* Mobile: vertical stack */}
-        <div className="flex sm:hidden flex-col gap-3 w-full">
+        {/* Mobile/Tablet: vertical stack (under lg) */}
+        <div className="flex lg:hidden flex-col gap-3 w-full">
           {TAB_ITEMS.map(item => {
             const isActive = activeTab === item.value;
             return (
@@ -53,15 +53,10 @@ export default function CulturalFit() {
                 style={{
                   padding: '14px 16px',
                   textAlign: 'left',
-                  borderLeft: isActive ? '3px solid hsl(var(--secondary))' : '3px solid transparent',
-                  background: isActive
-                    ? 'hsla(280, 50%, 35%, 0.25)'
-                    : 'hsla(280, 20%, 18%, 0.5)',
+                  background: isActive ? 'hsla(280, 50%, 35%, 0.25)' : 'hsla(280, 20%, 18%, 0.5)',
                   boxShadow: isActive ? '0 0 14px 0 hsla(280, 65%, 55%, 0.2)' : 'none',
                   color: isActive ? 'hsl(183, 80%, 70%)' : 'hsl(270, 15%, 70%)',
-                  border: isActive
-                    ? '1px solid hsla(280, 50%, 55%, 0.3)'
-                    : '1px solid hsla(280, 20%, 30%, 0.3)',
+                  border: isActive ? '1px solid hsla(280, 50%, 55%, 0.3)' : '1px solid hsla(280, 20%, 30%, 0.3)',
                   borderLeftWidth: '3px',
                   borderLeftColor: isActive ? 'hsl(var(--secondary))' : 'transparent',
                 }}
@@ -75,7 +70,7 @@ export default function CulturalFit() {
 
         {/* Desktop: horizontal scroll tabs */}
         <div
-          className="hidden sm:flex [&::-webkit-scrollbar]:hidden"
+          className="hidden lg:flex [&::-webkit-scrollbar]:hidden"
           style={{
             overflowX: 'scroll',
             WebkitOverflowScrolling: 'touch',
