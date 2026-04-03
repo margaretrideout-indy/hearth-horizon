@@ -57,7 +57,7 @@ export default function HearthJournal({ user }) {
       queryClient.invalidateQueries({ queryKey: ['emberPosts'] });
       toast.success('Your words have been offered to the Embers.');
     } else {
-      toast.success('Your entry has been held in the Hearth.');
+      toast.success('Your thoughts are safe in the Hearth.');
     }
 
     queryClient.invalidateQueries({ queryKey: ['rootwerkLogs', user.id] });
