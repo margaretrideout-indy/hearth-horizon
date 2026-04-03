@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Heart, Gift, Loader2, CheckCircle, Upload, Filter, Sprout } from 'lucide-react';
+import { Heart, Gift, CheckCircle, Upload, Filter, Sprout } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { toast } from 'sonner';
 import VoucherPoolStatus from '../components/support/VoucherPoolStatus';
 import SeedlingTierCard from '../components/support/SeedlingTierCard';
 import FoundingCounter, { useFoundingCount } from '../components/support/FoundingCounter';
+
+const STRIPE_LINKS = {
+  supporter: 'https://buy.stripe.com/00w00jdy0gCz0DWaG6dAk00',
+  sponsor: 'https://buy.stripe.com/eVq14n2Tm4TR4UcaG6dAk01',
+  seed: 'https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02',
+};
 
 const FOUNDING_TIERS = [
   {
@@ -51,10 +55,7 @@ const PERK_ICONS = {
 
 export default function Support() {
   const [selectedTier, setSelectedTier] = useState('supporter');
-  const [loading, setLoading] = useState(false);
   const [seedAmount, setSeedAmount] = useState('');
-  const [seedLoading, setSeedLoading] = useState(false);
-  const queryClient = useQueryClient();
   const { isFoundingActive, spotsLeft } = useFoundingCount();
 
   // Pick pricing based on founding status
@@ -64,48 +65,7 @@ export default function Support() {
     amount: isFoundingActive ? t.founding_amount : t.amount,
   }));
 
-  const { data: user } = useQuery({
-    queryKey: ['me'],
-    queryFn: () => base44.auth.me(),
-  });
-
-  const handleCheckout = async () => {
-    setLoading(true);
-    const origin = window.location.origin;
-    const res = await base44.functions.invoke("createCheckout", {
-      tier: selectedTier,
-      userEmail: user?.email,
-      successUrl: `${origin}/payment/success?tier=${selectedTier}`,
-      cancelUrl: `${origin}/payment/cancel`,
-    });
-    if (res.url) {
-      window.location.href = res.url;
-    } else {
-      setLoading(false);
-    }
-  };
-
   const tier = TIERS.find(t => t.id === selectedTier);
-
-  const handleSeedFund = async () => {
-    const amount = parseFloat(seedAmount);
-    if (!amount || amount <= 0) return;
-    setSeedLoading(true);
-    // Each $3 (or part thereof) sponsors one seat
-    const seats = Math.floor(amount / 3);
-    if (seats > 0) {
-      const vouchers = Array.from({ length: seats }, () => ({
-        sponsor_email: user?.email || 'anonymous',
-        amount_paid: 3,
-        status: 'available',
-      }));
-      await base44.entities.VoucherPool.bulkCreate(vouchers);
-      queryClient.invalidateQueries({ queryKey: ['vouchers'] });
-    }
-    toast.success(`Thank you. Your seed funds ${seats > 0 ? `${seats} sponsored seat${seats > 1 ? 's' : ''}` : 'the grove'} for a colleague in transition.`);
-    setSeedAmount('');
-    setSeedLoading(false);
-  };
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
@@ -186,12 +146,11 @@ export default function Support() {
             </p>
           )}
           <Button
-            onClick={handleSeedFund}
-            disabled={!seedAmount || parseFloat(seedAmount) <= 0 || seedLoading}
+            onClick={() => { window.location.href = STRIPE_LINKS.seed; }}
             variant="outline"
             className="w-full gap-2 border-secondary/30 text-secondary hover:bg-secondary/10"
           >
-            {seedLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sprout className="w-4 h-4" />}
+            <Sprout className="w-4 h-4" />
             Contribute to the grove
           </Button>
           <p className="text-center text-xs text-muted-foreground">
@@ -221,8 +180,7 @@ export default function Support() {
           </div>
 
           <Button
-            onClick={handleCheckout}
-            disabled={loading}
+            onClick={() => { window.location.href = STRIPE_LINKS[selectedTier]; }}
             className="w-full gap-2"
             style={{
               height: 'auto',
@@ -233,11 +191,9 @@ export default function Support() {
               width: '100%',
             }}
           >
-            {loading ? <Loader2 className="w-4 h-4 animate-spin shrink-0" /> : <Heart className="w-4 h-4 shrink-0" />}
+            <Heart className="w-4 h-4 shrink-0" />
             <span>
-              {loading
-                ? 'Opening the path…'
-                : isFoundingActive
+              {isFoundingActive
                 ? `Founding Member Rate (Locked) — ${tier?.price}`
                 : `Standard Membership — ${tier?.price}`}
             </span>
