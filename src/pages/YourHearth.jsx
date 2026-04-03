@@ -13,7 +13,7 @@ import { Heart, LogIn } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function YourHearth() {
-  const { isAuthenticated, navigateToLogin } = useAuth();
+  const { isAuthenticated, navigateToLogin, isLoadingAuth } = useAuth();
 
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
@@ -27,6 +27,11 @@ export default function YourHearth() {
     queryFn: () => base44.auth.me(),
     enabled: isAuthenticated,
   });
+
+  // Show nothing while auth is checking to prevent flashing content
+  if (isLoadingAuth) {
+    return null;
+  }
 
   const profile = profiles[0] || null;
 
