@@ -3,17 +3,17 @@ const STRIPE_SECRET_KEY = Deno.env.get("STRIPE_SECRET_KEY");
 Deno.serve(async (req) => {
   const { tier, userEmail, successUrl, cancelUrl } = await req.json();
 
-  // Tier config: supporter=$3/month, sponsor=$5/month
+  // Tier config: hearthkeeper=$5/month, steward=$8/month
   const tiers: Record<string, { amount: number; name: string; description: string }> = {
     supporter: {
-      amount: 300,
-      name: "The Supporter — Pivot Path",
-      description: "A $3/month contribution that keeps Pivot Path accessible for public-sector professionals.",
+      amount: 500,
+      name: "The Hearthkeeper — Hearth & Horizon",
+      description: "A $5/month contribution that keeps Hearth & Horizon accessible for public-sector professionals.",
     },
     sponsor: {
-      amount: 500,
-      name: "The Sponsor — Pivot Path",
-      description: "A $5/month subscription that sponsors a seat for an educator who can't afford access.",
+      amount: 800,
+      name: "The Steward — Hearth & Horizon",
+      description: "An $8/month subscription that sponsors a seat for an educator who can't afford access.",
     },
   };
 

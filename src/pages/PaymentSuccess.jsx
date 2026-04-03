@@ -61,12 +61,13 @@ export default function PaymentSuccess() {
         {/* Heading */}
         <div>
           <h1 className="font-heading text-3xl font-semibold text-foreground mb-2">
-            {tier === 'sponsor' ? "You're a Hero. 💚" : 'Thank You! 🌱'}
+            Welcome to the Hearth.
           </h1>
+          <p className="font-heading text-lg text-secondary mb-3">Your journey into the Horizon starts here.</p>
           <p className="text-muted-foreground leading-relaxed">
             {tier === 'sponsor'
-              ? "Your $5/month sponsors a seat for an educator who couldn't otherwise afford access. You've changed someone's trajectory."
-              : "Your $3/month contribution keeps Pivot Path accessible for public-sector professionals everywhere. We're grateful."}
+              ? "Your $8/month sponsors a seat for an educator who couldn't otherwise afford access. You've changed someone's trajectory."
+              : "Your $5/month contribution keeps Hearth & Horizon accessible for public-sector professionals everywhere. We're grateful."}
           </p>
         </div>
 
