@@ -33,11 +33,13 @@ export default function CulturalFit() {
       </div>
 
       <Tabs defaultValue={valuesProfile ? "matcher" : "compass"} className="space-y-6">
-        <TabsList className="bg-muted w-full sm:w-auto grid grid-cols-3 sm:flex">
-          <TabsTrigger value="compass">Ethics Compass</TabsTrigger>
-          <TabsTrigger value="matcher">Company Matcher</TabsTrigger>
-          <TabsTrigger value="translator">Culture Translator</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <TabsList className="bg-muted h-auto p-1 flex flex-nowrap gap-3 w-max">
+            <TabsTrigger value="compass" className="flex-shrink-0 px-4">Ethics Compass</TabsTrigger>
+            <TabsTrigger value="matcher" className="flex-shrink-0 px-4">Company Matcher</TabsTrigger>
+            <TabsTrigger value="translator" className="flex-shrink-0 px-4">Culture Translator</TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="compass">
           <EthicsCompass
