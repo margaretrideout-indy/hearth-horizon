@@ -41,19 +41,9 @@ export default function HeroSection({ onCTA }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-xl text-muted-foreground leading-relaxed max-w-3xl"
+          className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl"
         >
-          You've spent years building your expertise, but now you're standing at a crossroads. Welcome to Hearth & Horizon—a sanctuary designed for professionals ready to transition from institutional roles into the modern landscapes of tech and remote work.
-        </motion.p>
-
-        {/* Body Text */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-lg text-foreground/80 leading-relaxed max-w-2xl"
-        >
-          This is a space for those who want to move forward without losing their sense of purpose. Whether you are here to explore the Grove or find your seat in the Founding Forest, you are exactly where you need to be.
+          You've spent years building your expertise, but now you're standing at a crossroads. Welcome to Hearth & Horizon—a sanctuary designed for professionals ready to transition from institutional roles into tech and remote work.
         </motion.p>
 
         {/* CTA Button */}
@@ -77,11 +67,11 @@ export default function HeroSection({ onCTA }) {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
           className="text-xs text-muted-foreground/60 italic pt-8"
           style={{ borderTop: '1px solid hsl(280, 15%, 26%)' }}
         >
-          Founded by Margaret, M.Ed. | 13 Years of Curriculum & Program Leadership
+          Founded by Margaret, M.Ed. | 13 Years of Leadership
         </motion.p>
       </div>
     </div>
