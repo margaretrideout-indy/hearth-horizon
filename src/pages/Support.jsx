@@ -225,12 +225,12 @@ export default function Support() {
             disabled={loading}
             className="w-full gap-2"
             style={{
-              minHeight: '44px',
               height: 'auto',
-              fontSize: '0.9rem',
+              fontSize: '14px',
               whiteSpace: 'normal',
               padding: '12px 20px',
               lineHeight: 1.4,
+              width: '100%',
             }}
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin shrink-0" /> : <Heart className="w-4 h-4 shrink-0" />}

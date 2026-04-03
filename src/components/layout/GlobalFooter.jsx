@@ -66,11 +66,9 @@ export default function GlobalFooter() {
           className="text-xs text-muted-foreground/50"
           style={{ lineHeight: 1.6 }}
         >
-          <span className="block sm:inline">Hearth &amp; Horizon</span>
-          <span className="hidden sm:inline"> &nbsp;·&nbsp; </span>
-          <span className="block sm:inline">Dartmouth, NS, Canada</span>
-          <span className="hidden sm:inline"> &nbsp;·&nbsp; </span>
-          <span className="block sm:inline">Built for the Caregivers of the World.</span>
+          <span className="block">Hearth &amp; Horizon</span>
+          <span className="block">Dartmouth, NS, Canada</span>
+          <span className="block">Built for the Caregivers of the World.</span>
         </p>
         <div className="flex flex-wrap justify-center gap-3 text-xs text-muted-foreground/40">
           <Link to="/contact" className="hover:text-secondary transition-colors">Contact Support</Link>

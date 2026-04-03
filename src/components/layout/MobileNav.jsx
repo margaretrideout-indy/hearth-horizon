@@ -11,6 +11,7 @@ const navItems = [
   { path: '/embers', label: 'Embers', icon: Flame },
   { path: '/canopy', label: 'Canopy', icon: Trees },
   { path: '/support', label: 'Grove', icon: HandHeart },
+  { path: '/cultural-fit', label: 'Ecosystem', icon: Compass },
 ];
 
 export default function MobileNav() {
