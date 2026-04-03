@@ -51,17 +51,21 @@ export default function Sidebar({ collapsed, onToggle }) {
       }}
     >
       {/* Logo */}
-      <div className="p-4 flex items-center gap-3 border-b border-sidebar-border/40">
+      <Link
+        to="/"
+        className="flex items-center gap-3 border-b border-sidebar-border/40 hover:opacity-80 transition-opacity"
+        style={{ padding: '12px 16px' }}
+      >
         <div className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center flex-shrink-0">
           <Compass className="w-4 h-4 text-sidebar-primary-foreground" />
         </div>
         {!collapsed && (
-          <div className="overflow-hidden">
-            <h1 className="font-heading font-semibold text-lg text-white leading-tight">Hearth & Horizon</h1>
-            <p className="text-[10px] text-sidebar-foreground/50 tracking-widest">Your sanctuary</p>
+          <div className="min-w-0 flex-1">
+            <h1 className="font-heading font-semibold text-lg text-white leading-tight truncate">Hearth & Horizon</h1>
+            <p className="text-[10px] text-sidebar-foreground/50 tracking-widest truncate">Your sanctuary</p>
           </div>
         )}
-      </div>
+      </Link>
 
       {/* Navigation Groups */}
       <nav className="flex-1 py-4 px-2 overflow-y-auto">
