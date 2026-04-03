@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -25,7 +25,7 @@ import Gateway from './pages/Gateway';
 // Component to protect routes that require authentication
 const ProtectedRoute = ({ element, requiredAuth = true }) => {
   const { isAuthenticated, isLoadingAuth } = useAuth();
-  const navigate = require('react-router-dom').useNavigate();
+  const navigate = useNavigate();
 
   if (isLoadingAuth) {
     return (
