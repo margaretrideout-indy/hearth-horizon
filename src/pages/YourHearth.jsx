@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import WelcomeHeader from '../components/dashboard/WelcomeHeader';
@@ -23,6 +23,21 @@ export default function YourHearth() {
   });
 
   const profile = profiles[0] || null;
+
+  // Seedling welcome: post to logbook on first sign-up
+  useEffect(() => {
+    if (!user) return;
+    const welcomeKey = `hearth_welcomed_${user.id}`;
+    if (localStorage.getItem(welcomeKey)) return;
+    const firstName = user.full_name?.split(' ')[0] || user.email.split('@')[0];
+    base44.entities.RootwerkLog.create({
+      user_id: user.id,
+      user_email: user.email,
+      entry_body: `Welcome to the forest, ${firstName}. You have 2 bridge crossings (PDF uploads) available this month. Your first step is to visit The Rootwork and tell us what you're leaving behind.`,
+      sentiment_tag: 'Rooted',
+      is_private: true,
+    }).then(() => localStorage.setItem(welcomeKey, '1'));
+  }, [user]);
 
   return (
     <div className="space-y-8">

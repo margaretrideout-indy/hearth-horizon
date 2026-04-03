@@ -124,7 +124,7 @@ export default function Embers() {
   const { data: user } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ['emberPosts'],
-    queryFn: () => base44.entities.EmberPost.list('created_date', 100),
+    queryFn: () => base44.entities.EmberPost.list('created_date', 50),
     refetchInterval: 15000,
   });
 
@@ -212,6 +212,14 @@ export default function Embers() {
         {isLoading && (
           <div className="flex justify-center py-8">
             <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+          </div>
+        )}
+        {!isLoading && feed.length === 0 && (
+          <div className="flex flex-col items-center justify-center h-full py-16 text-center">
+            <Flame className="w-8 h-8 text-secondary/40 mb-3" />
+            <p className="text-muted-foreground/60 text-sm italic">
+              The fire is just being lit. Be the first to share a spark.
+            </p>
           </div>
         )}
         <AnimatePresence>

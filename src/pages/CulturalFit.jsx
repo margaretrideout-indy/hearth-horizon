@@ -33,12 +33,33 @@ export default function CulturalFit() {
       </div>
 
       <Tabs defaultValue={valuesProfile ? "matcher" : "compass"} className="space-y-6">
-        <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          <TabsList className="bg-muted h-auto p-1 flex flex-nowrap gap-3 w-max">
-            <TabsTrigger value="compass" className="flex-shrink-0 px-4">Ethics Compass</TabsTrigger>
-            <TabsTrigger value="matcher" className="flex-shrink-0 px-4">Company Matcher</TabsTrigger>
-            <TabsTrigger value="translator" className="flex-shrink-0 px-4">Culture Translator</TabsTrigger>
+        <div
+          style={{
+            overflowX: 'scroll',
+            display: 'flex',
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            position: 'relative',
+          }}
+          className="[&::-webkit-scrollbar]:hidden"
+        >
+          <TabsList className="bg-muted h-auto p-1 w-max" style={{ display: 'flex', gap: '12px', flexWrap: 'nowrap' }}>
+            <TabsTrigger value="compass" style={{ flexShrink: 0, whiteSpace: 'nowrap', minWidth: 'max-content', paddingLeft: '16px', paddingRight: '16px' }}>Ethics Compass</TabsTrigger>
+            <TabsTrigger value="matcher" style={{ flexShrink: 0, whiteSpace: 'nowrap', minWidth: 'max-content', paddingLeft: '16px', paddingRight: '16px' }}>Company Matcher</TabsTrigger>
+            <TabsTrigger value="translator" style={{ flexShrink: 0, whiteSpace: 'nowrap', minWidth: 'max-content', paddingLeft: '16px', paddingRight: '16px' }}>Culture Translator</TabsTrigger>
           </TabsList>
+          {/* Gradient fade hint */}
+          <div style={{
+            position: 'sticky',
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: '32px',
+            background: 'linear-gradient(to right, transparent, hsl(var(--background)))',
+            pointerEvents: 'none',
+            flexShrink: 0,
+          }} />
         </div>
 
         <TabsContent value="compass">

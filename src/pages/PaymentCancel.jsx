@@ -44,9 +44,9 @@ export default function PaymentCancel() {
             </Link>
           </Button>
           <Button asChild className="flex-1 gap-2">
-            <Link to="/">
+            <Link to="/support">
               <ArrowLeft className="w-4 h-4" />
-              Back to Dashboard
+              Back to Pricing
             </Link>
           </Button>
         </div>

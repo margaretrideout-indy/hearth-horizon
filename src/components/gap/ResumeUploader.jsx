@@ -81,11 +81,16 @@ Focus on strategic, operational, and leadership competencies. Write in a warm, a
           className="gap-2 border-secondary/30 text-secondary hover:bg-secondary/10"
         >
           {uploading ? (
-            <><Loader2 className="w-4 h-4 animate-spin" /> Analysing your path…</>
+            <><Loader2 className="w-4 h-4 animate-spin" /> Constructing your bridge… please stay by the hearth.</>
           ) : (
             <><Upload className="w-4 h-4" /> Cross the Bridge — Upload PDF</>
           )}
         </Button>
+        {!isPaid && (
+          <p className="text-xs text-muted-foreground/60 mt-2">
+            Seedling Status: <span className="text-secondary font-medium">{uploadCount || 0} / 2</span> Crossings used this month.
+          </p>
+        )}
       </div>
 
       <AnimatePresence>

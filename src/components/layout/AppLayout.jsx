@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import MobileNav from './MobileNav';
+import GlobalFooter from './GlobalFooter';
 import { cn } from '@/lib/utils';
 
 export default function AppLayout() {
@@ -27,6 +28,7 @@ export default function AppLayout() {
       )}>
         <div className="p-4 md:p-8 max-w-6xl mx-auto">
           <Outlet />
+          <GlobalFooter />
         </div>
       </main>
     </div>
