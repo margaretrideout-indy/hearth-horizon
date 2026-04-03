@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }) => {
       console.error('Unexpected error:', error);
       setIsLoadingPublicSettings(false);
       setIsLoadingAuth(false);
+      setIsAuthenticated(false);
     }
   };
 
