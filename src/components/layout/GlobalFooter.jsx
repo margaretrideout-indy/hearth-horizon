@@ -71,11 +71,13 @@ export default function GlobalFooter() {
           <span className="block">Built for the Caregivers of the World.</span>
         </p>
         <div className="flex flex-wrap justify-center gap-3 text-xs text-muted-foreground/40">
-          <Link to="/contact" className="hover:text-secondary transition-colors">Contact Support</Link>
-          <span>·</span>
-          <button onClick={() => setModal('privacy')} className="hover:text-secondary transition-colors">Privacy Policy</button>
-          <span>·</span>
-          <button onClick={() => setModal('terms')} className="hover:text-secondary transition-colors">Terms</button>
+           <Link to="/contact" className="hover:text-secondary transition-colors">Contact Support</Link>
+           <span>·</span>
+           <button onClick={() => setModal('privacy')} className="hover:text-secondary transition-colors">Privacy Policy</button>
+           <span>·</span>
+           <button onClick={() => setModal('terms')} className="hover:text-secondary transition-colors">Terms</button>
+           <span>·</span>
+           <button onClick={() => { import('@/api/base44Client').then(m => m.base44.auth.redirectToLogin(window.location.href)); }} className="hover:text-secondary transition-colors">Already a member? Log in</button>
         </div>
       </footer>
 

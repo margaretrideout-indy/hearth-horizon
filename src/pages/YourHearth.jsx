@@ -15,6 +15,13 @@ import { Link } from 'react-router-dom';
 export default function YourHearth() {
   const { isAuthenticated, navigateToLogin, isLoadingAuth } = useAuth();
 
+  // Redirect authenticated users to dashboard
+  React.useEffect(() => {
+    if (isAuthenticated && !isLoadingAuth) {
+      window.location.href = '/dashboard';
+    }
+  }, [isAuthenticated, isLoadingAuth]);
+
   const { data: profiles } = useQuery({
     queryKey: ['userProfile'],
     queryFn: () => base44.entities.UserProfile.list(),
@@ -28,10 +35,16 @@ export default function YourHearth() {
     enabled: isAuthenticated,
   });
 
-  // Show nothing while auth is checking to prevent flashing content
-  if (isLoadingAuth) {
+  // Show nothing while auth is checking or if authenticated (redirecting)
+  if (isLoadingAuth || isAuthenticated) {
     return null;
   }
+
+  const handleLoginClick = () => {
+    import('@/api/base44Client').then(m => {
+      m.base44.auth.redirectToLogin(window.location.href);
+    });
+  };
 
   const profile = profiles[0] || null;
 
@@ -54,7 +67,7 @@ export default function YourHearth() {
     return (
       <div className="space-y-0">
         {/* Hero Section */}
-        <HeroSection onCTA={navigateToLogin} />
+         <HeroSection onCTA={navigateToLogin} onLogin={handleLoginClick} />
 
         {/* The Forest — public preview of dashboard features */}
         <div className="bg-background px-4 py-16 md:py-20">

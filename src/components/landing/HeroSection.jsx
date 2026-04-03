@@ -1,9 +1,9 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
-export default function HeroSection({ onCTA }) {
+export default function HeroSection({ onCTA, onLogin }) {
   return (
     <div className="relative overflow-hidden">
       {/* Gradient background with forest/earth tones */}
@@ -22,6 +22,19 @@ export default function HeroSection({ onCTA }) {
       <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full opacity-10 blur-3xl" style={{ background: 'hsl(35, 85%, 65%)' }} />
 
       <div className="relative max-w-4xl mx-auto px-4 py-24 md:py-32 space-y-8">
+        {/* Top right login button */}
+        <div className="absolute top-0 right-0 pt-4 pr-4">
+          <Button
+            onClick={onLogin}
+            variant="outline"
+            size="sm"
+            className="gap-2"
+          >
+            <LogIn className="w-4 h-4" />
+            Log In
+          </Button>
+        </div>
+
         {/* Headline */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
