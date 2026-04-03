@@ -21,12 +21,15 @@ export default function AppLayout() {
       </div>
 
       {/* Main Content */}
-      <main className={cn(
-        "transition-all duration-300 min-h-screen",
-        "pt-16 md:pt-0",
-        collapsed ? "md:ml-16" : "md:ml-64"
-      )}>
-        <div className="p-4 md:p-8 max-w-6xl mx-auto">
+      <main
+        className={cn(
+          "transition-all duration-300 min-h-screen",
+          "pt-16 md:pt-0",
+          collapsed ? "md:ml-16" : "md:ml-64"
+        )}
+        style={{ maxWidth: '100vw', overflowX: 'hidden' }}
+      >
+        <div className="p-4 md:p-8 max-w-6xl mx-auto pb-24 md:pb-8">
           <Outlet />
           <GlobalFooter />
         </div>

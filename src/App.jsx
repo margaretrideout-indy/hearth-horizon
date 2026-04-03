@@ -18,6 +18,7 @@ import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentCancel from './pages/PaymentCancel';
 import Embers from './pages/Embers';
 import AdminDashboard from './pages/AdminDashboard';
+import Contact from './pages/Contact';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -58,6 +59,7 @@ const AuthenticatedApp = () => {
         <Route path="/payment/cancel" element={<PaymentCancel />} />
         <Route path="/embers" element={<Embers />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/contact" element={<Contact />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

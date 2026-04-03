@@ -220,13 +220,27 @@ export default function Support() {
             })}
           </div>
 
-          <Button onClick={handleCheckout} disabled={loading} className="w-full h-11 text-base gap-2">
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Heart className="w-4 h-4" />}
-            {loading
-              ? 'Opening the path…'
-              : isFoundingActive
-              ? `Founding Member Rate (Locked) — ${tier?.price}`
-              : `Standard Membership — ${tier?.price}`}
+          <Button
+            onClick={handleCheckout}
+            disabled={loading}
+            className="w-full gap-2"
+            style={{
+              minHeight: '44px',
+              height: 'auto',
+              fontSize: '0.9rem',
+              whiteSpace: 'normal',
+              padding: '12px 20px',
+              lineHeight: 1.4,
+            }}
+          >
+            {loading ? <Loader2 className="w-4 h-4 animate-spin shrink-0" /> : <Heart className="w-4 h-4 shrink-0" />}
+            <span>
+              {loading
+                ? 'Opening the path…'
+                : isFoundingActive
+                ? `Founding Member Rate (Locked) — ${tier?.price}`
+                : `Standard Membership — ${tier?.price}`}
+            </span>
           </Button>
 
           {isFoundingActive && (

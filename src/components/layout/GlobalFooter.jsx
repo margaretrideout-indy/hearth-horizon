@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
 
+
 function PolicyModal({ title, content, onClose }) {
   return (
     <div
@@ -36,7 +37,7 @@ const PRIVACY_CONTENT = (
     <p><strong className="text-foreground">What we collect:</strong> Your email, name, and any profile or journal data you voluntarily provide.</p>
     <p><strong className="text-foreground">How we use it:</strong> To personalise your experience and support your career transition journey. We never sell your data.</p>
     <p><strong className="text-foreground">Your journal entries</strong> marked "private" are visible only to you and are never shared without your explicit consent.</p>
-    <p><strong className="text-foreground">Contact:</strong> For any data requests, email us at <a href="mailto:support@hearthandhorizon.ca" className="text-secondary underline">support@hearthandhorizon.ca</a>.</p>
+    <p><strong className="text-foreground">Contact:</strong> For any data requests, <Link to="/contact" className="text-secondary underline">contact us here</Link>.</p>
     <p className="text-xs text-muted-foreground/50">Last updated: April 2026</p>
   </>
 );
@@ -57,12 +58,22 @@ export default function GlobalFooter() {
 
   return (
     <>
-      <footer className="mt-16 py-6 border-t border-border/20 text-center space-y-2">
-        <p className="text-xs text-muted-foreground/50">
-          Hearth &amp; Horizon &nbsp;·&nbsp; Dartmouth, NS, Canada &nbsp;·&nbsp; Built for the Caregivers of the World.
+      <footer
+        className="mt-16 py-6 border-t border-border/20 text-center space-y-2"
+        style={{ position: 'relative' }}
+      >
+        <p
+          className="text-xs text-muted-foreground/50"
+          style={{ lineHeight: 1.6 }}
+        >
+          <span className="block sm:inline">Hearth &amp; Horizon</span>
+          <span className="hidden sm:inline"> &nbsp;·&nbsp; </span>
+          <span className="block sm:inline">Dartmouth, NS, Canada</span>
+          <span className="hidden sm:inline"> &nbsp;·&nbsp; </span>
+          <span className="block sm:inline">Built for the Caregivers of the World.</span>
         </p>
-        <div className="flex justify-center gap-4 text-xs text-muted-foreground/40">
-          <a href="mailto:support@hearthandhorizon.ca" className="hover:text-secondary transition-colors">Contact Support</a>
+        <div className="flex flex-wrap justify-center gap-3 text-xs text-muted-foreground/40">
+          <Link to="/contact" className="hover:text-secondary transition-colors">Contact Support</Link>
           <span>·</span>
           <button onClick={() => setModal('privacy')} className="hover:text-secondary transition-colors">Privacy Policy</button>
           <span>·</span>
