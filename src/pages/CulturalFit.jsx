@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Compass } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Compass, ChevronRight } from 'lucide-react';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
+// TabsList and TabsTrigger replaced with custom responsive nav
 import EthicsCompass from '../components/culture/EthicsCompass';
 import CompanyMatcher from '../components/culture/CompanyMatcher';
 import CultureTranslator from '../components/culture/CultureTranslator';
+
+const TAB_ITEMS = [
+  { value: 'compass', label: 'Ethics Compass' },
+  { value: 'matcher', label: 'Company Matcher' },
+  { value: 'translator', label: 'Culture Translator' },
+];
 
 export default function CulturalFit() {
   const queryClient = useQueryClient();
@@ -17,6 +24,7 @@ export default function CulturalFit() {
   });
 
   const valuesProfile = valuesProfiles[0] || null;
+  const [activeTab, setActiveTab] = useState(valuesProfile ? 'matcher' : 'compass');
 
   return (
     <div className="space-y-8">
@@ -32,33 +40,83 @@ export default function CulturalFit() {
         </p>
       </div>
 
-      <Tabs defaultValue={valuesProfile ? "matcher" : "compass"} className="space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        {/* Mobile: vertical stack */}
+        <div className="flex sm:hidden flex-col gap-3 w-full">
+          {TAB_ITEMS.map(item => {
+            const isActive = activeTab === item.value;
+            return (
+              <button
+                key={item.value}
+                onClick={() => setActiveTab(item.value)}
+                className="flex items-center justify-between w-full rounded-xl text-sm font-medium transition-all"
+                style={{
+                  padding: '14px 16px',
+                  textAlign: 'left',
+                  borderLeft: isActive ? '3px solid hsl(var(--secondary))' : '3px solid transparent',
+                  background: isActive
+                    ? 'hsla(280, 50%, 35%, 0.25)'
+                    : 'hsla(280, 20%, 18%, 0.5)',
+                  boxShadow: isActive ? '0 0 14px 0 hsla(280, 65%, 55%, 0.2)' : 'none',
+                  color: isActive ? 'hsl(183, 80%, 70%)' : 'hsl(270, 15%, 70%)',
+                  border: isActive
+                    ? '1px solid hsla(280, 50%, 55%, 0.3)'
+                    : '1px solid hsla(280, 20%, 30%, 0.3)',
+                  borderLeftWidth: '3px',
+                  borderLeftColor: isActive ? 'hsl(var(--secondary))' : 'transparent',
+                }}
+              >
+                <span>{item.label}</span>
+                <ChevronRight className="w-4 h-4 opacity-50 shrink-0" />
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Desktop: horizontal scroll tabs */}
         <div
+          className="hidden sm:flex [&::-webkit-scrollbar]:hidden"
           style={{
             overflowX: 'scroll',
-            display: 'flex',
             WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
             position: 'relative',
           }}
-          className="[&::-webkit-scrollbar]:hidden"
         >
-          <TabsList className="bg-muted h-auto p-1 w-max" style={{ display: 'flex', gap: '12px', flexWrap: 'nowrap' }}>
-            <TabsTrigger value="compass" style={{ flexShrink: 0, whiteSpace: 'nowrap', minWidth: 'max-content', paddingLeft: '16px', paddingRight: '16px' }}>Ethics Compass</TabsTrigger>
-            <TabsTrigger value="matcher" style={{ flexShrink: 0, whiteSpace: 'nowrap', minWidth: 'max-content', paddingLeft: '16px', paddingRight: '16px' }}>Company Matcher</TabsTrigger>
-            <TabsTrigger value="translator" style={{ flexShrink: 0, whiteSpace: 'nowrap', minWidth: 'max-content', paddingLeft: '16px', paddingRight: '16px' }}>Culture Translator</TabsTrigger>
-          </TabsList>
-          {/* Gradient fade hint */}
+          <div
+            className="h-auto p-1 rounded-lg w-max"
+            style={{ display: 'flex', gap: '12px', flexWrap: 'nowrap', background: 'hsl(var(--muted))' }}
+          >
+            {TAB_ITEMS.map(item => {
+              const isActive = activeTab === item.value;
+              return (
+                <button
+                  key={item.value}
+                  onClick={() => setActiveTab(item.value)}
+                  className="rounded-md text-sm font-medium transition-all"
+                  style={{
+                    flexShrink: 0,
+                    whiteSpace: 'nowrap',
+                    minWidth: 'max-content',
+                    paddingLeft: '16px',
+                    paddingRight: '16px',
+                    paddingTop: '6px',
+                    paddingBottom: '6px',
+                    background: isActive ? 'hsl(var(--background))' : 'transparent',
+                    color: isActive ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground))',
+                    boxShadow: isActive ? '0 1px 4px rgba(0,0,0,0.2)' : 'none',
+                  }}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
+          </div>
           <div style={{
-            position: 'sticky',
-            right: 0,
-            top: 0,
-            bottom: 0,
-            width: '32px',
+            position: 'sticky', right: 0, top: 0, bottom: 0, width: '32px',
             background: 'linear-gradient(to right, transparent, hsl(var(--background)))',
-            pointerEvents: 'none',
-            flexShrink: 0,
+            pointerEvents: 'none', flexShrink: 0,
           }} />
         </div>
 
