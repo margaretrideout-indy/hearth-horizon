@@ -26,23 +26,38 @@ export default function AppLayout() {
       <main
         className={cn(
           "transition-all duration-300",
-          isEmbers ? "h-screen overflow-hidden" : "min-h-screen",
+          isEmbers ? "overflow-hidden" : "min-h-screen",
           "pt-16 md:pt-0",
           collapsed ? "md:ml-16" : "md:ml-64"
         )}
         style={{ maxWidth: '100vw', overflowX: 'hidden' }}
       >
-        <div
-          className={cn(
-            isEmbers
-              ? "p-4 md:p-8 h-full"
-              : "p-4 md:p-8 max-w-6xl mx-auto pb-32 lg:pb-8"
-          )}
-          style={{ maxWidth: '100vw', overflowX: 'hidden' }}
-        >
-          <Outlet />
-          {!isEmbers && <GlobalFooter />}
-        </div>
+        {isEmbers ? (
+          <>
+            {/* Mobile/tablet: height minus top nav bar (4rem = 64px) */}
+            <div
+              className="p-4 flex flex-col md:hidden"
+              style={{ height: 'calc(100vh - 4rem)', overflowX: 'hidden' }}
+            >
+              <Outlet />
+            </div>
+            {/* Desktop: full viewport height, sidebar handles offset via ml */}
+            <div
+              className="p-8 hidden md:flex flex-col"
+              style={{ height: '100vh', overflowX: 'hidden' }}
+            >
+              <Outlet />
+            </div>
+          </>
+        ) : (
+          <div
+            className="p-4 md:p-8 max-w-6xl mx-auto pb-32 lg:pb-8"
+            style={{ maxWidth: '100vw', overflowX: 'hidden' }}
+          >
+            <Outlet />
+            <GlobalFooter />
+          </div>
+        )}
       </main>
     </div>
   );
