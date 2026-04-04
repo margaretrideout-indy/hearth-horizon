@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -28,7 +28,6 @@ import ForestGuide from './pages/ForestGuide';
 // Component to protect routes that require authentication
 const ProtectedRoute = ({ element, requiredAuth = true }) => {
   const { isAuthenticated, isLoadingAuth } = useAuth();
-  const navigate = useNavigate();
 
   if (isLoadingAuth) {
     return (
@@ -39,7 +38,10 @@ const ProtectedRoute = ({ element, requiredAuth = true }) => {
   }
 
   if (requiredAuth && !isAuthenticated) {
-    navigate('/gateway');
+    // Redirect to login, returning the user to the page they tried to visit
+    import('@/api/base44Client').then(m => {
+      m.base44.auth.redirectToLogin(window.location.href);
+    });
     return null;
   }
 
