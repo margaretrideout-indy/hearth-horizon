@@ -6,8 +6,9 @@ import { Card } from '@/components/ui/card';
 import { Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// 👇 Replace this with your live Stripe Payment Link
-const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/your_link_here';
+// 👇 const LINK_HEARTHKEEPER = 'https://buy.stripe.com/00w00jdy0gCz0DWaG6dAk00';
+const LINK_STEWARD = 'https://buy.stripe.com/eVq14n2Tm4TR4UcaG6dAk01';
+const LINK_DONATION = 'https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02';
 
 export default function Gateway() {
   const handleLoginClick = () => {
