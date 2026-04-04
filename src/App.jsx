@@ -70,31 +70,27 @@ const AuthenticatedApp = () => {
 
       <Route element={<AppLayout />}>
         
-        {/* Protected member home - requires authentication */}
-        <Route path="/hearth" element={<ProtectedRoute element={<YourHearth />} requiredAuth={true} />} />
-        
-        {/* Protected routes - require authentication */}
-        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} requiredAuth={true} />} />
-        <Route path="/translator" element={<ProtectedRoute element={<SkillTranslator />} requiredAuth={true} />} />
-        <Route path="/gap-analyzer" element={<ProtectedRoute element={<GapAnalyzer />} requiredAuth={true} />} />
-        <Route path="/identity-anchor" element={<ProtectedRoute element={<IdentityAnchor />} requiredAuth={true} />} />
-        <Route path="/cultural-fit" element={<ProtectedRoute element={<CulturalFit />} requiredAuth={true} />} />
-        <Route path="/support" element={<ProtectedRoute element={<Support />} requiredAuth={true} />} />
-        <Route path="/canopy" element={<ProtectedRoute element={<Canopy />} requiredAuth={true} />} />
-        <Route path="/embers" element={<ProtectedRoute element={<Embers />} requiredAuth={true} />} />
-        <Route path="/admin" element={<ProtectedRoute element={<AdminDashboard />} requiredAuth={true} />} />
-        
-        {/* Public contact page */}
-        <Route path="/contact" element={<Contact />} />
-        
-        {/* Public install app guide */}
-        <Route path="/install" element={<InstallApp />} />
+        {/* Protected core pages */}
+        <Route path="/hearth" element={<ProtectedRoute element={<YourHearth />} />} />
+        <Route path="/translator" element={<ProtectedRoute element={<SkillTranslator />} />} />
+        <Route path="/audit" element={<ProtectedRoute element={<HorizonAudit />} />} />
+        <Route path="/synthesis" element={<ProtectedRoute element={<HorizonSynthesis />} />} />
 
-        {/* Grove resource pages */}
-        <Route path="/identity-translator" element={<ProtectedRoute element={<IdentityTranslator />} requiredAuth={true} />} />
-        <Route path="/audit" element={<ProtectedRoute element={<HorizonAudit />} requiredAuth={true} />} />
-        <Route path="/guide" element={<ProtectedRoute element={<ForestGuide />} requiredAuth={true} />} />
-        <Route path="/synthesis" element={<ProtectedRoute element={<HorizonSynthesis />} requiredAuth={true} />} />
+        {/* Other member pages — accessible once logged in */}
+        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
+        <Route path="/gap-analyzer" element={<ProtectedRoute element={<GapAnalyzer />} />} />
+        <Route path="/identity-anchor" element={<ProtectedRoute element={<IdentityAnchor />} />} />
+        <Route path="/cultural-fit" element={<ProtectedRoute element={<CulturalFit />} />} />
+        <Route path="/support" element={<ProtectedRoute element={<Support />} />} />
+        <Route path="/canopy" element={<ProtectedRoute element={<Canopy />} />} />
+        <Route path="/embers" element={<ProtectedRoute element={<Embers />} />} />
+        <Route path="/admin" element={<ProtectedRoute element={<AdminDashboard />} />} />
+        <Route path="/identity-translator" element={<ProtectedRoute element={<IdentityTranslator />} />} />
+        <Route path="/guide" element={<ProtectedRoute element={<ForestGuide />} />} />
+
+        {/* Public pages */}
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/install" element={<InstallApp />} />
         
         {/* Payment routes - public but only triggered after auth */}
         <Route path="/payment/success" element={<PaymentSuccess />} />

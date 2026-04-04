@@ -1,5 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { LogOut } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { base44 } from '@/api/base44Client';
 
 export default function HearthWelcome({ user }) {
   const firstName = user?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'Seedling';
@@ -18,12 +21,23 @@ export default function HearthWelcome({ user }) {
       <div className="absolute -top-20 -right-20 w-56 h-56 rounded-full opacity-10 blur-3xl" style={{ background: 'hsl(183, 80%, 38%)' }} />
       <div className="absolute -bottom-16 -left-16 w-40 h-40 rounded-full opacity-10 blur-3xl" style={{ background: 'hsl(35, 85%, 65%)' }} />
 
-      <div className="relative space-y-1">
-        <p className="text-xs font-medium tracking-widest uppercase text-primary/70">Your Hearth</p>
-        <h1 className="font-heading text-3xl md:text-4xl font-semibold text-foreground leading-snug">
-          Welcome home, <span style={{ color: 'hsl(183, 80%, 55%)' }}>{firstName}</span>.
-        </h1>
-        <p className="text-muted-foreground text-base mt-1">Your horizon is waiting.</p>
+      <div className="relative flex items-start justify-between gap-4">
+        <div className="space-y-1">
+          <p className="text-xs font-medium tracking-widest uppercase text-primary/70">Your Hearth</p>
+          <h1 className="font-heading text-3xl md:text-4xl font-semibold text-foreground leading-snug">
+            Welcome home, <span style={{ color: 'hsl(183, 80%, 55%)' }}>{firstName}</span>.
+          </h1>
+          <p className="text-muted-foreground text-base mt-1">Your horizon is waiting.</p>
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => base44.auth.logout('/')}
+          className="shrink-0 text-muted-foreground hover:text-foreground gap-1.5 mt-1"
+        >
+          <LogOut className="w-4 h-4" />
+          <span className="hidden sm:inline">Log out</span>
+        </Button>
       </div>
     </motion.div>
   );

@@ -59,13 +59,13 @@ export default function IdentityTranslator() {
         >
           {/* Table header */}
           <div className="grid grid-cols-2 border-b border-white/10">
-            <div className="px-6 py-4 bg-white/5">
-              <p className="text-xs uppercase tracking-widest text-amber-400 font-semibold">The Legacy Language</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Public / Education Sector</p>
+            <div className="px-4 py-3 bg-white/5">
+              <p className="text-xs uppercase tracking-wider text-amber-400 font-semibold">Legacy Language</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Public / Education</p>
             </div>
-            <div className="px-6 py-4 bg-white/5 border-l border-white/10">
-              <p className="text-xs uppercase tracking-widest text-primary font-semibold">The Tech Language</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Corporate / Data Sector</p>
+            <div className="px-4 py-3 bg-white/5 border-l border-white/10">
+              <p className="text-xs uppercase tracking-wider text-primary font-semibold">Tech Language</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Corporate / Data</p>
             </div>
           </div>
 
@@ -73,12 +73,12 @@ export default function IdentityTranslator() {
           {TRANSLATIONS.map((row, i) => (
             <div
               key={i}
-              className="grid grid-cols-2 border-b border-white/5 last:border-0 hover:bg-white/3 transition-colors"
+              className="grid grid-cols-2 border-b border-white/5 last:border-0 transition-colors"
             >
-              <div className="px-6 py-5 flex items-center">
-                <span className="text-sm text-amber-300/90 font-medium">"{row.legacy}"</span>
+              <div className="px-4 py-4 flex items-start">
+                <span className="text-sm text-amber-300/90 font-medium leading-relaxed">"{row.legacy}"</span>
               </div>
-              <div className="px-6 py-5 flex items-center border-l border-white/5">
+              <div className="px-4 py-4 flex items-start border-l border-white/5">
                 <span className="text-sm text-foreground/85 leading-relaxed">"{row.tech}"</span>
               </div>
             </div>

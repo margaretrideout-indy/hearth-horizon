@@ -171,8 +171,8 @@ Respond in JSON format like:
               </div>
               <div className="divide-y divide-white/5">
                 {synthesis.plan.map((phase, i) => (
-                  <div key={i} className="px-6 py-5 space-y-3">
-                    <div className="flex items-baseline gap-3">
+                  <div key={i} className="px-4 sm:px-6 py-5 space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
                       <span className="text-xs font-mono text-amber-400/80 tracking-widest">{phase.phase}</span>
                       <span className="font-heading font-semibold text-foreground">{phase.title}</span>
                     </div>
