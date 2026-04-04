@@ -59,9 +59,10 @@ const AuthenticatedApp = () => {
   // Render the main app with public home and protected member areas
   return (
     <Routes>
+      {/* Public gateway — no sidebar/layout */}
+      <Route path="/" element={<Gateway />} />
+
       <Route element={<AppLayout />}>
-        {/* Public gateway landing page */}
-        <Route path="/" element={<Gateway />} />
         
         {/* Protected member home - requires authentication */}
         <Route path="/hearth" element={<ProtectedRoute element={<YourHearth />} requiredAuth={true} />} />

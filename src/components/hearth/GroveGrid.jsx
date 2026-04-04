@@ -39,8 +39,8 @@ export default function GroveGrid() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: i * 0.1 }}
-            className="relative overflow-hidden rounded-2xl border border-border/50 p-6 flex flex-col gap-4 hover:border-primary/40 transition-all"
-            style={{ background: 'hsla(280, 20%, 16%, 0.85)' }}
+            className="relative overflow-hidden rounded-2xl border border-white/10 p-6 flex flex-col gap-4 hover:border-amber-400/40 transition-all shadow-xl backdrop-blur-sm"
+            style={{ background: 'hsla(280, 25%, 12%, 0.80)' }}
           >
             {/* Subtle glow accent */}
             <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-10 blur-2xl" style={{ background: 'hsl(183, 80%, 38%)' }} />
@@ -56,7 +56,7 @@ export default function GroveGrid() {
               asChild
               size="sm"
               variant="outline"
-              className="w-full border-primary/30 text-primary hover:bg-primary/10 gap-2"
+              className="w-full border-amber-500/50 text-amber-400 hover:bg-amber-500/10 hover:border-amber-400 gap-2 transition-all"
             >
               <a href={resource.href} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="w-3 h-3" />
