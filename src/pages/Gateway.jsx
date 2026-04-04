@@ -79,7 +79,7 @@ export default function Gateway() {
             className="pt-4"
           >
             <Button asChild size="lg" className="gap-2 h-12 px-8 text-base font-medium">
-              <a href={STRIPE_PAYMENT_LINK} target="_blank" rel="noopener noreferrer">
+              <a href={LINK_STEWARD} target="_blank" rel="noopener noreferrer">
                 Join the Founding Forest
                 <ArrowRight className="w-5 h-5" />
               </a>
@@ -158,7 +158,7 @@ export default function Gateway() {
               Be among the first to access Hearth & Horizon at our legacy founding member rate. Limited to the first 25 members.
             </p>
             <Button asChild size="lg" className="w-full sm:w-auto gap-2 mt-2">
-              <a href={STRIPE_PAYMENT_LINK} target="_blank" rel="noopener noreferrer">
+              <a href={LINK_STEWARD} target="_blank" rel="noopener noreferrer">
                 <Heart className="w-4 h-4" />
                 Join the Founding Forest
               </a>
