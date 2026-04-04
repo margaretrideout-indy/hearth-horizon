@@ -1,26 +1,27 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ExternalLink } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const RESOURCES = [
   {
     emoji: '🕯️',
     title: 'The Identity Translator',
     subtitle: 'Translate your expertise into Tech-speak.',
-    href: 'https://placeholder.pdf/identity-translator',
+    to: '/identity-translator',
   },
   {
     emoji: '🔭',
     title: 'The Horizon Audit',
     subtitle: 'Align your values with your next career move.',
-    href: 'https://placeholder.pdf/horizon-audit',
+    to: '/audit',
   },
   {
     emoji: '🗺️',
     title: 'The Forest Guide',
     subtitle: 'How to navigate your Hearth & Horizon dashboard.',
-    href: 'https://placeholder.pdf/forest-guide',
+    to: '/guide',
   },
 ];
 
@@ -58,10 +59,10 @@ export default function GroveGrid() {
               variant="outline"
               className="w-full border-amber-500/50 text-amber-400 hover:bg-amber-500/10 hover:border-amber-400 gap-2 transition-all"
             >
-              <a href={resource.href} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="w-3 h-3" />
+              <Link to={resource.to}>
+                <ArrowRight className="w-3 h-3" />
                 View Resource
-              </a>
+              </Link>
             </Button>
           </motion.div>
         ))}

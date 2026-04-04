@@ -1,0 +1,110 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, CheckCircle2, BookOpen, CalendarCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+const STEPS = [
+  {
+    number: '01',
+    icon: CheckCircle2,
+    title: 'Complete your Audit',
+    description: 'Begin with The Horizon Audit to surface your deepest values, ideal rhythms, and the skills that still light you up.',
+    link: '/audit',
+    linkLabel: 'Go to The Horizon Audit',
+  },
+  {
+    number: '02',
+    icon: BookOpen,
+    title: 'Translate your Identity',
+    description: 'Use The Identity Translator to reframe your public-sector expertise into language that resonates with tech and corporate ecosystems.',
+    link: '/identity-translator',
+    linkLabel: 'Open The Identity Translator',
+  },
+  {
+    number: '03',
+    icon: CalendarCheck,
+    title: 'Book your Horizon Call',
+    description: 'Schedule a 1:1 with Margaret to map your personalised 90-day roadmap. Bring your audit and translation with you.',
+    link: '/contact',
+    linkLabel: 'Book your Horizon Call',
+  },
+];
+
+export default function ForestGuide() {
+  return (
+    <div
+      className="min-h-screen px-4 py-10"
+      style={{
+        background: `linear-gradient(135deg, hsl(280, 25%, 11%) 0%, hsl(183, 35%, 14%) 60%, hsl(35, 40%, 13%) 100%)`,
+      }}
+    >
+      <div className="max-w-2xl mx-auto space-y-8">
+        {/* Back button */}
+        <Button asChild variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-2">
+          <Link to="/hearth">
+            <ArrowLeft className="w-4 h-4" />
+            Return to The Grove
+          </Link>
+        </Button>
+
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="space-y-2"
+        >
+          <h1 className="font-heading text-4xl font-bold text-foreground">🗺️ The Forest Guide</h1>
+          <p className="text-muted-foreground text-base leading-relaxed">
+            How to navigate your Hearth & Horizon journey. Follow these three steps to arrive at your new horizon.
+          </p>
+        </motion.div>
+
+        {/* Timeline */}
+        <div className="relative space-y-0">
+          {/* Vertical line */}
+          <div className="absolute left-8 top-8 bottom-8 w-px bg-white/10" />
+
+          {STEPS.map((step, i) => (
+            <motion.div
+              key={step.number}
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: i * 0.15 }}
+              className="relative flex gap-6 pb-8 last:pb-0"
+            >
+              {/* Circle node */}
+              <div
+                className="relative z-10 w-16 h-16 rounded-full border border-white/15 flex items-center justify-center shrink-0 shadow-lg backdrop-blur-sm"
+                style={{ background: 'hsla(280, 25%, 16%, 0.90)' }}
+              >
+                <step.icon className="w-6 h-6 text-amber-400" />
+              </div>
+
+              {/* Content card */}
+              <div
+                className="flex-1 rounded-2xl border border-white/10 p-5 space-y-3 shadow-xl backdrop-blur-sm"
+                style={{ background: 'hsla(280, 25%, 12%, 0.82)' }}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-mono text-amber-400/70 tracking-widest">STEP {step.number}</span>
+                </div>
+                <h3 className="font-heading text-lg font-semibold text-foreground">{step.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+                <Button
+                  asChild
+                  size="sm"
+                  variant="outline"
+                  className="border-amber-500/40 text-amber-400 hover:bg-amber-500/10 hover:border-amber-400 gap-2 transition-all"
+                >
+                  <Link to={step.link}>{step.linkLabel}</Link>
+                </Button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

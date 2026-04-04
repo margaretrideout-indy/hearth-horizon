@@ -21,6 +21,9 @@ import AdminDashboard from './pages/AdminDashboard';
 import Contact from './pages/Contact';
 import InstallApp from './pages/InstallApp';
 import Gateway from './pages/Gateway';
+import IdentityTranslator from './pages/IdentityTranslator';
+import HorizonAudit from './pages/HorizonAudit';
+import ForestGuide from './pages/ForestGuide';
 
 // Component to protect routes that require authentication
 const ProtectedRoute = ({ element, requiredAuth = true }) => {
@@ -83,6 +86,11 @@ const AuthenticatedApp = () => {
         
         {/* Public install app guide */}
         <Route path="/install" element={<InstallApp />} />
+
+        {/* Grove resource pages */}
+        <Route path="/identity-translator" element={<ProtectedRoute element={<IdentityTranslator />} requiredAuth={true} />} />
+        <Route path="/audit" element={<ProtectedRoute element={<HorizonAudit />} requiredAuth={true} />} />
+        <Route path="/guide" element={<ProtectedRoute element={<ForestGuide />} requiredAuth={true} />} />
         
         {/* Payment routes - public but only triggered after auth */}
         <Route path="/payment/success" element={<PaymentSuccess />} />
