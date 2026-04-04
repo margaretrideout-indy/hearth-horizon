@@ -6,22 +6,13 @@ import { Card } from '@/components/ui/card';
 import { Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+// 👇 Replace this with your live Stripe Payment Link
+const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/your_link_here';
+
 export default function Gateway() {
   const handleLoginClick = () => {
     import('@/api/base44Client').then(m => {
-      m.base44.auth.redirectToLogin(window.location.href);
-    });
-  };
-
-  const handleEnterForest = () => {
-    import('@/api/base44Client').then(m => {
-      m.base44.auth.redirectToLogin('/');
-    });
-  };
-
-  const handleJoinFoundingForest = () => {
-    import('@/api/base44Client').then(m => {
-      m.base44.auth.redirectToLogin('/');
+      m.base44.auth.redirectToLogin('/hearth');
     });
   };
 
@@ -86,13 +77,11 @@ export default function Gateway() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="pt-4"
           >
-            <Button
-              onClick={handleEnterForest}
-              size="lg"
-              className="gap-2 h-12 px-8 text-base font-medium"
-            >
-              Enter the Forest
-              <ArrowRight className="w-5 h-5" />
+            <Button asChild size="lg" className="gap-2 h-12 px-8 text-base font-medium">
+              <a href={STRIPE_PAYMENT_LINK} target="_blank" rel="noopener noreferrer">
+                Join the Founding Forest
+                <ArrowRight className="w-5 h-5" />
+              </a>
             </Button>
           </motion.div>
 
@@ -120,7 +109,7 @@ export default function Gateway() {
           {/* Forest Sections Preview */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* The Grove */}
-            <Card className="p-6 rounded-2xl border-border/50 hover:border-secondary/30 transition-all cursor-pointer" onClick={handleEnterForest}>
+            <Card className="p-6 rounded-2xl border-border/50 hover:border-secondary/30 transition-all">
               <div className="space-y-3">
                 <div className="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center">
                   <Heart className="w-5 h-5 text-secondary" />
@@ -131,7 +120,7 @@ export default function Gateway() {
             </Card>
 
             {/* The Canopy */}
-            <Card className="p-6 rounded-2xl border-border/50 hover:border-primary/30 transition-all cursor-pointer" onClick={handleEnterForest}>
+            <Card className="p-6 rounded-2xl border-border/50 hover:border-primary/30 transition-all">
               <div className="space-y-3">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Heart className="w-5 h-5 text-primary" />
@@ -142,7 +131,7 @@ export default function Gateway() {
             </Card>
 
             {/* The Embers */}
-            <Card className="p-6 rounded-2xl border-border/50 hover:border-accent/30 transition-all cursor-pointer" onClick={handleEnterForest}>
+            <Card className="p-6 rounded-2xl border-border/50 hover:border-accent/30 transition-all">
               <div className="space-y-3">
                 <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
                   <Heart className="w-5 h-5 text-accent" />
@@ -154,7 +143,7 @@ export default function Gateway() {
           </div>
 
           <div className="text-center text-sm text-muted-foreground/70">
-            Click any section above to explore (login required)
+            Already a member? <button onClick={handleLoginClick} className="underline hover:text-foreground transition-colors">Log in here</button>
           </div>
         </div>
       </div>
@@ -167,9 +156,11 @@ export default function Gateway() {
             <p className="text-muted-foreground text-lg">
               Be among the first to access Hearth & Horizon at our legacy founding member rate. Limited to the first 25 members.
             </p>
-            <Button onClick={handleJoinFoundingForest} size="lg" className="w-full sm:w-auto gap-2 mt-2">
-              <Heart className="w-4 h-4" />
-              Join the Founding Forest
+            <Button asChild size="lg" className="w-full sm:w-auto gap-2 mt-2">
+              <a href={STRIPE_PAYMENT_LINK} target="_blank" rel="noopener noreferrer">
+                <Heart className="w-4 h-4" />
+                Join the Founding Forest
+              </a>
             </Button>
             <p className="text-xs text-muted-foreground/70 italic">
               Founding rate locked for the first 25 members. After that, standard pricing applies.

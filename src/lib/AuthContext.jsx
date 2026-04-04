@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = (redirectUrl = '/gateway') => {
+  const logout = (redirectUrl = '/') => {
     setUser(null);
     setIsAuthenticated(false);
     // Use the SDK's logout method with redirect to /gateway

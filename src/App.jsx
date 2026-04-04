@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -27,7 +27,7 @@ import ForestGuide from './pages/ForestGuide';
 import HorizonSynthesis from './pages/HorizonSynthesis';
 
 // Component to protect routes that require authentication
-const ProtectedRoute = ({ element, requiredAuth = true }) => {
+const ProtectedRoute = ({ element }) => {
   const { isAuthenticated, isLoadingAuth } = useAuth();
 
   if (isLoadingAuth) {
@@ -38,8 +38,7 @@ const ProtectedRoute = ({ element, requiredAuth = true }) => {
     );
   }
 
-  if (requiredAuth && !isAuthenticated) {
-    // Redirect to login, returning the user to the page they tried to visit
+  if (!isAuthenticated) {
     import('@/api/base44Client').then(m => {
       m.base44.auth.redirectToLogin(window.location.href);
     });
@@ -49,12 +48,14 @@ const ProtectedRoute = ({ element, requiredAuth = true }) => {
   return element;
 };
 
+const PUBLIC_PATHS = ['/'];
+
 const AuthenticatedApp = () => {
   const { isLoadingPublicSettings } = useAuth();
+  const location = useLocation();
 
-  // Only show loading spinner while checking app public settings
-  // Auth state loads in the background for protected routes
-  if (isLoadingPublicSettings) {
+  // Only block rendering with a spinner for non-public routes
+  if (isLoadingPublicSettings && !PUBLIC_PATHS.includes(location.pathname)) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
