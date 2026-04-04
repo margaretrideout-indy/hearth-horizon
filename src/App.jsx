@@ -24,6 +24,7 @@ import Gateway from './pages/Gateway';
 import IdentityTranslator from './pages/IdentityTranslator';
 import HorizonAudit from './pages/HorizonAudit';
 import ForestGuide from './pages/ForestGuide';
+import HorizonSynthesis from './pages/HorizonSynthesis';
 
 // Component to protect routes that require authentication
 const ProtectedRoute = ({ element, requiredAuth = true }) => {
@@ -93,6 +94,7 @@ const AuthenticatedApp = () => {
         <Route path="/identity-translator" element={<ProtectedRoute element={<IdentityTranslator />} requiredAuth={true} />} />
         <Route path="/audit" element={<ProtectedRoute element={<HorizonAudit />} requiredAuth={true} />} />
         <Route path="/guide" element={<ProtectedRoute element={<ForestGuide />} requiredAuth={true} />} />
+        <Route path="/synthesis" element={<ProtectedRoute element={<HorizonSynthesis />} requiredAuth={true} />} />
         
         {/* Payment routes - public but only triggered after auth */}
         <Route path="/payment/success" element={<PaymentSuccess />} />

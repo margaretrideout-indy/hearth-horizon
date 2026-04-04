@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const QUESTIONS = [
@@ -14,11 +14,11 @@ const QUESTIONS = [
 
 export default function HorizonAudit() {
   const [answers, setAnswers] = useState({});
-  const [submitted, setSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (id, value) => setAnswers(prev => ({ ...prev, [id]: value }));
 
-  const handleSubmit = () => setSubmitted(true);
+  const handleSubmit = () => navigate('/synthesis', { state: { answers } });
 
   return (
     <div
@@ -50,52 +50,35 @@ export default function HorizonAudit() {
         </motion.div>
 
         {/* Form */}
-        {!submitted ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="rounded-2xl border border-white/10 p-6 md:p-8 space-y-6 shadow-2xl backdrop-blur-sm"
-            style={{ background: 'hsla(280, 25%, 12%, 0.82)' }}
-          >
-            {QUESTIONS.map((q, i) => (
-              <div key={q.id} className="space-y-2">
-                <label className="text-sm font-medium text-foreground/90">
-                  <span className="text-amber-400 mr-2">{i + 1}.</span>{q.label}
-                </label>
-                <textarea
-                  rows={3}
-                  value={answers[q.id] || ''}
-                  onChange={e => handleChange(q.id, e.target.value)}
-                  placeholder="Your reflection..."
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/50 resize-none transition-all"
-                />
-              </div>
-            ))}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="rounded-2xl border border-white/10 p-6 md:p-8 space-y-6 shadow-2xl backdrop-blur-sm"
+          style={{ background: 'hsla(280, 25%, 12%, 0.82)' }}
+        >
+          {QUESTIONS.map((q, i) => (
+            <div key={q.id} className="space-y-2">
+              <label className="text-sm font-medium text-foreground/90">
+                <span className="text-amber-400 mr-2">{i + 1}.</span>{q.label}
+              </label>
+              <textarea
+                rows={3}
+                value={answers[q.id] || ''}
+                onChange={e => handleChange(q.id, e.target.value)}
+                placeholder="Your reflection..."
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/50 resize-none transition-all"
+              />
+            </div>
+          ))}
 
-            <Button
-              onClick={handleSubmit}
-              className="w-full h-11 bg-amber-500 hover:bg-amber-400 text-background font-semibold mt-2"
-            >
-              Submit to Hearth
-            </Button>
-          </motion.div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4 }}
-            className="rounded-2xl border border-white/10 p-10 text-center space-y-4 shadow-2xl backdrop-blur-sm"
-            style={{ background: 'hsla(280, 25%, 12%, 0.82)' }}
+          <Button
+            onClick={handleSubmit}
+            className="w-full h-11 bg-amber-500 hover:bg-amber-400 text-background font-semibold mt-2"
           >
-            <CheckCircle2 className="w-12 h-12 text-primary mx-auto" />
-            <h2 className="font-heading text-2xl font-semibold text-foreground">Your reflections are planted.</h2>
-            <p className="text-muted-foreground text-sm">The forest holds your words. Return to The Grove to continue your journey.</p>
-            <Button asChild variant="outline" className="border-white/20 text-foreground hover:bg-white/5">
-              <Link to="/hearth">Return to The Grove</Link>
-            </Button>
-          </motion.div>
-        )}
+            Submit to Hearth → Generate Synthesis
+          </Button>
+        </motion.div>
       </div>
     </div>
   );
