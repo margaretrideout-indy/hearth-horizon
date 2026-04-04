@@ -7,6 +7,9 @@ import RoadmapProgress from '../components/dashboard/RoadmapProgress';
 import BrigidMessage from '../components/hearth/BrigidMessage';
 import HearthJournal from '../components/hearth/HearthJournal';
 import InstallBanner from '../components/hearth/InstallBanner';
+import HearthWelcome from '../components/hearth/HearthWelcome';
+import GroveGrid from '../components/hearth/GroveGrid';
+import GrowthPath from '../components/hearth/GrowthPath';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart } from 'lucide-react';
@@ -48,7 +51,7 @@ export default function YourHearth() {
   return (
     <div className="space-y-8">
       <InstallBanner />
-      <WelcomeHeader profile={profile} />
+      <HearthWelcome user={user} />
 
       {profile?.brigid_checkin_message && (
         <BrigidMessage message={profile.brigid_checkin_message} profileId={profile.id} />
@@ -57,6 +60,12 @@ export default function YourHearth() {
       <Card className="p-6 rounded-2xl border-border/50 shadow-sm">
         <RoadmapProgress currentStage={profile?.roadmap_stage || 'discovery'} />
       </Card>
+
+      {/* The Grove — resource grid */}
+      <GroveGrid />
+
+      {/* The Canopy — growth path checklist */}
+      <GrowthPath />
 
       {/* The Hearth — two-column journal interface */}
       {user && <HearthJournal user={user} />}
