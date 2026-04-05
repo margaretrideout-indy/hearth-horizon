@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Heart, Gift, Sprout, ArrowRight, Check } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Heart, Gift, Sprout, ArrowRight, Check, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -89,7 +89,7 @@ export default function Gateway() {
                 <ul className="mt-8 space-y-4 text-sm text-muted-foreground text-left">
                   <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Community Campfire access</span></li>
                   <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Public Reflection logs</span></li>
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Introductory resources</span></li>
+                  <li className="flex items-start gap-3"><FileText className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>**2 Free PDFs:** Transition & Grounding Guides</span></li>
                 </ul>
               </div>
               <Button asChild variant="outline" className="mt-8 w-full rounded-full h-12 border-border/50">
