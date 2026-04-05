@@ -158,12 +158,12 @@ export default function Gateway() {
             <p className="text-muted-foreground text-lg">
               Be among the first to access Hearth & Horizon at our legacy founding member rate. Limited to the first 25 members.
             </p>
-            <Button asChild size="lg" className="w-full sm:w-auto gap-2 mt-2">
-              <a href={LINK_STEWARD} target="_blank" rel="noopener noreferrer">
-                <Heart className="w-4 h-4" />
-                Join the Founding Forest
-              </a>
-            </Button>
+            <Button asChild size="lg" className="gap-2 h-12 px-8 text-base font-medium">
+  <a href="#pricing">  {/* <--- Change this line right here! */}
+    Join the Founding Forest
+    <ArrowRight className="w-5 h-5" />
+  </a>
+</Button>
             <p className="text-xs text-muted-foreground/70 italic">
               Founding rate locked for the first 25 members. After that, standard pricing applies.
             </p>
