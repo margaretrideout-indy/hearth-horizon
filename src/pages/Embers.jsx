@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-// Replace these imports with your actual Base44 / Database hooks
-// import { useDatabase, useUser } from '@base44/react'; 
+// These are the standard Base44 imports - double-check these match your project!
+import { useDatabase, useUser } from '@base44/react'; 
 
 const EmbersChat = () => {
-  // 1. Hook into your User and Message data
+  // 1. Initialize the tools
   const { user } = useUser(); 
   const { data: messages, add } = useDatabase('messages'); 
   
@@ -19,16 +19,16 @@ const EmbersChat = () => {
 
   // 3. The logic to actually send the message
   const handleSendMessage = async () => {
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || !user) return;
 
     try {
       await add({
         content: newMessage,
-        user_id: user?.id,
-        user_name: user?.name || 'Member',
+        user_id: user.id,
+        user_name: user.name || 'Member',
         created_at: new Date().toISOString(),
       });
-      setNewMessage(''); // Clear input after success
+      setNewMessage(''); 
     } catch (error) {
       console.error("Hearth Error:", error);
     }
@@ -45,7 +45,7 @@ const EmbersChat = () => {
         </p>
       </div>
 
-      {/* Chat Window - Now with SCROLL! */}
+      {/* Chat Window */}
       <div 
         ref={scrollRef}
         style={{ 
@@ -86,7 +86,7 @@ const EmbersChat = () => {
           type="text" 
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+          onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
           placeholder="Share a thought with the grove..."
           style={{ 
             flex: 1, 
