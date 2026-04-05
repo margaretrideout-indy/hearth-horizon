@@ -5,18 +5,39 @@ import { ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const TRANSLATIONS = [
-  {
-    legacy: 'Managed a classroom',
-    tech: 'Coordinated daily operations and stakeholder engagement.',
+ 
+  { 
+    legacy: "Designing & Implementing Curricular Frameworks", 
+    tech: "Product Lifecycle & Instructional Design: Developing end-to-end information delivery systems." 
   },
-  {
-    legacy: 'Developed curriculum',
-    tech: 'Architected scalable content frameworks.',
+  { 
+    legacy: "Differentiating Instruction for Diverse Learners", 
+    tech: "UX Personalization & Accessibility: Customizing complex content for varying user personas." 
   },
-  {
-    legacy: 'Assessed student progress',
-    tech: 'Analyzed user performance metrics to iterate on strategy.',
+  { 
+    legacy: "Leading Program Initiatives", 
+    tech: "Project & Program Management: Managing cross-functional projects with strict deadlines." 
   },
+  { 
+    legacy: "Culturally Responsive Teaching & Advocacy", 
+    tech: "Inclusivity & Localization (L10n): Adapting content for diverse global standards." 
+  },
+  { 
+    legacy: "Classroom & Behavioral Management", 
+    tech: "Community Operations: Coordinating high-density groups in fast-paced settings." 
+  },
+  { 
+    legacy: "Assessing Student Growth & Data Analysis", 
+    tech: "QA (Quality Assurance): Analyzing performance data to ensure quality standards." 
+  },
+  { 
+    legacy: "Facilitating High-Stakes Parent/Staff Meetings", 
+    tech: "Client Success: Translating technical progress into clear, actionable terms for stakeholders." 
+  },
+  { 
+    legacy: "Managing Rapid-Fire Instructional Objectives", 
+    tech: "Agile Execution & Sprint Planning: Executing deliverables in constantly changing environments." 
+  }
 ];
 
 export default function IdentityTranslator() {
