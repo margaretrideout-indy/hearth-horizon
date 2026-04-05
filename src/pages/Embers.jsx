@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-// These are the standard Base44 imports - double-check these match your project!
-import { useDatabase, useUser } from '@base44/react'; 
+import { useDatabase } from '@/hooks/useDatabase';
+import { useUser } from '@/hooks/useUser';
 
 const EmbersChat = () => {
   // 1. Initialize the tools
