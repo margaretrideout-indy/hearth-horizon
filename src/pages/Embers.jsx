@@ -4,6 +4,7 @@ const EmbersChat = ({ messages, onSendMessage, user }) => {
   const [newMessage, setNewMessage] = useState('');
   const scrollRef = useRef(null);
 
+  // Auto-scroll to the bottom whenever messages change
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -16,44 +17,73 @@ const EmbersChat = ({ messages, onSendMessage, user }) => {
     setNewMessage('');
   };
 
-  // --- STYLE CONTROLS ---
-  // Change these hex codes to match your specific site brand!
-  const brandBlue = '#63b3ed'; // Your accent color
-  const glassBackground = 'rgba(255, 255, 255, 0.05)'; // Subtle "glass" look
+  // --- BRAND COLORS (HEARTH TEAL) ---
+  const brandTeal = '#0d9488'; // Deep, grounding teal
+  const mintTeal = '#2dd4bf';  // Bright, minty accent
+  const glassBg = 'rgba(255, 255, 255, 0.05)';
   const borderStyle = '1px solid rgba(255, 255, 255, 0.1)';
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px', height: '80vh', display: 'flex', flexDirection: 'column', color: 'inherit', fontFamily: 'inherit' }}>
+    <div style={{ 
+      maxWidth: '800px', 
+      margin: '0 auto', 
+      padding: '20px', 
+      height: '80vh', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      color: 'white', 
+      fontFamily: 'sans-serif' 
+    }}>
       
-      {/* Welcome Banner - Now using "Glass" style to blend in */}
-      <div style={{ background: glassBackground, borderLeft: `4px solid ${brandBlue}`, padding: '15px', borderRadius: '12px', marginBottom: '20px', backdropFilter: 'blur(10px)' }}>
-        <h3 style={{ margin: 0, color: brandBlue, fontSize: '1.2rem' }}>Welcome to The Embers 🌲</h3>
-        <p style={{ margin: '5px 0 0 0', opacity: 0.8, fontSize: '0.95rem' }}>
+      {/* Welcome Banner */}
+      <div style={{ 
+        background: 'rgba(13, 148, 136, 0.15)', 
+        borderLeft: `4px solid ${brandTeal}`, 
+        padding: '15px', 
+        borderRadius: '12px', 
+        marginBottom: '20px', 
+        backdropFilter: 'blur(10px)' 
+      }}>
+        <h3 style={{ margin: 0, color: mintTeal, fontSize: '1.2rem' }}>Welcome to The Embers 🌲</h3>
+        <p style={{ margin: '5px 0 0 0', opacity: 0.9, fontSize: '0.95rem', color: '#ccfbf1' }}>
           Grab your <b>Free Bridge Builder PDFs</b> in the Resources tab and share a spark below.
         </p>
       </div>
 
-      {/* Chat Window - Transparent background to show your site theme through it */}
+      {/* Chat Window */}
       <div 
         ref={scrollRef}
-        style={{ flex: 1, overflowY: 'auto', background: 'transparent', padding: '10px', display: 'flex', flexDirection: 'column', gap: '12px' }}
+        style={{ 
+          flex: 1, 
+          overflowY: 'auto', 
+          background: 'transparent', 
+          padding: '10px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '15px' 
+        }}
       >
         {messages && messages.length > 0 ? (
           messages.map((msg) => (
             <div key={msg.id} style={{ 
               alignSelf: msg.user_id === user?.id ? 'flex-end' : 'flex-start', 
-              background: msg.user_id === user?.id ? brandBlue : glassBackground, 
-              color: msg.user_id === user?.id ? '#1a202c' : 'white',
-              padding: '12px 16px', 
-              borderRadius: '16px', 
+              background: msg.user_id === user?.id ? brandTeal : glassBg, 
+              color: 'white',
+              padding: '12px 18px', 
+              borderRadius: msg.user_id === user?.id ? '18px 18px 4px 18px' : '18px 18px 18px 4px', 
               maxWidth: '80%',
-              border: msg.user_id === user?.id ? 'none' : borderStyle,
-              boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+              border: msg.user_id === user?.id ? `1px solid ${brandTeal}` : borderStyle,
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
             }}>
-              <div style={{ fontSize: '0.75rem', opacity: 0.8, fontWeight: 'bold', marginBottom: '4px' }}>
+              <div style={{ 
+                fontSize: '0.75rem', 
+                color: mintTeal, 
+                fontWeight: 'bold', 
+                marginBottom: '4px' 
+              }}>
                 {msg.user_name || 'Seedling'}
               </div>
-              <div style={{ fontSize: '1rem', lineHeight: '1.5' }}>{msg.content}</div>
+              <div style={{ fontSize: '1rem', lineHeight: '1.6' }}>{msg.content}</div>
             </div>
           ))
         ) : (
@@ -63,7 +93,7 @@ const EmbersChat = ({ messages, onSendMessage, user }) => {
         )}
       </div>
 
-      {/* Input Area - Matches your site's dark/light mode automatically */}
+      {/* Input Area */}
       <div style={{ marginTop: '20px', display: 'flex', gap: '12px' }}>
         <input 
           type="text" 
@@ -74,24 +104,25 @@ const EmbersChat = ({ messages, onSendMessage, user }) => {
           style={{ 
             flex: 1, 
             padding: '14px', 
-            borderRadius: '12px', 
+            borderRadius: '14px', 
             border: borderStyle, 
-            background: glassBackground, 
+            background: 'rgba(0, 0, 0, 0.2)', 
             color: 'white',
-            outline: 'none'
+            outline: 'none',
+            fontSize: '1rem'
           }}
         />
         <button 
           onClick={handleSend} 
           style={{ 
-            padding: '0 28px', 
-            borderRadius: '12px', 
-            background: brandBlue, 
-            color: '#1a202c', 
-            fontWeight: 'bold', 
+            padding: '0 30px', 
+            borderRadius: '14px', 
+            background: brandTeal, 
+            color: 'white', 
+            fontWeight: '600', 
             border: 'none', 
             cursor: 'pointer',
-            transition: 'transform 0.2s'
+            boxShadow: `0 4px 14px rgba(13, 148, 136, 0.4)`
           }}
         >
           Send
