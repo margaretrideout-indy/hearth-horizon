@@ -30,7 +30,7 @@ export default function Gateway() {
           <Link to="/install" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Install App</Link>
           <Button onClick={handleLoginClick} variant="outline" size="sm">Log In</Button>
         </div>
-        <div className="max-w-4xl mx-auto px-4 py-24 md:py-32 space-y-8">
+        <div className="max-w-4xl mx-auto px-4 py-24 md:py-32 space-y-8 text-left">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="font-heading text-5xl md:text-6xl font-bold text-foreground leading-tight">
               Ground your history.<br />
@@ -49,29 +49,8 @@ export default function Gateway() {
         </div>
       </section>
 
-      {/* Feature Preview */}
-      <section className="px-4 py-20 bg-background">
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-          <Card className="p-6 border-border/50">
-            <Heart className="w-5 h-5 text-secondary mb-3" />
-            <h3 className="font-semibold mb-2 text-foreground">The Grove</h3>
-            <p className="text-sm text-muted-foreground">A reciprocity model where your contribution sponsors a peer seat.</p>
-          </Card>
-          <Card className="p-6 border-border/50">
-            <Heart className="w-5 h-5 text-primary mb-3" />
-            <h3 className="font-semibold mb-2 text-foreground">The Canopy</h3>
-            <p className="text-sm text-muted-foreground">Curated job board and pathways for experienced professionals.</p>
-          </Card>
-          <Card className="p-6 border-border/50">
-            <Heart className="w-5 h-5 text-accent mb-3" />
-            <h3 className="font-semibold mb-2 text-foreground">The Embers</h3>
-            <p className="text-sm text-muted-foreground">A community campfire for shared reflections and support.</p>
-          </Card>
-        </div>
-      </section>
-
       {/* Pricing Section */}
-      <section id="pricing" className="px-4 py-24 border-t border-border/10">
+      <section id="pricing" className="px-4 py-24 border-t border-border/10 bg-background">
         <div className="max-w-7xl mx-auto space-y-12">
           <div className="text-center space-y-4">
             <h2 className="text-4xl font-semibold italic text-foreground">Choose Your Place in the Forest</h2>
@@ -83,13 +62,16 @@ export default function Gateway() {
             {/* TIER 0: THE SEEDLING */}
             <Card className="p-8 flex flex-col justify-between border-border/40 bg-background/30 hover:border-border transition-all">
               <div>
-                <Sprout className="w-8 h-8 text-muted-foreground mb-6" />
+                <div className="flex justify-between items-center mb-6">
+                   <Sprout className="w-8 h-8 text-muted-foreground" />
+                   <span className="px-2 py-1 text-xs font-medium rounded-full bg-muted text-muted-foreground">Free</span>
+                </div>
                 <h3 className="font-heading text-xl font-bold text-foreground">The Seedling</h3>
                 <div className="text-3xl font-bold mt-2 text-muted-foreground">$0</div>
                 <ul className="mt-8 space-y-4 text-sm text-muted-foreground text-left">
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Community Campfire access</span></li>
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Public Reflection logs</span></li>
-                  <li className="flex items-start gap-3"><FileText className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>**2 Free PDFs:** Transition & Grounding Guides</span></li>
+                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Access to **The Embers** campfire chat</span></li>
+                  <li className="flex items-start gap-3"><FileText className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>2 Bridge Builder crossings (PDFs) / month</span></li>
+                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Foundational grounding resources</span></li>
                 </ul>
               </div>
               <Button asChild variant="outline" className="mt-8 w-full rounded-full h-12 border-border/50">
@@ -104,9 +86,9 @@ export default function Gateway() {
                 <h3 className="text-xl font-bold text-foreground">The Hearthkeeper</h3>
                 <div className="text-3xl font-bold mt-2 text-primary">$3 <span className="text-sm text-muted-foreground font-normal">/ mo</span></div>
                 <ul className="mt-8 space-y-4 text-sm text-muted-foreground text-left">
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Everything in Seedling</span></li>
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>**Full Canopy Job Board**</span></li>
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Founding Member Badge</span></li>
+                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Everything in **Seedling**</span></li>
+                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Support this sanctuary's ecosystem</span></li>
+                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Founding Member status</span></li>
                 </ul>
               </div>
               <Button asChild className="mt-8 rounded-full h-12"><a href={LINK_HEARTHKEEPER} target="_blank" rel="noopener noreferrer">Select</a></Button>
@@ -115,12 +97,15 @@ export default function Gateway() {
             {/* TIER 2: THE STEWARD */}
             <Card className="p-8 flex flex-col justify-between border-primary bg-primary/5 shadow-xl md:-translate-y-2 border-2">
               <div>
-                <Gift className="w-8 h-8 text-primary mb-6" />
+                <div className="flex justify-between items-center mb-6">
+                   <Gift className="w-8 h-8 text-primary" />
+                   <span className="px-2 py-1 text-xs font-medium rounded-full bg-primary/20 text-primary">Reciprocity</span>
+                </div>
                 <h3 className="text-xl font-bold text-foreground">The Steward</h3>
                 <div className="text-3xl font-bold mt-2 text-primary">$5 <span className="text-sm text-muted-foreground font-normal">/ mo</span></div>
                 <ul className="mt-8 space-y-4 text-sm text-muted-foreground text-left">
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Everything in Hearthkeeper</span></li>
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>**Sponsor a Peer Seat**</span></li>
+                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Everything in **Hearthkeeper**</span></li>
+                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>**Sponsor a peer seat** in transition</span></li>
                   <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Community Voting rights</span></li>
                 </ul>
               </div>
@@ -134,8 +119,8 @@ export default function Gateway() {
                 <h3 className="text-xl font-bold text-foreground">Plant a Seed</h3>
                 <div className="text-3xl font-bold mt-2 text-secondary">Custom</div>
                 <ul className="mt-8 space-y-4 text-sm text-muted-foreground text-left">
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-secondary mt-0.5 shrink-0" /> <span>One-time Gift</span></li>
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-secondary mt-0.5 shrink-0" /> <span>Direct Voucher Pool funding</span></li>
+                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-secondary mt-0.5 shrink-0" /> <span>Flexible one-time contribution</span></li>
+                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-secondary mt-0.5 shrink-0" /> <span>Directly fund the Voucher Pool</span></li>
                   <li className="flex items-start gap-3"><Check className="w-4 h-4 text-secondary mt-0.5 shrink-0" /> <span>Legacy Community Support</span></li>
                 </ul>
               </div>
