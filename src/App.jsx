@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 // --- 1. THE TIER BADGE ---
 const TierBadge = ({ userTier = 'seedling' }) => {
@@ -36,39 +35,20 @@ const Dashboard = ({ user }) => (
   </div>
 );
 
-// --- 3. INSIGHTS/RESOURCES PAGE ---
-const HearthInsights = ({ userTier }) => {
-  const resources = [
-    { title: "Teacher-to-Tech Dictionary", cat: "Strategy", icon: "📖", premium: true },
-    { title: "Linguistic Bridge Guide", cat: "Tutorial", icon: "🌉", premium: false }
-  ];
-  return (
-    <div style={{ padding: '40px 20px', maxWidth: '1000px', margin: '0 auto' }}>
-      <h1 style={{ marginBottom: '30px' }}>Hearth Insights</h1>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
-        {resources.map((res, i) => (
-          <div key={i} style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '15px', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <div style={{ fontSize: '2rem' }}>{res.icon}</div>
-            <h4>{res.title}</h4>
-            {res.premium && userTier === 'seedling' && <span style={{ color: '#2dd4bf', fontSize: '0.7rem' }}>🔒 PREMIUM</span>}
-          </div>
-        ))}
-      </div>
+// --- 3. INSIGHTS PAGE ---
+const HearthInsights = ({ userTier }) => (
+  <div style={{ padding: '40px 20px', maxWidth: '1000px', margin: '0 auto' }}>
+    <h1 style={{ marginBottom: '30px' }}>Hearth Insights</h1>
+    <div style={{ background: 'rgba(255,255,255,0.05)', padding: '30px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>
+      <h3>The Teacher-to-Tech Dictionary</h3>
+      <p style={{ opacity: 0.7 }}>Coming soon for Hearthkeepers.</p>
     </div>
-  );
-};
-
-// --- 4. PRICING/JOIN PAGE ---
-const Pricing = () => (
-  <div style={{ padding: '40px 20px', textAlign: 'center' }}>
-    <h1>Join the Grove</h1>
-    <p>Select a tier to support the community.</p>
-    {/* Simplified for brevity, you can paste your full pricing cards here later */}
   </div>
 );
 
-// --- 5. MAIN APP ENGINE ---
+// --- 4. MAIN APP ENGINE (No Router Version) ---
 export default function App() {
+  const [currentPage, setCurrentPage] = useState('dashboard');
   const [user] = useState({ name: 'Margaret', tier: 'founder' });
 
   const navStyle = {
@@ -76,24 +56,29 @@ export default function App() {
     borderBottom: '1px solid rgba(255,255,255,0.1)', alignItems: 'center'
   };
 
-  const linkStyle = { color: '#2dd4bf', textDecoration: 'none', fontWeight: 'bold' };
+  const linkStyle = (page) => ({
+    color: currentPage === page ? '#2dd4bf' : 'white',
+    textDecoration: 'none',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    background: 'none',
+    border: 'none',
+    fontSize: '1rem'
+  });
 
   return (
-    <Router>
-      <div style={{ minHeight: '100vh', background: '#020617', color: 'white', fontFamily: 'sans-serif' }}>
-        <nav style={navStyle}>
-          <div style={{ marginRight: 'auto', fontWeight: 'bold', fontSize: '1.2rem' }}>Hearth & Horizon</div>
-          <Link to="/" style={linkStyle}>Dashboard</Link>
-          <Link to="/resources" style={linkStyle}>Insights</Link>
-          <Link to="/join" style={linkStyle}>Membership</Link>
-        </nav>
+    <div style={{ minHeight: '100vh', background: '#020617', color: 'white', fontFamily: 'sans-serif' }}>
+      <nav style={navStyle}>
+        <div style={{ marginRight: 'auto', fontWeight: 'bold', fontSize: '1.2rem' }}>Hearth & Horizon</div>
+        <button onClick={() => setCurrentPage('dashboard')} style={linkStyle('dashboard')}>Dashboard</button>
+        <button onClick={() => setCurrentPage('resources')} style={linkStyle('resources')}>Insights</button>
+        <button onClick={() => setCurrentPage('join')} style={linkStyle('join')}>Membership</button>
+      </nav>
 
-        <Routes>
-          <Route path="/" element={<Dashboard user={user} />} />
-          <Route path="/resources" element={<HearthInsights userTier={user.tier} />} />
-          <Route path="/join" element={<Pricing />} />
-        </Routes>
-      </div>
-    </Router>
+      {/* RENDER CONTENT BASED ON STATE */}
+      {currentPage === 'dashboard' && <Dashboard user={user} />}
+      {currentPage === 'resources' && <HearthInsights userTier={user.tier} />}
+      {currentPage === 'join' && <div style={{ padding: '40px', textAlign: 'center' }}><h1>Membership Options</h1></div>}
+    </div>
   );
 }
