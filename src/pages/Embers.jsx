@@ -4,7 +4,6 @@ const EmbersChat = ({ messages, onSendMessage, user }) => {
   const [newMessage, setNewMessage] = useState('');
   const scrollRef = useRef(null);
 
-  // Auto-scroll to the bottom whenever messages change
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -18,8 +17,8 @@ const EmbersChat = ({ messages, onSendMessage, user }) => {
   };
 
   // --- BRAND COLORS (HEARTH TEAL) ---
-  const brandTeal = '#0d9488'; // Deep, grounding teal
-  const mintTeal = '#2dd4bf';  // Bright, minty accent
+  const brandTeal = '#0d9488'; 
+  const mintTeal = '#2dd4bf';  
   const glassBg = 'rgba(255, 255, 255, 0.05)';
   const borderStyle = '1px solid rgba(255, 255, 255, 0.1)';
 
@@ -35,18 +34,18 @@ const EmbersChat = ({ messages, onSendMessage, user }) => {
       fontFamily: 'sans-serif' 
     }}>
       
-      {/* Welcome Banner */}
+      {/* Welcome Banner - Resume Review Focus */}
       <div style={{ 
         background: 'rgba(13, 148, 136, 0.15)', 
         borderLeft: `4px solid ${brandTeal}`, 
-        padding: '15px', 
+        padding: '18px', 
         borderRadius: '12px', 
         marginBottom: '20px', 
         backdropFilter: 'blur(10px)' 
       }}>
         <h3 style={{ margin: 0, color: mintTeal, fontSize: '1.2rem' }}>Welcome to The Embers 🌲</h3>
-        <p style={{ margin: '5px 0 0 0', opacity: 0.9, fontSize: '0.95rem', color: '#ccfbf1' }}>
-          Grab your <b>Free Bridge Builder PDFs</b> in the Resources tab and share a spark below.
+        <p style={{ margin: '8px 0 0 0', opacity: 0.9, fontSize: '0.95rem', color: '#ccfbf1', lineHeight: '1.4' }}>
+          Ready for your next horizon? Head over to the <b>Resume Review</b> tab to upload your PDF and get instant, AI-powered feedback on your transition into tech.
         </p>
       </div>
 
@@ -75,12 +74,7 @@ const EmbersChat = ({ messages, onSendMessage, user }) => {
               border: msg.user_id === user?.id ? `1px solid ${brandTeal}` : borderStyle,
               boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
             }}>
-              <div style={{ 
-                fontSize: '0.75rem', 
-                color: mintTeal, 
-                fontWeight: 'bold', 
-                marginBottom: '4px' 
-              }}>
+              <div style={{ fontSize: '0.75rem', color: mintTeal, fontWeight: 'bold', marginBottom: '4px' }}>
                 {msg.user_name || 'Seedling'}
               </div>
               <div style={{ fontSize: '1rem', lineHeight: '1.6' }}>{msg.content}</div>
@@ -88,7 +82,7 @@ const EmbersChat = ({ messages, onSendMessage, user }) => {
           ))
         ) : (
           <div style={{ textAlign: 'center', opacity: 0.4, marginTop: '40px', fontStyle: 'italic' }}>
-            The hearth is quiet... be the first to share a spark.
+            The hearth is quiet... share your first spark below.
           </div>
         )}
       </div>
@@ -100,7 +94,7 @@ const EmbersChat = ({ messages, onSendMessage, user }) => {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder="Share a spark..."
+          placeholder="Say hello to the grove..."
           style={{ 
             flex: 1, 
             padding: '14px', 
