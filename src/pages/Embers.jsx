@@ -25,11 +25,11 @@ const EmbersChat = ({ messages, onSendMessage, user }) => {
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px', height: '80vh', display: 'flex', flexDirection: 'column', color: 'white', fontFamily: 'sans-serif' }}>
       
-      {/* Welcome Banner */}
+      {/* Welcome Banner - Final Correction */}
       <div style={{ background: 'rgba(13, 148, 136, 0.15)', borderLeft: `4px solid ${brandTeal}`, padding: '18px', borderRadius: '12px', marginBottom: '20px', backdropFilter: 'blur(10px)' }}>
         <h3 style={{ margin: 0, color: mintTeal, fontSize: '1.2rem' }}>Welcome to The Embers 🌲</h3>
         <p style={{ margin: '8px 0 0 0', opacity: 0.9, fontSize: '0.95rem', color: '#ccfbf1', lineHeight: '1.4' }}>
-          Ready for your next horizon? Head over to the <b>Resume Review</b> tab to upload your PDF and get instant feedback on your transition into tech.
+          Ready for your next horizon? Head over to <b>The Bridge Builder</b> to upload your PDF and get instant feedback on your career transition.
         </p>
       </div>
 
@@ -46,7 +46,7 @@ const EmbersChat = ({ messages, onSendMessage, user }) => {
             </div>
           ))
         ) : (
-          // --- MARGARET'S PINNED WELCOME ---
+          /* MARGARET'S PINNED WELCOME */
           <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '20px' }}>
             <div style={{ background: glassBg, padding: '20px', borderRadius: '18px', maxWidth: '85%', border: borderStyle, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
               <div style={{ fontSize: '0.85rem', color: mintTeal, fontWeight: 'bold', marginBottom: '8px', letterSpacing: '0.05em' }}>
