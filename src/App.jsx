@@ -1,95 +1,123 @@
 import React, { useState } from 'react';
 
-// --- 1. SIDEBAR NAVIGATION ---
-const Sidebar = ({ currentPage, setCurrentPage }) => {
-  const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
-    { id: 'insights', label: 'Hearth Insights', icon: '🕯️' },
-    { id: 'membership', label: 'The Grove', icon: '🌲' },
-    { id: 'settings', label: 'Settings', icon: '⚙️' },
-  ];
-
-  return (
-    <div style={{
-      width: '280px', height: '100vh', background: '#1c1921', 
-      borderRight: '1px solid rgba(255,255,255,0.05)', display: 'flex', 
-      flexDirection: 'column', padding: '40px 20px', position: 'fixed', left: 0, top: 0
-    }}>
-      <div style={{ fontWeight: '900', fontSize: '1.4rem', color: 'white', marginBottom: '50px', paddingLeft: '15px' }}>
-        Hearth <span style={{ color: '#2dd4bf' }}>&</span> Horizon
-      </div>
-      
-      {navItems.map((item) => (
-        <button
-          key={item.id}
-          onClick={() => setCurrentPage(item.id)}
-          style={{
-            display: 'flex', alignItems: 'center', gap: '15px', padding: '15px',
-            borderRadius: '12px', border: 'none', cursor: 'pointer', marginBottom: '10px',
-            background: currentPage === item.id ? 'rgba(45, 212, 191, 0.1)' : 'transparent',
-            color: currentPage === item.id ? '#2dd4bf' : '#94a3b8',
-            transition: '0.2s', textAlign: 'left', fontWeight: '700'
-          }}
-        >
-          <span style={{ fontSize: '1.2rem' }}>{item.icon}</span>
-          {item.label}
-        </button>
-      ))}
-    </div>
-  );
-};
-
-// --- 2. DASHBOARD PAGE ---
-const Dashboard = () => (
-  <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-    <div style={{
-      background: 'rgba(255, 255, 255, 0.03)', padding: '60px 50px', borderRadius: '40px', 
-      border: '1px solid rgba(45, 212, 191, 0.2)', marginBottom: '30px'
-    }}>
-      <h1 style={{ fontSize: '4.5rem', fontWeight: '900', letterSpacing: '-0.04em', lineHeight: '1', color: 'white', margin: '0 0 15px 0' }}>
-        Welcome back, Margaret.
-      </h1>
-      <p style={{ fontSize: '1.2rem', color: '#a0aec0', maxWidth: '500px', lineHeight: '1.6' }}>
-        Your transition to the tech sector is a bridge built on 13 years of expertise.
-      </p>
-      
-      <div style={{
-        display: 'inline-flex', alignItems: 'center', gap: '10px', padding: '10px 20px',
-        background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid rgba(45,212,191,0.2)', marginTop: '20px'
-      }}>
-        <span style={{ color: '#2dd4bf', fontWeight: '900', fontSize: '0.8rem', letterSpacing: '0.05em' }}>FOUNDER TIER</span>
-      </div>
-    </div>
-
-    <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '40px', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.05)' }}>
-      <h3 style={{ color: '#2dd4bf', marginBottom: '10px' }}>Ready to cross the bridge?</h3>
-      <p style={{ color: '#a0aec0', marginBottom: '25px' }}>Upload your latest CV to begin the linguistic translation into tech data roles.</p>
-      <button style={{ 
-        background: '#14b8a6', color: '#1c1921', border: 'none', padding: '14px 30px', 
-        borderRadius: '12px', fontWeight: '900', cursor: 'pointer' 
-      }}>
-        Start Translation →
-      </button>
-    </div>
-  </div>
-);
-
-// --- 3. MAIN APP ENGINE ---
 export default function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
+  const [isTranslating, setIsTranslating] = useState(false);
+
+  const colors = {
+    bg: '#241f31',
+    card: '#2d283e',
+    accent: '#2dd4bf',
+    text: '#ffffff',
+    secondary: '#94a3b8'
+  };
+
+  const handleTranslate = () => {
+    setIsTranslating(true);
+    setTimeout(() => {
+      alert("Bridge Builder: Initializing linguistic data translation...");
+      setIsTranslating(false);
+    }, 800);
+  };
+
+  const cardStyle = {
+    background: colors.card,
+    borderRadius: '35px',
+    border: '1px solid rgba(255, 255, 255, 0.05)',
+    padding: '40px',
+    textAlign: 'left',
+    boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+  };
+
+  const Dashboard = () => (
+    <div style={{ maxWidth: '900px', display: 'flex', flexDirection: 'column', gap: '30px' }}>
+      <div style={{ ...cardStyle, padding: '60px 50px', background: 'linear-gradient(145deg, #2d283e, #241f31)' }}>
+        <h1 style={{ fontSize: '5rem', fontWeight: '900', letterSpacing: '-0.05em', margin: '0 0 10px 0', lineHeight: '0.9', color: colors.text }}>
+          Welcome back, <br/>Margaret.
+        </h1>
+        <p style={{ fontSize: '1.2rem', color: colors.secondary, maxWidth: '500px', marginBottom: '25px' }}>
+          Your 13 years of expertise is the bedrock of this transition.
+        </p>
+        <div style={{ display: 'inline-block', padding: '10px 20px', borderRadius: '12px', background: 'rgba(45, 212, 191, 0.1)', border: '1px solid rgba(45, 212, 191, 0.3)' }}>
+          <span style={{ color: colors.accent, fontWeight: '900', fontSize: '0.8rem', letterSpacing: '0.1em' }}>FOUNDER TIER</span>
+        </div>
+      </div>
+
+      <div style={cardStyle}>
+        <h3 style={{ color: colors.accent, fontSize: '1.2rem', fontWeight: '900', margin: '0 0 10px 0' }}>Ready to cross the bridge?</h3>
+        <p style={{ color: colors.secondary, margin: '0 0 30px 0' }}>Upload your CV to begin the linguistic translation into tech-sector data narratives.</p>
+        <button 
+          onClick={handleTranslate}
+          style={{ 
+            background: colors.accent, color: colors.bg, border: 'none', 
+            padding: '16px 36px', borderRadius: '15px', fontWeight: '900', 
+            cursor: 'pointer', transition: 'transform 0.1s',
+            opacity: isTranslating ? 0.7 : 1
+          }}
+        >
+          {isTranslating ? 'Processing...' : 'Start Translation →'}
+        </button>
+      </div>
+    </div>
+  );
+
+  const Membership = () => (
+    <div style={{ maxWidth: '1000px' }}>
+      <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '40px', color: colors.text }}>The Grove</h2>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+        {['The Seedling', 'The Hearthkeeper'].map((tier, i) => (
+          <div key={i} style={cardStyle}>
+            <div style={{fontSize: '2rem', marginBottom: '10px'}}>{i === 0 ? '🌱' : '🔥'}</div>
+            <h4 style={{fontSize: '1.5rem', fontWeight: '900', margin: 0, color: colors.text}}>{tier}</h4>
+            <p style={{color: colors.secondary, marginTop: '10px'}}>Active membership tier details and community voting rights.</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const GenericPage = ({ title }) => (
+    <div style={cardStyle}>
+      <h2 style={{fontWeight: '900', color: colors.text}}>{title}</h2>
+      <p style={{color: colors.secondary}}>This section is currently being cultivated. Resources for your career transition will appear here shortly.</p>
+    </div>
+  );
 
   return (
-    <div style={{ 
-      minHeight: '100vh', background: '#1c1921', color: 'white', 
-      fontFamily: 'system-ui, -apple-system, sans-serif', display: 'flex' 
-    }}>
-      <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      
-      <main style={{ flex: 1, marginLeft: '280px', padding: '60px' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: colors.bg, color: colors.text, fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      <nav style={{ width: '280px', padding: '50px 20px', borderRight: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', position: 'fixed', height: '100vh' }}>
+        <div style={{ fontWeight: '900', fontSize: '1.6rem', marginBottom: '60px', paddingLeft: '15px' }}>
+          Hearth <span style={{ color: colors.accent }}>&</span> Horizon
+        </div>
+        
+        {[
+          { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
+          { id: 'insights', label: 'Hearth Insights', icon: '🕯️' },
+          { id: 'membership', label: 'The Grove', icon: '🌲' },
+          { id: 'settings', label: 'Settings', icon: '⚙️' }
+        ].map((link) => (
+          <button
+            key={link.id}
+            onClick={() => setCurrentPage(link.id)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '15px', padding: '16px 20px',
+              borderRadius: '15px', border: 'none', cursor: 'pointer', marginBottom: '10px',
+              background: currentPage === link.id ? 'rgba(45, 212, 191, 0.15)' : 'transparent',
+              color: currentPage === link.id ? colors.accent : colors.secondary,
+              fontWeight: '700', textAlign: 'left', transition: '0.2s'
+            }}
+          >
+            <span style={{fontSize: '1.2rem'}}>{link.icon}</span>
+            {link.label}
+          </button>
+        ))}
+      </nav>
+
+      <main style={{ flex: 1, marginLeft: '280px', padding: '80px 60px' }}>
         {currentPage === 'dashboard' && <Dashboard />}
-        {currentPage === 'insights' && <div style={{padding: '40px'}}><h1>Hearth Insights</h1></div>}
-        {currentPage === 'membership' && <div style={{padding: '40px'}}><h1>The Grove</h1></div>}
-        {currentPage === 'settings' && <div style={{padding: '40px'}}><h1>Settings</h1></div>}
+        {currentPage === 'membership' && <Membership />}
+        {currentPage === 'insights' && <GenericPage title="Hearth Insights" />}
+        {currentPage === 'settings' && <GenericPage title="Settings" />}
       </main>
     </div>
   );
