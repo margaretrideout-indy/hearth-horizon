@@ -1,117 +1,61 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
+import WelcomeHeader from '../components/dashboard/WelcomeHeader';
+import RoadmapProgress from '../components/dashboard/RoadmapProgress';
+import QuickActions from '../components/dashboard/QuickActions';
+import RecentActivity from '../components/dashboard/RecentActivity';
+import TargetUsers from '../components/dashboard/TargetUsers';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Heart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-// --- COMPONENTS ---
-
-const TierBadge = () => (
-  <div style={{
-    display: 'inline-flex', alignItems: 'center', gap: '12px', padding: '12px 20px',
-    background: 'rgba(255, 255, 255, 0.05)', borderRadius: '16px', 
-    border: '1px solid rgba(45, 212, 191, 0.3)', marginTop: '20px'
-  }}>
-    <span style={{ fontSize: '1.4rem' }}>🕯️</span>
-    <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
-      <span style={{ color: '#2dd4bf', fontWeight: '900', fontSize: '0.85rem', letterSpacing: '0.05em' }}>FOUNDER</span>
-      <span style={{ color: '#a0aec0', fontSize: '0.75rem' }}>The Hearth Builder</span>
-    </div>
-  </div>
-);
-
-const Dashboard = () => (
-  <div style={{ padding: '40px 20px', maxWidth: '1000px', margin: '0 auto' }}>
-    {/* Welcome Card */}
-    <div style={{
-      background: 'rgba(53, 47, 68, 0.6)', padding: '60px 50px', borderRadius: '40px', 
-      border: '1px solid rgba(45, 212, 191, 0.2)', marginBottom: '30px', textAlign: 'left',
-      backdropFilter: 'blur(15px)', boxShadow: '0 20px 50px rgba(0,0,0,0.2)'
-    }}>
-      <h1 style={{ fontSize: '5rem', margin: '0 0 15px 0', fontWeight: '900', letterSpacing: '-0.05em', lineHeight: '1', color: 'white' }}>
-        Welcome to the Horizon
-      </h1>
-      <p style={{ fontSize: '1.25rem', color: '#cbd5e1', maxWidth: '550px', lineHeight: '1.5', margin: '0' }}>
-        The path forward is clear, Margaret. Your transition to tech is illuminated by 13 years of wisdom.
-      </p>
-      <TierBadge />
-    </div>
-
-    {/* Action Card */}
-    <div style={{ 
-      background: 'rgba(53, 47, 68, 0.4)', padding: '40px', borderRadius: '35px', 
-      border: '1px solid rgba(255, 255, 255, 0.08)', textAlign: 'left', backdropFilter: 'blur(10px)' 
-    }}>
-      <p style={{ color: '#2dd4bf', fontSize: '0.9rem', fontWeight: '900', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-        Ready for your next crossing?
-      </p>
-      <p style={{ color: '#cbd5e1', fontSize: '1.1rem', margin: '0 0 25px 0', lineHeight: '1.6' }}>
-        Upload your CV to <b>The Bridge Builder</b>. We'll translate your educational leadership into tech-sector data narratives.
-      </p>
-      <button style={{ 
-        background: '#14b8a6', color: '#2a2438', border: 'none', padding: '16px 36px', 
-        borderRadius: '15px', fontWeight: '900', cursor: 'pointer', fontSize: '1.1rem'
-      }}>
-        Start Translation →
-      </button>
-    </div>
-  </div>
-);
-
-const HearthInsights = () => (
-  <div style={{ padding: '40px 20px', maxWidth: '1000px', margin: '0 auto' }}>
-    <h1 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '30px', color: 'white', letterSpacing: '-0.02em' }}>Hearth Insights</h1>
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '25px' }}>
-      {[
-        { title: 'Teacher-to-Tech Dictionary', icon: '📖' },
-        { title: 'Linguistic Bridge Guide', icon: '🌉' }
-      ].map((item, i) => (
-        <div key={i} style={{ 
-          background: 'rgba(53, 47, 68, 0.6)', padding: '30px', borderRadius: '30px', 
-          border: '1px solid rgba(255, 255, 255, 0.08)', textAlign: 'left', backdropFilter: 'blur(10px)' 
-        }}>
-          <div style={{ fontSize: '2.3rem', marginBottom: '15px' }}>{item.icon}</div>
-          <h4 style={{ margin: 0, fontSize: '1.4rem', fontWeight: '900', color: 'white' }}>{item.title}</h4>
-          <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginTop: '10px' }}>Exclusive Hearthkeeper Resource</p>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-// --- MAIN APP ---
-
-export default function App() {
-  const [currentPage, setCurrentPage] = useState('dashboard');
-
-  const bgPlum = '#2a2438'; // The deeply saturated Forest/Plum background
-  
-  const navLinkStyle = (id) => ({
-    background: 'none', border: 'none', 
-    color: currentPage === id ? '#2dd4bf' : '#94a3b8',
-    fontSize: '0.85rem', fontWeight: '900', cursor: 'pointer', 
-    textTransform: 'uppercase', letterSpacing: '0.2em', 
-    borderBottom: currentPage === id ? '2px solid #2dd4bf' : '2px solid transparent',
-    paddingBottom: '6px', transition: '0.3s'
+export default function Dashboard() {
+  const { data: profiles } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: () => base44.entities.UserProfile.list(),
+    initialData: [],
   });
 
-  return (
-    <div style={{ minHeight: '100vh', background: bgPlum, color: 'white', fontFamily: 'system-ui, sans-serif' }}>
-      <nav style={{ display: 'flex', gap: '40px', padding: '30px 60px', alignItems: 'center', position: 'sticky', top: 0, zIndex: 100, background: bgPlum }}>
-        <div style={{ marginRight: 'auto', fontWeight: '900', fontSize: '1.5rem', letterSpacing: '-0.04em' }}>
-          Hearth <span style={{ color: '#2dd4bf' }}>&</span> Horizon
-        </div>
-        <button onClick={() => setCurrentPage('dashboard')} style={navLinkStyle('dashboard')}>DASHBOARD</button>
-        <button onClick={() => setCurrentPage('resources')} style={navLinkStyle('resources')}>INSIGHTS</button>
-        <button onClick={() => setCurrentPage('join')} style={navLinkStyle('join')}>MEMBERSHIP</button>
-      </nav>
+  const { data: checkIns } = useQuery({
+    queryKey: ['recentCheckIns'],
+    queryFn: () => base44.entities.DailyCheckIn.list('-created_date', 5),
+    initialData: [],
+  });
 
-      <main>
-        {currentPage === 'dashboard' && <Dashboard />}
-        {currentPage === 'resources' && <HearthInsights />}
-        {currentPage === 'join' && (
-          <div style={{ padding: '100px 20px', textAlign: 'center' }}>
-            <h1 style={{ fontSize: '4rem', fontWeight: '900', color: 'white' }}>The Grove</h1>
-            <p style={{ color: '#94a3b8' }}>Cultivating new tiers for our community.</p>
-          </div>
-        )}
-      </main>
+  const profile = profiles[0] || null;
+
+  return (
+    <div className="space-y-8">
+      <WelcomeHeader profile={profile} />
+
+      <Card className="p-6 rounded-2xl border-border/50 shadow-sm">
+        <RoadmapProgress currentStage={profile?.roadmap_stage || 'discovery'} />
+      </Card>
+
+      <div>
+        <h2 className="font-heading font-semibold text-xl mb-4">Tend the fire</h2>
+        <QuickActions />
+      </div>
+
+      <TargetUsers />
+
+      <RecentActivity checkIns={checkIns} />
+
+      {/* Support Banner */}
+      <Card className="p-5 rounded-2xl border-secondary/30 bg-secondary/5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div className="w-9 h-9 rounded-xl bg-secondary/20 flex items-center justify-center shrink-0">
+          <Heart className="w-4 h-4 text-secondary" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-medium text-sm">The grove — a reciprocity model</p>
+          <p className="text-xs text-muted-foreground mt-0.5">One seat purchased sponsors a peer in financial transition. No one gets left behind.</p>
+        </div>
+        <Button asChild size="sm" variant="outline" className="shrink-0 border-secondary/40 text-secondary hover:bg-secondary/10">
+          <Link to="/support">Enter the grove</Link>
+        </Button>
+      </Card>
     </div>
   );
 }
