@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
-// --- 1. THE TIER BADGE COMPONENT ---
+// --- 1. THE TIER BADGE ---
 const TierBadge = ({ userTier = 'seedling' }) => {
   const tiers = {
     founder: { label: 'Founder', icon: '🕯️', color: '#2dd4bf', bg: 'rgba(45, 212, 191, 0.15)', description: 'The Hearth Builder' },
@@ -21,28 +21,54 @@ const TierBadge = ({ userTier = 'seedling' }) => {
   );
 };
 
-// --- 2. THE DASHBOARD COMPONENT ---
-const Dashboard = ({ user }) => {
-  const userTier = user?.tier || 'seedling'; 
+// --- 2. DASHBOARD PAGE ---
+const Dashboard = ({ user }) => (
+  <div style={{ padding: '40px 20px', maxWidth: '1000px', margin: '0 auto' }}>
+    <div style={{ background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.2) 0%, rgba(0, 0, 0, 0) 100%)', padding: '40px', borderRadius: '24px', border: '1px solid rgba(13, 148, 136, 0.3)', marginBottom: '40px' }}>
+      <h1 style={{ fontSize: '2.5rem', margin: '0 0 10px 0' }}>Welcome to the Horizon</h1>
+      <p style={{ opacity: 0.8 }}>The path forward is clear, {user?.name}.</p>
+      <TierBadge userTier={user.tier} />
+    </div>
+    <div style={{ background: 'rgba(13, 148, 136, 0.1)', padding: '25px', borderRadius: '20px', border: '1px solid rgba(13, 148, 136, 0.3)' }}>
+      <h3>Ready for your next crossing?</h3>
+      <p style={{ opacity: 0.7 }}>Upload your CV to The Bridge Builder to begin.</p>
+    </div>
+  </div>
+);
+
+// --- 3. INSIGHTS/RESOURCES PAGE ---
+const HearthInsights = ({ userTier }) => {
+  const resources = [
+    { title: "Teacher-to-Tech Dictionary", cat: "Strategy", icon: "📖", premium: true },
+    { title: "Linguistic Bridge Guide", cat: "Tutorial", icon: "🌉", premium: false }
+  ];
   return (
-    <div style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto', color: 'white' }}>
-      <div style={{ background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.2) 0%, rgba(0, 0, 0, 0) 100%)', padding: '40px', borderRadius: '24px', border: '1px solid rgba(13, 148, 136, 0.3)', marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '2.5rem', margin: '0 0 10px 0' }}>Welcome to the Horizon</h1>
-        <p style={{ opacity: 0.8 }}>The path forward is clear, {user?.name}.</p>
-        <TierBadge userTier={userTier} />
-      </div>
-      <div style={{ background: 'rgba(13, 148, 136, 0.1)', padding: '25px', borderRadius: '20px', border: '1px solid rgba(13, 148, 136, 0.3)' }}>
-        <h3>Ready for your next crossing?</h3>
-        <button style={{ marginTop: '15px', padding: '12px 24px', background: '#0d9488', color: 'white', border: 'none', borderRadius: '10px', fontWeight: 'bold' }}>
-          Go to The Bridge Builder →
-        </button>
+    <div style={{ padding: '40px 20px', maxWidth: '1000px', margin: '0 auto' }}>
+      <h1 style={{ marginBottom: '30px' }}>Hearth Insights</h1>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+        {resources.map((res, i) => (
+          <div key={i} style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '15px', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <div style={{ fontSize: '2rem' }}>{res.icon}</div>
+            <h4>{res.title}</h4>
+            {res.premium && userTier === 'seedling' && <span style={{ color: '#2dd4bf', fontSize: '0.7rem' }}>🔒 PREMIUM</span>}
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
-// --- 3. THE MAIN APP ENGINE ---
-const App = () => {
+// --- 4. PRICING/JOIN PAGE ---
+const Pricing = () => (
+  <div style={{ padding: '40px 20px', textAlign: 'center' }}>
+    <h1>Join the Grove</h1>
+    <p>Select a tier to support the community.</p>
+    {/* Simplified for brevity, you can paste your full pricing cards here later */}
+  </div>
+);
+
+// --- 5. MAIN APP ENGINE ---
+export default function App() {
   const [user] = useState({ name: 'Margaret', tier: 'founder' });
 
   const navStyle = {
@@ -50,21 +76,24 @@ const App = () => {
     borderBottom: '1px solid rgba(255,255,255,0.1)', alignItems: 'center'
   };
 
+  const linkStyle = { color: '#2dd4bf', textDecoration: 'none', fontWeight: 'bold' };
+
   return (
     <Router>
       <div style={{ minHeight: '100vh', background: '#020617', color: 'white', fontFamily: 'sans-serif' }}>
         <nav style={navStyle}>
-          <div style={{ marginRight: 'auto', fontWeight: 'bold' }}>Hearth & Horizon</div>
-          <Link to="/" style={{ color: '#2dd4bf', textDecoration: 'none' }}>Dashboard</Link>
-          <Link to="/join" style={{ color: '#2dd4bf', textDecoration: 'none' }}>Membership</Link>
+          <div style={{ marginRight: 'auto', fontWeight: 'bold', fontSize: '1.2rem' }}>Hearth & Horizon</div>
+          <Link to="/" style={linkStyle}>Dashboard</Link>
+          <Link to="/resources" style={linkStyle}>Insights</Link>
+          <Link to="/join" style={linkStyle}>Membership</Link>
         </nav>
 
         <Routes>
           <Route path="/" element={<Dashboard user={user} />} />
+          <Route path="/resources" element={<HearthInsights userTier={user.tier} />} />
+          <Route path="/join" element={<Pricing />} />
         </Routes>
       </div>
     </Router>
   );
-};
-
-export default App;
+}
