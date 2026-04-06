@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 export default function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
 
+  // --- THE ORIGINAL SANCTUARY PALETTE ---
   const colors = {
-    bg: '#1c1921',
-    card: '#241f2a',
-    accent: '#2dd4bf',
+    bg: '#1c1921',        // Original warm slate/plum
+    card: '#241f2a',      // Original card depth
+    accent: '#2dd4bf',    // Mint teal
     text: '#ffffff',
     secondary: '#94a3b8'
   };
@@ -17,6 +18,8 @@ export default function App() {
     { id: 'membership', label: 'The Grove', icon: '🌲' },
     { id: 'settings', label: 'Settings', icon: '⚙️' }
   ];
+
+  // --- COMPONENTS ---
 
   const Sidebar = () => (
     <nav style={{ 
@@ -58,58 +61,68 @@ export default function App() {
           <span style={{ color: colors.accent, fontWeight: '900', fontSize: '0.85rem', letterSpacing: '0.1em' }}>FOUNDER TIER</span>
         </div>
       </div>
-
-      <div style={{ background: colors.card, padding: '40px', borderRadius: '35px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
-        <h3 style={{ color: colors.accent, fontSize: '1.2rem', fontWeight: '900', margin: '0 0 10px 0' }}>Ready to cross the bridge?</h3>
-        <p style={{ color: colors.secondary, margin: '0 0 30px 0' }}>Upload your latest CV to begin the linguistic translation into tech data roles.</p>
-        <button style={{ background: colors.accent, color: colors.bg, border: 'none', padding: '16px 36px', borderRadius: '15px', fontWeight: '900', cursor: 'pointer' }}>
-          Start Translation →
-        </button>
-      </div>
     </div>
   );
 
   const TheGrove = () => {
     const tiers = [
       {
-        name: 'The Seedling', price: '$0', tag: 'FREE', icon: '🌱',
-        features: ['Access to **The Embers** chat', '2 Bridge Builder crossings / mo', 'Foundational resources', 'Seedling profile badge']
+        name: 'The Seedling', price: '$0', tag: 'FREE', icon: '🌱', link: 'https://buy.stripe.com/example_free',
+        desc: 'For those just beginning to explore the crossing.',
+        features: ['Access to The Embers chat', '2 Bridge crossings / mo', 'Foundational resources', 'Seedling profile badge']
       },
       {
-        name: 'The Hearthkeeper', price: '$3', icon: '🔥',
-        features: ['Everything in **Seedling**', 'UNLIMITED Bridge crossings', 'Insight: Teaching to Tech Guide', 'Priority processing speed', 'Hearthkeeper profile badge']
+        name: 'The Hearthkeeper', price: '$3', icon: '🔥', link: 'https://buy.stripe.com/example_3',
+        desc: 'Our core membership for active career transition.',
+        features: ['Everything in Seedling', 'UNLIMITED Bridge crossings', 'Teaching to Tech Guide', 'Priority processing speed']
       },
       {
-        name: 'The Steward', price: '$5', tag: 'Reciprocity', icon: '🛡️',
-        features: ["Everything in **Hearthkeeper**", "The Steward's Vote (Roadmap)", "Sponsor a peer seat", "Community Voting rights", "Steward profile badge"]
+        name: 'The Steward', price: '$5', tag: 'RECIPROCITY', icon: '🛡️', link: 'https://buy.stripe.com/example_5',
+        desc: 'For those ready to steward and support the forest.',
+        features: ["Everything in Hearthkeeper", "The Steward's Vote", "Sponsor a peer seat", "Community Voting rights"]
       },
       {
-        name: 'Plant a Seed', price: 'Custom', icon: '🌿',
-        features: ['Flexible one-time contribution', 'Directly fund the Voucher Pool', 'Legacy Community Support']
+        name: 'Plant a Seed', price: 'Any', icon: '🌿', link: 'https://donate.stripe.com/example_donate',
+        desc: 'A one-time gift to keep the voucher pool growing.',
+        features: ['One-time contribution', 'Directly fund the Voucher Pool', 'Legacy Community Support']
       }
     ];
 
     return (
       <div style={{ maxWidth: '1200px' }}>
         <h2 style={{ fontSize: '3.5rem', fontWeight: '900', textAlign: 'center', marginBottom: '10px' }}>Welcome to the Horizon</h2>
-        <p style={{ textAlign: 'center', color: colors.secondary, marginBottom: '50px' }}>Choose your place in the grove. Whether you're just starting your crossing or ready to steward the forest, there is a seat by the hearth for you.</p>
+        <p style={{ textAlign: 'center', color: colors.secondary, marginBottom: '50px' }}>Select a tier to proceed to our secure Stripe checkout.</p>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
           {tiers.map((tier, i) => (
-            <div key={i} style={{ background: colors.card, padding: '30px', borderRadius: '30px', border: tier.name === 'The Hearthkeeper' ? `2px solid ${colors.accent}` : '1px solid rgba(255,255,255,0.05)', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-              {tier.tag && <span style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '0.7rem', fontWeight: '900', color: colors.secondary, background: 'rgba(255,255,255,0.05)', padding: '4px 10px', borderRadius: '8px' }}>{tier.tag}</span>}
-              <div style={{ fontSize: '1.5rem', marginBottom: '10px' }}>{tier.icon} <span style={{ fontSize: '0.8rem', fontWeight: '900', color: colors.secondary, textTransform: 'uppercase', marginLeft: '10px' }}>{tier.name}</span></div>
-              <div style={{ fontSize: '2.5rem', fontWeight: '900', margin: '10px 0' }}>{tier.price} <span style={{ fontSize: '1rem', color: colors.secondary }}>{tier.price !== 'Custom' && '/ mo'}</span></div>
-              <ul style={{ listStyle: 'none', padding: 0, margin: '20px 0', flexGrow: 1 }}>
+            <div key={i} style={{ 
+              background: colors.card, padding: '30px', borderRadius: '30px', 
+              border: tier.name === 'The Hearthkeeper' ? `2px solid ${colors.accent}` : '1px solid rgba(255,255,255,0.05)', 
+              display: 'flex', flexDirection: 'column', position: 'relative' 
+            }}>
+              {tier.tag && (
+                <span style={{ position: 'absolute', top: '20px', right: '20px', fontSize: '0.7rem', fontWeight: '900', color: colors.accent, background: 'rgba(45, 212, 191, 0.1)', padding: '4px 10px', borderRadius: '8px' }}>
+                  {tier.tag}
+                </span>
+              )}
+              <div style={{ fontSize: '1.5rem', marginBottom: '10px' }}>{tier.icon}</div>
+              <h4 style={{ fontSize: '1.1rem', fontWeight: '900', margin: '0 0 5px 0' }}>{tier.name}</h4>
+              <div style={{ fontSize: '2.2rem', fontWeight: '900', margin: '10px 0' }}>
+                {tier.price} <span style={{ fontSize: '0.9rem', color: colors.secondary, fontWeight: '400' }}>{tier.price.includes('$') && tier.price !== '$0' ? '/ mo' : ''}</span>
+              </div>
+              <p style={{ fontSize: '0.85rem', color: colors.secondary, marginBottom: '20px', minHeight: '40px' }}>{tier.desc}</p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 30px 0', flexGrow: 1 }}>
                 {tier.features.map((f, idx) => (
-                  <li key={idx} style={{ color: colors.secondary, fontSize: '0.85rem', marginBottom: '12px', display: 'flex', gap: '10px' }}>
-                    <span style={{ color: colors.accent }}>✓</span> {f.replace(/\*\*/g, '')}
+                  <li key={idx} style={{ color: colors.secondary, fontSize: '0.8rem', marginBottom: '10px', display: 'flex', gap: '8px' }}>
+                    <span style={{ color: colors.accent }}>✓</span> {f}
                   </li>
                 ))}
               </ul>
-              <button style={{ width: '100%', padding: '12px', borderRadius: '20px', border: tier.name === 'The Hearthkeeper' || tier.name === 'The Steward' ? 'none' : '1px solid rgba(255,255,255,0.1)', background: tier.name === 'The Hearthkeeper' || tier.name === 'The Steward' ? colors.accent : 'transparent', color: tier.name === 'The Hearthkeeper' || tier.name === 'The Steward' ? colors.bg : 'white', fontWeight: '900', cursor: 'pointer' }}>
-                {tier.name === 'Plant a Seed' ? 'Contribute' : tier.name === 'The Seedling' ? 'Enter the Grove' : 'Select'}
-              </button>
+              <a href={tier.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                <button style={{ width: '100%', padding: '12px', borderRadius: '15px', border: 'none', background: tier.name === 'The Hearthkeeper' || tier.name === 'The Steward' ? colors.accent : 'rgba(255,255,255,0.1)', color: tier.name === 'The Hearthkeeper' || tier.name === 'The Steward' ? colors.bg : 'white', fontWeight: '900', cursor: 'pointer' }}>
+                  {tier.name === 'Plant a Seed' ? 'Contribute' : 'Select'}
+                </button>
+              </a>
             </div>
           ))}
         </div>
@@ -123,7 +136,12 @@ export default function App() {
       <main style={{ flex: 1, marginLeft: '280px', padding: '80px 60px' }}>
         {currentPage === 'dashboard' && <Dashboard />}
         {currentPage === 'membership' && <TheGrove />}
-        {(currentPage === 'insights' || currentPage === 'settings') && <div style={{ background: colors.card, padding: '40px', borderRadius: '35px' }}><h2 style={{ fontWeight: '900' }}>{currentPage.charAt(0).toUpperCase() + currentPage.slice(1)}</h2><p style={{ color: colors.secondary }}>Coming soon.</p></div>}
+        {(currentPage === 'insights' || currentPage === 'settings') && (
+          <div style={{ background: colors.card, padding: '40px', borderRadius: '35px' }}>
+            <h2 style={{ fontWeight: '900' }}>{currentPage.toUpperCase()}</h2>
+            <p style={{ color: colors.secondary }}>Development in progress.</p>
+          </div>
+        )}
       </main>
     </div>
   );
