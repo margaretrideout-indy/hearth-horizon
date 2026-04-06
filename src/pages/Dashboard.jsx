@@ -1,143 +1,107 @@
 import React from 'react';
 
-const TierBadge = ({ userTier = 'seedling' }) => {
-  const tiers = {
-    founder: {
-      label: 'Founder',
-      icon: '🕯️',
-      color: '#2dd4bf', 
-      bg: 'rgba(45, 212, 191, 0.15)',
-      description: 'The Hearth Builder'
-    },
-    steward: {
-      label: 'Steward',
-      icon: '🛡️',
-      color: '#fde047', 
-      bg: 'rgba(253, 224, 71, 0.1)',
-      description: 'Protector of the Grove'
-    },
-    hearthkeeper: {
-      label: 'Hearthkeeper',
-      icon: '🔥',
-      color: '#fb923c', 
-      bg: 'rgba(251, 146, 60, 0.1)',
-      description: 'Nurturer of the Fire'
-    },
-    seedling: {
-      label: 'Seedling',
-      icon: '🌱',
-      color: '#4ade80', 
-      bg: 'rgba(74, 222, 128, 0.1)',
-      description: 'New Growth'
-    }
+const PricingSection = () => {
+  const mintTeal = '#2dd4bf';
+  const brandTeal = '#0d9488';
+  const glassBg = 'rgba(255, 255, 255, 0.05)';
+  const borderStyle = '1px solid rgba(255, 255, 255, 0.1)';
+
+  const containerStyle = {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '20px',
+    justifyContent: 'center',
+    padding: '40px 20px',
+    fontFamily: 'sans-serif'
   };
 
-  const current = tiers[userTier.toLowerCase()] || tiers.seedling;
-
-  return (
-    <div style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '12px',
-      padding: '12px 20px',
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: '16px',
-      border: `1px solid ${current.bg}`,
-      boxShadow: `0 4px 20px ${current.bg}`,
-      backdropFilter: 'blur(12px)',
-      marginTop: '10px'
-    }}>
-      <span style={{ fontSize: '1.5rem', filter: `drop-shadow(0 0 8px ${current.color})` }}>
-        {current.icon}
-      </span>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <span style={{ color: current.color, fontWeight: 'bold', fontSize: '0.9rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-          {current.label}
-        </span>
-        <span style={{ color: '#e2e8f0', fontSize: '0.75rem', opacity: 0.7 }}>
-          {current.description}
-        </span>
-      </div>
-    </div>
-  );
-};
-
-const Dashboard = ({ user }) => {
-  const userTier = user?.tier || 'seedling'; 
-  
   const cardStyle = {
-    background: 'rgba(255, 255, 255, 0.03)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '16px',
-    padding: '20px',
+    background: glassBg,
+    border: borderStyle,
+    borderRadius: '20px',
+    padding: '30px',
+    display: 'flex',
+    flexDirection: 'column',
+    backdropFilter: 'blur(10px)',
     flex: '1',
-    minWidth: '200px'
+    minWidth: '280px',
+    maxWidth: '350px',
+    color: 'white'
+  };
+
+  const listStyle = {
+    listStyle: 'none',
+    padding: 0,
+    marginTop: '20px',
+    lineHeight: '1.8',
+    fontSize: '0.95rem'
+  };
+
+  const checkStyle = {
+    color: mintTeal,
+    marginRight: '8px',
+    fontSize: '1rem'
   };
 
   return (
-    <div style={{ 
-      padding: '40px 20px', 
-      maxWidth: '1000px', 
-      margin: '0 auto', 
-      color: 'white', 
-      fontFamily: 'sans-serif' 
-    }}>
+    <div style={containerStyle}>
       
-      <header style={{ marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '2rem', margin: '0 0 8px 0' }}>
-          Welcome back, {user?.name || 'Margaret'}
-        </h1>
-        <p style={{ opacity: 0.6, margin: 0 }}>Manage your growth and crossings in the grove.</p>
-        <TierBadge userTier={userTier} />
-      </header>
-
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '40px' }}>
-        <div style={cardStyle}>
-          <div style={{ fontSize: '0.8rem', opacity: 0.6, textTransform: 'uppercase', marginBottom: '8px' }}>
-            Bridge Crossings
-          </div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>
-            {userTier === 'seedling' ? '1 / 2' : 'Unlimited'}
-          </div>
-          <div style={{ fontSize: '0.8rem', color: '#2dd4bf', marginTop: '4px' }}>
-            {userTier === 'seedling' ? 'Resets in 12 days' : 'Priority Processing Active'}
-          </div>
-        </div>
-
-        <div style={cardStyle}>
-          <div style={{ fontSize: '0.8rem', opacity: 0.6, textTransform: 'uppercase', marginBottom: '8px' }}>
-            Community Sparks
-          </div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>12</div>
-          <div style={{ fontSize: '0.8rem', opacity: 0.5, marginTop: '4px' }}>Messages in The Embers</div>
-        </div>
-
-        <div style={cardStyle}>
-          <div style={{ fontSize: '0.8rem', opacity: 0.6, textTransform: 'uppercase', marginBottom: '8px' }}>
-            Hearth Insights
-          </div>
-          <div style={{ fontSize: '1.1rem', fontWeight: '600', color: '#2dd4bf' }}>
-            {userTier === 'seedling' ? 'Upgrade to Unlock' : 'Teaching to Tech Guide'}
-          </div>
-        </div>
+      {/* SEEDLING CARD */}
+      <div style={cardStyle}>
+        <div style={{ opacity: 0.6, fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '8px' }}>🌱 The Seedling</div>
+        <h2 style={{ margin: '0 0 10px 0' }}>The Grove</h2>
+        <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>$0 <span style={{ fontSize: '1rem', opacity: 0.5 }}>/mo</span></div>
+        
+        <ul style={listStyle}>
+          <li><span style={checkStyle}>✓</span> Access to <b>The Embers</b> chat</li>
+          <li><span style={checkStyle}>✓</span> 2 Bridge Builder crossings / mo</li>
+          <li><span style={checkStyle}>✓</span> Foundational resources</li>
+          <li><span style={checkStyle}>✓</span> 🌱 Seedling profile badge</li>
+        </ul>
+        
+        <button style={{ marginTop: 'auto', padding: '12px', borderRadius: '30px', border: borderStyle, background: 'rgba(255,255,255,0.05)', color: 'white', fontWeight: 'bold', cursor: 'pointer' }}>
+          Enter the Grove
+        </button>
       </div>
 
-      <div style={{ background: 'rgba(13, 148, 136, 0.1)', padding: '25px', borderRadius: '20px', border: '1px solid rgba(13, 148, 136, 0.3)' }}>
-        <h3 style={{ margin: '0 0 10px 0' }}>Ready for your next horizon?</h3>
-        <p style={{ opacity: 0.8, fontSize: '0.95rem', maxWidth: '600px', lineHeight: '1.6' }}>
-          Your bridge is open. Upload your latest CV to <b>The Bridge Builder</b> and let the AI translate your 13 years of experience into tech-ready language.
-        </p>
-        <button style={{ 
-          marginTop: '15px', 
-          padding: '12px 24px', 
-          background: '#0d9488', 
-          color: 'white', 
-          border: 'none', 
-          borderRadius: '10px', 
-          fontWeight: 'bold', 
-          cursor: 'pointer' 
-        }}>
-          Go to The Bridge Builder →
+      {/* HEARTHKEEPER CARD */}
+      <div style={{ ...cardStyle, border: `1px solid ${brandTeal}`, boxShadow: `0 0 20px rgba(13, 148, 136, 0.2)` }}>
+        <div style={{ opacity: 0.6, fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '8px' }}>🔥 The Hearthkeeper</div>
+        <h2 style={{ margin: '0 0 10px 0' }}>The Fire</h2>
+        <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>$3 <span style={{ fontSize: '1rem', opacity: 0.5 }}>/mo</span></div>
+        
+        <ul style={listStyle}>
+          <li><span style={checkStyle}>✓</span> Everything in <b>Seedling</b></li>
+          <li style={{ color: mintTeal, fontWeight: 'bold' }}><span style={checkStyle}>✓</span> UNLIMITED Bridge crossings</li>
+          <li style={{ color: mintTeal, fontWeight: 'bold' }}><span style={checkStyle}>✓</span> Insight: Teaching to Tech Guide</li>
+          <li><span style={checkStyle}>✓</span> Priority processing speed</li>
+          <li><span style={checkStyle}>✓</span> 🔥 Hearthkeeper profile badge</li>
+        </ul>
+        
+        <button style={{ marginTop: 'auto', padding: '12px', borderRadius: '30px', border: 'none', background: brandTeal, color: 'white', fontWeight: 'bold', cursor: 'pointer' }}>
+          Select
+        </button>
+      </div>
+
+      {/* STEWARD CARD */}
+      <div style={cardStyle}>
+        <div style={{ position: 'relative' }}>
+          <div style={{ position: 'absolute', right: 0, top: 0, background: 'rgba(45, 212, 191, 0.2)', color: mintTeal, padding: '2px 10px', borderRadius: '10px', fontSize: '0.7rem' }}>Reciprocity</div>
+          <div style={{ opacity: 0.6, fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '8px' }}>🛡️ The Steward</div>
+        </div>
+        <h2 style={{ margin: '0 0 10px 0' }}>The Protector</h2>
+        <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>$5 <span style={{ fontSize: '1rem', opacity: 0.5 }}>/mo</span></div>
+        
+        <ul style={listStyle}>
+          <li><span style={checkStyle}>✓</span> Everything in <b>Hearthkeeper</b></li>
+          <li style={{ color: mintTeal, fontWeight: 'bold' }}><span style={checkStyle}>✓</span> The Steward's Vote (Roadmap)</li>
+          <li style={{ color: mintTeal, fontWeight: 'bold' }}><span style={checkStyle}>✓</span> Sponsor a peer seat</li>
+          <li><span style={checkStyle}>✓</span> Community Voting rights</li>
+          <li><span style={checkStyle}>✓</span> 🛡️ Steward profile badge</li>
+        </ul>
+        
+        <button style={{ marginTop: 'auto', padding: '12px', borderRadius: '30px', border: 'none', background: brandTeal, color: 'white', fontWeight: 'bold', cursor: 'pointer' }}>
+          Select
         </button>
       </div>
 
@@ -145,4 +109,4 @@ const Dashboard = ({ user }) => {
   );
 };
 
-export default Dashboard;
+export default PricingSection;
