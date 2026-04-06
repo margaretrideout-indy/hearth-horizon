@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 const TierBadge = () => (
   <div style={{
     display: 'inline-flex', alignItems: 'center', gap: '12px', padding: '12px 20px',
-    background: 'rgba(255, 255, 255, 0.04)', borderRadius: '16px', 
+    background: 'rgba(255, 255, 255, 0.03)', borderRadius: '16px', 
     border: '1px solid rgba(45, 212, 191, 0.2)', marginTop: '20px'
   }}>
     <span style={{ fontSize: '1.4rem' }}>🕯️</span>
@@ -17,7 +17,7 @@ const TierBadge = () => (
 const Dashboard = ({ user }) => (
   <div style={{ padding: '40px 20px', maxWidth: '1000px', margin: '0 auto' }}>
     <div style={{
-      background: '#242129', padding: '60px 50px', borderRadius: '40px', 
+      background: 'rgba(36, 33, 41, 0.8)', padding: '60px 50px', borderRadius: '40px', 
       border: '1px solid rgba(45, 212, 191, 0.15)', marginBottom: '30px', textAlign: 'left'
     }}>
       <h1 style={{ fontSize: '5rem', margin: '0 0 15px 0', fontWeight: '900', letterSpacing: '-0.04em', lineHeight: '1', color: 'white' }}>
@@ -29,13 +29,13 @@ const Dashboard = ({ user }) => (
       <TierBadge />
     </div>
 
-    <div style={{ background: '#242129', padding: '40px', borderRadius: '35px', border: '1px solid rgba(255, 255, 255, 0.05)', textAlign: 'left' }}>
+    <div style={{ background: 'rgba(36, 33, 41, 0.8)', padding: '40px', borderRadius: '35px', border: '1px solid rgba(255, 255, 255, 0.05)', textAlign: 'left' }}>
       <p style={{ color: '#2dd4bf', fontSize: '0.9rem', fontWeight: '900', marginBottom: '10px', textTransform: 'uppercase' }}>Ready for your next crossing?</p>
       <p style={{ color: '#a0aec0', fontSize: '1.1rem', margin: '0 0 25px 0', lineHeight: '1.6' }}>
         Upload your CV to <b>The Bridge Builder</b>. We'll translate your educational leadership into tech-sector data narratives.
       </p>
       <button style={{ 
-        background: '#14b8a6', color: '#1c1921', border: 'none', padding: '16px 36px', 
+        background: '#14b8a6', color: '#211d2b', border: 'none', padding: '16px 36px', 
         borderRadius: '15px', fontWeight: '900', cursor: 'pointer', fontSize: '1.1rem'
       }}>
         Start Translation →
@@ -49,7 +49,7 @@ const HearthInsights = () => (
     <h1 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '30px', letterSpacing: '-0.02em' }}>Hearth Insights</h1>
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
       {['Teacher-to-Tech Dictionary', 'Linguistic Bridge Guide'].map((title, i) => (
-        <div key={i} style={{ background: '#242129', padding: '30px', borderRadius: '30px', border: '1px solid rgba(255, 255, 255, 0.05)', textAlign: 'left' }}>
+        <div key={i} style={{ background: 'rgba(36, 33, 41, 0.8)', padding: '30px', borderRadius: '30px', border: '1px solid rgba(255, 255, 255, 0.05)', textAlign: 'left' }}>
           <div style={{ fontSize: '2.3rem', marginBottom: '15px' }}>{i === 0 ? '📖' : '🌉'}</div>
           <h4 style={{ margin: 0, fontSize: '1.4rem', fontWeight: '900' }}>{title}</h4>
           <p style={{ color: '#718096', fontSize: '0.95rem', marginTop: '10px' }}>Exclusive Hearthkeeper Resource</p>
@@ -63,7 +63,7 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
 
   const navStyle = {
-    display: 'flex', gap: '40px', padding: '30px 60px', background: '#1c1921',
+    display: 'flex', gap: '40px', padding: '30px 60px', background: '#211d2b',
     alignItems: 'center', position: 'sticky', top: 0, zIndex: 100
   };
 
@@ -75,7 +75,7 @@ export default function App() {
   });
 
   return (
-    <div style={{ minHeight: '100vh', background: '#1c1921', color: 'white', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#211d2b', color: 'white', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <nav style={navStyle}>
         <div style={{ marginRight: 'auto', fontWeight: '900', fontSize: '1.5rem', letterSpacing: '-0.04em' }}>
           Hearth <span style={{ color: '#2dd4bf' }}>&</span> Horizon
