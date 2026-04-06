@@ -1,120 +1,65 @@
-import { Toaster } from "@/components/ui/toaster"
-import { QueryClientProvider } from '@tanstack/react-query'
-import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
-import PageNotFound from './lib/PageNotFound';
-import { AuthProvider, useAuth } from '@/lib/AuthContext';
-import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-import Dashboard from './pages/Dashboard';
-import YourHearth from './pages/YourHearth';
-import SkillTranslator from './pages/SkillTranslator';
-import GapAnalyzer from './pages/GapAnalyzer';
-import IdentityAnchor from './pages/IdentityAnchor';
-import CulturalFit from './pages/CulturalFit';
-import AppLayout from './components/layout/AppLayout';
-import Support from './pages/Support';
-import Canopy from './pages/Canopy';
-import PaymentSuccess from './pages/PaymentSuccess';
-import PaymentCancel from './pages/PaymentCancel';
-import Embers from './pages/Embers';
-import AdminDashboard from './pages/AdminDashboard';
-import Contact from './pages/Contact';
-import InstallApp from './pages/InstallApp';
-import Gateway from './pages/Gateway';
-import IdentityTranslator from './pages/IdentityTranslator';
-import HorizonAudit from './pages/HorizonAudit';
-import ForestGuide from './pages/ForestGuide';
-import HorizonSynthesis from './pages/HorizonSynthesis';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
-// Component to protect routes that require authentication
-const ProtectedRoute = ({ element }) => {
-  const { isAuthenticated, isLoadingAuth } = useAuth();
+// Import your components
+import Dashboard from './Dashboard';
+import PricingSection from './PricingSection';
+import HearthInsights from './HearthInsights';
 
-  if (isLoadingAuth) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
+const App = () => {
+  // Mock user state - in a real app, this comes from your Auth provider
+  const [user, setUser] = useState({
+    name: 'Margaret',
+    tier: 'founder' // Options: 'seedling', 'hearthkeeper', 'steward', 'founder'
+  });
 
-  if (!isAuthenticated) {
-    import('@/api/base44Client').then(m => {
-      m.base44.auth.redirectToLogin(window.location.href);
-    });
-    return null;
-  }
+  const navStyle = {
+    display: 'flex',
+    gap: '20px',
+    padding: '20px',
+    background: 'rgba(0,0,0,0.2)',
+    borderBottom: '1px solid rgba(255,255,255,0.1)',
+    fontFamily: 'sans-serif'
+  };
 
-  return element;
-};
+  const linkStyle = {
+    color: '#2dd4bf',
+    textDecoration: 'none',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em'
+  };
 
-const PUBLIC_PATHS = ['/'];
-
-const AuthenticatedApp = () => {
-  const { isLoadingPublicSettings } = useAuth();
-  const location = useLocation();
-
-  // Only block rendering with a spinner for non-public routes
-  if (isLoadingPublicSettings && !PUBLIC_PATHS.includes(location.pathname)) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  // Render the main app with public home and protected member areas
   return (
-    <Routes>
-      {/* Public gateway — no sidebar/layout */}
-      <Route path="/" element={<Gateway />} />
-
-      <Route element={<AppLayout />}>
+    <Router>
+      <div style={{ minHeight: '100vh', background: '#020617', color: 'white' }}>
         
-        {/* Protected core pages */}
-        <Route path="/hearth" element={<ProtectedRoute element={<YourHearth />} />} />
-        <Route path="/translator" element={<ProtectedRoute element={<SkillTranslator />} />} />
-        <Route path="/audit" element={<ProtectedRoute element={<HorizonAudit />} />} />
-        <Route path="/synthesis" element={<ProtectedRoute element={<HorizonSynthesis />} />} />
+        {/* TOP NAVIGATION */}
+        <nav style={navStyle}>
+          <div style={{ marginRight: 'auto', fontWeight: 'bold', color: 'white' }}>
+            Hearth & Horizon
+          </div>
+          <Link title="Dashboard" to="/" style={linkStyle}>Dashboard</Link>
+          <Link title="Resources" to="/resources" style={linkStyle}>Hearth Insights</Link>
+          <Link title="Membership" to="/join" style={linkStyle}>Membership</Link>
+        </nav>
 
-        {/* Other member pages — accessible once logged in */}
-        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-        <Route path="/gap-analyzer" element={<ProtectedRoute element={<GapAnalyzer />} />} />
-        <Route path="/identity-anchor" element={<ProtectedRoute element={<IdentityAnchor />} />} />
-        <Route path="/cultural-fit" element={<ProtectedRoute element={<CulturalFit />} />} />
-        <Route path="/support" element={<ProtectedRoute element={<Support />} />} />
-        <Route path="/canopy" element={<ProtectedRoute element={<Canopy />} />} />
-        <Route path="/embers" element={<ProtectedRoute element={<Embers />} />} />
-        <Route path="/admin" element={<ProtectedRoute element={<AdminDashboard />} />} />
-        <Route path="/identity-translator" element={<ProtectedRoute element={<IdentityTranslator />} />} />
-        <Route path="/guide" element={<ProtectedRoute element={<ForestGuide />} />} />
+        {/* PAGE ROUTES */}
+        <Routes>
+          {/* The Dashboard is the Home page */}
+          <Route path="/" element={<Dashboard user={user} />} />
+          
+          {/* The Resource Library / Knowledge Grove */}
+          <Route path="/resources" element={<HearthInsights user={user} />} />
+          
+          {/* The Pricing / Join Page */}
+          <Route path="/join" element={<PricingSection />} />
+        </Routes>
 
-        {/* Public pages */}
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/install" element={<InstallApp />} />
-        
-        {/* Payment routes - public but only triggered after auth */}
-        <Route path="/payment/success" element={<PaymentSuccess />} />
-        <Route path="/payment/cancel" element={<PaymentCancel />} />
-      </Route>
-      <Route path="*" element={<PageNotFound />} />
-    </Routes>
+      </div>
+    </Router>
   );
 };
 
-
-function App() {
-
-  return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClientInstance}>
-        <Router>
-          <AuthenticatedApp />
-        </Router>
-        <Toaster />
-      </QueryClientProvider>
-    </AuthProvider>
-  )
-}
-
-export default App
+export default App;
