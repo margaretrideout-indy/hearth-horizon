@@ -86,9 +86,22 @@ export default function Gateway() {
                 <h3 className="text-xl font-bold text-foreground">The Hearthkeeper</h3>
                 <div className="text-3xl font-bold mt-2 text-primary">$3 <span className="text-sm text-muted-foreground font-normal">/ mo</span></div>
                 <ul className="mt-8 space-y-4 text-sm text-muted-foreground text-left">
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Everything in **Seedling**</span></li>
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Support this sanctuary's ecosystem</span></li>
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Founding Member status</span></li>
+<li className="flex items-start gap-3">
+  <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> 
+  <span>Everything in **Seedling**</span>
+</li>
+<li className="flex items-start gap-3">
+  <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> 
+  <span>Unlimited PDF uploads & deep-dive analysis</span>
+</li>
+<li className="flex items-start gap-3">
+  <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> 
+  <span>Support this sanctuary's ecosystem</span>
+</li>
+<li className="flex items-start gap-3">
+  <Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> 
+  <span>Founding Member status</span>
+</li>
                 </ul>
               </div>
               <Button asChild className="mt-8 rounded-full h-12"><a href={LINK_HEARTHKEEPER} target="_blank" rel="noopener noreferrer">Select</a></Button>
