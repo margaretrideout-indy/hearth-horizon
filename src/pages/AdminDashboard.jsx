@@ -16,49 +16,49 @@ const EmbersChat = ({ messages, onSendMessage, user }) => {
     setNewMessage('');
   };
 
-  // --- THE HEARTH TEAL PALETTE ---
-  const brandTeal = '#0d9488'; // A rich, deep teal (Tailwind Teal 600)
-  const softTeal = 'rgba(20, 184, 166, 0.15)'; // Very soft teal glow for the banner
-  const glassBackground = 'rgba(255, 255, 255, 0.03)'; // Barely-there glass
-  const borderStyle = '1px solid rgba(255, 255, 255, 0.08)';
+  // --- BRAND COLORS ---
+  const brandTeal = '#0d9488'; 
+  const mintTeal = '#2dd4bf';  
+  const glassBg = 'rgba(255, 255, 255, 0.05)';
+  const borderStyle = '1px solid rgba(255, 255, 255, 0.1)';
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px', height: '80vh', display: 'flex', flexDirection: 'column', color: 'inherit', fontFamily: 'inherit' }}>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px', height: '80vh', display: 'flex', flexDirection: 'column', color: 'white', fontFamily: 'sans-serif' }}>
       
-      {/* Welcome Banner - Now in Soft Teal */}
-      <div style={{ background: softTeal, borderLeft: `4px solid ${brandTeal}`, padding: '15px', borderRadius: '12px', marginBottom: '20px', backdropFilter: 'blur(8px)' }}>
-        <h3 style={{ margin: 0, color: '#2dd4bf', fontSize: '1.2rem', letterSpacing: '0.02em' }}>Welcome to The Embers 🌲</h3>
-        <p style={{ margin: '5px 0 0 0', opacity: 0.9, fontSize: '0.95rem', color: '#ccfbf1' }}>
-          Grab your <b>Free Bridge Builder PDFs</b> in the Resources tab and share a spark below.
+      {/* Welcome Banner - Cleaner C.T.A. */}
+      <div style={{ background: 'rgba(13, 148, 136, 0.15)', borderLeft: `4px solid ${brandTeal}`, padding: '18px', borderRadius: '12px', marginBottom: '20px', backdropFilter: 'blur(10px)' }}>
+        <h3 style={{ margin: 0, color: mintTeal, fontSize: '1.2rem' }}>Welcome to The Embers 🌲</h3>
+        <p style={{ margin: '8px 0 0 0', opacity: 0.9, fontSize: '0.95rem', color: '#ccfbf1', lineHeight: '1.4' }}>
+          Ready for your next horizon? Head over to the <b>Resume Review</b> tab to upload your PDF and get instant feedback on your transition into tech.
         </p>
       </div>
 
       {/* Chat Window */}
       <div 
         ref={scrollRef}
-        style={{ flex: 1, overflowY: 'auto', background: 'transparent', padding: '10px', display: 'flex', flexDirection: 'column', gap: '14px' }}
+        style={{ flex: 1, overflowY: 'auto', background: 'transparent', padding: '10px', display: 'flex', flexDirection: 'column', gap: '15px' }}
       >
         {messages && messages.length > 0 ? (
           messages.map((msg) => (
-            <div key={msg.id} style={{ 
-              alignSelf: msg.user_id === user?.id ? 'flex-end' : 'flex-start', 
-              background: msg.user_id === user?.id ? brandTeal : 'rgba(255, 255, 255, 0.07)', 
-              color: 'white',
-              padding: '12px 18px', 
-              borderRadius: msg.user_id === user?.id ? '18px 18px 4px 18px' : '18px 18px 18px 4px', 
-              maxWidth: '80%',
-              border: msg.user_id === user?.id ? `1px solid ${brandTeal}` : borderStyle,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-            }}>
-              <div style={{ fontSize: '0.75rem', color: '#99f6e4', fontWeight: 'bold', marginBottom: '4px', opacity: 0.9 }}>
-                {msg.user_name || 'Seedling'}
-              </div>
-              <div style={{ fontSize: '1rem', lineHeight: '1.6', fontWeight: '400' }}>{msg.content}</div>
+            <div key={msg.id} style={{ alignSelf: msg.user_id === user?.id ? 'flex-end' : 'flex-start', background: msg.user_id === user?.id ? brandTeal : glassBg, color: 'white', padding: '12px 18px', borderRadius: '16px', maxWidth: '80%', border: borderStyle }}>
+              <div style={{ fontSize: '0.75rem', color: mintTeal, fontWeight: 'bold' }}>{msg.user_name}</div>
+              <div style={{ fontSize: '1rem', lineHeight: '1.6' }}>{msg.content}</div>
             </div>
           ))
         ) : (
-          <div style={{ textAlign: 'center', opacity: 0.3, marginTop: '40px', letterSpacing: '0.05em' }}>
-            Waiting for the first spark...
+          // --- THE FOUNDER'S PINNED WELCOME MESSAGE ---
+          // This only appears when the chat is empty.
+          <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '20px' }}>
+            <div style={{ background: glassBg, padding: '16px 20px', borderRadius: '18px', maxWidth: '85%', border: borderStyle, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+              <div style={{ fontSize: '0.8rem', color: mintTeal, fontWeight: 'bold', marginBottom: '6px' }}>
+                Hearth Founder 🕯️
+              </div>
+              <div style={{ fontSize: '1.05rem', lineHeight: '1.7', color: '#e2e8f0', letterSpacing: '0.01em' }}>
+                "Pull up a seat. I'm the founder of Hearth & Horizon, and after 13 years navigating career pivots, I know exactly what it’s like to stand at that edge, looking toward a new horizon.
+                <br /><br />
+                I built this grove to be the supportive space I wish I’d had. When you’re ready, share a spark—where are you coming from, and where are you headed?"
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -70,30 +70,12 @@ const EmbersChat = ({ messages, onSendMessage, user }) => {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder="Share a spark..."
-          style={{ 
-            flex: 1, 
-            padding: '14px', 
-            borderRadius: '14px', 
-            border: borderStyle, 
-            background: 'rgba(0, 0, 0, 0.2)', 
-            color: 'white',
-            outline: 'none',
-            fontSize: '1rem'
-          }}
+          placeholder="Share a spark with the grove..."
+          style={{ flex: 1, padding: '14px', borderRadius: '14px', border: borderStyle, background: 'rgba(0, 0, 0, 0.2)', color: 'white', fontSize: '1rem' }}
         />
         <button 
           onClick={handleSend} 
-          style={{ 
-            padding: '0 30px', 
-            borderRadius: '14px', 
-            background: brandTeal, 
-            color: 'white', 
-            fontWeight: '600', 
-            border: 'none', 
-            cursor: 'pointer',
-            boxShadow: `0 4px 14px ${brandTeal}44` // Subtle teal glow
-          }}
+          style={{ padding: '0 30px', borderRadius: '14px', background: brandTeal, color: 'white', fontWeight: '600', border: 'none', cursor: 'pointer', boxShadow: `0 4px 14px rgba(13, 148, 136, 0.4)` }}
         >
           Send
         </button>
