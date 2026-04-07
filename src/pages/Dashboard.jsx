@@ -1,14 +1,30 @@
 import React, { useState, useMemo } from 'react';
 import { 
   Network, X, Info, Lock, ArrowRight, 
-  ShieldCheck, RefreshCw, MessageSquare, 
-  Calendar, ChevronRight 
+  ShieldCheck, RefreshCw, MessageSquare 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
-// --- Sub-Component 1: The Mycelium Map Overlay ---
+// --- MOCK DATA FOR TESTING ---
+const mockCheckIns = [
+  { id: 1, mood: 'hopeful', emoji: '🌱', reflection: 'Feeling like I finally found a path forward.', date: 'Apr 7' },
+  { id: 2, mood: 'anxious', emoji: '🌊', reflection: 'Test purposes only', date: 'Apr 7' },
+  { id: 3, mood: 'uncertain', emoji: '☁️', reflection: 'A pulse check without notes.', date: 'Apr 7' },
+  { id: 4, mood: 'motivated', emoji: '🔥', reflection: 'Drafting new career goals today.', date: 'Apr 6' },
+  { id: 5, mood: 'confident', emoji: '☀️', reflection: 'Networking call went surprisingly well.', date: 'Apr 5' },
+  { id: 6, mood: 'hopeful', emoji: '🌱', reflection: 'Small wins add up.', date: 'Apr 4' },
+  { id: 7, mood: 'uncertain', emoji: '☁️', reflection: 'Wondering if I should pivot to tech.', date: 'Apr 3' },
+  { id: 8, mood: 'anxious', emoji: '🌊', reflection: 'Feeling the weight of the transition.', date: 'Apr 2' },
+  { id: 9, mood: 'motivated', emoji: '🔥', reflection: 'Finished my SkillTranslator logic!', date: 'Apr 1' },
+  { id: 10, mood: 'confident', emoji: '☀️', reflection: 'Resume looking sharp.', date: 'Mar 31' },
+  { id: 11, mood: 'hopeful', emoji: '🌱', reflection: 'Visualizing the Mycelium network.', date: 'Mar 30' },
+  { id: 12, mood: 'uncertain', emoji: '☁️', reflection: 'Is the data clean?', date: 'Mar 29' },
+  { id: 13, mood: 'anxious', emoji: '🌊', reflection: 'So much to learn.', date: 'Mar 28' },
+  { id: 14, mood: 'motivated', emoji: '🔥', reflection: 'The 14th pulse! Let it bloom.', date: 'Mar 27' },
+];
+
 const MyceliumMap = ({ checkIns, onClose }) => {
   const moodColors = {
     hopeful: '#2DD4BF',
@@ -90,7 +106,6 @@ const MyceliumMap = ({ checkIns, onClose }) => {
   );
 };
 
-// --- Sub-Component 2: Inline Recent Activity (Replacing the import) ---
 const RecentActivityList = ({ checkIns = [] }) => {
   return (
     <div className="space-y-6">
@@ -120,8 +135,8 @@ const RecentActivityList = ({ checkIns = [] }) => {
             </Card>
           ))
         ) : (
-          <div className="h-32 flex flex-col items-center justify-center border border-dashed border-white/5 rounded-3xl bg-white/[0.01]">
-            <MessageSquare className="w-5 h-5 text-white/10 mb-2" />
+          <div className="h-48 flex flex-col items-center justify-center border border-dashed border-white/5 rounded-[2rem] bg-white/[0.01]">
+            <MessageSquare className="w-6 h-6 text-white/10 mb-2" />
             <p className="text-[10px] text-gray-600 uppercase font-black tracking-widest">No pulses recorded yet</p>
           </div>
         )}
@@ -130,8 +145,7 @@ const RecentActivityList = ({ checkIns = [] }) => {
   );
 };
 
-// --- Main Dashboard Component ---
-export default function Dashboard({ checkIns = [] }) {
+export default function Dashboard({ checkIns = mockCheckIns }) {
   const [showMap, setShowMap] = useState(false);
   const isMapUnlocked = checkIns.length >= 14;
   const progressPercent = Math.min((checkIns.length / 14) * 100, 100);
