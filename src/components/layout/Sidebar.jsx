@@ -19,7 +19,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 
-const STANDALONE = { path: '/', label: 'Your Hearth', icon: LayoutDashboard };
+const STANDALONE = { path: '/dashboard', label: 'Your Hearth', icon: LayoutDashboard };
 
 const NAV_GROUPS = [
   {
@@ -63,7 +63,7 @@ export default function Sidebar({ collapsed, onToggle }) {
       }}
     >
       <Link
-        to="/"
+        to="/dashboard"
         className="flex items-center gap-3 border-b border-sidebar-border/40 hover:opacity-80 transition-opacity"
         style={{ padding: '12px 16px' }}
       >
