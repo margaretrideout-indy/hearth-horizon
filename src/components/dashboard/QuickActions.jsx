@@ -9,7 +9,7 @@ import {
 import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 
-const DASHBOARD_ACTIONS = [
+const ACTIONS = [
   {
     title: "The Linguistic Bridge",
     desc: "Translate your institutional wisdom into private-sector value.",
@@ -30,7 +30,7 @@ const DASHBOARD_ACTIONS = [
     title: "The Rootwork",
     desc: "A quiet space to anchor your identity through transition.",
     icon: Heart,
-    path: "/identity-anchor", 
+    path: "/audit",
     color: "text-orange-400",
     bg: "bg-orange-500/10"
   },
@@ -47,7 +47,7 @@ const DASHBOARD_ACTIONS = [
 export default function QuickActions() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {DASHBOARD_ACTIONS.map((action) => (
+      {ACTIONS.map((action) => (
         <Link key={action.title} to={action.path} className="group no-underline">
           <Card className="p-6 h-full bg-[#2D2438]/40 border-white/5 hover:border-white/20 transition-all hover:-translate-y-1 relative overflow-hidden">
             <div className="flex gap-4">
