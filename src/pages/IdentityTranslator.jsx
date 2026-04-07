@@ -1,5 +1,5 @@
 import React from 'react';
-import { Book, Sparkles, FileText, ShoppingBag, ExternalLink, GraduationCap, PenTool } from 'lucide-react';
+import { Book, Sparkles, FileText, ShoppingBag, ExternalLink, GraduationCap, PenTool, BookOpen } from 'lucide-react';
 
 const PARTNERS = [
   {
