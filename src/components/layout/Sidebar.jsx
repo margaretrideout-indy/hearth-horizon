@@ -35,7 +35,7 @@ const Sidebar = () => {
   return (
     <div className="fixed left-0 top-0 h-screen w-64 bg-[#1A1423] border-r border-white/5 flex flex-col p-6 z-50">
       
-      {/* THE ARCH LOGO (Direct SVG - No Imports Needed) */}
+      {/* THE GLOWING ARCH LOGO */}
       <div className="mb-10 px-4">
         <svg 
           width="42" 
@@ -70,7 +70,7 @@ const Sidebar = () => {
                       isActive ? 'text-[#2DD4BF]' : 'text-gray-400 hover:text-white'
                     }`}
                   >
-                    <item.icon className={`w-4 h-4 ${isActive ? 'text-[#2DD4BF]' : 'text-gray-500 group-hover:text-gray-300'}`} />
+                    <item.icon className={`w-4 h-4 ${isActive ? 'text-[#2DD4BF]' : 'text-gray-500'}`} />
                     <span className="text-[10px] font-black uppercase tracking-[0.15em]">
                       {item.name}
                     </span>
@@ -82,7 +82,6 @@ const Sidebar = () => {
         ))}
       </nav>
 
-      {/* Footer */}
       <div className="pt-6 border-t border-white/5 space-y-1">
         <button className="w-full flex items-center gap-4 px-4 py-3 text-gray-500 hover:text-white transition-all text-left">
           <Settings className="w-4 h-4" />
