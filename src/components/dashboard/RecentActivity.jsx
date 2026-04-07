@@ -36,10 +36,16 @@ export default function RecentActivity({ checkIns = [] }) {
 
   return (
     <div className="space-y-6">
-      <section className="space-y-3">
-        <h2 className="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] px-1">
-          The Daily Pulse
-        </h2>
+      <section className="space-y-4">
+        {/* Header and Subheader added here */}
+        <div className="space-y-1 px-1">
+          <h2 className="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em]">
+            The Daily Pulse
+          </h2>
+          <p className="text-gray-400 text-sm font-medium">
+            How are you feeling today?
+          </p>
+        </div>
         
         {!selectedMood ? (
           <div className="flex flex-wrap gap-2 animate-in fade-in zoom-in-95">
