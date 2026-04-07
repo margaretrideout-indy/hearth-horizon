@@ -1,7 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
-// Check: If your folder is "Layout", change 'layout' to 'Layout' below
 import Sidebar from './components/layout/Sidebar';
 
 // PAGE IMPORTS
@@ -19,16 +17,17 @@ const App = () => {
 
         <main className="flex-1 ml-64">
           <Routes>
-            {/* THIS IS THE KEY: '/hearth' now specifically renders the Dashboard component */}
-            <Route path="/hearth" element={<Dashboard />} />
+            {/* We keep the route for Dashboard so it can still be your homepage */}
+            <Route path="/dashboard" element={<Dashboard />} />
             
             <Route path="/library" element={<Library />} />
             <Route path="/audit" element={<HorizonAudit />} />
             <Route path="/translator" element={<SkillTranslator />} />
             <Route path="/cultural-fit" element={<CulturalFit />} />
 
-            <Route path="/" element={<Navigate to="/hearth" replace />} />
-            <Route path="*" element={<Navigate to="/hearth" replace />} />
+            {/* When you open the app, it still takes you to your reflections/Dashboard */}
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </main>
       </div>
