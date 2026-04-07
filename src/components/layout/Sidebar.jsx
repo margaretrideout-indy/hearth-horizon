@@ -35,7 +35,7 @@ const Sidebar = () => {
   return (
     <div className="fixed left-0 top-0 h-screen w-64 bg-[#1A1423] border-r border-white/5 flex flex-col p-6 z-50">
       
-      {/* THE GLOWING ARCH LOGO */}
+      {/* BRAND LOGO */}
       <div className="mb-10 px-4">
         <svg 
           width="42" 
