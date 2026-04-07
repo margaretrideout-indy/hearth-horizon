@@ -1,242 +1,113 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeftRight, Plus, Sparkles, Loader2, Building2, Briefcase, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { motion } from 'framer-motion';
+import { ArrowRightLeft, Sparkles, Lightbulb, BookOpen } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import TranslationCard from '../components/translator/TranslationCard';
+import { Button } from '@/components/ui/button';
 
-const EDUCATION_TO_CORPORATE = {
-  // Education
-  'classroom management': 'team operations & performance leadership',
-  'lesson plan': 'programme design',
-  'lesson planning': 'programme design',
-  'curriculum': 'learning & development strategy',
-  'curriculum development': 'L&D programme development',
-  'pedagogy': 'instructional design methodology',
-  'student': 'stakeholder',
-  'students': 'stakeholders',
-  'teacher': 'facilitator',
-  'teaching': 'facilitation',
-  'grading': 'performance evaluation',
-  'assessment': 'performance assessment',
-  'ied': 'personalised development plan',
-  'iep': 'individualised development plan',
-  'iep management': 'client success & personalised programme management',
-  'parent communication': 'stakeholder engagement',
-  'professional development': 'continuous learning & upskilling',
-  'school board': 'executive leadership',
-  'principal': 'senior manager',
-  'superintendent': 'executive director',
-  'special education': 'inclusive programme design',
-  'differentiated instruction': 'adaptive delivery methodology',
-  'report card': 'performance review',
-  'extracurricular': 'volunteer initiatives',
-  'stakeholder engagement': 'cross-functional leadership & client success',
-  // Healthcare
-  'clinical workflows': 'operations management & process optimisation',
-  'clinical workflow': 'operations management & process optimisation',
-  'patient advocacy': 'client success & stakeholder relations',
-  'triage': 'strategic prioritisation & risk management',
-  'care coordination': 'cross-functional project coordination',
-  'care plan': 'strategic development plan',
-  'electronic health record': 'enterprise data management',
-  'patient outcomes': 'client success metrics',
-  'clinical': 'operational',
-  // Social Services
-  'case management': 'client portfolio management & strategic planning',
-  'crisis intervention': 'risk management & critical incident response',
-  'resource allocation': 'strategic resource planning & operations management',
-  'community outreach': 'stakeholder engagement & business development',
-  'intake assessment': 'client onboarding & needs analysis',
-  'service coordination': 'cross-functional programme delivery',
-  'advocacy': 'stakeholder relations & strategic communications',
-};
-
-function applyKeywordTranslation(input) {
-  let result = input;
-  // Sort by length descending so longer phrases match before shorter sub-phrases
-  const entries = Object.entries(EDUCATION_TO_CORPORATE).sort((a, b) => b[0].length - a[0].length);
-  entries.forEach(([pub, corp]) => {
-    const escaped = pub.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(`\\b${escaped}\\b`, 'gi');
-    result = result.replace(regex, corp);
-  });
-  return result;
-}
-
-const SECTOR_OPTIONS = [
-  { value: 'education', label: 'Education' },
-  { value: 'government', label: 'Government' },
-  { value: 'nonprofit', label: 'Non-Profit' },
-  { value: 'healthcare', label: 'Public Healthcare' },
-  { value: 'social_services', label: 'Social Services' },
+const EXAMPLES = [
+  { legacy: "Designing & Implementing Curricular Frameworks", tech: "Product Lifecycle & Instructional Design: Developing end-to-end information delivery systems." },
+  { legacy: "Differentiating Instruction for Diverse Learners", tech: "UX Personalization & Accessibility: Customizing complex content for varying user personas." },
+  { legacy: "Leading Program Initiatives", tech: "Project & Program Management: Managing cross-functional projects with strict deadlines." },
+  { legacy: "Classroom & Behavioral Management", tech: "Community Operations: Coordinating high-density groups in fast-paced settings." },
 ];
 
-export default function SkillTranslator() {
-  const [sector, setSector] = useState('education');
-  const [taskInput, setTaskInput] = useState('');
-  const [translations, setTranslations] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleTranslate = async () => {
-    if (!taskInput.trim()) return;
-    setIsLoading(true);
-
-    // Minimum 1-second loading state for UX feedback
-    await new Promise(r => setTimeout(r, 1000));
-
-    // Apply keyword mapping for all public-sector inputs, not just education
-    const processedInput = applyKeywordTranslation(taskInput);
-
-    const result = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are a career transition expert specializing in helping public service professionals and mission-driven leaders move to the private sector.
-
-The user works in ${sector}. Translate this task/skill into private-sector, market-ready language:
-Task: "${processedInput}"
-
-Focus on translating into corporate strategy terms: Operations Management, Strategic Planning, Client Success, Cross-functional Leadership, and related corporate competencies.
-
-Provide 3 distinct translations that resonate with corporate recruiters. For each, explain the business value it communicates.`,
-      response_json_schema: {
-        type: "object",
-        properties: {
-          translations: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                original: { type: "string" },
-                translated: { type: "string" },
-                corporate_value: { type: "string" },
-                best_for_roles: { type: "array", items: { type: "string" } }
-              }
-            }
-          }
-        }
-      }
-    });
-
-    setTranslations(prev => [
-      { id: Date.now(), input: processedInput, results: result.translations },
-      ...prev
-    ]);
-    setTaskInput('');
-    setIsLoading(false);
-  };
+export default function UnifiedLinguisticBridge() {
+  const [input, setInput] = useState('');
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-5xl mx-auto px-4 py-12 space-y-16">
       {/* Header */}
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <ArrowLeftRight className="w-4 h-4 text-secondary" />
-          <p className="text-sm text-secondary font-medium">Jargon-to-value engine</p>
-        </div>
-        <h1 className="font-heading text-3xl font-bold text-foreground mb-2" style={{ fontWeight: 600 }}>The linguistic bridge</h1>
-        <p className="text-muted-foreground max-w-2xl">
-          Thirteen years of institutional wisdom doesn't disappear — it transforms. Here is how your sector speaks, and what the private world hears.
+      <div className="space-y-4">
+        <h1 className="text-4xl font-bold text-white font-heading">The Linguistic Bridge</h1>
+        <p className="text-gray-400 text-lg max-w-2xl">
+          Thirteen years of institutional wisdom doesn't disappear — it transforms. 
+          Use the engine below to bridge the gap between your history and your tech horizon.
         </p>
       </div>
 
-      {/* Translation Input */}
-      <Card className="p-5 sm:p-6 rounded-2xl">
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 items-end">
-          {/* Left: Public Sector */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Building2 className="w-4 h-4 text-muted-foreground" />
-              <label className="text-sm font-medium">Your Public-Sector Task</label>
-            </div>
-            <Select value={sector} onValueChange={setSector}>
-              <SelectTrigger className="mb-3">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {SECTOR_OPTIONS.map(s => (
-                  <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Input
-              placeholder='e.g., "IEP development and implementation"'
-              value={taskInput}
-              onChange={e => setTaskInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleTranslate()}
-              className="text-base"
-            />
-          </div>
-
-          {/* Center: Arrow */}
-          <div className="hidden md:flex items-center justify-center pb-2">
-            <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center">
-              <ArrowLeftRight className="w-5 h-5 text-primary" />
-            </div>
-          </div>
-
-          {/* Right: Private Sector */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Briefcase className="w-4 h-4 text-muted-foreground" />
-              <label className="text-sm font-medium">Market-Ready Translation</label>
-            </div>
-            <div className="h-[88px] rounded-lg border border-dashed border-border flex items-center justify-center text-muted-foreground/50 text-sm">
-              {isLoading ? (
-                <div className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Translating your expertise...
-                </div>
-              ) : translations.length > 0 ? (
-                <p className="px-4 text-center text-secondary font-medium">
-                  {translations[0].results[0]?.translated}
-                </p>
-              ) : (
-                'Your translated skills appear here'
-              )}
-            </div>
-          </div>
+      {/* Primary Engine (Interactive) */}
+      <Card className="p-8 bg-[#2D2438]/50 border-teal-500/30 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-4 opacity-10">
+          <Sparkles className="w-24 h-24 text-teal-500" />
         </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 items-center">
+          {/* Input Side */}
+          <div className="space-y-4">
+            <label className="flex items-center gap-2 text-sm font-medium text-gray-300 uppercase tracking-wider">
+              <BookOpen className="w-4 h-4 text-teal-500" /> Your Public-Sector Task
+            </label>
+            <div className="space-y-2">
+              <select className="w-full bg-[#1C1622] border-gray-700 rounded-lg p-3 text-white">
+                <option>Education</option>
+                <option>Public Health</option>
+                <option>Non-Profit</option>
+              </select>
+              <textarea 
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder='e.g., "IEP development and implementation"'
+                className="w-full bg-[#1C1622] border-gray-700 rounded-lg p-4 text-white min-h-[120px] focus:ring-2 focus:ring-teal-500 transition-all"
+              />
+            </div>
+            <Button className="w-full bg-teal-600 hover:bg-teal-500 text-white gap-2">
+              <Sparkles className="w-4 h-4" /> Translate Skill
+            </Button>
+          </div>
 
-        <div className="mt-4 flex items-center justify-center gap-3">
-          <Button
-            onClick={handleTranslate}
-            disabled={!taskInput.trim() || isLoading}
-            className="gap-2"
-          >
-            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-            Translate skill
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-muted-foreground text-xs"
-            onClick={() => setTaskInput('Classroom Management')}
-          >
-            Try an example
-          </Button>
+          {/* Icon */}
+          <div className="hidden md:flex flex-col items-center justify-center">
+             <div className="p-3 rounded-full bg-teal-500/20 text-teal-500">
+               <ArrowRightLeft className="w-6 h-6" />
+             </div>
+          </div>
+
+          {/* Output Side */}
+          <div className="space-y-4">
+            <label className="flex items-center gap-2 text-sm font-medium text-gray-300 uppercase tracking-wider">
+              <Lightbulb className="w-4 h-4 text-teal-500" /> Market-Ready Translation
+            </label>
+            <div className="w-full bg-[#1C1622]/50 border-2 border-dashed border-gray-700 rounded-lg p-8 min-h-[220px] flex items-center justify-center text-center">
+              <p className="text-gray-500 italic">
+                {input ? "Thinking..." : "Your translated skills will appear here once you anchor your legacy language."}
+              </p>
+            </div>
+          </div>
         </div>
       </Card>
 
-      {/* Results */}
-      <AnimatePresence>
-        {translations.map((t, i) => (
-          <motion.div
-            key={t.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ delay: i * 0.05 }}
-          >
-            <TranslationCard
-              input={t.input}
-              results={t.results}
-              onRemove={() => setTranslations(prev => prev.filter(item => item.id !== t.id))}
-            />
-          </motion.div>
-        ))}
-      </AnimatePresence>
+      {/* Examples Table (The "Translator" Gallery) */}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between border-b border-gray-800 pb-4">
+          <h2 className="text-2xl font-bold text-white italic">Common Conversions</h2>
+          <span className="text-xs uppercase text-teal-500 tracking-widest font-bold">Shedding light on hidden expertise</span>
+        </div>
+        
+        <div className="grid grid-cols-1 gap-4">
+          {EXAMPLES.map((item, idx) => (
+            <motion.div 
+              key={idx}
+              whileHover={{ x: 10 }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-xl bg-[#1C1622] border border-gray-800 hover:border-teal-500/50 transition-all group"
+            >
+              <div className="space-y-1">
+                <span className="text-[10px] text-yellow-500/70 uppercase font-bold tracking-tighter">Legacy Language</span>
+                <p className="text-white font-medium group-hover:text-teal-400 transition-colors">{item.legacy}</p>
+              </div>
+              <div className="space-y-1 border-t md:border-t-0 md:border-l border-gray-800 pt-4 md:pt-0 md:pl-6">
+                <span className="text-[10px] text-teal-500 uppercase font-bold tracking-tighter">Tech Language</span>
+                <p className="text-gray-300 text-sm leading-relaxed">{item.tech}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+        
+        <div className="text-center pt-4">
+          <p className="text-gray-500 text-sm italic">
+            Don't see your specific task? Type it into the engine above.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
