@@ -1,14 +1,20 @@
 import React from 'react';
 import { 
-  Home, Library, Layers, Wind, GitBranch, 
-  Anchor, LogOut, User
+  Home, 
+  Library, 
+  Layers, 
+  Wind, 
+  GitBranch, 
+  Anchor, 
+  LogOut, 
+  User 
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
   const location = useLocation();
 
-  // Logic to determine which brand name to show
+  // Logic to determine if we show Hearth or Horizon
   const isTransitionPage = ['/canopy', '/translator', '/alignment', '/audit'].includes(location.pathname);
 
   const menuItems = [
@@ -31,21 +37,26 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-64 h-screen bg-[#1A1423] border-r border-white/5 flex flex-col p-8 fixed left-0 top-0">
+    <div className="w-64 h-screen bg-[#1A1423] border-r border-white/5 flex flex-col p-8 fixed left-0 top-0 z-50">
       
       {/* BRAND HEADER - Arch Logo + Theme Matched Text */}
-      <div className="mb-14 px-1 flex items-center gap-4 cursor-default">
-        <div className="relative shrink-0">
-          {/* Subtle teal glow behind the logo to match the theme */}
-          <div className="absolute inset-0 bg-teal-400/20 blur-xl rounded-full scale-110" />
+      <div className="mb-14 px-1 flex items-center gap-3 cursor-default">
+        <div className="relative shrink-0 w-10 h-10 flex items-center justify-center">
+          {/* Subtle teal glow behind the logo */}
+          <div className="absolute inset-0 bg-teal-400/20 blur-xl rounded-full scale-110 animate-pulse" />
+          
           <img 
-            src="/logo.png" 
+            src="/logo.jpg" 
             alt="Hearth Logo" 
-            className="w-10 h-10 relative z-10 object-contain drop-shadow-[0_0_8px_rgba(45,212,191,0.4)]" 
+            className="w-full h-full relative z-10 object-contain drop-shadow-[0_0_8px_rgba(45,212,191,0.4)]"
+            onError={(e) => {
+              e.target.onerror = null; 
+              e.target.src="https://placehold.co/40x40/2dd4bf/ffffff?text=H"
+            }} 
           />
         </div>
         
-        <h1 className="text-3xl font-black italic tracking-tighter text-white uppercase font-heading drop-shadow-[0_2px_10px_rgba(255,255,255,0.15)] leading-none">
+        <h1 className="text-3xl font-black italic tracking-tighter text-white uppercase font-heading drop-shadow-[0_2px_10px_rgba(255,255,255,0.15)] leading-none pt-1">
           {isTransitionPage ? "Horizon" : "Hearth"}
         </h1>
       </div>
@@ -72,7 +83,7 @@ const Sidebar = () => {
                     <span className={`${isActive ? 'text-teal-400' : 'text-gray-600 group-hover:text-gray-300'}`}>
                       {item.icon}
                     </span>
-                    <span className="text-[11px] font-bold tracking-tight uppercase">{item.name}</span>
+                    <span className="text-[11px] font-bold tracking-tight uppercase italic">{item.name}</span>
                   </Link>
                 );
               })}
