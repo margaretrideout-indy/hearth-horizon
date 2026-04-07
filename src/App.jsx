@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-// CRITICAL FIX: Matching the 'Layout' capitalization exactly
+// Check: If your folder is "Layout", change 'layout' to 'Layout' below
 import Sidebar from './components/layout/Sidebar';
 
 // PAGE IMPORTS
@@ -19,7 +19,7 @@ const App = () => {
 
         <main className="flex-1 ml-64">
           <Routes>
-            {/* THE HEARTH now maps directly to Dashboard */}
+            {/* THIS IS THE KEY: '/hearth' now specifically renders the Dashboard component */}
             <Route path="/hearth" element={<Dashboard />} />
             
             <Route path="/library" element={<Library />} />
@@ -27,7 +27,6 @@ const App = () => {
             <Route path="/translator" element={<SkillTranslator />} />
             <Route path="/cultural-fit" element={<CulturalFit />} />
 
-            {/* DEFAULT REDIRECT */}
             <Route path="/" element={<Navigate to="/hearth" replace />} />
             <Route path="*" element={<Navigate to="/hearth" replace />} />
           </Routes>
