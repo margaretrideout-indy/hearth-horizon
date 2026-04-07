@@ -5,6 +5,8 @@ import {
   Anchor,
   Shuffle, 
   Layers, 
+  MessageSquare,
+  Trees, // Using Trees for The Grove
   Settings,
   LogOut
 } from 'lucide-react';
@@ -13,12 +15,13 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Everything consolidated under one clear header
   const navItems = [
     { name: 'THE LIBRARY', path: '/library', icon: Library },
     { name: 'THE ROOTWORK', path: '/audit', icon: Anchor },
     { name: 'LINGUISTIC BRIDGE', path: '/translator', icon: Shuffle },
+    { name: 'THE GROVE', path: '/grove', icon: Trees }, // Added The Grove
     { name: 'ECOSYSTEM ALIGNMENT', path: '/cultural-fit', icon: Layers },
+    { name: 'THE EMBERS', path: '/embers', icon: MessageSquare },
   ];
 
   return (
@@ -57,7 +60,7 @@ const Sidebar = () => {
                   isActive ? 'text-[#2DD4BF]' : 'text-gray-400 hover:text-white'
                 }`}
               >
-                <item.icon className={`w-4 h-4 ${isActive ? 'text-[#2DD4BF]' : 'text-gray-500'}`} />
+                <item.icon className={`w-4 h-4 ${isActive ? 'text-[#2DD4BF]' : 'text-gray-500 group-hover:text-gray-300'}`} />
                 <span className="text-[10px] font-black uppercase tracking-[0.15em]">
                   {item.name}
                 </span>
@@ -67,7 +70,6 @@ const Sidebar = () => {
         </div>
       </nav>
 
-      {/* FOOTER */}
       <div className="pt-6 border-t border-white/5 space-y-1">
         <button className="w-full flex items-center gap-4 px-4 py-3 text-gray-500 hover:text-white transition-all text-left">
           <Settings className="w-4 h-4" />
