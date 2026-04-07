@@ -24,7 +24,7 @@ const NAV_GROUPS = [
     items: [
       { path: '/canopy', label: 'The Canopy', icon: Trees },
       { path: '/translator', label: 'The Linguistic Bridge', icon: ArrowLeftRight },
-      { path: '/gap-analyzer', label: 'The Bridge Builder', icon: Target },
+    { path: '/gap-analyzer', label: 'Horizon Scan', icon: Binoculars },
       { path: '/cultural-fit', label: 'Ecosystem Alignment', icon: Compass },
     ],
   },
