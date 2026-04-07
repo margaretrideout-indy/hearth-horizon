@@ -79,7 +79,7 @@ const AuthenticatedApp = () => {
         {/* Other member pages — accessible once logged in */}
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
         <Route path="/gap-analyzer" element={<ProtectedRoute element={<GapAnalyzer />} />} />
-        <Route path="/library" element={<IdentityAnchor />} />
+        <Route path="/library" element={<IdentityTranslator />} />
         <Route path="/cultural-fit" element={<ProtectedRoute element={<CulturalFit />} />} />
         <Route path="/support" element={<ProtectedRoute element={<Support />} />} />
         <Route path="/canopy" element={<ProtectedRoute element={<Canopy />} />} />
@@ -90,7 +90,7 @@ const AuthenticatedApp = () => {
         {/* Public pages */}
         <Route path="/contact" element={<Contact />} />
         <Route path="/install" element={<InstallApp />} />
-        <Route path="/library" element={<IdentityAnchor />} />
+        <Route path="/library" element={<IdentityTranslator />} />
         
         {/* Payment routes - public but only triggered after auth */}
         <Route path="/payment/success" element={<PaymentSuccess />} />
