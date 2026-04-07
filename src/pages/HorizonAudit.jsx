@@ -33,7 +33,6 @@ const HorizonAudit = () => {
       setHasSubmitted(true);
       setReflection('');
       
-      // Clear success state and emoji after a short delay
       setTimeout(() => {
         setHasSubmitted(false);
         setSelectedEmoji(null);
@@ -56,7 +55,7 @@ const HorizonAudit = () => {
           <History className="w-4 h-4 shadow-[0_0_15px_rgba(45,212,191,0.5)]" />
           <span className="text-[9px] font-black uppercase tracking-[0.4em]">Identity Foundation</span>
         </div>
-        <h1 className="text-4xl font-serif font-bold tracking-tight text-white">Rootwork</h1>
+        <h1 className="text-4xl font-serif font-bold tracking-tight text-white">The Rootwork</h1>
         <p className="text-gray-400 text-xs mt-3 italic font-light">"The growth is invisible before it is inevitable."</p>
       </div>
 
@@ -109,7 +108,7 @@ const HorizonAudit = () => {
               />
             </div>
 
-            {/* SYNC BUTTON: EXPLICIT DUAL DESTINATION */}
+            {/* SYNC BUTTON */}
             <button 
               onClick={handleCommit}
               disabled={isSubmitting || !selectedEmoji || !reflection}
