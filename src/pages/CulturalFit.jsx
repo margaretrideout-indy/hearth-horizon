@@ -4,7 +4,7 @@ import {
   Compass, ShieldCheck, SearchCode, 
   ArrowRight, Zap, Target, AlertTriangle, 
   CheckCircle2, Globe, Building2, ChevronRight,
-  ShieldAlert, Sparkles, Binary
+  ShieldAlert, Sparkles, Binary, Info
 } from 'lucide-react';
 
 const EcosystemAlignment = () => {
@@ -13,7 +13,6 @@ const EcosystemAlignment = () => {
   const [jobText, setJobText] = useState('');
   const [selectedEthics, setSelectedEthics] = useState([]);
 
-  // Load ethics from local storage on mount
   useEffect(() => {
     const saved = localStorage.getItem('alignment_ethics_v1');
     if (saved) setSelectedEthics(JSON.parse(saved));
@@ -52,15 +51,12 @@ const EcosystemAlignment = () => {
     <div className="min-h-screen bg-[#1A1423] p-6 md:p-10 text-white font-sans pb-32">
       
       {/* HEADER */}
-      <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <div className="flex items-center gap-2 mb-2 text-teal-400">
-            <Target className="w-4 h-4 shadow-[0_0_10px_rgba(45,212,191,0.3)]" />
-            <span className="text-[9px] font-black uppercase tracking-[0.3em]">Validation Layer</span>
-          </div>
-          <h1 className="text-3xl font-serif font-bold tracking-tight text-white">Ecosystem Alignment</h1>
-          <p className="text-sm text-gray-500 italic mt-1 font-light">Validating your professional syntax against cultural realities.</p>
+      <div className="mb-10">
+        <div className="flex items-center gap-2 mb-2 text-teal-400">
+          <Target className="w-4 h-4 shadow-[0_0_10px_rgba(45,212,191,0.3)]" />
+          <span className="text-[9px] font-black uppercase tracking-[0.3em]">Validation Layer</span>
         </div>
+        <h1 className="text-3xl font-serif font-bold tracking-tight text-white">Ecosystem Alignment</h1>
       </div>
 
       {/* STEP PROGRESS TRACKER */}
@@ -84,19 +80,19 @@ const EcosystemAlignment = () => {
 
       <div className="max-w-6xl mx-auto">
         
-        {/* STEP 1: ETHICS COMPASS */}
+        {/* STEP 1: COMPASS */}
         {activeTab === 'compass' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="lg:col-span-7 bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-10">
-              <h3 className="text-xl font-bold mb-2">The Ethics Compass</h3>
-              <p className="text-xs text-gray-500 mb-8 font-light italic tracking-wide">Select your operational non-negotiables to filter the market.</p>
+              <h3 className="text-xl font-bold mb-2 text-white">The Ethics Compass</h3>
+              <p className="text-xs text-gray-500 mb-8 font-light italic">Define your operational non-negotiables.</p>
               
               <div className="space-y-3">
                 {ethicsOptions.map(option => (
                   <button 
                     key={option.id}
                     onClick={() => toggleEthic(option.id)}
-                    className={`w-full flex items-center justify-between p-5 rounded-2xl border transition-all duration-300 ${selectedEthics.includes(option.id) ? 'bg-teal-500/10 border-teal-500/30' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
+                    className={`w-full flex items-center justify-between p-5 rounded-2xl border transition-all duration-300 ${selectedEthics.includes(option.id) ? 'bg-teal-500/10 border-teal-500/30 shadow-[0_0_15px_rgba(45,212,191,0.05)]' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
                   >
                     <div className="flex items-center gap-4">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${selectedEthics.includes(option.id) ? 'bg-teal-400 text-black shadow-[0_0_10px_rgba(45,212,191,0.5)]' : 'bg-white/5 text-gray-600'}`}>
@@ -108,42 +104,21 @@ const EcosystemAlignment = () => {
                   </button>
                 ))}
               </div>
-
-              <button 
-                onClick={() => setActiveTab('scout')}
-                className="mt-10 w-full py-4 bg-[#FF6B35] rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:scale-[1.01] transition-all shadow-lg"
-              >
-                Continue to Sector Scouting <ChevronRight className="w-4 h-4" />
-              </button>
             </div>
-            
-            <div className="lg:col-span-5 flex flex-col justify-center gap-6">
-                <div className="p-8 border border-dashed border-white/5 rounded-3xl relative overflow-hidden group">
-                  <div className="absolute -right-10 -bottom-10 opacity-[0.03] group-hover:rotate-12 transition-transform duration-1000">
-                    <ShieldCheck className="w-40 h-40" />
-                  </div>
-                  <h4 className="text-lg font-serif italic text-gray-400 leading-relaxed mb-4">
-                    "Your legacy is built on values. Transitioning to tech shouldn't mean leaving them behind."
-                  </h4>
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-px bg-teal-500/30" />
-                    <span className="text-[8px] font-black text-teal-500/50 uppercase tracking-widest">Identity Philosophy</span>
-                  </div>
-                </div>
+            <div className="lg:col-span-5 p-8 border border-dashed border-white/5 rounded-3xl flex flex-col justify-center text-center italic text-gray-500 text-sm">
+              "Your ethics aren't just values—they're constraints that protect your focus."
             </div>
           </div>
         )}
 
-        {/* STEP 2: SECTOR SCOUTING */}
+        {/* STEP 2: SCOUTING (With New Hover States) */}
         {activeTab === 'scout' && (
           <div className="animate-in fade-in duration-700 space-y-4">
-            <div className="flex items-center justify-between mb-8 px-4">
-              <h3 className="text-lg font-bold">Recommended Ecosystems</h3>
-              <div className="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Based on {selectedEthics.length} Non-Negotiables</div>
-            </div>
-            
             {sectors.map(sector => (
-              <div key={sector.name} className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 flex flex-col md:flex-row md:items-center justify-between group hover:bg-white/[0.04] transition-all border-l-4 border-l-transparent hover:border-l-teal-500/50">
+              <div 
+                key={sector.name} 
+                className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 flex flex-col md:flex-row md:items-center justify-between group hover:bg-white/[0.04] hover:border-teal-500/40 hover:shadow-[0_0_30px_rgba(45,212,191,0.05)] transition-all duration-500 cursor-default"
+              >
                 <div className="flex items-center gap-8 mb-4 md:mb-0">
                   <div className="relative">
                     <svg className="w-16 h-16 transform -rotate-90">
@@ -153,7 +128,7 @@ const EcosystemAlignment = () => {
                     <span className="absolute inset-0 flex items-center justify-center text-[10px] font-black text-white">{sector.match}%</span>
                   </div>
                   <div>
-                    <h4 className="text-base font-bold text-white mb-1">{sector.name}</h4>
+                    <h4 className="text-base font-bold text-white mb-1 group-hover:text-teal-400 transition-colors">{sector.name}</h4>
                     <p className="text-xs text-gray-500 italic mb-3">{sector.vibe}</p>
                     <div className="flex gap-2">
                       {sector.tags.map(tag => (
@@ -164,7 +139,7 @@ const EcosystemAlignment = () => {
                 </div>
                 <button 
                   onClick={() => navigate('/canopy')}
-                  className="flex items-center gap-3 px-6 py-3 rounded-xl bg-white/5 border border-white/5 text-[9px] font-black uppercase tracking-widest hover:bg-teal-500/10 hover:border-teal-500/20 transition-all"
+                  className="flex items-center gap-3 px-6 py-3 rounded-xl bg-white/5 border border-white/5 text-[9px] font-black uppercase tracking-widest hover:bg-[#FF6B35] hover:border-[#FF6B35] hover:text-white transition-all"
                 >
                   View Market <ArrowRight className="w-4 h-4" />
                 </button>
@@ -173,14 +148,20 @@ const EcosystemAlignment = () => {
           </div>
         )}
 
-        {/* STEP 3: CULTURE TRANSLATOR */}
+        {/* STEP 3: TRANSLATOR (With Ethics Guard) */}
         {activeTab === 'translator' && (
           <div className="animate-in zoom-in-95 duration-700 lg:px-20">
-            <div className="bg-white/[0.03] border border-white/5 rounded-[3rem] p-12 relative overflow-hidden">
-               <div className="absolute -right-20 -top-20 opacity-[0.02] pointer-events-none">
-                  <SearchCode className="w-80 h-80" />
+            {/* EMPTY STATE WARNING */}
+            {selectedEthics.length === 0 && (
+              <div className="mb-8 flex items-center gap-4 p-5 bg-orange-500/5 border border-orange-500/20 rounded-2xl animate-pulse">
+                <Info className="w-5 h-5 text-orange-400" />
+                <p className="text-[10px] font-bold text-orange-200 uppercase tracking-widest leading-relaxed">
+                  No Ethics detected. <button onClick={() => setActiveTab('compass')} className="underline decoration-orange-500/50 hover:text-white transition-colors">Define your Compass</button> in Step 01 for a more accurate stress test.
+                </p>
               </div>
+            )}
 
+            <div className={`bg-white/[0.03] border border-white/5 rounded-[3rem] p-12 relative overflow-hidden transition-opacity duration-500 ${selectedEthics.length === 0 ? 'opacity-50 grayscale-[0.5]' : 'opacity-100'}`}>
               <div className="relative z-10">
                 <div className="flex items-center gap-4 mb-10">
                   <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
@@ -195,28 +176,29 @@ const EcosystemAlignment = () => {
                 <textarea 
                   value={jobText}
                   onChange={(e) => setJobText(e.target.value)}
-                  placeholder="Paste a job description or company values statement here..."
-                  className="w-full h-56 bg-black/40 border border-white/5 rounded-3xl p-8 text-sm text-gray-300 focus:outline-none focus:border-orange-500/20 transition-all mb-8 font-light leading-relaxed shadow-inner"
+                  disabled={selectedEthics.length === 0}
+                  placeholder={selectedEthics.length === 0 ? "Locked until Ethics are defined..." : "Paste a job description here..."}
+                  className="w-full h-56 bg-black/40 border border-white/5 rounded-3xl p-8 text-sm text-gray-300 focus:outline-none focus:border-orange-500/20 transition-all mb-8 font-light shadow-inner resize-none disabled:cursor-not-allowed"
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="bg-teal-500/[0.03] border border-teal-500/10 rounded-[2rem] p-8">
+                  <div className="bg-teal-500/[0.03] border border-teal-500/10 rounded-[2rem] p-8 group">
                     <div className="flex items-center gap-2 mb-4">
                       <CheckCircle2 className="w-4 h-4 text-teal-400" />
                       <span className="text-[9px] font-black text-teal-400 uppercase tracking-[0.2em]">Compatibility Signals</span>
                     </div>
-                    <p className="text-xs text-gray-400 leading-relaxed font-light italic">
-                      {jobText.length > 0 ? "Analyzing text for alignment with your 'Remote-First' and 'Autonomy' non-negotiables..." : "Paste a description to begin cultural analysis."}
+                    <p className="text-xs text-gray-500 leading-relaxed font-light italic group-hover:text-gray-400 transition-colors">
+                      {jobText.length > 0 ? "Scanning for keywords aligned with your verified non-negotiables..." : "Awaiting input..."}
                     </p>
                   </div>
 
-                  <div className="bg-red-500/[0.03] border border-red-500/10 rounded-[2rem] p-8">
+                  <div className="bg-red-500/[0.03] border border-red-500/10 rounded-[2rem] p-8 group">
                     <div className="flex items-center gap-2 mb-4">
                       <ShieldAlert className="w-4 h-4 text-red-400" />
                       <span className="text-[9px] font-black text-red-400 uppercase tracking-[0.2em]">Operational Friction</span>
                     </div>
-                    <p className="text-xs text-gray-400 leading-relaxed font-light italic">
-                      {jobText.length > 0 ? "Scanning for hidden red flags (e.g., 'crunch culture' terminology or lack of flexibility)." : "Waiting for input..."}
+                    <p className="text-xs text-gray-500 leading-relaxed font-light italic group-hover:text-gray-400 transition-colors">
+                      {jobText.length > 0 ? "Identifying language that contradicts your established ethics..." : "Awaiting input..."}
                     </p>
                   </div>
                 </div>
@@ -224,7 +206,6 @@ const EcosystemAlignment = () => {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );
