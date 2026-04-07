@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Sparkles, ArrowRight, BookOpen, MessageSquare, ShieldCheck, RefreshCw } from 'lucide-react';
+import { 
+  Sparkles, ArrowRight, BookOpen, MessageSquare, 
+  ShieldCheck, RefreshCw, Copy, Check 
+} from 'lucide-react';
 
 const industryPrompts = {
   Education: [
@@ -42,6 +45,7 @@ export default function SkillTranslator() {
   const [isBridging, setIsBridging] = useState(false);
   const [translation, setTranslation] = useState(null);
   const [promptIndex, setPromptIndex] = useState(0);
+  const [copiedKey, setCopiedKey] = useState(null);
 
   const getNewPrompt = () => {
     const prompts = industryPrompts[sourceIndustry];
@@ -49,9 +53,16 @@ export default function SkillTranslator() {
     setLegacyTask(prompts[promptIndex]);
   };
 
+  const copyToClipboard = (text, key) => {
+    navigator.clipboard.writeText(text);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2000);
+  };
+
   const handleBridge = () => {
     setIsBridging(true);
-    // Simulated translation logic for UI testing
+    setTranslation(null); // Reset for animation feel
+    
     setTimeout(() => {
       setTranslation({
         value: "Operational Strategy & Stakeholder Management",
@@ -59,7 +70,7 @@ export default function SkillTranslator() {
         interview: "In my previous role, I didn't just 'manage a group'—I coordinated complex, multi-layered operations where I had to pivot strategies based on real-time data. That’s exactly how I’ll approach your project management needs."
       });
       setIsBridging(false);
-    }, 800);
+    }, 1200); // Slightly longer for the "construction" feel
   };
 
   return (
@@ -113,7 +124,9 @@ export default function SkillTranslator() {
           <Button 
             onClick={handleBridge}
             disabled={!legacyTask || isBridging}
-            className="w-full py-7 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-2xl gap-3 shadow-lg shadow-teal-900/20 transition-all active:scale-[0.98]"
+            className={`w-full py-7 font-bold rounded-2xl gap-3 transition-all active:scale-[0.98] ${
+              isBridging ? 'bg-teal-900/50 text-teal-500 cursor-wait' : 'bg-teal-600 hover:bg-teal-500 text-white shadow-lg shadow-teal-900/20'
+            }`}
           >
             {isBridging ? (
               <>
@@ -128,48 +141,83 @@ export default function SkillTranslator() {
           </Button>
         </section>
 
-        {/* The Three-Tier Output */}
+        {/* Output Section */}
         <section className="space-y-4">
           <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] px-1">
             Professional Translation
           </label>
           
           {translation ? (
-            <div className="space-y-4 animate-in fade-in slide-in-from-right-8 duration-500">
-              <Card className="p-5 bg-teal-500/10 border-teal-500/20 rounded-3xl group">
+            <div className="space-y-4 animate-in fade-in zoom-in-95 duration-500">
+              {/* Pillar 1: Value */}
+              <Card className="p-5 bg-teal-500/10 border-teal-500/20 rounded-3xl relative group">
+                <button 
+                  onClick={() => copyToClipboard(translation.value, 'value')}
+                  className="absolute top-4 right-4 text-teal-500/50 hover:text-teal-400 transition-colors"
+                >
+                  {copiedKey === 'value' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                </button>
                 <div className="flex items-center gap-2 mb-3">
                   <ShieldCheck className="w-4 h-4 text-teal-400" />
                   <span className="text-[10px] font-black text-teal-400 uppercase tracking-widest">Pillar 1: The Value</span>
                 </div>
-                <p className="text-white font-bold text-lg leading-tight">{translation.value}</p>
+                <p className="text-white font-bold text-lg leading-tight pr-8">{translation.value}</p>
               </Card>
 
-              <Card className="p-5 bg-white/5 border-white/10 rounded-3xl hover:bg-white/[0.07] transition-colors">
+              {/* Pillar 2: Resume */}
+              <Card className="p-5 bg-white/5 border-white/10 rounded-3xl relative group hover:bg-white/[0.07] transition-colors">
+                <button 
+                  onClick={() => copyToClipboard(translation.resume, 'resume')}
+                  className="absolute top-4 right-4 text-gray-500 hover:text-gray-300 transition-colors"
+                >
+                  {copiedKey === 'resume' ? <Check className="w-4 h-4 text-teal-400" /> : <Copy className="w-4 h-4" />}
+                </button>
                 <div className="flex items-center gap-2 mb-3">
                   <BookOpen className="w-4 h-4 text-gray-400" />
                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Pillar 2: Resume Bullet</span>
                 </div>
-                <p className="text-sm text-gray-300 leading-relaxed italic">"{translation.resume}"</p>
+                <p className="text-sm text-gray-300 leading-relaxed italic pr-8">"{translation.resume}"</p>
               </Card>
 
-              <Card className="p-5 bg-white/5 border-white/10 rounded-3xl hover:bg-white/[0.07] transition-colors">
+              {/* Pillar 3: Narrative */}
+              <Card className="p-5 bg-white/5 border-white/10 rounded-3xl relative group hover:bg-white/[0.07] transition-colors">
+                <button 
+                  onClick={() => copyToClipboard(translation.interview, 'interview')}
+                  className="absolute top-4 right-4 text-gray-500 hover:text-gray-300 transition-colors"
+                >
+                  {copiedKey === 'interview' ? <Check className="w-4 h-4 text-teal-400" /> : <Copy className="w-4 h-4" />}
+                </button>
                 <div className="flex items-center gap-2 mb-3">
                   <MessageSquare className="w-4 h-4 text-gray-400" />
                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Pillar 3: The Narrative</span>
                 </div>
-                <p className="text-sm text-gray-300 leading-relaxed font-medium">
+                <div className="text-sm text-gray-300 leading-relaxed font-medium pr-8">
                   <span className="text-teal-400/80 font-bold block mb-1 uppercase text-[9px]">How to tell the story:</span>
                   {translation.interview}
-                </p>
+                </div>
               </Card>
             </div>
           ) : (
-            <div className="h-full min-h-[400px] border-2 border-dashed border-white/5 bg-white/[0.02] rounded-[2rem] flex flex-col items-center justify-center p-12 text-center group">
-              <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
-                <ArrowRight className="w-8 h-8 text-white/10" />
+            /* Construction/Empty State */
+            <div className={`h-full min-h-[400px] border-2 border-dashed rounded-[2rem] flex flex-col items-center justify-center p-12 text-center transition-all duration-500 ${
+              isBridging ? 'border-teal-500/30 bg-teal-500/5 animate-pulse' : 'border-white/5 bg-white/[0.02]'
+            }`}>
+              <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-all duration-500 ${
+                isBridging ? 'bg-teal-500/20 rotate-180 scale-110' : 'bg-white/5'
+              }`}>
+                {isBridging ? (
+                  <RefreshCw className="w-8 h-8 text-teal-400 animate-spin" />
+                ) : (
+                  <ArrowRight className="w-8 h-8 text-white/10" />
+                )}
               </div>
-              <p className="text-gray-500 text-sm font-medium max-w-[240px] leading-relaxed">
-                Input a legacy task from your previous career to generate your professional bridge.
+              <p className={`text-sm font-medium max-w-[240px] leading-relaxed transition-colors ${
+                isBridging ? 'text-teal-400' : 'text-gray-500'
+              }`}>
+                {isBridging 
+                  ? "Analyzing legacy context and mapping professional connections..." 
+                  : "Input a legacy task from your previous career to generate your professional bridge."
+                }
               </p>
             </div>
           )}
