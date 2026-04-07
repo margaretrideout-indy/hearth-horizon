@@ -69,7 +69,7 @@ export default function Gateway() {
                 <h3 className="font-heading text-xl font-bold text-foreground">The Seedling</h3>
                 <div className="text-3xl font-bold mt-2 text-muted-foreground">$0</div>
                 <ul className="mt-8 space-y-4 text-sm text-muted-foreground text-left">
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Access to **The Embers** campfire chat</span></li>
+                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Access to <strong className="text-foreground">The Embers</strong> campfire chat</span></li>
                   <li className="flex items-start gap-3"><FileText className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>2 Bridge Builder crossings (PDFs) / month</span></li>
                   <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Foundational grounding resources</span></li>
                 </ul>
@@ -89,7 +89,7 @@ export default function Gateway() {
                   <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-wider">(Introductory offer, then $5/mo)</p>
                 </div>
                 <ul className="mt-8 space-y-4 text-sm text-muted-foreground text-left">
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Everything in **Seedling**</span></li>
+                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Everything in <strong className="text-foreground">Seedling</strong></span></li>
                   <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Support this sanctuary's ecosystem</span></li>
                   <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Founding Member status</span></li>
                 </ul>
@@ -110,8 +110,8 @@ export default function Gateway() {
                   <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-wider">(Introductory offer, then $8/mo)</p>
                 </div>
                 <ul className="mt-8 space-y-4 text-sm text-muted-foreground text-left">
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Everything in **Hearthkeeper**</span></li>
-                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>**Sponsor a peer seat** in transition</span></li>
+                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Everything in <strong className="text-foreground">Hearthkeeper</strong></span></li>
+                  <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span><strong className="text-foreground">Sponsor a peer seat</strong> in transition</span></li>
                   <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Community Voting rights</span></li>
                 </ul>
               </div>
