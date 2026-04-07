@@ -1,3 +1,5 @@
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, ArrowLeftRight, Target, Heart, Compass,
   ChevronLeft, ChevronRight, LogOut, HandHeart, Trees, Flame, Lock, BookOpen
@@ -14,7 +16,7 @@ const NAV_GROUPS = [
     items: [
       { path: '/support', label: 'The Grove', icon: HandHeart },
       { path: '/embers', label: 'The Embers', icon: Flame },
-      { path: '/library', label: 'The Library', icon: BookOpen }, // This is the magic line
+      { path: '/library', label: 'The Library', icon: BookOpen },
     ],
   },
   {
@@ -49,7 +51,6 @@ export default function Sidebar({ collapsed, onToggle }) {
         borderRight: '1px solid hsla(280, 30%, 40%, 0.18)',
       }}
     >
-      {/* Logo */}
       <Link
         to="/"
         className="flex items-center gap-3 border-b border-sidebar-border/40 hover:opacity-80 transition-opacity"
@@ -66,9 +67,7 @@ export default function Sidebar({ collapsed, onToggle }) {
         )}
       </Link>
 
-      {/* Navigation Groups */}
       <nav className="flex-1 py-4 px-2 overflow-y-auto">
-        {/* Standalone: Your Hearth */}
         <div style={{ marginBottom: '24px' }}>
           {(() => {
             const item = STANDALONE;
@@ -97,7 +96,6 @@ export default function Sidebar({ collapsed, onToggle }) {
 
         {NAV_GROUPS.map((group, gi) => (
           <div key={group.label} style={{ marginBottom: gi < NAV_GROUPS.length - 1 ? '24px' : 0 }}>
-            {/* Group label */}
             {!collapsed && (
               <p
                 className="px-3 mb-2 font-medium tracking-widest"
@@ -179,7 +177,6 @@ export default function Sidebar({ collapsed, onToggle }) {
         ))}
       </nav>
 
-      {/* Logout + Collapse */}
       <div className="p-2 border-t border-sidebar-border/30 space-y-1">
         <button
           onClick={() => base44.auth.logout()}
