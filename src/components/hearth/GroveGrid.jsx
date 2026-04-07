@@ -6,22 +6,22 @@ import { Link } from 'react-router-dom';
 
 const RESOURCES = [
   {
-    emoji: '🕯️',
-    title: 'The Identity Translator',
+    emoji: '🌉',
+    title: 'The Linguistic Bridge',
     subtitle: 'Translate your expertise into Tech-speak.',
-    to: '/identity-translator',
+    to: '/translator',
   },
   {
-    emoji: '🔭',
-    title: 'The Horizon Audit',
+    emoji: '🌲',
+    title: 'The Canopy',
     subtitle: 'Align your values with your next career move.',
-    to: '/audit',
+    to: '/canopy',
   },
   {
-    emoji: '🗺️',
-    title: 'The Forest Guide',
-    subtitle: 'How to navigate your Hearth & Horizon dashboard.',
-    to: '/guide',
+    emoji: '📚',
+    title: 'The Library',
+    subtitle: 'Curated provisions for your professional pivot.',
+    to: '/library',
   },
 ];
 
