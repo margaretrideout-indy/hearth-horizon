@@ -34,7 +34,7 @@ const Sidebar = () => {
 
   return (
     <div className="fixed left-0 top-0 h-screen w-64 bg-[#1A1423] border-r border-white/5 flex flex-col p-6 z-50">
-      {/* Brand Header */}
+      {/* Brand Header - Reverted to your clean original */}
       <div className="mb-10 px-4">
         <h1 className="text-xl font-bold tracking-tight text-white">Vesta</h1>
         <p className="text-[8px] font-black uppercase tracking-[0.3em] text-gray-500">Identity Ecosystem</p>
@@ -43,7 +43,7 @@ const Sidebar = () => {
       <nav className="flex-1 space-y-8 text-left">
         {navSections.map((section, idx) => (
           <div key={idx} className="space-y-2">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600 px-4 mb-4 text-left">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600 px-4 mb-4">
               {section.title}
             </h3>
             <div className="space-y-1">
@@ -57,7 +57,7 @@ const Sidebar = () => {
                       isActive ? 'text-[#2DD4BF]' : 'text-gray-400 hover:text-white'
                     }`}
                   >
-                    <item.icon className={`w-4 h-4 ${isActive ? 'text-[#2DD4BF]' : 'text-gray-500 group-hover:text-gray-300'}`} />
+                    <item.icon className={`w-4 h-4 ${isActive ? 'text-[#2DD4BF]' : 'text-gray-500'}`} />
                     <span className="text-[10px] font-black uppercase tracking-[0.15em]">
                       {item.name}
                     </span>
@@ -69,7 +69,6 @@ const Sidebar = () => {
         ))}
       </nav>
 
-      {/* Footer Nav */}
       <div className="pt-6 border-t border-white/5 space-y-1">
         <button className="w-full flex items-center gap-4 px-4 py-3 text-gray-500 hover:text-white transition-all text-left">
           <Settings className="w-4 h-4" />
