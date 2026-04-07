@@ -35,7 +35,7 @@ const Sidebar = () => {
   return (
     <div className="fixed left-0 top-0 h-screen w-64 bg-[#1A1423] border-r border-white/5 flex flex-col p-6 z-50">
       {/* Brand Header */}
-      <div className="mb-10 px-4 text-left">
+      <div className="mb-10 px-4">
         <h1 className="text-xl font-bold tracking-tight text-white">Vesta</h1>
         <p className="text-[8px] font-black uppercase tracking-[0.3em] text-gray-500">Identity Ecosystem</p>
       </div>
@@ -43,7 +43,7 @@ const Sidebar = () => {
       <nav className="flex-1 space-y-8 text-left">
         {navSections.map((section, idx) => (
           <div key={idx} className="space-y-2">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600 px-4 mb-4">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600 px-4 mb-4 text-left">
               {section.title}
             </h3>
             <div className="space-y-1">
