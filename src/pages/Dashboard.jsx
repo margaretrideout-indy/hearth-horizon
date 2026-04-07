@@ -27,32 +27,33 @@ export default function Dashboard() {
   const profile = profiles[0] || null;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10 pb-10">
       <WelcomeHeader profile={profile} />
 
-      <Card className="p-6 rounded-2xl border-border/50 shadow-sm">
+      <Card className="p-8 bg-[#2D2438]/40 border-white/5 rounded-3xl backdrop-blur-sm">
         <RoadmapProgress currentStage={profile?.roadmap_stage || 'discovery'} />
       </Card>
 
-      <div>
-        <h2 className="font-heading font-semibold text-xl mb-4">Tend the fire</h2>
+      <section>
+        <h2 className="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mb-6 px-1">
+          Tend the fire
+        </h2>
         <QuickActions />
-      </div>
+      </section>
 
       <TargetUsers />
 
       <RecentActivity checkIns={checkIns} />
 
-      {/* Support Banner */}
-      <Card className="p-5 rounded-2xl border-secondary/30 bg-secondary/5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-        <div className="w-9 h-9 rounded-xl bg-secondary/20 flex items-center justify-center shrink-0">
-          <Heart className="w-4 h-4 text-secondary" />
+      <Card className="p-6 rounded-3xl border-white/5 bg-gradient-to-r from-orange-500/10 to-transparent flex flex-col sm:flex-row items-start sm:items-center gap-6">
+        <div className="w-12 h-12 rounded-2xl bg-orange-500/20 flex items-center justify-center shrink-0">
+          <Heart className="w-5 h-5 text-orange-400" />
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="font-medium text-sm">The grove — a reciprocity model</p>
-          <p className="text-xs text-muted-foreground mt-0.5">One seat purchased sponsors a peer in financial transition. No one gets left behind.</p>
+        <div className="flex-1">
+          <p className="font-bold text-white tracking-tight">The grove — a reciprocity model</p>
+          <p className="text-xs text-gray-400 mt-1">One seat purchased sponsors a peer in financial transition. No one gets left behind.</p>
         </div>
-        <Button asChild size="sm" variant="outline" className="shrink-0 border-secondary/40 text-secondary hover:bg-secondary/10">
+        <Button asChild variant="outline" className="shrink-0 border-white/10 hover:bg-white/5 text-white rounded-xl">
           <Link to="/support">Enter the grove</Link>
         </Button>
       </Card>
