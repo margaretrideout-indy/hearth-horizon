@@ -16,14 +16,11 @@ export default function UnifiedLinguisticBridge() {
   const [role, setRole] = useState('Education');
   const [translation, setTranslation] = useState('');
 
-  // 1. Logic to handle the "Translation" (Simulated for now)
   const handleTranslate = () => {
     if (!input) return;
-    // This is where your AI or logic would go. For now, it shows the "Worksheet" is active.
-    setTranslation(`[Translated Tech-Speak for: ${input}]`);
+    setTranslation(`Tech-Speak Translation for: ${input}`);
   };
 
-  // 2. Logic to Download the Worksheet
   const downloadWorksheet = () => {
     const content = `
 HEARTH & HORIZON: LINGUISTIC BRIDGE WORKSHEET
@@ -45,7 +42,6 @@ Keep this for your Master Resume and LinkedIn profile.
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12 space-y-16">
-      {/* Header */}
       <div className="space-y-4">
         <h1 className="text-4xl font-bold text-white font-heading">The Linguistic Bridge</h1>
         <p className="text-gray-400 text-lg max-w-2xl">
@@ -54,14 +50,12 @@ Keep this for your Master Resume and LinkedIn profile.
         </p>
       </div>
 
-      {/* Primary Engine (Interactive Worksheet) */}
       <Card className="p-8 bg-[#2D2438]/50 border-teal-500/30 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 p-4 opacity-10">
           <Sparkles className="w-24 h-24 text-teal-500" />
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 items-center">
-          {/* Input Side */}
           <div className="space-y-4">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 uppercase tracking-wider">
               <BookOpen className="w-4 h-4 text-teal-500" /> Your Public-Sector Task
@@ -91,44 +85,46 @@ Keep this for your Master Resume and LinkedIn profile.
             </Button>
           </div>
 
-          {/* Icon */}
           <div className="hidden md:flex flex-col items-center justify-center">
              <div className="p-3 rounded-full bg-teal-500/20 text-teal-500">
                <ArrowRightLeft className="w-6 h-6" />
              </div>
           </div>
 
-          {/* Output Side */}
           <div className="space-y-4">
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 uppercase tracking-wider">
               <Lightbulb className="w-4 h-4 text-teal-500" /> Market-Ready Translation
             </label>
             <div className="w-full bg-[#1C1622]/50 border-2 border-dashed border-gray-700 rounded-lg p-8 min-h-[220px] flex flex-col items-center justify-center text-center">
-              {translation ? (
-                <div className="space-y-6">
+              <div className="flex-1 flex items-center justify-center">
+                {translation ? (
                   <p className="text-teal-100 leading-relaxed font-medium">
                     {translation}
                   </p>
-                  {/* The Download Button: Only shows when a translation exists */}
-                  <Button 
-                    variant="outline" 
-                    onClick={downloadWorksheet}
-                    className="border-teal-500/50 text-teal-400 hover:bg-teal-500/10 gap-2"
-                  >
-                    <Download className="w-4 h-4" /> Download Worksheet
-                  </Button>
-                </div>
-              ) : (
-                <p className="text-gray-500 italic">
-                  Your translated skills will appear here once you anchor your legacy language.
-                </p>
-              )}
+                ) : (
+                  <p className="text-gray-500 italic">
+                    Your translated skills will appear here once you anchor your legacy language.
+                  </p>
+                )}
+              </div>
+
+              <Button 
+                variant="outline" 
+                onClick={downloadWorksheet}
+                disabled={!translation}
+                className={`mt-6 gap-2 transition-all ${
+                  translation 
+                    ? "border-teal-500/50 text-teal-400 hover:bg-teal-500/10" 
+                    : "opacity-30 border-gray-700 text-gray-500 cursor-not-allowed"
+                }`}
+              >
+                <Download className="w-4 h-4" /> Download Worksheet
+              </Button>
             </div>
           </div>
         </div>
       </Card>
 
-      {/* Examples Table */}
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b border-gray-800 pb-4">
           <h2 className="text-2xl font-bold text-white italic font-heading">Common Conversions</h2>
