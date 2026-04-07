@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRightLeft, Sparkles, Lightbulb, BookOpen } from 'lucide-react';
+import { ArrowRightLeft, Sparkles, Lightbulb, BookOpen, Download } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -13,6 +13,35 @@ const EXAMPLES = [
 
 export default function UnifiedLinguisticBridge() {
   const [input, setInput] = useState('');
+  const [role, setRole] = useState('Education');
+  const [translation, setTranslation] = useState('');
+
+  // 1. Logic to handle the "Translation" (Simulated for now)
+  const handleTranslate = () => {
+    if (!input) return;
+    // This is where your AI or logic would go. For now, it shows the "Worksheet" is active.
+    setTranslation(`[Translated Tech-Speak for: ${input}]`);
+  };
+
+  // 2. Logic to Download the Worksheet
+  const downloadWorksheet = () => {
+    const content = `
+HEARTH & HORIZON: LINGUISTIC BRIDGE WORKSHEET
+==========================================
+DATE: ${new Date().toLocaleDateString()}
+ORIGINAL ROLE: ${role}
+EDUCATOR TASK: ${input}
+TECH-READY TRANSLATION: ${translation}
+==========================================
+Keep this for your Master Resume and LinkedIn profile.
+    `;
+    const element = document.createElement("a");
+    const file = new Blob([content], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = "Linguistic-Bridge-Worksheet.txt";
+    document.body.appendChild(element);
+    element.click();
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12 space-y-16">
@@ -25,7 +54,7 @@ export default function UnifiedLinguisticBridge() {
         </p>
       </div>
 
-      {/* Primary Engine (Interactive) */}
+      {/* Primary Engine (Interactive Worksheet) */}
       <Card className="p-8 bg-[#2D2438]/50 border-teal-500/30 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 p-4 opacity-10">
           <Sparkles className="w-24 h-24 text-teal-500" />
@@ -38,7 +67,11 @@ export default function UnifiedLinguisticBridge() {
               <BookOpen className="w-4 h-4 text-teal-500" /> Your Public-Sector Task
             </label>
             <div className="space-y-2">
-              <select className="w-full bg-[#1C1622] border-gray-700 rounded-lg p-3 text-white">
+              <select 
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="w-full bg-[#1C1622] border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:ring-1 focus:ring-teal-500"
+              >
                 <option>Education</option>
                 <option>Public Health</option>
                 <option>Non-Profit</option>
@@ -47,10 +80,13 @@ export default function UnifiedLinguisticBridge() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder='e.g., "IEP development and implementation"'
-                className="w-full bg-[#1C1622] border-gray-700 rounded-lg p-4 text-white min-h-[120px] focus:ring-2 focus:ring-teal-500 transition-all"
+                className="w-full bg-[#1C1622] border-gray-700 rounded-lg p-4 text-white min-h-[120px] focus:ring-2 focus:ring-teal-500 transition-all outline-none"
               />
             </div>
-            <Button className="w-full bg-teal-600 hover:bg-teal-500 text-white gap-2">
+            <Button 
+              onClick={handleTranslate}
+              className="w-full bg-teal-600 hover:bg-teal-500 text-white gap-2 py-6 text-base"
+            >
               <Sparkles className="w-4 h-4" /> Translate Skill
             </Button>
           </div>
@@ -67,19 +103,35 @@ export default function UnifiedLinguisticBridge() {
             <label className="flex items-center gap-2 text-sm font-medium text-gray-300 uppercase tracking-wider">
               <Lightbulb className="w-4 h-4 text-teal-500" /> Market-Ready Translation
             </label>
-            <div className="w-full bg-[#1C1622]/50 border-2 border-dashed border-gray-700 rounded-lg p-8 min-h-[220px] flex items-center justify-center text-center">
-              <p className="text-gray-500 italic">
-                {input ? "Thinking..." : "Your translated skills will appear here once you anchor your legacy language."}
-              </p>
+            <div className="w-full bg-[#1C1622]/50 border-2 border-dashed border-gray-700 rounded-lg p-8 min-h-[220px] flex flex-col items-center justify-center text-center">
+              {translation ? (
+                <div className="space-y-6">
+                  <p className="text-teal-100 leading-relaxed font-medium">
+                    {translation}
+                  </p>
+                  {/* The Download Button: Only shows when a translation exists */}
+                  <Button 
+                    variant="outline" 
+                    onClick={downloadWorksheet}
+                    className="border-teal-500/50 text-teal-400 hover:bg-teal-500/10 gap-2"
+                  >
+                    <Download className="w-4 h-4" /> Download Worksheet
+                  </Button>
+                </div>
+              ) : (
+                <p className="text-gray-500 italic">
+                  Your translated skills will appear here once you anchor your legacy language.
+                </p>
+              )}
             </div>
           </div>
         </div>
       </Card>
 
-      {/* Examples Table (The "Translator" Gallery) */}
+      {/* Examples Table */}
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b border-gray-800 pb-4">
-          <h2 className="text-2xl font-bold text-white italic">Common Conversions</h2>
+          <h2 className="text-2xl font-bold text-white italic font-heading">Common Conversions</h2>
           <span className="text-xs uppercase text-teal-500 tracking-widest font-bold">Shedding light on hidden expertise</span>
         </div>
         
