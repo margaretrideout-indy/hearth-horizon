@@ -12,11 +12,23 @@ const EcosystemAlignment = () => {
   const [activeTab, setActiveTab] = useState('compass');
   const [jobText, setJobText] = useState('');
   const [selectedEthics, setSelectedEthics] = useState([]);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('alignment_ethics_v1');
     if (saved) setSelectedEthics(JSON.parse(saved));
   }, []);
+
+  // Trigger simulated analysis when jobText changes
+  useEffect(() => {
+    if (jobText.length > 10) {
+      setIsAnalyzing(true);
+      const timer = setTimeout(() => {
+        setIsAnalyzing(false);
+      }, 2500); // 2.5 second "think time"
+      return () => clearTimeout(timer);
+    }
+  }, [jobText]);
 
   const toggleEthic = (id) => {
     const updated = selectedEthics.includes(id) 
@@ -47,7 +59,6 @@ const EcosystemAlignment = () => {
     { id: 'translator', label: '03. Stress Test' }
   ];
 
-  // Helper to get the label of selected ethics for the dynamic feedback
   const getEthicLabel = (index) => {
     const id = selectedEthics[index];
     const option = ethicsOptions.find(e => e.id === id);
@@ -155,15 +166,14 @@ const EcosystemAlignment = () => {
           </div>
         )}
 
-        {/* STEP 3: TRANSLATOR */}
+        {/* STEP 3: TRANSLATOR (PERCEIVED VALUE UPDATE) */}
         {activeTab === 'translator' && (
           <div className="animate-in zoom-in-95 duration-700 lg:px-20">
-            {/* EMPTY STATE WARNING */}
             {selectedEthics.length === 0 && (
               <div className="mb-8 flex items-center gap-4 p-5 bg-orange-500/5 border border-orange-500/20 rounded-2xl animate-pulse">
                 <Info className="w-5 h-5 text-orange-400" />
                 <p className="text-[10px] font-bold text-orange-200 uppercase tracking-widest leading-relaxed">
-                  No Ethics detected. <button onClick={() => setActiveTab('compass')} className="underline decoration-orange-500/50 hover:text-white transition-colors">Define your Compass</button> in Step 01 for a more accurate stress test.
+                  No Ethics detected. <button onClick={() => setActiveTab('compass')} className="underline">Define your Compass</button> in Step 01 to begin.
                 </p>
               </div>
             )}
@@ -172,7 +182,7 @@ const EcosystemAlignment = () => {
               <div className="relative z-10">
                 <div className="flex items-center gap-4 mb-10">
                   <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
-                    <Sparkles className="w-6 h-6 text-[#FF6B35]" />
+                    <Sparkles className={`w-6 h-6 text-[#FF6B35] ${isAnalyzing ? 'animate-spin' : ''}`} />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold">Culture Translator</h3>
@@ -187,7 +197,24 @@ const EcosystemAlignment = () => {
                   className="w-full h-56 bg-black/40 border border-white/5 rounded-3xl p-8 text-sm text-gray-300 focus:outline-none focus:border-orange-500/20 transition-all mb-8 font-light shadow-inner resize-none"
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+                  
+                  {/* AUTHENTIC ANALYSIS OVERLAY */}
+                  {isAnalyzing && (
+                    <div className="absolute inset-0 z-30 flex items-center justify-center bg-[#1A1423]/90 backdrop-blur-md rounded-[2.5rem] animate-in fade-in duration-300">
+                      <div className="flex flex-col items-center gap-4 text-center">
+                        <div className="relative">
+                            <Binary className="w-10 h-10 text-teal-400 animate-pulse" />
+                            <div className="absolute inset-0 blur-lg bg-teal-400/20 animate-pulse" />
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-[10px] font-black text-white uppercase tracking-[0.4em]">Scanning Cultural Syntax</p>
+                            <p className="text-[8px] text-gray-500 uppercase tracking-widest font-bold">Comparing to defined non-negotiables...</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* COMPATIBILITY SIGNALS */}
                   <div className="bg-teal-500/[0.03] border border-teal-500/10 rounded-[2rem] p-8 group transition-all hover:bg-teal-500/[0.05]">
                     <div className="flex items-center gap-2 mb-4">
@@ -196,15 +223,13 @@ const EcosystemAlignment = () => {
                     </div>
                     <div className="text-xs text-gray-400 leading-relaxed font-light italic">
                       {jobText.length > 5 ? (
-                        <ul className="space-y-3 animate-in fade-in slide-in-from-left-2">
+                        <ul className="space-y-3">
                           <li className="flex gap-2 text-white/80">
                             <Zap className="w-3 h-3 text-teal-400 shrink-0 mt-0.5" /> 
-                            <span>Alignment detected with <span className="text-teal-400 font-bold uppercase tracking-tighter">"{getEthicLabel(0)}"</span>. Narrative suggests a respect for deep-work cycles.</span>
+                            <span>Alignment detected with <span className="text-teal-400 font-bold uppercase tracking-tighter">"{getEthicLabel(0)}"</span>. The narrative suggests a high degree of operational maturity.</span>
                           </li>
                         </ul>
-                      ) : (
-                        "Awaiting input to identify green flags..."
-                      )}
+                      ) : "Awaiting input..."}
                     </div>
                   </div>
 
@@ -216,16 +241,14 @@ const EcosystemAlignment = () => {
                     </div>
                     <div className="text-xs text-gray-400 leading-relaxed font-light italic">
                       {jobText.length > 5 ? (
-                        <div className="space-y-3 animate-in fade-in slide-in-from-right-2">
+                        <div className="space-y-3">
                           <p className="text-white/80 flex gap-2">
                             <AlertTriangle className="w-3 h-3 text-red-400 shrink-0 mt-0.5" />
                             <span>Risk Alert: Potential conflict with your requirement for <span className="text-red-400 font-bold uppercase tracking-tighter">"{getEthicLabel(selectedEthics.length - 1)}"</span>.</span>
                           </p>
-                          <p className="opacity-60">Syntax suggests potential boundary erosion or "always-on" expectations.</p>
+                          <p className="opacity-60">Syntax suggests potential boundary erosion through "fast-paced" terminology.</p>
                         </div>
-                      ) : (
-                        "Awaiting input to scan for red flags..."
-                      )}
+                      ) : "Awaiting input..."}
                     </div>
                   </div>
                 </div>
