@@ -1,228 +1,171 @@
-import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import React, { useState, useEffect } from 'react';
 import { 
-  Sparkles, ArrowRight, BookOpen, MessageSquare, 
-  ShieldCheck, RefreshCw, Copy, Check 
+  BookOpenText, Sparkles, ArrowRightLeft, 
+  Terminal, ArrowRight, Save, Copy, 
+  CheckCircle2, Hash, Zap
 } from 'lucide-react';
 
-const industryPrompts = {
-  Education: [
-    "Managed IEP development and parent communication",
-    "Designed and implemented year-long curriculum maps",
-    "Led grade-level team meetings and collaborative planning",
-    "Facilitated restorative justice circles for conflict resolution"
-  ],
-  "Service Industry": [
-    "Coordinated staff schedules and inventory during peak seasons",
-    "Resolved high-stakes customer escalations in real-time",
-    "Streamlined front-of-house operations to increase turnover",
-    "Trained new hires on POS systems and service standards"
-  ],
-  Healthcare: [
-    "Managed patient care plans and multidisciplinary coordination",
-    "Maintained 100% compliance with strict HIPAA regulations",
-    "Triaged emergency situations in high-pressure environments",
-    "Educated families on complex medical procedures and recovery"
-  ],
-  Trades: [
-    "Estimated project timelines and material resource allocation",
-    "Supervised onsite safety protocols and vendor coordination",
-    "Interpreted blueprints and technical specifications for builds",
-    "Mentored apprentices on technical skills and site standards"
-  ],
-  "Other / General": [
-    "Organized community events with multiple stakeholders",
-    "Managed personal freelance projects from scope to delivery",
-    "Volunteer coordination for local non-profit initiatives",
-    "Cross-functional collaboration on long-term goals"
-  ]
-};
+const LinguisticBridge = () => {
+  const [vaultData, setVaultData] = useState({});
+  const [activeTranslation, setActiveTranslation] = useState(null);
+  const [isCopied, setIsCopied] = useState(false);
 
-export default function SkillTranslator() {
-  const [sourceIndustry, setSourceIndustry] = useState('Education');
-  const [legacyTask, setLegacyTask] = useState('');
-  const [isBridging, setIsBridging] = useState(false);
-  const [translation, setTranslation] = useState(null);
-  const [promptIndex, setPromptIndex] = useState(0);
-  const [copiedKey, setCopiedKey] = useState(null);
+  // Load the Rootwork data directly from the vault
+  useEffect(() => {
+    const saved = localStorage.getItem('rootwork_logs_v3');
+    if (saved) {
+      setVaultData(JSON.parse(saved));
+    }
+  }, []);
 
-  const getNewPrompt = () => {
-    const prompts = industryPrompts[sourceIndustry];
-    setPromptIndex((prev) => (prev + 1) % prompts.length);
-    setLegacyTask(prompts[promptIndex]);
-  };
-
-  const copyToClipboard = (text, key) => {
-    navigator.clipboard.writeText(text);
-    setCopiedKey(key);
-    setTimeout(() => setCopiedKey(null), 2000);
-  };
-
-  const handleBridge = () => {
-    setIsBridging(true);
-    setTranslation(null); // Reset for animation feel
+  // Simple dictionary for the "Translation Engine"
+  const translate = (text) => {
+    if (!text) return "Awaiting input from The Rootwork...";
+    let translated = text.toLowerCase();
     
-    setTimeout(() => {
-      setTranslation({
-        value: "Operational Strategy & Stakeholder Management",
-        resume: "Spearheaded cross-functional project delivery for 30+ stakeholders, ensuring 100% compliance with regulatory standards while optimizing resource allocation.",
-        interview: "In my previous role, I didn't just 'manage a group'—I coordinated complex, multi-layered operations where I had to pivot strategies based on real-time data. That’s exactly how I’ll approach your project management needs."
-      });
-      setIsBridging(false);
-    }, 1200); // Slightly longer for the "construction" feel
+    const glossary = [
+      { find: /teacher|instructor/g, replace: "Subject Matter Expert (SME)" },
+      { find: /classroom|students/g, replace: "User Ecosystem" },
+      { find: /lesson plan|curriculum/g, replace: "Product Roadmap" },
+      { find: /grading|assessment/g, replace: "KPI Tracking & Metrics" },
+      { find: /managed/g, replace: "Orchestrated" },
+      { find: /parents|stakeholders/g, replace: "External Stakeholders" }
+    ];
+
+    glossary.forEach(item => {
+      translated = translated.replace(item.find, item.replace);
+    });
+
+    return translated.charAt(0).toUpperCase() + translated.slice(1);
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-8 animate-in fade-in duration-700">
-      <header className="space-y-2">
-        <h1 className="text-3xl font-black text-white tracking-tight">The Linguistic Bridge</h1>
-        <p className="text-gray-400 text-sm font-medium">Decode your legacy experience into the language of your future.</p>
-      </header>
-
-      <div className="grid lg:grid-cols-2 gap-8 items-start">
-        {/* Input Section */}
-        <section className="space-y-6">
-          <div className="space-y-4">
-            <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] px-1">
-              Your Background
-            </label>
-            <select 
-              value={sourceIndustry}
-              onChange={(e) => {
-                setSourceIndustry(e.target.value);
-                setLegacyTask('');
-              }}
-              className="w-full bg-[#2D2438]/40 border border-white/5 rounded-2xl p-4 text-white focus:outline-none focus:border-teal-500/50 transition-colors appearance-none cursor-pointer"
-            >
-              {Object.keys(industryPrompts).map(ind => (
-                <option key={ind} value={ind} className="bg-[#2D2438]">{ind}</option>
-              ))}
-            </select>
+    <div className="min-h-screen bg-[#1A1423] p-6 md:p-10 text-white font-sans pb-32">
+      
+      {/* HEADER */}
+      <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <div className="flex items-center gap-2 mb-2 text-teal-400">
+            <ArrowRightLeft className="w-4 h-4" />
+            <span className="text-[9px] font-black uppercase tracking-[0.3em]">Linguistic Bridge</span>
           </div>
+          <h1 className="text-3xl font-serif font-bold tracking-tight text-white">Semantic Translator</h1>
+          <p className="text-sm text-gray-500 italic mt-1">Converting education legacy into tech-industry syntax.</p>
+        </div>
 
-          <div className="space-y-4">
-            <div className="flex justify-between items-end px-1">
-              <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
-                Legacy Task
-              </label>
-              <button 
-                onClick={getNewPrompt}
-                className="text-[9px] font-bold text-teal-400 uppercase flex items-center gap-1.5 hover:text-teal-300 transition-colors"
-              >
-                <Sparkles className="w-3 h-3" /> Spark an Idea
-              </button>
+        <div className="flex items-center gap-3">
+            <div className="text-[9px] font-bold text-teal-500/50 uppercase tracking-widest bg-teal-500/5 px-3 py-2 rounded-lg border border-teal-500/10">
+                Engine Status: Online
             </div>
-            <textarea
-              value={legacyTask}
-              onChange={(e) => setLegacyTask(e.target.value)}
-              placeholder="What is a task that felt like 'just part of the job'?"
-              className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-teal-500/50 min-h-[160px] resize-none leading-relaxed transition-all"
-            />
-          </div>
+        </div>
+      </div>
 
-          <Button 
-            onClick={handleBridge}
-            disabled={!legacyTask || isBridging}
-            className={`w-full py-7 font-bold rounded-2xl gap-3 transition-all active:scale-[0.98] ${
-              isBridging ? 'bg-teal-900/50 text-teal-500 cursor-wait' : 'bg-teal-600 hover:bg-teal-500 text-white shadow-lg shadow-teal-900/20'
-            }`}
-          >
-            {isBridging ? (
-              <>
-                <RefreshCw className="w-4 h-4 animate-spin" /> 
-                Constructing the Span...
-              </>
-            ) : (
-              <>
-                Bridge the Gap <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </Button>
-        </section>
-
-        {/* Output Section */}
-        <section className="space-y-4">
-          <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] px-1">
-            Professional Translation
-          </label>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        {/* LEFT: THE SOURCE (Vault Entries) */}
+        <div className="lg:col-span-5 space-y-4">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600 mb-4 flex items-center gap-2">
+            <Terminal className="w-3.5 h-3.5" /> Source Material (The Vault)
+          </h2>
           
-          {translation ? (
-            <div className="space-y-4 animate-in fade-in zoom-in-95 duration-500">
-              {/* Pillar 1: Value */}
-              <Card className="p-5 bg-teal-500/10 border-teal-500/20 rounded-3xl relative group">
-                <button 
-                  onClick={() => copyToClipboard(translation.value, 'value')}
-                  className="absolute top-4 right-4 text-teal-500/50 hover:text-teal-400 transition-colors"
-                >
-                  {copiedKey === 'value' ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                </button>
-                <div className="flex items-center gap-2 mb-3">
-                  <ShieldCheck className="w-4 h-4 text-teal-400" />
-                  <span className="text-[10px] font-black text-teal-400 uppercase tracking-widest">Pillar 1: The Value</span>
+          {Object.keys(vaultData).length > 0 ? Object.entries(vaultData).map(([key, value]) => (
+            value && (
+              <button 
+                key={key}
+                onClick={() => setActiveTranslation({ key, value })}
+                className={`w-full text-left p-6 rounded-2xl border transition-all group ${activeTranslation?.key === key ? 'bg-white/[0.05] border-teal-500/30' : 'bg-white/[0.02] border-white/5 hover:border-white/10'}`}
+              >
+                <div className="flex justify-between items-start mb-2">
+                    <span className="text-[9px] font-bold text-teal-400/40 uppercase tracking-widest">{key.toUpperCase()}</span>
+                    <ArrowRight className={`w-3.5 h-3.5 transition-transform ${activeTranslation?.key === key ? 'translate-x-1 text-teal-400' : 'text-gray-700'}`} />
                 </div>
-                <p className="text-white font-bold text-lg leading-tight pr-8">{translation.value}</p>
-              </Card>
-
-              {/* Pillar 2: Resume */}
-              <Card className="p-5 bg-white/5 border-white/10 rounded-3xl relative group hover:bg-white/[0.07] transition-colors">
-                <button 
-                  onClick={() => copyToClipboard(translation.resume, 'resume')}
-                  className="absolute top-4 right-4 text-gray-500 hover:text-gray-300 transition-colors"
-                >
-                  {copiedKey === 'resume' ? <Check className="w-4 h-4 text-teal-400" /> : <Copy className="w-4 h-4" />}
-                </button>
-                <div className="flex items-center gap-2 mb-3">
-                  <BookOpen className="w-4 h-4 text-gray-400" />
-                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Pillar 2: Resume Bullet</span>
-                </div>
-                <p className="text-sm text-gray-300 leading-relaxed italic pr-8">"{translation.resume}"</p>
-              </Card>
-
-              {/* Pillar 3: Narrative */}
-              <Card className="p-5 bg-white/5 border-white/10 rounded-3xl relative group hover:bg-white/[0.07] transition-colors">
-                <button 
-                  onClick={() => copyToClipboard(translation.interview, 'interview')}
-                  className="absolute top-4 right-4 text-gray-500 hover:text-gray-300 transition-colors"
-                >
-                  {copiedKey === 'interview' ? <Check className="w-4 h-4 text-teal-400" /> : <Copy className="w-4 h-4" />}
-                </button>
-                <div className="flex items-center gap-2 mb-3">
-                  <MessageSquare className="w-4 h-4 text-gray-400" />
-                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Pillar 3: The Narrative</span>
-                </div>
-                <div className="text-sm text-gray-300 leading-relaxed font-medium pr-8">
-                  <span className="text-teal-400/80 font-bold block mb-1 uppercase text-[9px]">How to tell the story:</span>
-                  {translation.interview}
-                </div>
-              </Card>
-            </div>
-          ) : (
-            /* Construction/Empty State */
-            <div className={`h-full min-h-[400px] border-2 border-dashed rounded-[2rem] flex flex-col items-center justify-center p-12 text-center transition-all duration-500 ${
-              isBridging ? 'border-teal-500/30 bg-teal-500/5 animate-pulse' : 'border-white/5 bg-white/[0.02]'
-            }`}>
-              <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-all duration-500 ${
-                isBridging ? 'bg-teal-500/20 rotate-180 scale-110' : 'bg-white/5'
-              }`}>
-                {isBridging ? (
-                  <RefreshCw className="w-8 h-8 text-teal-400 animate-spin" />
-                ) : (
-                  <ArrowRight className="w-8 h-8 text-white/10" />
-                )}
-              </div>
-              <p className={`text-sm font-medium max-w-[240px] leading-relaxed transition-colors ${
-                isBridging ? 'text-teal-400' : 'text-gray-500'
-              }`}>
-                {isBridging 
-                  ? "Analyzing legacy context and mapping professional connections..." 
-                  : "Input a legacy task from your previous career to generate your professional bridge."
-                }
-              </p>
+                <p className="text-xs text-gray-400 font-light italic line-clamp-2 leading-relaxed">
+                  "{value}"
+                </p>
+              </button>
+            )
+          )) : (
+            <div className="p-8 border border-dashed border-white/5 rounded-2xl text-center">
+                <p className="text-xs text-gray-600 italic">No Rootwork logs detected. Complete an audit to begin.</p>
             </div>
           )}
-        </section>
+        </div>
+
+        {/* RIGHT: THE TRANSLATOR (The Laboratory) */}
+        <div className="lg:col-span-7">
+          <div className="bg-white/[0.03] border border-white/5 rounded-[2.5rem] p-10 sticky top-10 overflow-hidden">
+            {/* Background Accent */}
+            <div className="absolute -right-20 -top-20 opacity-[0.02] pointer-events-none">
+                <Zap className="w-80 h-80" />
+            </div>
+
+            <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-8">
+                    <div className="w-10 h-10 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center">
+                        <Sparkles className="w-5 h-5 text-teal-400" />
+                    </div>
+                    <div>
+                        <h3 className="text-lg font-bold tracking-tight">Translation Engine</h3>
+                        <p className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.2em]">Refining Professional Narrative</p>
+                    </div>
+                </div>
+
+                <div className="space-y-8">
+                    {/* INPUT SECTION */}
+                    <div>
+                        <label className="text-[9px] font-black text-gray-600 uppercase tracking-widest block mb-3 ml-1">Legacy Input</label>
+                        <div className="bg-black/40 border border-white/5 rounded-2xl p-6 text-sm text-gray-400 leading-relaxed font-light italic">
+                            {activeTranslation?.value || "Select a source entry from your Vault to begin translation."}
+                        </div>
+                    </div>
+
+                    <div className="flex justify-center">
+                        <div className="w-px h-8 bg-gradient-to-b from-teal-500/50 to-transparent" />
+                    </div>
+
+                    {/* OUTPUT SECTION */}
+                    <div>
+                        <label className="text-[9px] font-black text-teal-500 uppercase tracking-widest block mb-3 ml-1">Tech Syntax Output</label>
+                        <div className="bg-teal-500/[0.03] border border-teal-500/20 rounded-2xl p-8 relative group">
+                            <p className="text-base font-medium text-white leading-relaxed mb-6">
+                                {translate(activeTranslation?.value)}
+                            </p>
+                            
+                            <div className="flex items-center justify-between pt-6 border-t border-teal-500/10">
+                                <div className="flex gap-2">
+                                    <span className="text-[8px] font-bold bg-teal-500/10 text-teal-400 px-2 py-1 rounded uppercase tracking-widest">#SME</span>
+                                    <span className="text-[8px] font-bold bg-teal-500/10 text-teal-400 px-2 py-1 rounded uppercase tracking-widest">#Roadmap</span>
+                                </div>
+                                <div className="flex gap-3">
+                                    <button 
+                                        onClick={() => copyToClipboard(translate(activeTranslation?.value))}
+                                        className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 transition-all flex items-center gap-2"
+                                    >
+                                        {isCopied ? <CheckCircle2 className="w-4 h-4 text-teal-400" /> : <Copy className="w-4 h-4" />}
+                                        <span className="text-[9px] font-bold uppercase tracking-widest">Copy</span>
+                                    </button>
+                                    <button className="p-2.5 rounded-xl bg-[#FF6B35] hover:bg-[#FF6B35]/90 text-white transition-all flex items-center gap-2">
+                                        <Save className="w-4 h-4" />
+                                        <span className="text-[9px] font-black uppercase tracking-widest">Save Draft</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
-}
+};
+
+export default LinguisticBridge;
