@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-// UPDATED IMPORT PATH BASED ON YOUR DISCOVERY
+// MATCHING CASE-SENSITIVITY: Components and Layout
 import Sidebar from './components/Layout/Sidebar';
 
 // PAGE IMPORTS
@@ -15,7 +15,7 @@ const App = () => {
   return (
     <Router>
       <div className="flex bg-[#1A1423] min-h-screen">
-        {/* Persistent Sidebar from components/Layout */}
+        {/* The Sidebar found in src/components/Layout/Sidebar */}
         <Sidebar />
 
         {/* Main Content Area */}
