@@ -1,8 +1,6 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, ArrowLeftRight, Target, Heart, Compass,
-  ChevronLeft, ChevronRight, LogOut, HandHeart, Trees, Flame, Lock
+  ChevronLeft, ChevronRight, LogOut, HandHeart, Trees, Flame, Lock, BookOpen
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
@@ -16,6 +14,7 @@ const NAV_GROUPS = [
     items: [
       { path: '/support', label: 'The Grove', icon: HandHeart },
       { path: '/embers', label: 'The Embers', icon: Flame },
+      { path: '/library', label: 'The Library', icon: BookOpen }, // This is the magic line
     ],
   },
   {
