@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
-  Home, 
   Library, 
   Anchor,
   Shuffle, 
@@ -14,11 +13,11 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // "The Hearth" has been removed to keep the navigation lean
   const navSections = [
     {
       title: "NAVIGATION",
       items: [
-        { name: 'THE HEARTH', path: '/hearth', icon: Home },
         { name: 'THE LIBRARY', path: '/library', icon: Library },
       ]
     },
@@ -35,7 +34,7 @@ const Sidebar = () => {
   return (
     <div className="fixed left-0 top-0 h-screen w-64 bg-[#1A1423] border-r border-white/5 flex flex-col p-6 z-50">
       
-      {/* BRAND LOGO */}
+      {/* BRAND LOGO (Your glowing hearth logo remains as the brand mark) */}
       <div className="mb-10 px-4">
         <svg 
           width="42" 
