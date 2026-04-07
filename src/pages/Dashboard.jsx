@@ -1,98 +1,117 @@
-import React from 'react';
-import { HeartIcon, GiftIcon, CheckIcon } from '@heroicons/react/24/outline';
+import React, { useState } from 'react';
 
-const tiers = [
-  {
-    id: 'tier-hearthkeeper',
-    name: 'The Hearthkeeper',
-    icon: HeartIcon,
-    price_intro: '3',
-    price_standard: '5',
-    features: [
-      'Everything in Seedling',
-      'Unlimited PDF uploads & deep-dive analysis',
-      'Support this sanctuary\'s ecosystem',
-      'Founding Member status',
-    ],
-    highlight: false,
-  },
-  {
-    id: 'tier-steward',
-    name: 'The Steward',
-    icon: GiftIcon,
-    price_intro: '5',
-    price_standard: '8',
-    features: [
-      'Everything in Hearthkeeper',
-      'Sponsor a peer seat in transition',
-      'Community Voting rights',
-    ],
-    highlight: true,
-    label: 'Reciprocity',
-  },
-];
+// --- COMPONENTS ---
 
-export default function DashboardPricing() {
+const TierBadge = () => (
+  <div style={{
+    display: 'inline-flex', alignItems: 'center', gap: '12px', padding: '12px 20px',
+    background: 'rgba(255, 255, 255, 0.05)', borderRadius: '16px', 
+    border: '1px solid rgba(45, 212, 191, 0.3)', marginTop: '20px'
+  }}>
+    <span style={{ fontSize: '1.4rem' }}>🕯️</span>
+    <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+      <span style={{ color: '#2dd4bf', fontWeight: '900', fontSize: '0.85rem', letterSpacing: '0.05em' }}>FOUNDER</span>
+      <span style={{ color: '#a0aec0', fontSize: '0.75rem' }}>The Hearth Builder</span>
+    </div>
+  </div>
+);
+
+const Dashboard = () => (
+  <div style={{ padding: '40px 20px', maxWidth: '1000px', margin: '0 auto' }}>
+    {/* Welcome Card */}
+    <div style={{
+      background: 'rgba(53, 47, 68, 0.6)', padding: '60px 50px', borderRadius: '40px', 
+      border: '1px solid rgba(45, 212, 191, 0.2)', marginBottom: '30px', textAlign: 'left',
+      backdropFilter: 'blur(15px)', boxShadow: '0 20px 50px rgba(0,0,0,0.2)'
+    }}>
+      <h1 style={{ fontSize: '5rem', margin: '0 0 15px 0', fontWeight: '900', letterSpacing: '-0.05em', lineHeight: '1', color: 'white' }}>
+        Welcome to the Horizon
+      </h1>
+      <p style={{ fontSize: '1.25rem', color: '#cbd5e1', maxWidth: '550px', lineHeight: '1.5', margin: '0' }}>
+        The path forward is clear, Margaret. Your transition to tech is illuminated by 13 years of wisdom.
+      </p>
+      <TierBadge />
+    </div>
+
+    {/* Action Card */}
+    <div style={{ 
+      background: 'rgba(53, 47, 68, 0.4)', padding: '40px', borderRadius: '35px', 
+      border: '1px solid rgba(255, 255, 255, 0.08)', textAlign: 'left', backdropFilter: 'blur(10px)' 
+    }}>
+      <p style={{ color: '#2dd4bf', fontSize: '0.9rem', fontWeight: '900', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        Ready for your next crossing?
+      </p>
+      <p style={{ color: '#cbd5e1', fontSize: '1.1rem', margin: '0 0 25px 0', lineHeight: '1.6' }}>
+        Upload your CV to <b>The Bridge Builder</b>. We'll translate your educational leadership into tech-sector data narratives.
+      </p>
+      <button style={{ 
+        background: '#14b8a6', color: '#2a2438', border: 'none', padding: '16px 36px', 
+        borderRadius: '15px', fontWeight: '900', cursor: 'pointer', fontSize: '1.1rem'
+      }}>
+        Start Translation →
+      </button>
+    </div>
+  </div>
+);
+
+const HearthInsights = () => (
+  <div style={{ padding: '40px 20px', maxWidth: '1000px', margin: '0 auto' }}>
+    <h1 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '30px', color: 'white', letterSpacing: '-0.02em' }}>Hearth Insights</h1>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '25px' }}>
+      {[
+        { title: 'Teacher-to-Tech Dictionary', icon: '📖' },
+        { title: 'Linguistic Bridge Guide', icon: '🌉' }
+      ].map((item, i) => (
+        <div key={i} style={{ 
+          background: 'rgba(53, 47, 68, 0.6)', padding: '30px', borderRadius: '30px', 
+          border: '1px solid rgba(255, 255, 255, 0.08)', textAlign: 'left', backdropFilter: 'blur(10px)' 
+        }}>
+          <div style={{ fontSize: '2.3rem', marginBottom: '15px' }}>{item.icon}</div>
+          <h4 style={{ margin: 0, fontSize: '1.4rem', fontWeight: '900', color: 'white' }}>{item.title}</h4>
+          <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginTop: '10px' }}>Exclusive Hearthkeeper Resource</p>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// --- MAIN APP ---
+
+export default function App() {
+  const [currentPage, setCurrentPage] = useState('dashboard');
+
+  const bgPlum = '#2a2438'; // The deeply saturated Forest/Plum background
+  
+  const navLinkStyle = (id) => ({
+    background: 'none', border: 'none', 
+    color: currentPage === id ? '#2dd4bf' : '#94a3b8',
+    fontSize: '0.85rem', fontWeight: '900', cursor: 'pointer', 
+    textTransform: 'uppercase', letterSpacing: '0.2em', 
+    borderBottom: currentPage === id ? '2px solid #2dd4bf' : '2px solid transparent',
+    paddingBottom: '6px', transition: '0.3s'
+  });
+
   return (
-    <div className="bg-[#1C1622] rounded-3xl py-12 px-6">
-      <div className="mx-auto max-w-7xl">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">Support the Grove</h2>
-          <p className="mt-4 text-lg leading-8 text-gray-400">
-            Choose a tier to unlock deep-dive analysis and support fellow educators.
-          </p>
+    <div style={{ minHeight: '100vh', background: bgPlum, color: 'white', fontFamily: 'system-ui, sans-serif' }}>
+      <nav style={{ display: 'flex', gap: '40px', padding: '30px 60px', alignItems: 'center', position: 'sticky', top: 0, zIndex: 100, background: bgPlum }}>
+        <div style={{ marginRight: 'auto', fontWeight: '900', fontSize: '1.5rem', letterSpacing: '-0.04em' }}>
+          Hearth <span style={{ color: '#2dd4bf' }}>&</span> Horizon
         </div>
-        
-        <div className="isolate mx-auto grid max-w-md grid-cols-1 gap-y-8 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:gap-x-8">
-          {tiers.map((tier) => (
-            <div
-              key={tier.id}
-              className={
-                tier.highlight
-                  ? 'rounded-3xl p-8 bg-[#2D2438] ring-2 ring-[#008080] flex flex-col justify-between'
-                  : 'rounded-3xl p-8 bg-[#1C1622] ring-1 ring-gray-800 flex flex-col justify-between'
-              }
-            >
-              <div>
-                <div className="flex items-center justify-between gap-x-4">
-                  <h3 className="text-xl font-semibold leading-8 text-white">{tier.name}</h3>
-                  {tier.label && (
-                    <span className="rounded-full bg-[#008080]/10 px-3 py-1 text-xs font-semibold leading-5 text-[#008080]">
-                      {tier.label}
-                    </span>
-                  )}
-                </div>
+        <button onClick={() => setCurrentPage('dashboard')} style={navLinkStyle('dashboard')}>DASHBOARD</button>
+        <button onClick={() => setCurrentPage('resources')} style={navLinkStyle('resources')}>INSIGHTS</button>
+        <button onClick={() => setCurrentPage('join')} style={navLinkStyle('join')}>MEMBERSHIP</button>
+      </nav>
 
-                <div className="mt-4">
-                  <div className="flex items-baseline gap-x-1">
-                    <span className="text-4xl font-bold tracking-tight text-[#008080]">${tier.price_intro}</span>
-                    <span className="text-sm font-semibold leading-6 text-gray-400">/ mo</span>
-                  </div>
-                  <p className="mt-1 text-xs text-gray-400">
-                    (Introductory offer, then ${tier.price_standard}/mo)
-                  </p>
-                </div>
-
-                <ul className="mt-8 space-y-3 text-sm leading-6 text-gray-300">
-                  {tier.features.map((feature) => (
-                    <li key={feature} className="flex gap-x-3">
-                      <CheckIcon className="h-6 w-5 flex-none text-[#008080]" aria-hidden="true" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <button
-                type="button"
-                className="mt-10 block w-full rounded-full bg-[#008080] px-4 py-2 text-center text-sm font-semibold leading-6 text-white hover:bg-[#006666] transition-colors"
-              >
-                Upgrade to {tier.name.replace('The ', '')}
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
+      <main>
+        {currentPage === 'dashboard' && <Dashboard />}
+        {currentPage === 'resources' && <HearthInsights />}
+        {currentPage === 'join' && (
+          <div style={{ padding: '100px 20px', textAlign: 'center' }}>
+            <h1 style={{ fontSize: '4rem', fontWeight: '900', color: 'white' }}>The Grove</h1>
+            <p style={{ color: '#94a3b8' }}>Cultivating new tiers for our community.</p>
+          </div>
+        )}
+      </main>
     </div>
   );
 }
