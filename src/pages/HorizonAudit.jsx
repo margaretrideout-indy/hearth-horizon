@@ -1,194 +1,180 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Anchor, Sparkles, ChevronRight, PenLine, 
-  CheckCircle2, ScrollText, Lightbulb, 
-  BarChart3, Layers, ArrowUpRight, Hash
+  Sprout, Cloud, Waves, 
+  Flame, Anchor, 
+  ArrowRight, History, LayoutDashboard,
+  CheckCircle2
 } from 'lucide-react';
 
-const HorizonAudit = () => {
+const Rootwork = () => {
   const navigate = useNavigate();
-  const [isSaved, setIsSaved] = useState(false);
-  const [view, setView] = useState('draft'); 
-  const [activePhase, setActivePhase] = useState('excavation');
-  const [responses, setResponses] = useState({
-    q1: '', q2: '', q3: '', q4: '', q5: '', q6: ''
-  });
+  const [reflection, setReflection] = useState('');
+  const [selectedEmoji, setSelectedEmoji] = useState(null);
 
-  const themeMap = {
-    '#Leadership': ['lead', 'manage', 'team', 'strategy', 'direction', 'stakeholder', 'program'],
-    '#Agile': ['agile', 'scrum', 'sprint', 'iteration', 'workflow', 'process', 'kanban'],
-    '#Data': ['data', 'analysis', 'metric', 'research', 'pattern', 'evidence', 'stats'],
-    '#Product': ['user', 'product', 'design', 'roadmap', 'impact', 'solution', 'owner'],
-    '#Education': ['curriculum', 'learning', 'teaching', 'student', 'instructional', 'school']
-  };
+  // The Emotional Metadata for the Emoji Check-in
+  const emotionalStates = [
+    { id: 'hopeful', label: 'Hopeful', icon: Sprout, color: 'text-green-400', bg: 'bg-green-400/10' },
+    { id: 'anxious', label: 'Anxious', icon: Waves, color: 'text-blue-400', bg: 'bg-blue-400/10' },
+    { id: 'uncertain', label: 'Uncertain', icon: Cloud, color: 'text-gray-400', bg: 'bg-gray-400/10' },
+    { id: 'driven', label: 'Driven', icon: Flame, color: 'text-orange-400', bg: 'bg-orange-400/10' },
+    { id: 'grounded', label: 'Grounded', icon: Anchor, color: 'text-amber-600', bg: 'bg-amber-600/10' }
+  ];
 
-  useEffect(() => {
-    try {
-      const savedData = localStorage.getItem('rootwork_logs_v3');
-      if (savedData) {
-        setResponses(JSON.parse(savedData));
-      }
-    } catch (error) {
-      console.error("Vault retrieval error:", error);
-    }
-  }, []);
-
-  const activeThemes = useMemo(() => {
-    const allText = Object.values(responses).join(' ').toLowerCase();
-    return Object.keys(themeMap).filter(theme => 
-      themeMap[theme].some(keyword => allText.includes(keyword))
-    );
-  }, [responses]);
-
-  const handleSave = () => {
-    localStorage.setItem('rootwork_logs_v3', JSON.stringify(responses));
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 3000);
-  };
-
-  const bridgeToTranslator = () => {
-    handleSave();
-    navigate('/translator');
-  };
-
-  const phases = {
-    excavation: {
-      title: "Phase 01: Excavation",
-      description: "Unearthing the constants from your 13-year legacy.",
-      questions: [
-        { id: "q1", displayId: "01.", question: "What is your ideal daily rhythm?", nudge: "Consider deep focus blocks vs. collaborative energy." },
-        { id: "q2", displayId: "02.", question: "Which core skills feel most energizing?", nudge: "What work makes time 'disappear' for you?" },
-        { id: "q3", displayId: "03.", question: "What are your 'Non-Negotiables'?", nudge: "What values must exist to prevent burnout?" }
-      ]
-    },
-    architecting: {
-      title: "Phase 02: Architecting",
-      description: "Building the bridge toward tech and data leadership.",
-      questions: [
-        { id: "q4", displayId: "04.", question: "Which technical 'pains' do you enjoy?", nudge: "Logic gaps, workflow bottlenecks, or data disarray?" },
-        { id: "q5", displayId: "05.", question: "What does 'Impact' look like now?", nudge: "System efficiency, user empowerment, or roadmap clarity?" },
-        { id: "q6", displayId: "06.", question: "The 5-Year Syntax", nudge: "What is the high-level roadmap for your professional identity?" }
-      ]
-    }
-  };
+  // Mock data for the "Past Pulses"
+  const recentPulses = [
+    { date: 'APR 7', status: 'Hopeful', note: 'Feeling like I finally found a path forward.', icon: Sprout },
+    { date: 'APR 7', status: 'Anxious', note: 'Navigating the technical shift feels heavy today.', icon: Waves },
+    { date: 'APR 6', status: 'Uncertain', note: 'Questioning the bridge between curriculum and data.', icon: Cloud }
+  ];
 
   return (
-    <div className="min-h-screen bg-[#1A1423] p-6 md:p-10 text-white font-sans pb-32">
+    <div className="min-h-screen bg-[#1A1423] p-8 md:p-12 text-white font-sans pb-32">
       
-      <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <div className="flex items-center gap-2 mb-2 text-teal-400">
-            <Layers className="w-4 h-4" />
-            <span className="text-[9px] font-bold uppercase tracking-[0.3em]">The recursive Audit</span>
-          </div>
-          <h1 className="text-3xl font-serif font-bold tracking-tight text-white">The Rootwork</h1>
+      {/* HEADER SECTION - RESTORED TITLING */}
+      <div className="mb-16">
+        <div className="flex items-center gap-2 mb-3 text-teal-400">
+          <History className="w-4 h-4 shadow-[0_0_10px_rgba(45,212,191,0.3)]" />
+          <span className="text-[9px] font-black uppercase tracking-[0.4em]">Identity Foundation</span>
         </div>
-
-        <div className="flex bg-black/30 p-1.5 rounded-2xl border border-white/5 shadow-inner">
-          <button 
-            onClick={() => setView('draft')} 
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${view === 'draft' ? 'bg-[#FF6B35] text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
-          >
-            <PenLine className="w-3.5 h-3.5" /> Workspace
-          </button>
-          <button 
-            onClick={() => setView('vault')} 
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${view === 'vault' ? 'bg-white/10 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
-          >
-            <ScrollText className="w-3.5 h-3.5" /> The Vault
-          </button>
-        </div>
+        <h1 className="text-4xl font-serif font-bold tracking-tight text-white">Rootwork</h1>
+        <p className="text-gray-500 text-xs mt-3 italic font-light">"The growth is invisible before it is inevitable."</p>
       </div>
 
-      {view === 'draft' ? (
-        <div className="max-w-5xl">
-          <div className="flex gap-8 border-b border-white/5 mb-10">
-            {Object.keys(phases).map(key => (
-              <button 
-                key={key} 
-                onClick={() => setActivePhase(key)} 
-                className={`pb-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative ${activePhase === key ? 'text-teal-400' : 'text-gray-600 hover:text-gray-400'}`}
-              >
-                {phases[key].title}
-                {activePhase === key && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-teal-400 shadow-[0_0_10px_rgba(45,212,191,0.5)]" />}
-              </button>
-            ))}
-          </div>
-
-          <div className="space-y-6">
-            {phases[activePhase].questions.map((item) => (
-              <div key={item.id} className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 hover:bg-white/[0.04] transition-all group">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                  <div className="flex items-center gap-4">
-                    <span className="text-xl font-serif italic text-teal-400/50">{item.displayId}</span>
-                    <h3 className="text-lg font-bold tracking-tight text-white">{item.question}</h3>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-7xl mx-auto">
+        
+        {/* LEFT: THE PULSE INPUT & CHECK-IN */}
+        <div className="lg:col-span-7 space-y-10">
+          <div className="bg-white/[0.02] border border-white/5 rounded-[3rem] p-10 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-teal-400/5 blur-[50px] -z-10" />
+            
+            <h3 className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-500 mb-8 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+              Daily Pulse Check
+            </h3>
+            
+            {/* EMOJI SELECTOR GRID */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mb-10">
+              {emotionalStates.map((state) => (
+                <button
+                  key={state.id}
+                  onClick={() => setSelectedEmoji(state.id)}
+                  className={`flex flex-col items-center gap-3 p-4 rounded-2xl border transition-all duration-300 ${
+                    selectedEmoji === state.id 
+                    ? `bg-white/10 border-teal-500/40 shadow-[0_0_20px_rgba(45,212,191,0.1)]` 
+                    : 'bg-black/20 border-white/5 hover:border-white/10'
+                  }`}
+                >
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${selectedEmoji === state.id ? state.bg : 'bg-white/5'}`}>
+                    <state.icon className={`w-4 h-4 ${selectedEmoji === state.id ? state.color : 'text-gray-600'}`} />
                   </div>
-                  <div className="px-3 py-1.5 rounded-lg bg-teal-500/5 text-teal-400 text-[9px] font-bold uppercase tracking-wider border border-teal-500/10">
-                    <Lightbulb className="w-3 h-3 inline mr-1.5" /> Context Prompt
-                  </div>
-                </div>
-                
-                <textarea 
-                  value={responses[item.id] || ''}
-                  onChange={(e) => setResponses({...responses, [item.id]: e.target.value})}
-                  className="w-full h-36 bg-black/20 border border-white/5 rounded-2xl p-6 text-sm text-gray-300 placeholder:text-gray-800 focus:outline-none focus:border-teal-500/20 transition-all resize-none font-light leading-relaxed"
-                  placeholder="Analyze and record..."
-                />
-                <p className="mt-3 text-[9px] text-gray-600 italic uppercase tracking-widest">{item.nudge}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-12 pt-8 border-t border-white/5 flex items-center justify-between">
-            <div className="text-gray-600 text-[10px] font-bold uppercase tracking-widest">
-              {isSaved ? <span className="text-teal-400 animate-pulse flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> Vault Updated</span> : "Pending Changes"}
+                  <span className={`text-[8px] font-black uppercase tracking-widest ${selectedEmoji === state.id ? 'text-white' : 'text-gray-600'}`}>
+                    {state.label}
+                  </span>
+                </button>
+              ))}
             </div>
-            <button onClick={handleSave} className="flex items-center gap-3 px-8 py-4 bg-[#FF6B35] text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-[0.98] transition-all">
-              Lock In Anchors <ChevronRight className="w-4 h-4" />
+
+            <div className="relative">
+              <textarea 
+                value={reflection}
+                onChange={(e) => setReflection(e.target.value)}
+                placeholder="What shifted in your legacy narrative today?"
+                className="w-full h-48 bg-black/40 border border-white/5 rounded-[2rem] p-8 text-sm text-gray-300 focus:outline-none focus:border-teal-500/20 transition-all mb-8 font-light shadow-inner resize-none placeholder:text-gray-700"
+              />
+            </div>
+
+            <button className="group flex items-center gap-4 px-10 py-5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-teal-500/20 transition-all">
+              Commit Pulse <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
-        </div>
-      ) : (
-        <div className="max-w-6xl">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-3 bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex items-center justify-between mb-4">
-              <div className="flex flex-col">
-                <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-2">Active Semantic Themes</span>
-                <div className="flex gap-2 flex-wrap">
-                  {activeThemes.length > 0 ? activeThemes.map(tag => (
-                    <span key={tag} className="text-[9px] bg-teal-500/10 border border-teal-500/20 px-3 py-1 rounded-full text-teal-400 font-bold flex items-center gap-1.5">
-                      <Hash className="w-2.5 h-2.5" /> {tag.replace('#', '')}
-                    </span>
-                  )) : <span className="text-[9px] text-gray-700 italic">No patterns detected yet.</span>}
-                </div>
-              </div>
-              <BarChart3 className="w-5 h-5 text-gray-800" />
-            </div>
 
-            {Object.keys(phases).flatMap(key => phases[key].questions).map((item) => (
-              <div 
-                key={item.id} 
-                className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-8 relative overflow-hidden group hover:border-teal-500/20 transition-all cursor-pointer"
-                onClick={bridgeToTranslator}
-              >
-                <div className="relative z-10">
-                  <span className="text-[9px] font-black text-teal-500/40 uppercase tracking-[0.2em] mb-4 block">Anchor {item.displayId}</span>
-                  <h4 className="text-sm font-bold text-white mb-4 leading-tight">{item.question}</h4>
-                  <p className="text-xs text-gray-400 font-light italic leading-relaxed line-clamp-4">
-                    {responses[item.id] || "Reflection pending..."}
-                  </p>
+          {/* RECENT REFLECTIONS FEED */}
+          <div className="space-y-6">
+            <div className="flex items-center justify-between px-4">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600">Growth Log</h3>
+              <span className="text-[8px] font-bold text-gray-800 uppercase tracking-widest italic">Viewing Last 3 Cycles</span>
+            </div>
+            
+            <div className="space-y-3">
+              {recentPulses.map((pulse, idx) => (
+                <div key={idx} className="bg-white/[0.01] border border-white/5 rounded-[2rem] p-8 flex items-center justify-between group hover:bg-white/[0.03] transition-all duration-500">
+                  <div className="flex items-center gap-8">
+                    <div className="flex flex-col items-center w-12 text-center">
+                      <pulse.icon className="w-5 h-5 text-gray-600 mb-2 group-hover:text-teal-400 transition-colors" />
+                      <span className="text-[7px] font-black text-gray-700 uppercase tracking-tighter">{pulse.status}</span>
+                    </div>
+                    <div className="max-w-md">
+                      <p className="text-xs text-gray-400 font-light leading-relaxed italic">"{pulse.note}"</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[9px] font-black text-gray-700 tracking-[0.2em]">{pulse.date}</span>
+                    <div className="flex justify-end mt-1">
+                       <CheckCircle2 className="w-3 h-3 text-teal-500/20" />
+                    </div>
+                  </div>
                 </div>
-                <div className="absolute top-6 right-6 w-8 h-8 rounded-full bg-teal-500/5 flex items-center justify-center border border-teal-500/10 group-hover:bg-[#FF6B35] group-hover:border-[#FF6B35] transition-all">
-                  <ArrowUpRight className="w-4 h-4 text-teal-400 group-hover:text-white transition-colors" />
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      )}
+
+        {/* RIGHT: ECOSYSTEM PERSPECTIVE */}
+        <div className="lg:col-span-5">
+          <div className="sticky top-12">
+            <div className="bg-gradient-to-br from-teal-500/10 via-transparent to-transparent border border-teal-500/20 rounded-[3.5rem] p-12 overflow-hidden relative group shadow-2xl">
+              
+              {/* Background Glow */}
+              <div className="absolute -right-20 -bottom-20 opacity-10 group-hover:opacity-20 transition-opacity duration-1000">
+                <LayoutDashboard className="w-80 h-80 text-teal-400" />
+              </div>
+              
+              <div className="relative z-10">
+                <div className="w-14 h-14 rounded-2xl bg-teal-400/20 border border-teal-400/30 flex items-center justify-center mb-8 shadow-[0_0_20px_rgba(45,212,191,0.2)]">
+                  <LayoutDashboard className="w-7 h-7 text-teal-400" />
+                </div>
+                
+                <div className="space-y-2 mb-8">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">Network Intelligence</h4>
+                  <h2 className="text-3xl font-serif font-bold text-white leading-tight">Mycelium Status: <br/>Active</h2>
+                </div>
+
+                <div className="p-6 rounded-2xl bg-black/40 border border-white/5 mb-10 space-y-4">
+                  <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-widest">
+                    <span className="text-gray-500">Stability Index</span>
+                    <span className="text-teal-400">88%</span>
+                  </div>
+                  <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-teal-400 w-[88%] shadow-[0_0_10px_rgba(45,212,191,0.5)]" />
+                  </div>
+                  <p className="text-[10px] text-gray-500 italic leading-relaxed">
+                    "Your reflections are aligning with the 'High Autonomy' ecosystem match found in your last scan."
+                  </p>
+                </div>
+                
+                <button 
+                  onClick={() => navigate('/mycelium')}
+                  className="group w-full py-6 rounded-2xl bg-teal-400 text-[#1A1423] text-[10px] font-black uppercase tracking-[0.3em] shadow-xl shadow-teal-400/20 hover:bg-white transition-all active:scale-95 flex items-center justify-center gap-3"
+                >
+                  Enter The Map
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
+            </div>
+            
+            {/* Extra Contextual Tip */}
+            <div className="mt-8 px-10 py-6 border border-dashed border-white/10 rounded-3xl">
+              <p className="text-[9px] text-gray-600 uppercase tracking-widest leading-relaxed text-center font-bold">
+                Identity Audit: Use the 'Driven' pulse when finalizing resume translations to track confidence levels.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 };
 
-export default HorizonAudit;
+export default Rootwork;
