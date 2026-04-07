@@ -23,22 +23,20 @@ const Rootwork = () => {
     { id: 'grounded', label: 'Grounded', icon: Anchor, color: 'text-amber-400', bg: 'bg-amber-600/20' }
   ];
 
-  // Logic for the dual-sync "Commit"
   const handleCommit = () => {
     if (!selectedEmoji || !reflection) return;
     setIsSubmitting(true);
     
-    // Simulate data traveling to both the Mycelium Map and the Growth Log
+    // Simulate sync to both Mycelium Map and Growth Log
     setTimeout(() => {
       setIsSubmitting(false);
       setHasSubmitted(true);
       setReflection('');
       
-      // Reset success state after 3 seconds
       setTimeout(() => {
         setHasSubmitted(false);
         setSelectedEmoji(null);
-      }, 3000);
+      }, 4000);
     }, 1500);
   };
 
@@ -65,13 +63,13 @@ const Rootwork = () => {
         
         {/* LEFT: THE PULSE INPUT & CHECK-IN */}
         <div className="lg:col-span-7 space-y-10">
-          <div className="bg-white/[0.03] border border-white/10 rounded-[3rem] p-10 relative overflow-hidden">
+          <div className="bg-white/[0.03] border border-white/10 rounded-[3rem] p-10 relative overflow-hidden shadow-2xl">
             <h3 className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-300 mb-8 flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-[#2DD4BF] animate-pulse" />
               Daily Pulse Check
             </h3>
             
-            {/* BRIGHTER EMOJI SELECTOR GRID */}
+            {/* LUMINOUS EMOJI SELECTOR GRID */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mb-10">
               {emotionalStates.map((state) => (
                 <button
@@ -110,76 +108,75 @@ const Rootwork = () => {
               />
             </div>
 
+            {/* UPDATED SYNC BUTTON */}
             <button 
               onClick={handleCommit}
               disabled={isSubmitting || !selectedEmoji || !reflection}
               className={`group flex items-center gap-4 px-10 py-5 rounded-full text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-500 ${
                 hasSubmitted 
-                ? 'bg-green-500/20 border-green-500/40 text-green-400' 
-                : 'bg-[#2DD4BF]/10 border-[#2DD4BF]/30 text-[#2DD4BF] hover:bg-[#2DD4BF]/20'
-              } disabled:opacity-30 disabled:grayscale`}
+                ? 'bg-green-500/20 border-green-500/40 text-green-400 shadow-[0_0_20px_rgba(34,197,94,0.1)]' 
+                : 'bg-[#2DD4BF]/10 border-[#2DD4BF]/30 text-[#2DD4BF] hover:bg-[#2DD4BF]/20 shadow-[0_0_20px_rgba(45,212,191,0.05)]'
+              } disabled:opacity-30`}
             >
               {isSubmitting ? (
                 <>Synthesizing... <Loader2 className="w-4 h-4 animate-spin" /></>
               ) : hasSubmitted ? (
-                <>Pulse Mapped <CheckCircle2 className="w-4 h-4" /></>
+                <>Pulse Synced to Ecosystem <CheckCircle2 className="w-4 h-4" /></>
               ) : (
-                <>Commit Pulse to Mycelium <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></>
+                <>
+                  Sync Pulse to Ecosystem 
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </>
               )}
             </button>
           </div>
 
-          {/* RECENT REFLECTIONS FEED */}
+          {/* GROWTH LOG SECTION */}
           <div className="space-y-6">
             <div className="flex items-center justify-between px-4">
               <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Growth Log</h3>
               
-              {/* SYNC FEEDBACK INDICATOR */}
               {isSubmitting ? (
                 <span className="text-[8px] font-bold text-[#2DD4BF] uppercase tracking-widest animate-pulse flex items-center gap-2">
-                  <Loader2 className="w-2 h-2 animate-spin" /> Syncing with Mycelium & Log...
+                  <Loader2 className="w-2 h-2 animate-spin" /> Syncing Ecosystem...
                 </span>
               ) : hasSubmitted ? (
-                <span className="text-[8px] font-bold text-green-400 uppercase tracking-widest flex items-center gap-2 animate-in fade-in zoom-in duration-300">
-                  <CheckCircle2 className="w-2 h-2" /> Log Updated Successfully
+                <span className="text-[8px] font-bold text-green-400 uppercase tracking-widest flex items-center gap-2">
+                  <CheckCircle2 className="w-2 h-2" /> Log Updated
                 </span>
               ) : (
-                <span className="text-[8px] font-bold text-gray-700 uppercase tracking-widest">Repository Synced</span>
+                <span className="text-[8px] font-bold text-gray-700 uppercase tracking-widest">Archive Synced</span>
               )}
             </div>
             
-            <div className="space-y-3">
+            <div className={`space-y-3 transition-all duration-500 ${hasSubmitted ? 'opacity-50' : ''}`}>
               {recentPulses.map((pulse, idx) => (
-                <div key={idx} className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-8 flex items-center justify-between group hover:bg-white/[0.04] transition-all duration-500">
+                <div key={idx} className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-8 flex items-center justify-between group hover:bg-white/[0.04] transition-all">
                   <div className="flex items-center gap-8">
                     <div className="flex flex-col items-center w-12 text-center">
-                      <pulse.icon className="w-5 h-5 text-gray-400 mb-2 group-hover:text-[#2DD4BF] transition-colors" />
+                      <pulse.icon className="w-5 h-5 text-gray-400 mb-2 group-hover:text-[#2DD4BF]" />
                       <span className="text-[7px] font-black text-gray-500 uppercase tracking-tighter">{pulse.status}</span>
                     </div>
-                    <div className="max-w-md">
-                      <p className="text-xs text-gray-200 font-light leading-relaxed italic">"{pulse.note}"</p>
-                    </div>
+                    <p className="text-xs text-gray-200 font-light leading-relaxed italic">"{pulse.note}"</p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-[9px] font-black text-gray-600 tracking-[0.2em]">{pulse.date}</span>
-                  </div>
+                  <span className="text-[9px] font-black text-gray-600 tracking-[0.2em]">{pulse.date}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* RIGHT: ECOSYSTEM PERSPECTIVE */}
+        {/* RIGHT: NETWORK INTELLIGENCE */}
         <div className="lg:col-span-5">
           <div className="sticky top-12">
-            <div className="bg-gradient-to-br from-[#2DD4BF]/10 via-transparent to-transparent border border-[#2DD4BF]/20 rounded-[3.5rem] p-12 overflow-hidden relative shadow-2xl">
+            <div className="bg-gradient-to-br from-[#2DD4BF]/10 via-transparent to-transparent border border-[#2DD4BF]/20 rounded-[3.5rem] p-12 overflow-hidden relative shadow-2xl group">
               <div className="relative z-10">
-                <div className="w-14 h-14 rounded-2xl bg-[#2DD4BF]/20 border border-[#2DD4BF]/30 flex items-center justify-center mb-8 shadow-[0_0_20px_rgba(45,212,191,0.2)]">
+                <div className="w-14 h-14 rounded-2xl bg-[#2DD4BF]/20 border border-[#2DD4BF]/30 flex items-center justify-center mb-8 shadow-[0_0_20px_rgba(45,212,191,0.2)] group-hover:scale-110 transition-transform duration-500">
                   <LayoutDashboard className="w-7 h-7 text-[#2DD4BF]" />
                 </div>
                 
                 <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#2DD4BF] mb-2">Network Intelligence</h4>
-                <h2 className="text-3xl font-serif font-bold text-white leading-tight">Mycelium Status: <br/>Active</h2>
+                <h2 className="text-3xl font-serif font-bold text-white leading-tight mb-8">Mycelium Status: <br/>Active</h2>
 
                 <div className="p-6 rounded-2xl bg-black/40 border border-white/10 mb-10 space-y-4">
                   <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-widest text-gray-300">
@@ -190,7 +187,7 @@ const Rootwork = () => {
                     <div className="h-full bg-[#2DD4BF] w-[88%] shadow-[0_0_15px_rgba(45,212,191,0.5)]" />
                   </div>
                   <p className="text-[10px] text-gray-400 italic leading-relaxed">
-                    Identity Audit: Reflecting a sustained "Hopeful" trend over recent cycles.
+                    Identity Audit: Reflections currently align with "Mission-Driven" sector profiles.
                   </p>
                 </div>
                 
@@ -205,7 +202,6 @@ const Rootwork = () => {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
