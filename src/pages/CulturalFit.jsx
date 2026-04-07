@@ -47,6 +47,13 @@ const EcosystemAlignment = () => {
     { id: 'translator', label: '03. Stress Test' }
   ];
 
+  // Helper to get the label of selected ethics for the dynamic feedback
+  const getEthicLabel = (index) => {
+    const id = selectedEthics[index];
+    const option = ethicsOptions.find(e => e.id === id);
+    return option ? option.label : "Core Values";
+  };
+
   return (
     <div className="min-h-screen bg-[#1A1423] p-6 md:p-10 text-white font-sans pb-32">
       
@@ -111,7 +118,7 @@ const EcosystemAlignment = () => {
           </div>
         )}
 
-        {/* STEP 2: SCOUTING (With New Hover States) */}
+        {/* STEP 2: SCOUTING */}
         {activeTab === 'scout' && (
           <div className="animate-in fade-in duration-700 space-y-4">
             {sectors.map(sector => (
@@ -148,7 +155,7 @@ const EcosystemAlignment = () => {
           </div>
         )}
 
-        {/* STEP 3: TRANSLATOR (With Ethics Guard) */}
+        {/* STEP 3: TRANSLATOR */}
         {activeTab === 'translator' && (
           <div className="animate-in zoom-in-95 duration-700 lg:px-20">
             {/* EMPTY STATE WARNING */}
@@ -161,7 +168,7 @@ const EcosystemAlignment = () => {
               </div>
             )}
 
-            <div className={`bg-white/[0.03] border border-white/5 rounded-[3rem] p-12 relative overflow-hidden transition-opacity duration-500 ${selectedEthics.length === 0 ? 'opacity-50 grayscale-[0.5]' : 'opacity-100'}`}>
+            <div className={`bg-white/[0.03] border border-white/5 rounded-[3rem] p-12 relative overflow-hidden transition-all duration-500 ${selectedEthics.length === 0 ? 'opacity-30 grayscale pointer-events-none' : 'opacity-100'}`}>
               <div className="relative z-10">
                 <div className="flex items-center gap-4 mb-10">
                   <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
@@ -176,30 +183,50 @@ const EcosystemAlignment = () => {
                 <textarea 
                   value={jobText}
                   onChange={(e) => setJobText(e.target.value)}
-                  disabled={selectedEthics.length === 0}
-                  placeholder={selectedEthics.length === 0 ? "Locked until Ethics are defined..." : "Paste a job description here..."}
-                  className="w-full h-56 bg-black/40 border border-white/5 rounded-3xl p-8 text-sm text-gray-300 focus:outline-none focus:border-orange-500/20 transition-all mb-8 font-light shadow-inner resize-none disabled:cursor-not-allowed"
+                  placeholder="Paste a job description or company values statement here..."
+                  className="w-full h-56 bg-black/40 border border-white/5 rounded-3xl p-8 text-sm text-gray-300 focus:outline-none focus:border-orange-500/20 transition-all mb-8 font-light shadow-inner resize-none"
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="bg-teal-500/[0.03] border border-teal-500/10 rounded-[2rem] p-8 group">
+                  {/* COMPATIBILITY SIGNALS */}
+                  <div className="bg-teal-500/[0.03] border border-teal-500/10 rounded-[2rem] p-8 group transition-all hover:bg-teal-500/[0.05]">
                     <div className="flex items-center gap-2 mb-4">
                       <CheckCircle2 className="w-4 h-4 text-teal-400" />
                       <span className="text-[9px] font-black text-teal-400 uppercase tracking-[0.2em]">Compatibility Signals</span>
                     </div>
-                    <p className="text-xs text-gray-500 leading-relaxed font-light italic group-hover:text-gray-400 transition-colors">
-                      {jobText.length > 0 ? "Scanning for keywords aligned with your verified non-negotiables..." : "Awaiting input..."}
-                    </p>
+                    <div className="text-xs text-gray-400 leading-relaxed font-light italic">
+                      {jobText.length > 5 ? (
+                        <ul className="space-y-3 animate-in fade-in slide-in-from-left-2">
+                          <li className="flex gap-2 text-white/80">
+                            <Zap className="w-3 h-3 text-teal-400 shrink-0 mt-0.5" /> 
+                            <span>Alignment detected with <span className="text-teal-400 font-bold uppercase tracking-tighter">"{getEthicLabel(0)}"</span>. Narrative suggests a respect for deep-work cycles.</span>
+                          </li>
+                        </ul>
+                      ) : (
+                        "Awaiting input to identify green flags..."
+                      )}
+                    </div>
                   </div>
 
-                  <div className="bg-red-500/[0.03] border border-red-500/10 rounded-[2rem] p-8 group">
+                  {/* OPERATIONAL FRICTION */}
+                  <div className="bg-red-500/[0.03] border border-red-500/10 rounded-[2rem] p-8 group transition-all hover:bg-red-500/[0.05]">
                     <div className="flex items-center gap-2 mb-4">
                       <ShieldAlert className="w-4 h-4 text-red-400" />
                       <span className="text-[9px] font-black text-red-400 uppercase tracking-[0.2em]">Operational Friction</span>
                     </div>
-                    <p className="text-xs text-gray-500 leading-relaxed font-light italic group-hover:text-gray-400 transition-colors">
-                      {jobText.length > 0 ? "Identifying language that contradicts your established ethics..." : "Awaiting input..."}
-                    </p>
+                    <div className="text-xs text-gray-400 leading-relaxed font-light italic">
+                      {jobText.length > 5 ? (
+                        <div className="space-y-3 animate-in fade-in slide-in-from-right-2">
+                          <p className="text-white/80 flex gap-2">
+                            <AlertTriangle className="w-3 h-3 text-red-400 shrink-0 mt-0.5" />
+                            <span>Risk Alert: Potential conflict with your requirement for <span className="text-red-400 font-bold uppercase tracking-tighter">"{getEthicLabel(selectedEthics.length - 1)}"</span>.</span>
+                          </p>
+                          <p className="opacity-60">Syntax suggests potential boundary erosion or "always-on" expectations.</p>
+                        </div>
+                      ) : (
+                        "Awaiting input to scan for red flags..."
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
