@@ -4,7 +4,7 @@ import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
-import UserNotRegisteredError from '@/components/UserNotRegisteredError';
+import IdentityTranslator from './pages/IdentityTranslator';
 import Dashboard from './pages/Dashboard';
 import YourHearth from './pages/YourHearth';
 import SkillTranslator from './pages/SkillTranslator';
