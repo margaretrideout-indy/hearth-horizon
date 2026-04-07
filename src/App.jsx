@@ -79,7 +79,6 @@ const AuthenticatedApp = () => {
         {/* Other member pages — accessible once logged in */}
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
         <Route path="/gap-analyzer" element={<ProtectedRoute element={<GapAnalyzer />} />} />
-        <Route path="/library" element={<IdentityTranslator />} />
         <Route path="/cultural-fit" element={<ProtectedRoute element={<CulturalFit />} />} />
         <Route path="/support" element={<ProtectedRoute element={<Support />} />} />
         <Route path="/canopy" element={<ProtectedRoute element={<Canopy />} />} />
