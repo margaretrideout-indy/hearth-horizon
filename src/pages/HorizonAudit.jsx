@@ -7,7 +7,7 @@ import {
   CheckCircle2, Loader2
 } from 'lucide-react';
 
-const Rootwork = () => {
+const HorizonAudit = () => {
   const navigate = useNavigate();
   const [reflection, setReflection] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState(null);
@@ -27,12 +27,13 @@ const Rootwork = () => {
     if (!selectedEmoji || !reflection) return;
     setIsSubmitting(true);
     
-    // Simulate sync to both Mycelium Map and Growth Log
+    // Simulate dual-sync to Mycelium Map and Growth Log
     setTimeout(() => {
       setIsSubmitting(false);
       setHasSubmitted(true);
       setReflection('');
       
+      // Clear success state and emoji after a short delay
       setTimeout(() => {
         setHasSubmitted(false);
         setSelectedEmoji(null);
@@ -69,7 +70,7 @@ const Rootwork = () => {
               Daily Pulse Check
             </h3>
             
-            {/* LUMINOUS EMOJI SELECTOR GRID */}
+            {/* BRIGHTER EMOJI SELECTOR GRID */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mb-10">
               {emotionalStates.map((state) => (
                 <button
@@ -108,7 +109,7 @@ const Rootwork = () => {
               />
             </div>
 
-            {/* UPDATED SYNC BUTTON */}
+            {/* SYNC BUTTON: EXPLICIT DUAL DESTINATION */}
             <button 
               onClick={handleCommit}
               disabled={isSubmitting || !selectedEmoji || !reflection}
@@ -154,7 +155,7 @@ const Rootwork = () => {
                 <div key={idx} className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-8 flex items-center justify-between group hover:bg-white/[0.04] transition-all">
                   <div className="flex items-center gap-8">
                     <div className="flex flex-col items-center w-12 text-center">
-                      <pulse.icon className="w-5 h-5 text-gray-400 mb-2 group-hover:text-[#2DD4BF]" />
+                      <pulse.icon className="w-5 h-5 text-gray-400 mb-2 group-hover:text-[#2DD4BF] transition-colors" />
                       <span className="text-[7px] font-black text-gray-500 uppercase tracking-tighter">{pulse.status}</span>
                     </div>
                     <p className="text-xs text-gray-200 font-light leading-relaxed italic">"{pulse.note}"</p>
@@ -166,7 +167,7 @@ const Rootwork = () => {
           </div>
         </div>
 
-        {/* RIGHT: NETWORK INTELLIGENCE */}
+        {/* RIGHT: ECOSYSTEM PERSPECTIVE */}
         <div className="lg:col-span-5">
           <div className="sticky top-12">
             <div className="bg-gradient-to-br from-[#2DD4BF]/10 via-transparent to-transparent border border-[#2DD4BF]/20 rounded-[3.5rem] p-12 overflow-hidden relative shadow-2xl group">
@@ -207,4 +208,4 @@ const Rootwork = () => {
   );
 };
 
-export default Rootwork;
+export default HorizonAudit;
