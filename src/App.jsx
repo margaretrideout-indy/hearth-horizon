@@ -8,6 +8,8 @@ import Library from './pages/Library';
 import HorizonAudit from './pages/HorizonAudit'; 
 import SkillTranslator from './pages/SkillTranslator'; 
 import CulturalFit from './pages/CulturalFit';
+import EmbersChat from './pages/EmbersChat';
+import GroveTiers from './pages/GroveTiers'; // Make sure this matches your file name!
 
 const App = () => {
   return (
@@ -17,15 +19,14 @@ const App = () => {
 
         <main className="flex-1 ml-64">
           <Routes>
-            {/* We keep the route for Dashboard so it can still be your homepage */}
             <Route path="/dashboard" element={<Dashboard />} />
-            
             <Route path="/library" element={<Library />} />
             <Route path="/audit" element={<HorizonAudit />} />
             <Route path="/translator" element={<SkillTranslator />} />
             <Route path="/cultural-fit" element={<CulturalFit />} />
+            <Route path="/embers" element={<EmbersChat />} />
+            <Route path="/grove" element={<GroveTiers />} /> 
 
-            {/* When you open the app, it still takes you to your reflections/Dashboard */}
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
