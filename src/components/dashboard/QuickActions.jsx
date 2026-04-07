@@ -30,7 +30,7 @@ const ACTIONS = [
     title: "The Rootwork",
     desc: "A quiet space to anchor your identity through transition.",
     icon: Heart,
-    path: "/identity-anchor",
+    path: "/identity-anchor", // This line is the key fix
     color: "text-orange-400",
     bg: "bg-orange-500/10"
   },
