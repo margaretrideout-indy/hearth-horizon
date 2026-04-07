@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Heart, Calendar, Plus, Send, X, Network } from 'lucide-react';
-import { format } from 'date-fns';
+import { Heart, Calendar, Plus, Send, X, Network, CheckCircle2 } from 'lucide-react';
+import { format, isToday } from 'date-fns';
 import { Card } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -19,6 +19,10 @@ export default function RecentActivity({ checkIns = [] }) {
   const queryClient = useQueryClient();
   const [selectedMood, setSelectedMood] = useState(null);
   const [reflection, setReflection] = useState('');
+
+  const hasPulsedToday = checkIns.some(checkIn => 
+    isToday(new Date(checkIn.created_date))
+  );
 
   const { mutate: saveCheckIn, isLoading: isSaving } = useMutation({
     mutationFn: (data) => base44.entities.DailyCheckIn.create(data),
@@ -42,11 +46,23 @@ export default function RecentActivity({ checkIns = [] }) {
             The Daily Pulse
           </h2>
           <p className="text-gray-400 text-sm font-medium">
-            How is your transition feeling today?
+            {hasPulsedToday ? "Your pulse is anchored for today." : "How is your transition feeling today?"}
           </p>
         </div>
         
-        {!selectedMood ? (
+        {hasPulsedToday ? (
+          <div className="bg-orange-500/5 border border-orange-500/20 rounded-2xl p-6 animate-in fade-in slide-in-from-bottom-2">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-400">
+                <CheckCircle2 className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-white text-sm font-bold">Today's reflection is saved.</p>
+                <p className="text-gray-400 text-xs mt-0.5">Your mycelium network is growing quietly beneath the surface.</p>
+              </div>
+            </div>
+          </div>
+        ) : !selectedMood ? (
           <div className="flex flex-wrap gap-2 animate-in fade-in zoom-in-95">
             {Object.entries(moodEmojis).map(([mood, emoji]) => (
               <button
@@ -113,7 +129,7 @@ export default function RecentActivity({ checkIns = [] }) {
               <div className="w-16 h-1 bg-white/5 rounded-full mt-1 overflow-hidden">
                 <div 
                   className="h-full bg-orange-500/40 transition-all duration-1000" 
-                  style={{ width: `${(checkIns.length / 14) * 100}%` }}
+                  style={{ width: `${Math.min((checkIns.length / 14) * 100, 100)}%` }}
                 />
               </div>
             </div>
