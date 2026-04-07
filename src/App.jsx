@@ -47,7 +47,7 @@ const ProtectedRoute = ({ element }) => {
   return element;
 };
 
-const PUBLIC_PATHS = ['/'];
+const PUBLIC_PATHS = ['/', '/library'];
 
 const AuthenticatedApp = () => {
   const { isLoadingPublicSettings } = useAuth();
@@ -90,6 +90,7 @@ const AuthenticatedApp = () => {
         {/* Public pages */}
         <Route path="/contact" element={<Contact />} />
         <Route path="/install" element={<InstallApp />} />
+        <Route path="/library" element={<IdentityAnchor />} />
         
         {/* Payment routes - public but only triggered after auth */}
         <Route path="/payment/success" element={<PaymentSuccess />} />
