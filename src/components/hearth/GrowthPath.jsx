@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 import { CheckCircle2, Circle } from 'lucide-react';
 
 const DEFAULT_STEPS = [
-  { id: 1, label: 'Complete your Identity Translator worksheet', done: false },
-  { id: 2, label: 'Run your Horizon Audit to surface your values alignment', done: false },
-  { id: 3, label: 'Review the Forest Guide to map your next 90 days', done: false },
+  { id: 1, label: 'Complete your Linguistic Bridge worksheet', done: false },
+  { id: 2, label: 'Run your Canopy Audit to surface your alignment', done: false },
+  { id: 3, label: 'Review the Library provisions to map your next 90 days', done: false },
 ];
 
 export default function GrowthPath() {
@@ -26,31 +26,24 @@ export default function GrowthPath() {
         <p className="text-sm text-muted-foreground mt-0.5">My Current Growth Path</p>
       </div>
 
-      <ul className="space-y-3">
-        {steps.map((step, i) => (
-          <motion.li
+      <div className="space-y-3">
+        {steps.map((step) => (
+          <button
             key={step.id}
-            initial={{ opacity: 0, x: -12 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.35, delay: i * 0.08 }}
             onClick={() => toggle(step.id)}
-            className="flex items-center gap-3 cursor-pointer group"
+            className="flex items-center gap-3 w-full text-left group"
           >
             {step.done ? (
-              <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-teal-400" />
             ) : (
-              <Circle className="w-5 h-5 text-muted-foreground group-hover:text-primary/60 shrink-0 transition-colors" />
+              <Circle className="w-5 h-5 text-muted-foreground group-hover:text-teal-400/50 transition-colors" />
             )}
-            <span
-              className={`text-sm transition-colors ${
-                step.done ? 'line-through text-muted-foreground' : 'text-foreground'
-              }`}
-            >
+            <span className={`text-sm transition-all ${step.done ? 'text-muted-foreground line-through opacity-50' : 'text-foreground'}`}>
               {step.label}
             </span>
-          </motion.li>
+          </button>
         ))}
-      </ul>
+      </div>
     </section>
   );
 }
