@@ -1,10 +1,14 @@
 import React, { useState, useMemo } from 'react';
-import { Network, X, Info, Lock, ArrowRight, ShieldCheck, RefreshCw } from 'lucide-react';
+import { 
+  Network, X, Info, Lock, ArrowRight, 
+  ShieldCheck, RefreshCw, MessageSquare, 
+  Calendar, ChevronRight 
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import RecentActivity from './RecentActivity'; 
 
+// --- Sub-Component 1: The Mycelium Map Overlay ---
 const MyceliumMap = ({ checkIns, onClose }) => {
   const moodColors = {
     hopeful: '#2DD4BF',
@@ -16,7 +20,7 @@ const MyceliumMap = ({ checkIns, onClose }) => {
   };
 
   const nodes = useMemo(() => {
-    return checkIns.slice(0, 14).map((checkIn, i) => {
+    return (checkIns || []).slice(0, 14).map((checkIn, i) => {
       const angle = (i / 14) * Math.PI * 2;
       const radius = 120 + (i % 3) * 20;
       return {
@@ -34,20 +38,13 @@ const MyceliumMap = ({ checkIns, onClose }) => {
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-[100] bg-[#1A1423]/98 backdrop-blur-3xl flex flex-col items-center justify-center p-6 overflow-hidden"
     >
-      <button 
-        onClick={onClose} 
-        className="absolute top-10 right-10 text-gray-500 hover:text-white transition-colors z-10"
-      >
+      <button onClick={onClose} className="absolute top-10 right-10 text-gray-500 hover:text-white transition-colors z-10">
         <X className="w-8 h-8" />
       </button>
 
       <div className="max-w-3xl w-full text-center space-y-8 relative">
         <header className="space-y-2">
-          <motion.h2 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="text-4xl font-black text-white italic tracking-tighter"
-          >
+          <motion.h2 initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-4xl font-black text-white italic tracking-tighter">
             Your Mycelium Map
           </motion.h2>
           <p className="text-gray-400 font-medium">A visualization of your transition's hidden network.</p>
@@ -61,56 +58,29 @@ const MyceliumMap = ({ checkIns, onClose }) => {
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={{ pathLength: 1, opacity: 0.15 }}
                 transition={{ duration: 1.5, delay: i * 0.1 }}
-                x1="250" y1="250"
-                x2={node.x} y2={node.y}
+                x1="250" y1="250" x2={node.x} y2={node.y}
                 stroke={moodColors[node.mood] || '#ffffff'}
                 strokeWidth="1.5"
               />
             ))}
-
             <circle cx="250" cy="250" r="15" className="fill-white/5 stroke-white/10" />
-            <motion.circle 
-              cx="250" cy="250" r="5" 
-              className="fill-orange-500"
-              animate={{ scale: [1, 1.5, 1] }}
-              transition={{ repeat: Infinity, duration: 4 }}
-            />
-
+            <motion.circle cx="250" cy="250" r="5" className="fill-orange-500" animate={{ scale: [1, 1.5, 1] }} transition={{ repeat: Infinity, duration: 4 }} />
             {nodes.map((node, i) => (
-              <motion.g 
-                key={node.id || i}
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: 'spring', delay: i * 0.1 }}
-              >
-                <circle
-                  cx={node.x} cy={node.y} r="7"
-                  fill={moodColors[node.mood] || '#555'}
-                  className="drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]"
-                />
-                <circle
-                  cx={node.x} cy={node.y} r="14"
-                  stroke={moodColors[node.mood]}
-                  strokeWidth="1"
-                  fill="none"
-                  className="opacity-20"
-                />
+              <motion.g key={node.id || i} initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', delay: i * 0.1 }}>
+                <circle cx={node.x} cy={node.y} r="7" fill={moodColors[node.mood] || '#555'} className="drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]" />
+                <circle cx={node.x} cy={node.y} r="14" stroke={moodColors[node.mood]} strokeWidth="1" fill="none" className="opacity-20" />
               </motion.g>
             ))}
           </svg>
         </div>
 
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 1.5 }}
-        >
+        <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1.5 }}>
           <Card className="p-6 bg-white/5 border border-white/10 rounded-[2rem] text-left flex gap-4 max-w-md mx-auto">
             <ShieldCheck className="w-6 h-6 text-teal-400 shrink-0" />
             <div className="space-y-1">
               <span className="text-[10px] font-black text-teal-400 uppercase tracking-widest">Ecosystem Insight</span>
               <p className="text-xs text-gray-400 leading-relaxed font-medium">
-                Your network is showing significant density in <span className="text-white">resilient clusters</span>. The connection between your hopeful pulses and uncertainty shows a healthy, adaptive growth pattern.
+                Your network is showing significant density in <span className="text-white font-bold">resilient clusters</span>. Your patterns suggest a healthy, adaptive growth journey.
               </p>
             </div>
           </Card>
@@ -120,6 +90,47 @@ const MyceliumMap = ({ checkIns, onClose }) => {
   );
 };
 
+// --- Sub-Component 2: Inline Recent Activity (Replacing the import) ---
+const RecentActivityList = ({ checkIns = [] }) => {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between px-1">
+        <h2 className="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em]">Recent Reflections</h2>
+        <span className="text-[9px] font-bold text-gray-600 uppercase tracking-tighter">Past 3 Pulses</span>
+      </div>
+      
+      <div className="space-y-4">
+        {checkIns.length > 0 ? (
+          checkIns.slice(0, 3).map((checkIn, i) => (
+            <Card key={checkIn.id || i} className="p-5 bg-white/[0.03] border-white/5 rounded-3xl hover:bg-white/[0.05] transition-all group">
+              <div className="flex justify-between items-start gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{checkIn.emoji || '🌱'}</span>
+                    <span className="text-[10px] font-black text-white/40 uppercase tracking-widest italic">{checkIn.mood}</span>
+                  </div>
+                  <p className="text-sm text-gray-300 leading-relaxed line-clamp-2 italic">
+                    {checkIn.reflection || "No reflection added for this pulse."}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="text-[9px] font-bold text-gray-600 uppercase tracking-tighter">{checkIn.date || 'Today'}</div>
+                </div>
+              </div>
+            </Card>
+          ))
+        ) : (
+          <div className="h-32 flex flex-col items-center justify-center border border-dashed border-white/5 rounded-3xl bg-white/[0.01]">
+            <MessageSquare className="w-5 h-5 text-white/10 mb-2" />
+            <p className="text-[10px] text-gray-600 uppercase font-black tracking-widest">No pulses recorded yet</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// --- Main Dashboard Component ---
 export default function Dashboard({ checkIns = [] }) {
   const [showMap, setShowMap] = useState(false);
   const isMapUnlocked = checkIns.length >= 14;
@@ -136,7 +147,7 @@ export default function Dashboard({ checkIns = [] }) {
 
         <div className="grid lg:grid-cols-3 gap-12 items-start">
           <div className="lg:col-span-2 space-y-12">
-            <RecentActivity checkIns={checkIns} />
+            <RecentActivityList checkIns={checkIns} />
           </div>
 
           <aside className="space-y-6 lg:sticky lg:top-12">
@@ -173,7 +184,7 @@ export default function Dashboard({ checkIns = [] }) {
                       <span className="font-black text-[11px] uppercase tracking-widest px-1">Maturing</span>
                     </div>
                     <p className="text-xs text-gray-400 leading-relaxed font-medium">
-                      Complete <span className="text-white font-bold">{14 - checkIns.length}</span> more pulses to visualize your professional ecosystem.
+                      Complete <span className="text-white font-bold">{Math.max(0, 14 - checkIns.length)}</span> more pulses to visualize your professional ecosystem.
                     </p>
                     
                     <div className="space-y-2">
