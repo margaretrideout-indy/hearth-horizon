@@ -1,13 +1,14 @@
 import React from 'react';
 import { 
   Home, Library, Layers, Wind, GitBranch, 
-  Anchor, LogOut, User, Zap
+  Anchor, LogOut, User
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
   const location = useLocation();
 
+  // Logic to determine which brand name to show
   const isTransitionPage = ['/canopy', '/translator', '/alignment', '/audit'].includes(location.pathname);
 
   const menuItems = [
@@ -32,19 +33,11 @@ const Sidebar = () => {
   return (
     <div className="w-64 h-screen bg-[#1A1423] border-r border-white/5 flex flex-col p-8 fixed left-0 top-0">
       
-      <div className="mb-12 px-2">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-teal-500/20 rounded-xl flex items-center justify-center border border-teal-500/30">
-            {isTransitionPage ? (
-              <Zap className="w-4 h-4 text-teal-400 fill-teal-400" />
-            ) : (
-              <Home className="w-4 h-4 text-teal-400 fill-teal-400" />
-            )}
-          </div>
-          <span className="text-lg font-black italic tracking-tighter text-white uppercase">
-            {isTransitionPage ? "Horizon" : "Hearth"}
-          </span>
-        </div>
+      {/* BRAND HEADER - Replaces "Mycelium." with theme-matched text */}
+      <div className="mb-14 px-1">
+        <h1 className="text-3xl font-black italic tracking-tighter text-white uppercase font-heading">
+          {isTransitionPage ? "Horizon" : "Hearth"}
+        </h1>
       </div>
 
       <nav className="flex-1 space-y-12">
