@@ -1,7 +1,6 @@
 import { 
   LayoutDashboard, 
   ArrowLeftRight, 
-  Target, 
   Heart, 
   Compass, 
   ChevronLeft, 
@@ -10,7 +9,6 @@ import {
   HandHeart, 
   Trees, 
   Flame, 
-  Lock, 
   BookOpen,
   Binoculars 
 } from 'lucide-react';
@@ -37,18 +35,15 @@ const NAV_GROUPS = [
       { path: '/translator', label: 'The Linguistic Bridge', icon: ArrowLeftRight },
       { path: '/gap-analyzer', label: 'Horizon Scan', icon: Binoculars },
       { path: '/cultural-fit', label: 'Ecosystem Alignment', icon: Compass },
-      { path: '/identity-anchor', label: 'The Rootwork', icon: Heart },
+      { path: '/audit', label: 'The Rootwork', icon: Heart },
     ],
   },
 ];
-
-const ALLOWED_TIERS = ['Hearthkeeper', 'Steward', 'Patron'];
 
 export default function Sidebar({ collapsed, onToggle }) {
   const location = useLocation();
   const { data: user } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
   const userTier = user?.subscription_tier || 'Seedling';
-  const hasFullAccess = ALLOWED_TIERS.includes(userTier);
 
   return (
     <aside
@@ -63,111 +58,93 @@ export default function Sidebar({ collapsed, onToggle }) {
         borderRight: '1px solid hsla(280, 30%, 40%, 0.18)',
       }}
     >
+      {/* Brand Header */}
       <Link
         to="/dashboard"
         className="flex items-center gap-3 border-b border-sidebar-border/40 hover:opacity-80 transition-opacity"
         style={{ padding: '12px 16px' }}
       >
-        <div className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center flex-shrink-0">
-          <Compass className="w-4 h-4 text-sidebar-primary-foreground" />
+        <div className="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center flex-shrink-0">
+          <Compass className="w-4 h-4 text-orange-400" />
         </div>
         {!collapsed && (
           <div className="min-w-0 flex-1">
-            <h1 className="font-heading font-semibold text-lg text-white leading-tight truncate">Hearth & Horizon</h1>
-            <p className="text-[10px] text-sidebar-foreground/50 tracking-widest truncate">Your sanctuary</p>
+            <h1 className="text-sm font-bold text-white truncate font-heading tracking-tight">
+              Hearth & Horizon
+            </h1>
+            <p className="text-[10px] text-gray-500 font-medium truncate uppercase tracking-widest">
+              {userTier}
+            </p>
           </div>
         )}
       </Link>
 
-      <nav className="flex-1 py-4 px-2 overflow-y-auto">
-        <div style={{ marginBottom: '24px' }}>
-          {(() => {
-            const item = STANDALONE;
-            const isActive = location.pathname === item.path;
-            return (
-              <Link
-                to={item.path}
-                className={`flex items-center gap-3 rounded-xl transition-all duration-200 ${collapsed ? 'justify-center' : ''}`}
-                style={{
-                  padding: '10px 12px',
-                  background: isActive ? 'hsla(183, 80%, 38%, 0.12)' : 'transparent',
-                  boxShadow: isActive ? '0 0 12px 0 hsla(183, 80%, 38%, 0.25), inset 0 0 0 1px hsla(183, 80%, 38%, 0.2)' : 'none',
-                  color: isActive ? 'hsl(183, 80%, 75%)' : 'hsla(270, 15%, 75%, 0.7)',
-                }}
-              >
-                <span className="flex items-center justify-center flex-shrink-0 rounded-lg" style={{ padding: '12px', width: '20px', height: '20px' }}>
-                  <item.icon style={{ width: '20px', height: '20px', color: isActive ? 'hsl(183, 80%, 55%)' : 'inherit', flexShrink: 0 }} />
-                </span>
-                {!collapsed && <span className="text-sm font-medium leading-tight">{item.label}</span>}
-              </Link>
-            );
-          })()}
+      {/* Navigation Links */}
+      <div className="flex-1 overflow-y-auto py-4 space-y-6 custom-scrollbar">
+        <div className="px-3">
+          <Link
+            to={STANDALONE.path}
+            className={cn(
+              'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative',
+              location.pathname === STANDALONE.path
+                ? 'bg-white/10 text-white shadow-sm'
+                : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
+            )}
+          >
+            <STANDALONE.icon className={cn(
+              "w-5 h-5 shrink-0",
+              location.pathname === STANDALONE.path ? "text-orange-400" : "group-hover:text-gray-200"
+            )} />
+            {!collapsed && <span className="text-sm font-medium">{STANDALONE.label}</span>}
+          </Link>
         </div>
 
-        {NAV_GROUPS.map((group, gi) => (
-          <div key={group.label} style={{ marginBottom: gi < NAV_GROUPS.length - 1 ? '24px' : 0 }}>
+        {NAV_GROUPS.map((group) => (
+          <div key={group.label} className="px-3 space-y-1">
             {!collapsed && (
-              <p
-                className="px-3 mb-2 font-medium tracking-widest"
-                style={{
-                  fontSize: '0.7rem',
-                  letterSpacing: '0.12em',
-                  color: 'hsl(280, 65%, 72%)',
-                  textTransform: 'uppercase',
-                  fontWeight: 600,
-                }}
-              >
+              <h2 className="px-3 text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-2">
                 {group.label}
-              </p>
+              </h2>
             )}
-
-            <div className="space-y-0.5">
-              {group.items.map(item => {
-                const isActive = location.pathname === item.path;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={cn(
-                      'flex items-center gap-3 rounded-xl transition-all duration-200 group',
-                      collapsed ? 'justify-center' : '',
-                    )}
-                    style={{
-                      padding: '10px 12px',
-                      background: isActive ? 'hsla(183, 80%, 38%, 0.12)' : 'transparent',
-                      color: isActive ? 'hsl(183, 80%, 75%)' : 'hsla(270, 15%, 75%, 0.7)',
-                    }}
-                  >
-                    <span className="flex items-center justify-center flex-shrink-0" style={{ width: '20px', height: '20px' }}>
-                      <item.icon style={{ width: '20px', height: '20px', color: isActive ? 'hsl(183, 80%, 55%)' : 'inherit' }} />
-                    </span>
-                    {!collapsed && <span className="flex-1 text-sm font-medium leading-tight">{item.label}</span>}
-                  </Link>
-                );
-              })}
+            <div className="space-y-1">
+              {group.items.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group',
+                    location.pathname === item.path
+                      ? 'bg-white/10 text-white shadow-sm'
+                      : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
+                  )}
+                >
+                  <item.icon className={cn(
+                    "w-5 h-5 shrink-0",
+                    location.pathname === item.path ? "text-orange-400" : "group-hover:text-gray-200"
+                  )} />
+                  {!collapsed && <span className="text-sm font-medium">{item.label}</span>}
+                </Link>
+              ))}
             </div>
           </div>
         ))}
-      </nav>
+      </div>
 
-      <div className="p-2 border-t border-sidebar-border/30 space-y-1">
+      {/* Bottom Actions */}
+      <div className="p-4 border-t border-sidebar-border/40 space-y-2">
         <button
           onClick={() => base44.auth.logout()}
-          className={cn(
-            'flex items-center gap-3 rounded-xl w-full transition-all duration-200',
-            'text-sidebar-foreground/40 hover:text-white',
-            collapsed ? 'justify-center' : ''
-          )}
-          style={{ padding: '10px 12px' }}
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200 w-full group"
         >
-          <LogOut style={{ width: '20px', height: '20px' }} />
-          {!collapsed && <span className="text-sm">Sign Out</span>}
+          <LogOut className="w-5 h-5 shrink-0 transition-transform group-hover:-translate-x-1" />
+          {!collapsed && <span className="text-sm font-medium text-left">Logout</span>}
         </button>
+
         <button
           onClick={onToggle}
-          className="flex items-center justify-center w-full py-2 rounded-lg text-sidebar-foreground/30 hover:text-white transition-all"
+          className="flex items-center justify-center w-full py-2 text-gray-500 hover:text-white transition-colors"
         >
-          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
         </button>
       </div>
     </aside>
