@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
@@ -41,29 +41,23 @@ const ProtectedRoute = ({ element }) => {
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      
-      <Route element={<AppLayout />}>
-        {/* Main Member Home */}
-        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
+    <Router>
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         
-        {/* Transition Tools */}
-        <Route path="/translator" element={<ProtectedRoute element={<SkillTranslator />} />} />
-        <Route path="/canopy" element={<ProtectedRoute element={<Canopy />} />} />
-        <Route path="/cultural-fit" element={<ProtectedRoute element={<CulturalFit />} />} />
-        <Route path="/audit" element={<ProtectedRoute element={<Rootwork />} />} />
-        
-        {/* Support & Community */}
-        <Route path="/support" element={<ProtectedRoute element={<Support />} />} />
-        <Route path="/embers" element={<ProtectedRoute element={<Embers />} />} />
-        
-        {/* Redirects */}
-        <Route path="/gap-analyzer" element={<Navigate to="/audit" replace />} />
-      </Route>
+        <Route element={<AppLayout />}>
+          <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
+          <Route path="/translator" element={<ProtectedRoute element={<SkillTranslator />} />} />
+          <Route path="/canopy" element={<ProtectedRoute element={<Canopy />} />} />
+          <Route path="/cultural-fit" element={<ProtectedRoute element={<CulturalFit />} />} />
+          <Route path="/audit" element={<ProtectedRoute element={<Rootwork />} />} />
+          <Route path="/support" element={<ProtectedRoute element={<Support />} />} />
+          <Route path="/embers" element={<ProtectedRoute element={<Embers />} />} />
+          <Route path="/gap-analyzer" element={<Navigate to="/audit" replace />} />
+        </Route>
 
-      {/* Catch-all */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
-    </Routes>
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </Router>
   );
 }
