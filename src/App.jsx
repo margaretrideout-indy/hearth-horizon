@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
-// Layouts & Pages
 import AppLayout from './components/layout/AppLayout';
 import Dashboard from './pages/Dashboard';
 import SkillTranslator from './pages/SkillTranslator';
@@ -12,8 +11,8 @@ import CulturalFit from './pages/CulturalFit';
 import Rootwork from './pages/HorizonAudit';
 import Support from './pages/Support';
 import Embers from './pages/Embers';
+import LibraryPage from './pages/Library';
 
-// Initialize the Data Engine
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ element }) => {
@@ -26,8 +25,8 @@ const ProtectedRoute = ({ element }) => {
 
   if (isLoading) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center bg-[#1C1622]">
-        <div className="animate-pulse text-orange-400 font-heading italic tracking-widest text-lg">
+      <div className="h-screen w-screen flex items-center justify-center bg-[#1A1423]">
+        <div className="animate-pulse text-[#E2776F] font-heading italic tracking-widest text-lg">
           Loading the Hearth...
         </div>
       </div>
@@ -51,9 +50,10 @@ export default function App() {
           
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-            <Route path="/translator" element={<ProtectedRoute element={<SkillTranslator />} />} />
+            <Route path="/library" element={<ProtectedRoute element={<LibraryPage />} />} />
             <Route path="/canopy" element={<ProtectedRoute element={<Canopy />} />} />
-            <Route path="/cultural-fit" element={<ProtectedRoute element={<CulturalFit />} />} />
+            <Route path="/translator" element={<ProtectedRoute element={<SkillTranslator />} />} />
+            <Route path="/alignment" element={<ProtectedRoute element={<CulturalFit />} />} />
             <Route path="/audit" element={<ProtectedRoute element={<Rootwork />} />} />
             <Route path="/support" element={<ProtectedRoute element={<Support />} />} />
             <Route path="/embers" element={<ProtectedRoute element={<Embers />} />} />
