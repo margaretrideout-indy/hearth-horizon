@@ -84,7 +84,10 @@ export default function Gateway() {
               <div>
                 <Heart className="w-8 h-8 text-primary mb-6" />
                 <h3 className="text-xl font-bold text-foreground">The Hearthkeeper</h3>
-                <div className="text-3xl font-bold mt-2 text-primary">$3 <span className="text-sm text-muted-foreground font-normal">/ mo</span></div>
+                <div className="mt-2">
+                  <div className="text-3xl font-bold text-primary">$3 <span className="text-sm text-muted-foreground font-normal">/ mo</span></div>
+                  <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-wider">(Introductory offer, then $5/mo)</p>
+                </div>
                 <ul className="mt-8 space-y-4 text-sm text-muted-foreground text-left">
                   <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Everything in **Seedling**</span></li>
                   <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Support this sanctuary's ecosystem</span></li>
@@ -102,7 +105,10 @@ export default function Gateway() {
                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-primary/20 text-primary">Reciprocity</span>
                 </div>
                 <h3 className="text-xl font-bold text-foreground">The Steward</h3>
-                <div className="text-3xl font-bold mt-2 text-primary">$5 <span className="text-sm text-muted-foreground font-normal">/ mo</span></div>
+                <div className="mt-2">
+                  <div className="text-3xl font-bold text-primary">$5 <span className="text-sm text-muted-foreground font-normal">/ mo</span></div>
+                  <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-wider">(Introductory offer, then $8/mo)</p>
+                </div>
                 <ul className="mt-8 space-y-4 text-sm text-muted-foreground text-left">
                   <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>Everything in **Hearthkeeper**</span></li>
                   <li className="flex items-start gap-3"><Check className="w-4 h-4 text-primary mt-0.5 shrink-0" /> <span>**Sponsor a peer seat** in transition</span></li>
