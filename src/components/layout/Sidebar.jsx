@@ -30,7 +30,7 @@ const Sidebar = () => {
         { name: 'LINGUISTIC BRIDGE', path: '/bridge', icon: Shuffle },
         { 
           name: 'THE ROOTWORK', 
-          path: '/audit', // UPDATED FROM /dashboard TO /audit
+          path: '/audit', // UPDATED DESTINATION
           icon: Anchor 
         },
         { name: 'MYCELIUM MAP', path: '/mycelium', icon: Layers },
@@ -59,7 +59,7 @@ const Sidebar = () => {
       </div>
 
       {/* Nav Groups */}
-      <nav className="flex-1 space-y-10">
+      <nav className="flex-1 space-y-10 text-left">
         {navSections.map((section, idx) => (
           <div key={idx} className="space-y-4">
             <h3 className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-600 px-4">
@@ -79,7 +79,7 @@ const Sidebar = () => {
                     }`}
                   >
                     <item.icon className={`w-4 h-4 transition-colors ${
-                      isActive ? 'text-[#2DD4BF] shadow-[0_0_10px_rgba(45,212,191,0.5)]' : 'text-gray-500 group-hover:text-gray-300'
+                      isActive ? 'text-[#2DD4BF]' : 'text-gray-500 group-hover:text-gray-300'
                     }`} />
                     <span className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all ${
                       isActive ? 'translate-x-1' : ''
