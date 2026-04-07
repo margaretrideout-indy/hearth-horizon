@@ -33,14 +33,18 @@ const Sidebar = () => {
         <div className="relative group">
           <div className="absolute inset-0 bg-teal-400/30 blur-2xl rounded-full scale-150 animate-pulse" />
           <img 
-            src="https://framerusercontent.com/images/6d27e8a4-4666-4022-8d5b-dfcb623f1880.jpg" 
-            alt="Hearth and Horizon Logo" 
+            src="/HearthandHorizonLogo.jpg" 
+            alt="Hearth and Horizon" 
             className="w-20 h-20 relative z-10 object-contain drop-shadow-[0_0_20px_rgba(45,212,191,0.6)]"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "https://placehold.co/80x80/1A1423/2dd4bf?text=H";
+            }}
           />
         </div>
       </div>
 
-      <nav className="flex-1 space-y-12">
+      <nav className="flex-1 space-y-12 overflow-y-auto">
         {menuItems.map((group, idx) => (
           <div key={idx} className="space-y-4">
             <h3 className="text-[10px] font-black text-gray-600 uppercase tracking-[0.25em] px-2 italic">
@@ -56,7 +60,7 @@ const Sidebar = () => {
                     to={item.path}
                     className={`flex items-center gap-4 px-3 py-3 rounded-2xl transition-all group ${
                       isActive 
-                        ? 'bg-teal-500/10 text-teal-400 font-bold border border-teal-500/20' 
+                        ? 'bg-teal-500/10 text-teal-400 font-bold border border-teal-500/20 shadow-[0_0_15px_rgba(45,212,191,0.05)]' 
                         : 'text-gray-500 hover:text-white hover:bg-white/5'
                     }`}
                   >
