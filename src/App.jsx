@@ -1,11 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
-// MATCHING CASE-SENSITIVITY: Components and Layout
-import Sidebar from './components/layout/Sidebar';
+import Sidebar from './components/Layout/Sidebar';
 
 // PAGE IMPORTS
-import Hearth from './pages/Hearth';
+import Dashboard from './pages/Dashboard'; 
 import Library from './pages/Library';
 import HorizonAudit from './pages/HorizonAudit'; 
 import SkillTranslator from './pages/SkillTranslator'; 
@@ -15,22 +13,19 @@ const App = () => {
   return (
     <Router>
       <div className="flex bg-[#1A1423] min-h-screen">
-        {/* The Sidebar found in src/components/Layout/Sidebar */}
         <Sidebar />
 
-        {/* Main Content Area */}
         <main className="flex-1 ml-64">
           <Routes>
-            {/* NAVIGATION SECTION */}
-            <Route path="/hearth" element={<Hearth />} />
+            {/* THE HEARTH now maps directly to Dashboard to remove redundancy */}
+            <Route path="/hearth" element={<Dashboard />} />
+            
             <Route path="/library" element={<Library />} />
-
-            {/* TRANSITION SECTION */}
             <Route path="/audit" element={<HorizonAudit />} />
             <Route path="/translator" element={<SkillTranslator />} />
             <Route path="/cultural-fit" element={<CulturalFit />} />
 
-            {/* REDIRECTS */}
+            {/* DEFAULT REDIRECT */}
             <Route path="/" element={<Navigate to="/hearth" replace />} />
             <Route path="*" element={<Navigate to="/hearth" replace />} />
           </Routes>
