@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // MATCHING CASE-SENSITIVITY: Components and Layout
-import Sidebar from './components/Layout/Sidebar';
+import Sidebar from './components/layout/Sidebar';
 
 // PAGE IMPORTS
 import Hearth from './pages/Hearth';
