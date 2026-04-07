@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Heart, Loader2, Send, RefreshCw } from 'lucide-react';
+import { Heart, Loader2, Send, RefreshCw, Anchor, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
+
+// Import your sub-components (Ensure these paths are correct!)
 import MoodSelector from '../components/anchor/MoodSelector';
 import PromptCard from '../components/anchor/PromptCard';
 import CheckInHistory from '../components/anchor/CheckInHistory';
@@ -52,30 +54,30 @@ export default function IdentityAnchor() {
     if (!selectedMood) return;
     setIsSubmitting(true);
 
-    // Get supportive AI response
-    const response = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are a compassionate career transition coach. A public-sector professional is going through a career change and just did a check-in.
+    try {
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are a compassionate career transition coach. A professional is transitioning after 13 years in education. 
+        Mood: ${selectedMood}
+        Prompt: "${currentPrompt}"
+        Reflection: "${reflection}"
+        Provide a 2-3 sentence, warm, encouraging response.`,
+      });
 
-Their mood: ${selectedMood}
-The prompt they reflected on: "${currentPrompt}"
-Their reflection: "${reflection}"
+      setAiResponse(response);
 
-Provide a brief (2-3 sentences), warm, and encouraging response that validates their feelings and gently guides them forward. Be specific to their words. Do not use generic platitudes.
+      await base44.entities.DailyCheckIn.create({
+        mood: selectedMood,
+        reflection: reflection,
+        prompt_used: currentPrompt,
+        gratitude_note: '',
+      });
 
-IMPORTANT: If their mood is "grieving", begin your response with exactly: "Thank you for being honest. It is natural to feel this way when moving between worlds. Your value is not tied to your title."`,
-    });
-
-    setAiResponse(response);
-
-    await base44.entities.DailyCheckIn.create({
-      mood: selectedMood,
-      reflection: reflection,
-      prompt_used: currentPrompt,
-      gratitude_note: '',
-    });
-
-    queryClient.invalidateQueries({ queryKey: ['checkIns'] });
-    setIsSubmitting(false);
+      queryClient.invalidateQueries({ queryKey: ['checkIns'] });
+    } catch (error) {
+      console.error("Submission failed", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {
@@ -86,76 +88,82 @@ IMPORTANT: If their mood is "grieving", begin your response with exactly: "Thank
   };
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-4xl mx-auto space-y-10 pb-20 pt-4 px-4">
       {/* Header */}
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <Heart className="w-4 h-4 text-secondary" />
-          <p className="text-sm text-secondary font-medium">Psychology-Led Support</p>
+      <header className="space-y-4">
+        <div className="flex items-center gap-2 text-orange-400">
+          <Anchor className="w-5 h-5" />
+          <span className="text-xs font-bold uppercase tracking-widest">The Rootwork</span>
         </div>
-        <h1 className="font-heading text-3xl font-bold text-foreground mb-2">The rootwork</h1>
-        <p className="text-muted-foreground max-w-2xl">
-          Career transitions aren't just professional — they're deeply personal. Take a moment to ground yourself in who you are and who you're becoming.
+        <h1 className="text-4xl font-bold text-white font-heading italic leading-tight">
+          Identity Anchors
+        </h1>
+        <p className="text-gray-400 text-lg max-w-2xl leading-relaxed">
+          Take a moment to ground yourself. Your value is independent of your title.
         </p>
-      </div>
+      </header>
 
-      {/* Mood Check */}
-      <Card className="p-6 rounded-2xl">
-        <h2 className="font-heading font-semibold text-lg mb-4">How are you feeling today?</h2>
-        <MoodSelector selected={selectedMood} onSelect={setSelectedMood} />
-      </Card>
+      {/* Main Container */}
+      <div className="space-y-6">
+        {/* Mood Section */}
+        <Card className="p-8 bg-[#1C1622]/60 border-white/5 rounded-3xl backdrop-blur-md">
+          <h2 className="text-white font-bold text-lg mb-6 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-orange-400" />
+            How are you feeling today?
+          </h2>
+          <MoodSelector selected={selectedMood} onSelect={setSelectedMood} />
+        </Card>
 
-      {/* Prompt & Reflection */}
-      <PromptCard prompt={currentPrompt} onShuffle={shufflePrompt} />
+        {/* Prompt Section */}
+        <PromptCard prompt={currentPrompt} onShuffle={shufflePrompt} />
 
-      <Card className="p-6 rounded-2xl">
-        <label className="text-sm font-medium mb-3 block">Your Reflection</label>
-        <Textarea
-          placeholder="Take your time. There are no wrong answers here..."
-          value={reflection}
-          onChange={e => setReflection(e.target.value)}
-          className="min-h-[120px] text-base resize-none"
-        />
-        <div className="flex justify-end mt-4 gap-3">
-          {aiResponse && (
-            <Button variant="outline" onClick={handleReset} className="gap-2">
-              <RefreshCw className="w-4 h-4" /> New Check-In
+        {/* Input Section */}
+        <Card className="p-8 bg-[#1C1622]/60 border-white/5 rounded-3xl">
+          <label className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4 block">
+            Your Reflection
+          </label>
+          <Textarea
+            placeholder="There are no wrong answers here..."
+            value={reflection}
+            onChange={e => setReflection(e.target.value)}
+            className="bg-white/5 border-white/10 text-white min-h-[150px] rounded-2xl focus:border-orange-500/50 transition-all text-lg italic"
+          />
+          <div className="flex justify-end mt-6 gap-3">
+            {aiResponse && (
+              <Button variant="ghost" onClick={handleReset} className="text-gray-400 hover:text-white gap-2">
+                <RefreshCw className="w-4 h-4" /> New Check-In
+              </Button>
+            )}
+            <Button
+              onClick={handleSubmit}
+              disabled={!selectedMood || isSubmitting}
+              className="bg-orange-600 hover:bg-orange-500 text-white px-8 rounded-xl gap-2 h-12"
+            >
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+              Anchor My Reflection
             </Button>
-          )}
-          <Button
-            onClick={handleSubmit}
-            disabled={!selectedMood || isSubmitting}
-            className="gap-2"
-          >
-            {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-            Submit Check-In
-          </Button>
-        </div>
-      </Card>
-
-      {/* AI Response */}
-      {aiResponse && (
-        <Card className="p-6 rounded-2xl bg-gradient-to-br from-secondary/5 to-accent/50 border-secondary/20">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center">
-              <Heart className="w-4 h-4 text-secondary" />
-            </div>
-            <p className="font-heading font-semibold">Your Anchor Response</p>
           </div>
-          <p className="text-foreground leading-relaxed">{aiResponse}</p>
         </Card>
-      )}
 
-      {/* Journal Entry */}
-      {user && (
-        <Card className="p-6 rounded-2xl">
-          <h2 className="font-heading font-semibold text-lg mb-4">Your Logbook Entry</h2>
-          <JournalEntry user={user} />
-        </Card>
-      )}
+        {/* AI Response Area */}
+        {aiResponse && (
+          <Card className="p-8 bg-gradient-to-br from-orange-500/10 to-transparent border-orange-500/20 rounded-3xl shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center">
+                <Heart className="w-5 h-5 text-orange-400 fill-orange-400/20" />
+              </div>
+              <h3 className="font-bold text-white">Coach's Reflection</h3>
+            </div>
+            <p className="text-orange-100/90 text-lg leading-relaxed italic">
+              "{aiResponse}"
+            </p>
+          </Card>
+        )}
 
-      {/* History */}
-      <CheckInHistory checkIns={checkIns} />
+        {/* Journal and History */}
+        {user && <JournalEntry user={user} />}
+        <CheckInHistory checkIns={checkIns} />
+      </div>
     </div>
   );
 }
