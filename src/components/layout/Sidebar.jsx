@@ -1,8 +1,18 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import {
-  LayoutDashboard, ArrowLeftRight, Target, Heart, Compass,
-  ChevronLeft, ChevronRight, LogOut, HandHeart, Trees, Flame, Lock, BookOpen
+import { 
+  LayoutDashboard, 
+  ArrowLeftRight, 
+  Target, 
+  Heart, 
+  Compass, 
+  ChevronLeft, 
+  ChevronRight, 
+  LogOut, 
+  HandHeart, 
+  Trees, 
+  Flame, 
+  Lock, 
+  BookOpen,
+  Binoculars 
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
