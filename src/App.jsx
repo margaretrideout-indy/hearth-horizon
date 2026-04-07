@@ -21,7 +21,6 @@ import AdminDashboard from './pages/AdminDashboard';
 import Contact from './pages/Contact';
 import InstallApp from './pages/InstallApp';
 import Gateway from './pages/Gateway';
-import IdentityTranslator from './pages/IdentityTranslator';
 import HorizonAudit from './pages/HorizonAudit';
 import ForestGuide from './pages/ForestGuide';
 import HorizonSynthesis from './pages/HorizonSynthesis';
@@ -86,7 +85,6 @@ const AuthenticatedApp = () => {
         <Route path="/canopy" element={<ProtectedRoute element={<Canopy />} />} />
         <Route path="/embers" element={<ProtectedRoute element={<Embers />} />} />
         <Route path="/admin" element={<ProtectedRoute element={<AdminDashboard />} />} />
-        <Route path="/identity-translator" element={<ProtectedRoute element={<IdentityTranslator />} />} />
         <Route path="/guide" element={<ProtectedRoute element={<ForestGuide />} />} />
 
         {/* Public pages */}
