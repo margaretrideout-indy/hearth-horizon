@@ -1,46 +1,37 @@
-import { Toaster } from "@/components/ui/toaster"
-import { QueryClientProvider } from '@tanstack/react-query'
-import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
-import PageNotFound from './lib/PageNotFound';
-import { AuthProvider, useAuth } from '@/lib/AuthContext';
-import IdentityTranslator from './pages/IdentityTranslator';
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
+
+// Layouts & Pages
+import AppLayout from './components/layout/AppLayout';
 import Dashboard from './pages/Dashboard';
 import SkillTranslator from './pages/SkillTranslator';
-import GapAnalyzer from './pages/GapAnalyzer';
-import CulturalFit from './pages/CulturalFit';
-import AppLayout from './components/layout/AppLayout';
-import Support from './pages/Support';
 import Canopy from './pages/Canopy';
-import PaymentSuccess from './pages/PaymentSuccess';
-import PaymentCancel from './pages/PaymentCancel';
+import CulturalFit from './pages/CulturalFit';
+import Rootwork from './pages/HorizonAudit';
+import Support from './pages/Support';
 import Embers from './pages/Embers';
-import AdminDashboard from './pages/AdminDashboard';
-import Contact from './pages/Contact';
-import InstallApp from './pages/InstallApp';
-import Gateway from './pages/Gateway';
-import HorizonAudit from './pages/HorizonAudit';
-import ForestGuide from './pages/ForestGuide';
-import HorizonSynthesis from './pages/HorizonSynthesis';
 
 const ProtectedRoute = ({ element }) => {
-  const { data: user, isLoading } = useQuery({ 
+  const { data: user, isLoading, isError } = useQuery({ 
     queryKey: ['me'], 
-    queryFn: () => base44.auth.me().catch(() => null),
-    retry: false
+    queryFn: () => base44.auth.me(),
+    retry: false,
+    staleTime: Infinity
   });
 
   if (isLoading) {
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-[#1C1622]">
-        <div className="animate-pulse text-orange-400 font-heading italic tracking-widest">
+        <div className="animate-pulse text-orange-400 font-heading italic tracking-widest text-lg">
           Loading the Hearth...
         </div>
       </div>
     );
   }
 
-  if (!user) {
+  if (isError || !user) {
     base44.auth.redirectToLogin(window.location.href);
     return null;
   }
@@ -48,58 +39,31 @@ const ProtectedRoute = ({ element }) => {
   return element;
 };
 
-const PUBLIC_PATHS = ['/', '/library', '/contact'];
-
-const AuthenticatedApp = () => {
-  const { isLoadingPublicSettings } = useAuth();
-  const location = useLocation();
-
-  if (isLoadingPublicSettings && !PUBLIC_PATHS.includes(location.pathname)) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
+export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Gateway />} />
-
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      
       <Route element={<AppLayout />}>
+        {/* Main Member Home */}
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-        <Route path="/gap-analyzer" element={<ProtectedRoute element={<GapAnalyzer />} />} />
+        
+        {/* Transition Tools */}
         <Route path="/translator" element={<ProtectedRoute element={<SkillTranslator />} />} />
         <Route path="/canopy" element={<ProtectedRoute element={<Canopy />} />} />
         <Route path="/cultural-fit" element={<ProtectedRoute element={<CulturalFit />} />} />
+        <Route path="/audit" element={<ProtectedRoute element={<Rootwork />} />} />
+        
+        {/* Support & Community */}
         <Route path="/support" element={<ProtectedRoute element={<Support />} />} />
         <Route path="/embers" element={<ProtectedRoute element={<Embers />} />} />
-        <Route path="/audit" element={<ProtectedRoute element={<HorizonAudit />} />} />
-        <Route path="/synthesis" element={<ProtectedRoute element={<HorizonSynthesis />} />} />
-        <Route path="/guide" element={<ProtectedRoute element={<ForestGuide />} />} />
-        <Route path="/admin" element={<ProtectedRoute element={<AdminDashboard />} />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/install" element={<InstallApp />} />
-        <Route path="/library" element={<IdentityTranslator />} />
-        <Route path="/payment/success" element={<PaymentSuccess />} />
-        <Route path="/payment/cancel" element={<PaymentCancel />} />
+        
+        {/* Redirects */}
+        <Route path="/gap-analyzer" element={<Navigate to="/audit" replace />} />
       </Route>
-      <Route path="*" element={<PageNotFound />} />
+
+      {/* Catch-all */}
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );
-};
-
-function App() {
-  return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClientInstance}>
-        <Router>
-          <AuthenticatedApp />
-        </Router>
-        <Toaster />
-      </QueryClientProvider>
-    </AuthProvider>
-  )
 }
-
-export default App
