@@ -6,7 +6,6 @@ import {
   Wind, 
   GitBranch, 
   Anchor, 
-  Compass,
   LogOut,
   User
 } from 'lucide-react';
@@ -29,7 +28,7 @@ const Sidebar = () => {
         { name: "The Canopy", path: "/canopy", icon: <Wind className="w-4 h-4" /> },
         { name: "Linguistic Bridge", path: "/bridge", icon: <Layers className="w-4 h-4" /> },
         { name: "Ecosystem Alignment", path: "/alignment", icon: <GitBranch className="w-4 h-4" /> },
-        { name: "The Rootwork", path: "/rootwork", icon: <Anchor className="w-4 h-4" /> },
+        { name: "The Rootwork", path: "/audit", icon: <Anchor className="w-4 h-4" /> },
       ]
     }
   ];
