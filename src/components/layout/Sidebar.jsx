@@ -1,90 +1,109 @@
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { 
-  Home, Library, Layers, Wind, GitBranch, Anchor, LogOut, User 
+  Anchor, 
+  ArrowRightLeft, 
+  Wind, 
+  GitBranch, 
+  LayoutDashboard 
 } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const menuItems = [
     { 
-      group: "Overview",
-      items: [
-        { name: "The Hearth", path: "/dashboard", icon: <Home className="w-4 h-4" /> },
-        { name: "The Library", path: "/library", icon: <Library className="w-4 h-4" /> },
-      ]
+      id: 'rootwork', 
+      label: 'The Rootwork', 
+      icon: Anchor, 
+      path: '/rootwork',
+      category: 'TRANSITION' 
     },
-    {
-      group: "Transition",
-      items: [
-        { name: "The Canopy", path: "/canopy", icon: <Wind className="w-4 h-4" /> },
-        { name: "Linguistic Bridge", path: "/translator", icon: <Layers className="w-4 h-4" /> },
-        { name: "Ecosystem Alignment", path: "/alignment", icon: <GitBranch className="w-4 h-4" /> },
-        { name: "The Rootwork", path: "/audit", icon: <Anchor className="w-4 h-4" /> },
-      ]
+    { 
+      id: 'bridge', 
+      label: 'Linguistic Bridge', 
+      icon: ArrowRightLeft, 
+      path: '/translator',
+      category: 'TRANSITION' 
+    },
+    { 
+      id: 'alignment', 
+      label: 'Ecosystem Alignment', 
+      icon: GitBranch, 
+      path: '/alignment',
+      category: 'TRANSITION' 
+    },
+    { 
+      id: 'canopy', 
+      label: 'The Canopy', 
+      icon: Wind, 
+      path: '/canopy',
+      category: 'TRANSITION' 
     }
   ];
 
   return (
-    <div className="w-64 h-screen bg-[#1A1423] border-r border-white/5 flex flex-col p-8 fixed left-0 top-0 z-50">
+    <div className="w-72 min-h-screen bg-[#1A1423] border-r border-white/5 p-8 flex flex-col fixed left-0 top-0 z-50">
       
-      <div className="mb-14 pt-2 flex items-center justify-center cursor-default">
-        <div className="relative group">
-          <div className="absolute inset-0 bg-teal-400/30 blur-2xl rounded-full scale-150 animate-pulse" />
-          <img 
-            src="/HearthandHorizonLogo.jpg" 
-            alt="Hearth and Horizon" 
-            className="w-20 h-20 relative z-10 object-contain drop-shadow-[0_0_20px_rgba(45,212,191,0.6)]"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = "https://placehold.co/80x80/1A1423/2dd4bf?text=H";
-            }}
-          />
+      {/* BRANDING */}
+      <div className="mb-12 flex items-center gap-3 group cursor-pointer" onClick={() => navigate('/')}>
+        <div className="w-10 h-10 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center transition-all group-hover:shadow-[0_0_20px_rgba(45,212,191,0.3)]">
+          <LayoutDashboard className="w-5 h-5 text-teal-400" />
+        </div>
+        <div>
+          <h2 className="text-white font-serif font-bold tracking-tight text-lg leading-none">Hearth</h2>
+          <span className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em]">Horizon</span>
         </div>
       </div>
 
-      <nav className="flex-1 space-y-12 overflow-y-auto">
-        {menuItems.map((group, idx) => (
-          <div key={idx} className="space-y-4">
-            <h3 className="text-[10px] font-black text-gray-600 uppercase tracking-[0.25em] px-2 italic">
-              {group.group}
-            </h3>
-            
-            <div className="space-y-1">
-              {group.items.map((item) => {
-                const isActive = location.pathname === item.path;
-                return (
-                  <Link
-                    key={item.name}
-                    to={item.path}
-                    className={`flex items-center gap-4 px-3 py-3 rounded-2xl transition-all group ${
-                      isActive 
-                        ? 'bg-teal-500/10 text-teal-400 font-bold border border-teal-500/20 shadow-[0_0_15px_rgba(45,212,191,0.05)]' 
-                        : 'text-gray-500 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    <span className={`${isActive ? 'text-teal-400' : 'text-gray-600 group-hover:text-gray-300'}`}>
-                      {item.icon}
-                    </span>
-                    <span className="text-[11px] font-bold tracking-tight uppercase italic">{item.name}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </nav>
+      {/* NAVIGATION CATEGORY */}
+      <div className="space-y-1">
+        <h3 className="text-[9px] font-black text-gray-600 uppercase tracking-[0.3em] mb-6 ml-2">Transition</h3>
+        
+        {menuItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          const Icon = item.icon;
+          
+          return (
+            <button
+              key={item.id}
+              onClick={() => navigate(item.path)}
+              className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all group relative ${
+                isActive 
+                ? 'bg-teal-500/5 border border-teal-500/10' 
+                : 'hover:bg-white/[0.02] border border-transparent'
+              }`}
+            >
+              <Icon className={`w-4 h-4 transition-colors ${
+                isActive ? 'text-teal-400' : 'text-gray-600 group-hover:text-gray-400'
+              }`} />
+              
+              <span className={`text-[11px] font-bold uppercase tracking-widest transition-colors ${
+                isActive ? 'text-teal-400' : 'text-gray-500 group-hover:text-gray-300'
+              }`}>
+                {item.label}
+              </span>
 
-      <div className="mt-auto pt-6 border-t border-white/5 space-y-1">
-        <button className="w-full flex items-center gap-4 px-3 py-3 text-gray-500 hover:text-white transition-colors group">
-          <User className="w-4 h-4 text-gray-600 group-hover:text-teal-400" />
-          <span className="text-[10px] font-black uppercase tracking-widest">Profile</span>
-        </button>
-        <button className="w-full flex items-center gap-4 px-3 py-3 text-red-400/40 hover:text-red-400 transition-colors">
-          <LogOut className="w-4 h-4" />
-          <span className="text-[10px] font-black uppercase tracking-widest">Sign Out</span>
-        </button>
+              {isActive && (
+                <div className="absolute right-4 w-1.5 h-1.5 rounded-full bg-teal-400 shadow-[0_0_10px_rgba(45,212,191,0.8)]" />
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* FOOTER / IDENTITY ANCHOR */}
+      <div className="mt-auto pt-10 border-t border-white/5">
+        <div className="bg-black/20 rounded-2xl p-5 border border-white/5">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+            <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest">System Status</span>
+          </div>
+          <p className="text-[10px] text-gray-400 font-light leading-relaxed italic">
+            "Your 13-year legacy is the foundation of your next syntax."
+          </p>
+        </div>
       </div>
     </div>
   );
