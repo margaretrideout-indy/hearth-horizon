@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Anchor, Sparkles, ChevronRight, PenLine, 
   CheckCircle2, ScrollText, Lightbulb, 
@@ -6,6 +7,7 @@ import {
 } from 'lucide-react';
 
 const HorizonAudit = () => {
+  const navigate = useNavigate();
   const [isSaved, setIsSaved] = useState(false);
   const [view, setView] = useState('draft'); 
   const [activePhase, setActivePhase] = useState('excavation');
@@ -13,7 +15,6 @@ const HorizonAudit = () => {
     q1: '', q2: '', q3: '', q4: '', q5: '', q6: ''
   });
 
-  // SEMANTIC ENGINE MAP
   const themeMap = {
     '#Leadership': ['lead', 'manage', 'team', 'strategy', 'direction', 'stakeholder', 'program'],
     '#Agile': ['agile', 'scrum', 'sprint', 'iteration', 'workflow', 'process', 'kanban'],
@@ -22,7 +23,6 @@ const HorizonAudit = () => {
     '#Education': ['curriculum', 'learning', 'teaching', 'student', 'instructional', 'school']
   };
 
-  // LOAD DATA
   useEffect(() => {
     try {
       const savedData = localStorage.getItem('rootwork_logs_v3');
@@ -30,11 +30,10 @@ const HorizonAudit = () => {
         setResponses(JSON.parse(savedData));
       }
     } catch (error) {
-      console.error("Failed to load local storage:", error);
+      console.error("Vault retrieval error:", error);
     }
   }, []);
 
-  // SEMANTIC CALCULATION
   const activeThemes = useMemo(() => {
     const allText = Object.values(responses).join(' ').toLowerCase();
     return Object.keys(themeMap).filter(theme => 
@@ -46,6 +45,11 @@ const HorizonAudit = () => {
     localStorage.setItem('rootwork_logs_v3', JSON.stringify(responses));
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 3000);
+  };
+
+  const bridgeToTranslator = () => {
+    handleSave();
+    navigate('/translator');
   };
 
   const phases = {
@@ -72,7 +76,6 @@ const HorizonAudit = () => {
   return (
     <div className="min-h-screen bg-[#1A1423] p-6 md:p-10 text-white font-sans pb-32">
       
-      {/* HEADER & NAV */}
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <div className="flex items-center gap-2 mb-2 text-teal-400">
@@ -99,7 +102,6 @@ const HorizonAudit = () => {
       </div>
 
       {view === 'draft' ? (
-        /* WORKSPACE VIEW */
         <div className="max-w-5xl">
           <div className="flex gap-8 border-b border-white/5 mb-10">
             {Object.keys(phases).map(key => (
@@ -142,16 +144,14 @@ const HorizonAudit = () => {
             <div className="text-gray-600 text-[10px] font-bold uppercase tracking-widest">
               {isSaved ? <span className="text-teal-400 animate-pulse flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> Vault Updated</span> : "Pending Changes"}
             </div>
-            <button onClick={handleSave} className="flex items-center gap-3 px-8 py-4 bg-[#FF6B35] text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:scale-[1.02] transition-all">
+            <button onClick={handleSave} className="flex items-center gap-3 px-8 py-4 bg-[#FF6B35] text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:scale-[1.02] active:scale-[0.98] transition-all">
               Lock In Anchors <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
       ) : (
-        /* VAULT VIEW */
         <div className="max-w-6xl">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Theme Header */}
             <div className="md:col-span-3 bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex items-center justify-between mb-4">
               <div className="flex flex-col">
                 <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-2">Active Semantic Themes</span>
@@ -166,17 +166,22 @@ const HorizonAudit = () => {
               <BarChart3 className="w-5 h-5 text-gray-800" />
             </div>
 
-            {/* Entry Cards */}
             {Object.keys(phases).flatMap(key => phases[key].questions).map((item) => (
-              <div key={item.id} className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-8 relative overflow-hidden group hover:border-teal-500/20 transition-all">
+              <div 
+                key={item.id} 
+                className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-8 relative overflow-hidden group hover:border-teal-500/20 transition-all cursor-pointer"
+                onClick={bridgeToTranslator}
+              >
                 <div className="relative z-10">
                   <span className="text-[9px] font-black text-teal-500/40 uppercase tracking-[0.2em] mb-4 block">Anchor {item.displayId}</span>
                   <h4 className="text-sm font-bold text-white mb-4 leading-tight">{item.question}</h4>
-                  <p className="text-xs text-gray-400 font-light italic leading-relaxed">
+                  <p className="text-xs text-gray-400 font-light italic leading-relaxed line-clamp-4">
                     {responses[item.id] || "Reflection pending..."}
                   </p>
                 </div>
-                <ArrowUpRight className="absolute top-6 right-6 w-4 h-4 text-white/5 group-hover:text-teal-400 transition-colors" />
+                <div className="absolute top-6 right-6 w-8 h-8 rounded-full bg-teal-500/5 flex items-center justify-center border border-teal-500/10 group-hover:bg-[#FF6B35] group-hover:border-[#FF6B35] transition-all">
+                  <ArrowUpRight className="w-4 h-4 text-teal-400 group-hover:text-white transition-colors" />
+                </div>
               </div>
             ))}
           </div>
