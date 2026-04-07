@@ -33,9 +33,19 @@ const Sidebar = () => {
   return (
     <div className="w-64 h-screen bg-[#1A1423] border-r border-white/5 flex flex-col p-8 fixed left-0 top-0">
       
-      {/* BRAND HEADER - Replaces "Mycelium." with theme-matched text */}
-      <div className="mb-14 px-1">
-        <h1 className="text-3xl font-black italic tracking-tighter text-white uppercase font-heading">
+      {/* BRAND HEADER - Arch Logo + Theme Matched Text */}
+      <div className="mb-14 px-1 flex items-center gap-4 cursor-default">
+        <div className="relative shrink-0">
+          {/* Subtle teal glow behind the logo to match the theme */}
+          <div className="absolute inset-0 bg-teal-400/20 blur-xl rounded-full scale-110" />
+          <img 
+            src="/logo.png" 
+            alt="Hearth Logo" 
+            className="w-10 h-10 relative z-10 object-contain drop-shadow-[0_0_8px_rgba(45,212,191,0.4)]" 
+          />
+        </div>
+        
+        <h1 className="text-3xl font-black italic tracking-tighter text-white uppercase font-heading drop-shadow-[0_2px_10px_rgba(255,255,255,0.15)] leading-none">
           {isTransitionPage ? "Horizon" : "Hearth"}
         </h1>
       </div>
