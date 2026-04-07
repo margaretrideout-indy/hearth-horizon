@@ -14,6 +14,7 @@ import {
   BookOpen,
   Binoculars 
 } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
@@ -34,7 +35,7 @@ const NAV_GROUPS = [
     items: [
       { path: '/canopy', label: 'The Canopy', icon: Trees },
       { path: '/translator', label: 'The Linguistic Bridge', icon: ArrowLeftRight },
-    { path: '/gap-analyzer', label: 'Horizon Scan', icon: Binoculars },
+      { path: '/gap-analyzer', label: 'Horizon Scan', icon: Binoculars },
       { path: '/cultural-fit', label: 'Ecosystem Alignment', icon: Compass },
     ],
   },
