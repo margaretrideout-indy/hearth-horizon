@@ -1,104 +1,109 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
+  Home, 
+  Library, 
+  Shuffle, 
   Anchor, 
-  ArrowRightLeft, 
-  Wind, 
-  GitBranch, 
-  Home,
-  Library,
-  LayoutGrid
+  Layers, 
+  Compass, 
+  Zap,
+  Settings,
+  LogOut
 } from 'lucide-react';
 
 const Sidebar = () => {
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const overviewItems = [
-    { id: 'hearth', label: 'The Hearth', icon: Home, path: '/' },
-    { id: 'library', label: 'The Library', icon: Library, path: '/library' }
+  const navSections = [
+    {
+      title: "Navigation",
+      items: [
+        { name: 'THE HEARTH', path: '/hearth', icon: Home },
+        { name: 'THE LIBRARY', path: '/library', icon: Library },
+      ]
+    },
+    {
+      title: "Transition",
+      items: [
+        { name: 'LINGUISTIC BRIDGE', path: '/bridge', icon: Shuffle },
+        { 
+          name: 'THE ROOTWORK', 
+          path: '/audit', // UPDATED FROM /dashboard TO /audit
+          icon: Anchor 
+        },
+        { name: 'MYCELIUM MAP', path: '/mycelium', icon: Layers },
+      ]
+    },
+    {
+      title: "Intelligence",
+      items: [
+        { name: 'HORIZON SCAN', path: '/scan', icon: Compass },
+        { name: 'LABORATORY', path: '/lab', icon: Zap },
+      ]
+    }
   ];
-
-  const transitionItems = [
-    { id: 'rootwork', label: 'The Rootwork', icon: Anchor, path: '/rootwork' },
-    { id: 'bridge', label: 'Linguistic Bridge', icon: ArrowRightLeft, path: '/translator' },
-    { id: 'alignment', label: 'Ecosystem Alignment', icon: GitBranch, path: '/alignment' },
-    { id: 'canopy', label: 'The Canopy', icon: Wind, path: '/canopy' }
-  ];
-
-  const NavItem = ({ item }) => {
-    const isActive = location.pathname === item.path;
-    const Icon = item.icon;
-    
-    return (
-      <button
-        onClick={() => navigate(item.path)}
-        className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all group relative ${
-          isActive 
-          ? 'bg-teal-500/5 border border-teal-500/10' 
-          : 'hover:bg-white/[0.02] border border-transparent'
-        }`}
-      >
-        <Icon className={`w-4 h-4 transition-colors ${
-          isActive ? 'text-teal-400' : 'text-gray-600 group-hover:text-gray-400'
-        }`} />
-        
-        <span className={`text-[10px] font-black uppercase tracking-[0.15em] transition-colors ${
-          isActive ? 'text-teal-400' : 'text-gray-500 group-hover:text-gray-300'
-        }`}>
-          {item.label}
-        </span>
-
-        {isActive && (
-          <div className="absolute right-4 w-1.5 h-1.5 rounded-full bg-teal-400 shadow-[0_0_10px_rgba(45,212,191,0.8)]" />
-        )}
-      </button>
-    );
-  };
 
   return (
-    <div className="w-72 min-h-screen bg-[#1A1423] border-r border-white/5 p-8 flex flex-col fixed left-0 top-0 z-50">
-      
-      {/* BRANDING RESTORED */}
-      <div className="mb-12 flex items-center gap-4 px-2">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500/20 to-transparent border border-white/10 flex items-center justify-center shadow-inner">
-          <div className="text-teal-400 font-serif text-2xl font-bold">H</div>
+    <div className="fixed left-0 top-0 h-screen w-72 bg-[#140F1A] border-r border-white/5 flex flex-col p-8 z-50">
+      {/* Branding */}
+      <div className="mb-12 px-4">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#2DD4BF] to-[#2DD4BF]/20 flex items-center justify-center">
+            <Layers className="w-5 h-5 text-[#1A1423]" />
+          </div>
+          <span className="text-xl font-serif font-bold tracking-tight text-white">Vesta</span>
         </div>
-        <div className="flex flex-col">
-          <h2 className="text-white font-serif font-bold text-lg leading-tight tracking-tight">Hearth</h2>
-          <span className="text-[9px] text-gray-600 font-black uppercase tracking-[0.3em]">Horizon</span>
-        </div>
+        <p className="text-[8px] font-black uppercase tracking-[0.4em] text-gray-500">Identity Ecosystem</p>
       </div>
 
-      <nav className="space-y-10">
-        {/* OVERVIEW SECTION */}
-        <div>
-          <h3 className="text-[9px] font-black text-gray-700 uppercase tracking-[0.4em] mb-6 ml-5">Overview</h3>
-          <div className="space-y-1">
-            {overviewItems.map(item => <NavItem key={item.id} item={item} />)}
+      {/* Nav Groups */}
+      <nav className="flex-1 space-y-10">
+        {navSections.map((section, idx) => (
+          <div key={idx} className="space-y-4">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-600 px-4">
+              {section.title}
+            </h3>
+            <div className="space-y-1">
+              {section.items.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <button
+                    key={item.name}
+                    onClick={() => navigate(item.path)}
+                    className={`w-full flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 group ${
+                      isActive 
+                      ? 'bg-[#2DD4BF]/10 text-[#2DD4BF]' 
+                      : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <item.icon className={`w-4 h-4 transition-colors ${
+                      isActive ? 'text-[#2DD4BF] shadow-[0_0_10px_rgba(45,212,191,0.5)]' : 'text-gray-500 group-hover:text-gray-300'
+                    }`} />
+                    <span className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all ${
+                      isActive ? 'translate-x-1' : ''
+                    }`}>
+                      {item.name}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
-
-        {/* TRANSITION SECTION - NEW ORDER */}
-        <div>
-          <h3 className="text-[9px] font-black text-gray-700 uppercase tracking-[0.4em] mb-6 ml-5">Transition</h3>
-          <div className="space-y-1">
-            {transitionItems.map(item => <NavItem key={item.id} item={item} />)}
-          </div>
-        </div>
+        ))}
       </nav>
 
-      {/* FOOTER ANCHOR */}
-      <div className="mt-auto pt-10 border-t border-white/5">
-        <div className="bg-black/20 rounded-2xl p-5 border border-white/5">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-teal-500/40" />
-            <span className="text-[8px] font-black text-gray-600 uppercase tracking-widest">Legacy Verified</span>
-          </div>
-          <p className="text-[10px] text-gray-500 font-light italic leading-relaxed">
-            13 years of expertise as the raw data for your next chapter.
-          </p>
-        </div>
+      {/* Footer Nav */}
+      <div className="pt-8 mt-8 border-t border-white/5 space-y-2">
+        <button className="w-full flex items-center gap-4 px-4 py-3 rounded-2xl text-gray-500 hover:text-white transition-all">
+          <Settings className="w-4 h-4" />
+          <span className="text-[10px] font-black uppercase tracking-[0.2em]">Settings</span>
+        </button>
+        <button className="w-full flex items-center gap-4 px-4 py-3 rounded-2xl text-red-400/60 hover:text-red-400 transition-all">
+          <LogOut className="w-4 h-4" />
+          <span className="text-[10px] font-black uppercase tracking-[0.2em]">Log Out</span>
+        </button>
       </div>
     </div>
   );
