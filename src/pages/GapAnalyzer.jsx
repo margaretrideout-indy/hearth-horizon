@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Target, Loader2, Sparkles, Search, Flame } from 'lucide-react';
+import { Target, Loader2, Sparkles, Search, Flame, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -24,7 +24,7 @@ const ROLE_SUGGESTIONS = [
 const PAID_TIERS = ['Hearthkeeper', 'Steward', 'Patron'];
 const SEEDLING_MONTHLY_LIMIT = 2;
 
-export default function GapAnalyzer() {
+export default function HorizonScan() {
   const [dreamRole, setDreamRole] = useState('');
   const [currentSector, setCurrentSector] = useState('education');
   const [analysis, setAnalysis] = useState(null);
@@ -37,7 +37,6 @@ export default function GapAnalyzer() {
   const isPaid = PAID_TIERS.includes(userTier);
   const uploadCount = user?.seedling_upload_count || 0;
   const seedlingHasUploadsLeft = uploadCount < SEEDLING_MONTHLY_LIMIT;
-  // Paid users always have access; Seedlings have access if they haven't hit the limit
   const hasAccess = isPaid || seedlingHasUploadsLeft;
 
   const handleAnalyze = async () => {
@@ -119,9 +118,9 @@ For each skill, assess what level a ${currentSector} professional typically has 
           <Flame className="w-7 h-7 text-secondary" />
         </div>
         <div>
-          <h1 className="font-heading text-2xl font-semibold mb-2">The Bridge Builder</h1>
+          <h1 className="font-heading text-2xl font-semibold mb-2">The Horizon Scan</h1>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            The Bridge Builder's complex translation tools require a Hearthkeeper's flame to operate. Seedling tiers receive two complimentary bridge crossings (PDF uploads) per month. To continue building your bridge, please upgrade your tier.
+            The Horizon Scan's complex alignment tools require a Hearthkeeper's flame to operate. Seedling tiers receive two complimentary scans per month. To continue mapping your path, please upgrade your tier.
           </p>
         </div>
         <Button asChild className="gap-2">
@@ -138,7 +137,7 @@ For each skill, assess what level a ${currentSector} professional typically has 
         <AlertDialogHeader>
           <AlertDialogTitle>Hearthkeeper's flame required</AlertDialogTitle>
           <AlertDialogDescription>
-            The Bridge Builder requires a Hearthkeeper's flame to operate. Would you like to upgrade your tier?
+            The Horizon Scan requires a Hearthkeeper's flame to operate. Would you like to upgrade your tier?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -154,10 +153,10 @@ For each skill, assess what level a ${currentSector} professional typically has 
       {/* Header */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <Target className="w-4 h-4 text-secondary" />
-          <p className="text-sm text-secondary font-medium">Skill gap analysis</p>
+          <Zap className="w-4 h-4 text-secondary" />
+          <p className="text-sm text-secondary font-medium uppercase tracking-wider">Skill gap analysis</p>
         </div>
-        <h1 className="font-heading text-3xl font-bold text-foreground mb-2">The bridge builder</h1>
+        <h1 className="font-heading text-3xl font-bold text-foreground mb-2 italic">The Horizon Scan</h1>
         <p className="text-muted-foreground max-w-2xl">
           Analyse the path between your current roots and your new horizon.
         </p>
@@ -192,13 +191,13 @@ For each skill, assess what level a ${currentSector} professional typically has 
           </div>
           <Button onClick={handleAnalyze} disabled={!dreamRole.trim() || isAnalyzing} className="gap-2">
             {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-            Analyse
+            Initiate Scan
           </Button>
         </div>
 
         {/* Role suggestions */}
         <div className="mt-4">
-          <p className="text-xs text-muted-foreground mb-2">Popular transitions:</p>
+          <p className="text-xs text-muted-foreground mb-2 font-bold uppercase tracking-tighter">Popular transitions:</p>
           <div className="flex flex-wrap gap-2">
             {ROLE_SUGGESTIONS.slice(0, 6).map(role => (
               <button
@@ -215,9 +214,9 @@ For each skill, assess what level a ${currentSector} professional typically has 
 
       {/* Results */}
       {isAnalyzing && (
-        <Card className="p-12 rounded-2xl text-center">
+        <Card className="p-12 rounded-2xl text-center border-dashed border-2">
           <Loader2 className="w-8 h-8 animate-spin text-secondary mx-auto mb-4" />
-          <p className="font-heading font-semibold text-lg">Analysing your transition path...</p>
+          <p className="font-heading font-semibold text-lg">Scanning your career horizon...</p>
           <p className="text-sm text-muted-foreground mt-1">Mapping skills, certifications, and readiness</p>
         </Card>
       )}
@@ -227,7 +226,11 @@ For each skill, assess what level a ${currentSector} professional typically has 
       )}
 
       {/* Resume Upload */}
-      <Card className="p-6 rounded-2xl">
+      <Card className="p-6 rounded-2xl border-secondary/20">
+        <div className="mb-4">
+            <h3 className="font-heading font-semibold text-lg">Upload Legacy Resume</h3>
+            <p className="text-xs text-muted-foreground">Scan your current documents to surface embedded corporate language.</p>
+        </div>
         <ResumeUploader
           profileId={profile?.id}
           isPaid={isPaid}
@@ -236,20 +239,20 @@ For each skill, assess what level a ${currentSector} professional typically has 
         />
         {!isPaid && (
           <p className="text-xs text-muted-foreground mt-3">
-            {SEEDLING_MONTHLY_LIMIT - uploadCount} bridge crossing{SEEDLING_MONTHLY_LIMIT - uploadCount !== 1 ? 's' : ''} remaining this month.
+            {SEEDLING_MONTHLY_LIMIT - uploadCount} Horizon Scan{SEEDLING_MONTHLY_LIMIT - uploadCount !== 1 ? 's' : ''} remaining this month.
           </p>
         )}
       </Card>
 
       {/* Past Analyses */}
       {pastAnalyses.length > 0 && !analysis && (
-        <div>
-          <h2 className="font-heading font-semibold text-xl mb-4">Past analyses</h2>
+        <div className="pt-4">
+          <h2 className="font-heading font-semibold text-xl mb-4">Past scans</h2>
           <div className="grid gap-3">
             {pastAnalyses.map(a => (
               <Card
                 key={a.id}
-                className="p-4 rounded-xl cursor-pointer hover:shadow-md transition-shadow"
+                className="p-4 rounded-xl cursor-pointer hover:shadow-md transition-shadow border-white/5 bg-white/5"
                 onClick={() => setAnalysis(a)}
               >
                 <div className="flex items-center justify-between">
@@ -261,7 +264,7 @@ For each skill, assess what level a ${currentSector} professional typically has 
                   </div>
                   <div className="text-right">
                     <p className="text-2xl font-heading font-bold text-secondary">{a.readiness_score}%</p>
-                    <p className="text-xs text-muted-foreground">Readiness</p>
+                    <p className="text-xs text-muted-foreground uppercase font-bold tracking-tighter">Readiness</p>
                   </div>
                 </div>
               </Card>
