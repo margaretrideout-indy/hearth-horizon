@@ -24,20 +24,24 @@ import ForestGuide from './pages/ForestGuide';
 import HorizonSynthesis from './pages/HorizonSynthesis';
 
 const ProtectedRoute = ({ element }) => {
-  const { isAuthenticated, isLoadingAuth } = useAuth();
+  const { data: user, isLoading } = useQuery({ 
+    queryKey: ['me'], 
+    queryFn: () => base44.auth.me().catch(() => null),
+    retry: false
+  });
 
-  if (isLoadingAuth) {
+  if (isLoading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+      <div className="h-screen w-screen flex items-center justify-center bg-[#1C1622]">
+        <div className="animate-pulse text-orange-400 font-heading italic tracking-widest">
+          Loading the Hearth...
+        </div>
       </div>
     );
   }
 
-  if (!isAuthenticated) {
-    import('@/api/base44Client').then(m => {
-      m.base44.auth.redirectToLogin(window.location.href);
-    });
+  if (!user) {
+    base44.auth.redirectToLogin(window.location.href);
     return null;
   }
 
