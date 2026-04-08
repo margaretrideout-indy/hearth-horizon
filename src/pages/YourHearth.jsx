@@ -16,7 +16,7 @@ const YourHearth = () => {
     { icon: '🌊', label: 'FLUID' }, { icon: '🌙', label: 'REFLECTIVE' }
   ];
 
-  const teal = "#2DD4BF"; // Our chosen teal
+  const teal = "#2DD4BF"; 
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -39,8 +39,8 @@ const YourHearth = () => {
         {/* Main Entry Card */}
         <div className="bg-[#251D2F] rounded-[2rem] p-8 border border-white/5 shadow-2xl text-center relative overflow-hidden">
           
-          {/* Top Teal Bar */}
-          <div style={{ backgroundColor: teal, boxShadow: `0 0 20px ${teal}`, position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '120px', height: '4px' }} />
+          {/* Persistent Top Teal Bar */}
+          <div style={{ backgroundColor: teal, boxShadow: `0 0 20px ${teal}`, position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '120px', height: '4px', zIndex: 10 }} />
           
           <div style={{ backgroundColor: 'rgba(45, 212, 191, 0.1)', borderColor: 'rgba(45, 212, 191, 0.3)' }} className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-6 border">
             <Activity style={{ color: teal }} className="w-5 h-5" />
@@ -81,18 +81,17 @@ const YourHearth = () => {
               className="w-full bg-[#1A1423] border border-white/10 rounded-2xl p-6 text-slate-300 text-sm italic focus:outline-none min-h-[120px]"
             />
             
-            {/* The Hardcoded Teal Button */}
+            {/* THE ALWAYS-TEAL BUTTON */}
             <button
-              disabled={!selectedEmoji}
               type="submit"
               style={{ 
-                backgroundColor: selectedEmoji ? teal : '#334155', 
-                color: selectedEmoji ? '#1A1423' : '#94a3b8',
-                boxShadow: selectedEmoji ? `0 10px 25px ${teal}40` : 'none',
-                cursor: selectedEmoji ? 'pointer' : 'not-allowed',
-                opacity: selectedEmoji ? 1 : 0.6
+                backgroundColor: teal, 
+                color: '#1A1423',
+                boxShadow: `0 10px 25px ${teal}40`,
+                cursor: 'pointer',
+                opacity: selectedEmoji ? 1 : 0.7 
               }}
-              className="w-full py-4 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-2 transition-transform active:scale-95"
             >
               <Send className="w-4 h-4" /> LOG TO HEARTH
             </button>
