@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, Heart, Sprout, Flame, Shield, Award, Loader2 } from 'lucide-center';
+import { Check, Heart, Sprout, Flame, Shield, Award, Loader2 } from 'lucide-react';
 
 // Mapped Stripe Links
 const PAYMENT_LINKS = {
@@ -13,6 +13,7 @@ const GroveTiers = () => {
 
   const handleCheckout = (id, link) => {
     if (!link) {
+      // For Seedling/Free path
       console.log("Starting Free Path");
       return;
     }
