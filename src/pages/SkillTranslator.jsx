@@ -24,7 +24,6 @@ const LinguisticBridge = () => {
   };
 
   useEffect(() => {
-    // Pulling from the growth logs we created in Rootwork
     const saved = localStorage.getItem('rootwork_logs_v3');
     if (saved) setVaultData(JSON.parse(saved));
   }, []);
@@ -36,9 +35,12 @@ const LinguisticBridge = () => {
     const glossary = [
       { find: /teacher|instructor/g, replace: "SME (Subject Matter Expert)" },
       { find: /classroom|students/g, replace: "User Ecosystem" },
-      { find: /lesson plan|curriculum/g, replace: "Product Roadmap" },
-      { find: /grading|assessment/g, replace: "Performance Metrics" },
-      { find: /managed/g, replace: "Orchestrated" }
+      { find: /lesson plan|curriculum/g, replace: "Product Roadmap & Content Framework" },
+      { find: /grading|assessment/g, replace: "Performance Metrics & Data Validation" },
+      { find: /managed/g, replace: "Orchestrated" },
+      { find: /meetings|conferences/g, replace: "Stakeholder Alignment Sessions" },
+      { find: /teaching|instruction/g, replace: "Knowledge Transfer & Enablement" },
+      { find: /behavioral issues/g, replace: "Conflict Mitigation & Risk Management" }
     ];
 
     glossary.forEach(item => {
@@ -61,7 +63,6 @@ const LinguisticBridge = () => {
   return (
     <div className="min-h-screen bg-[#1A1423] p-6 md:p-12 text-slate-100 font-sans pb-32">
       
-      {/* HEADER & TOGGLE */}
       <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 max-w-7xl mx-auto">
         <div>
           <div className="flex items-center gap-2 mb-3 text-teal-400">
@@ -89,7 +90,6 @@ const LinguisticBridge = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 max-w-7xl mx-auto">
         
-        {/* LEFT PANEL: SOURCE SELECTION */}
         <div className="lg:col-span-5 space-y-4">
           <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-4 px-2 flex items-center gap-2">
             <Terminal className="w-3.5 h-3.5" /> Source Material
@@ -141,10 +141,8 @@ const LinguisticBridge = () => {
           )}
         </div>
 
-        {/* RIGHT PANEL: THE LABORATORY */}
         <div className="lg:col-span-7">
           <div className="bg-[#2D243A] border border-purple-500/10 rounded-[3rem] p-10 relative overflow-hidden shadow-2xl min-h-[500px]">
-            {/* Background Glow */}
             <div className="absolute -right-20 -top-20 opacity-[0.05] pointer-events-none text-teal-400">
                 <Zap className="w-96 h-96" />
             </div>
@@ -161,7 +159,6 @@ const LinguisticBridge = () => {
               </div>
 
               <div className="space-y-12 flex-grow">
-                {/* INPUT */}
                 <div className="relative pl-6">
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-slate-800 rounded-full" />
                   <label className="text-[9px] font-black text-slate-600 uppercase tracking-widest block mb-4">Legacy Syntax</label>
@@ -170,7 +167,6 @@ const LinguisticBridge = () => {
                   </div>
                 </div>
 
-                {/* OUTPUT */}
                 <div className="relative pl-6">
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-teal-500 rounded-full shadow-[0_0_15px_rgba(45,212,191,0.5)]" />
                   <label className="text-[9px] font-black text-teal-500 uppercase tracking-widest block mb-4">Optimized Capability</label>
