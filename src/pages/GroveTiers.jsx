@@ -1,11 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Sprout, TreePine, Heart, CheckCircle2 } from 'lucide-react';
+import { Sprout, TreePine, Heart, CheckCircle2, TabletSmartphone, X } from 'lucide-react';
 
 const GroveTiers = () => {
   const navigate = useNavigate();
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showBanner, setShowBanner] = useState(true);
   
+  // Listen for the install prompt on this page too
+  useEffect(() => {
+    const handler = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstall = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') setDeferredPrompt(null);
+  };
+
   const { data: user } = useQuery({ 
     queryKey: ['me'], 
     queryFn: () => window.base44.auth.me(),
@@ -64,8 +83,31 @@ const GroveTiers = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#1A1423] py-12 px-4 md:px-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#1A1423] pb-12">
+      {/* THE INSTALL BANNER */}
+      {deferredPrompt && showBanner && (
+        <div className="bg-[#251D2F] border-b border-white/10 px-6 py-3 flex items-center justify-between animate-in fade-in slide-in-from-top duration-500">
+          <button 
+            onClick={handleInstall}
+            className="flex items-center gap-3 text-slate-200 hover:text-teal-400 transition-colors group"
+          >
+            <div className="p-2 bg-white/5 rounded-lg group-hover:bg-teal-500/10">
+              <TabletSmartphone className="w-4 h-4 text-teal-400" />
+            </div>
+            <span className="text-xs font-bold tracking-wide">
+              📱 Take the Hearth with you. <span className="underline decoration-teal-500/50 underline-offset-4">Click here to add this app to your device.</span>
+            </span>
+          </button>
+          <button 
+            onClick={() => setShowBanner(false)}
+            className="p-2 text-slate-500 hover:text-white transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      <div className="max-w-7xl mx-auto px-4 md:px-8 pt-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {tiers.map((tier) => (
             <div 
