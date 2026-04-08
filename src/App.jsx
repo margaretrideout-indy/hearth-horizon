@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout, Activity } from 'lucide-react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthProvider } from '@/lib/AuthContext';
 
 import GroveTiers from './pages/GroveTiers';
 import LinguisticBridge from './pages/SkillTranslator';
@@ -8,6 +10,8 @@ import LibraryView from './pages/Library';
 import EmbersChat from './pages/EmbersChat';
 import CanopyView from './pages/Canopy';
 import YourHearth from './pages/YourHearth';
+
+const queryClient = new QueryClient();
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -76,21 +80,25 @@ const Navigation = () => {
 
 const App = () => {
   return (
-    <Router>
-      <div className="min-h-screen bg-[#1A1423]">
-        <Navigation />
-        <main className="pt-16">
-          <Routes>
-            <Route path="/" element={<GroveTiers />} />
-            <Route path="/hearth" element={<YourHearth />} />
-            <Route path="/bridge" element={<LinguisticBridge />} />
-            <Route path="/library" element={<LibraryView />} />
-            <Route path="/chat" element={<EmbersChat />} />
-            <Route path="/canopy" element={<CanopyView />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Router>
+          <div className="min-h-screen bg-[#1A1423]">
+            <Navigation />
+            <main className="pt-16">
+              <Routes>
+                <Route path="/" element={<GroveTiers />} />
+                <Route path="/hearth" element={<YourHearth />} />
+                <Route path="/bridge" element={<LinguisticBridge />} />
+                <Route path="/library" element={<LibraryView />} />
+                <Route path="/chat" element={<EmbersChat />} />
+                <Route path="/canopy" element={<CanopyView />} />
+              </Routes>
+            </main>
+          </div>
+        </Router>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 };
 
