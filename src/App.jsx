@@ -1,42 +1,102 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import Sidebar from './components/layout/Sidebar'; 
-import GroveTiers from './pages/GroveTiers';
-import Library from './pages/Library';
-import EmbersChat from './pages/EmbersChat';
-import Canopy from './pages/Canopy';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Menu, X, Home, TreePine, Bridge, Library, MessageSquare, Layout } from 'lucide-react';
 
-// This layout only applies to internal pages (Library, Chat, etc.)
-const AppLayout = () => (
-  <div className="flex min-h-screen bg-[#1A1423]">
-    {/* Sidebar is fixed/present ONLY for these routes */}
-    <Sidebar />
-    <main className="flex-1 md:ml-64 overflow-y-auto">
-      <Outlet /> 
-    </main>
-  </div>
-);
+// Import your components
+import GroveTiers from './components/GroveTiers';
+import LinguisticBridge from './components/LinguisticBridge';
+import LibraryView from './components/Library';
+import EmbersChat from './components/EmbersChat';
+import CanopyView from './components/Canopy';
 
-function App() {
+const Navigation = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
+  const navLinks = [
+    { name: 'The Grove', path: '/', icon: <TreePine className="w-4 h-4" /> },
+    { name: 'The Bridge', path: '/bridge', icon: <ArrowRightLeft className="w-4 h-4" /> },
+    { name: 'Library', path: '/library', icon: <Library className="w-4 h-4" /> },
+    { name: 'Embers Chat', path: '/chat', icon: <MessageSquare className="w-4 h-4" /> },
+    { name: 'Canopy', path: '/canopy', icon: <Layout className="w-4 h-4" /> },
+  ];
+
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1A1423]/80 backdrop-blur-md border-b border-white/5">
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center">
+            <TreePine className="text-[#1A1423] w-5 h-5" />
+          </div>
+          <span className="font-bold tracking-tighter text-slate-100">HEARTH HORIZON</span>
+        </div>
+
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-1">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                location.pathname === link.path 
+                ? 'bg-[#FF6B35] text-white' 
+                : 'text-slate-400 hover:text-teal-400 hover:bg-white/5'
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
+        </div>
+
+        {/* Mobile Toggle */}
+        <button className="md:hidden text-slate-100" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? <X /> : <Menu />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className="md:hidden bg-[#251D2F] border-b border-white/5 p-6 flex flex-col gap-4">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-3 text-xs font-bold text-slate-300 uppercase tracking-widest"
+            >
+              {link.icon} {link.name}
+            </Link>
+          ))}
+        </div>
+      )}
+    </nav>
+  );
+};
+
+const App = () => {
   return (
     <Router>
-      <Routes>
-        {/* GroveTiers is RENDERED ALONE - No Sidebar, Full Screen, App/Web Ready */}
-        <Route path="/" element={<GroveTiers />} />
-
-        {/* These routes will have the Sidebar */}
-        <Route element={<AppLayout />}>
-          <Route path="/library" element={<Library />} />
-          <Route path="/embers" element={<EmbersChat />} />
-          <Route path="/canopy" element={<Canopy />} />
-        </Route>
-
-        {/* Redirects */}
-        <Route path="/grove" element={<Navigate to="/" replace />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <div className="min-h-screen bg-[#1A1423]">
+        <Navigation />
+        
+        {/* Main Content Area */}
+        <main className="pt-16">
+          <Routes>
+            {/* The Grove is the default landing page */}
+            <Route path="/" element={<GroveTiers />} />
+            
+            {/* The Linguistic Bridge / Skill Translator */}
+            <Route path="/bridge" element={<LinguisticBridge />} />
+            
+            {/* Other Views */}
+            <Route path="/library" element={<LibraryView />} />
+            <Route path="/chat" element={<EmbersChat />} />
+            <Route path="/canopy" element={<CanopyView />} />
+          </Routes>
+        </main>
+      </div>
     </Router>
   );
-}
+};
 
 export default App;
