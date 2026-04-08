@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Flame, Leaf, Sprout, ArrowRight, Check, Info } from 'lucide-react';
+import { MapPin, Flame, Leaf, Sprout, ArrowRight, Check, Info, Heart } from 'lucide-react';
 
 const GroveTiers = () => {
   const navigate = useNavigate();
@@ -78,7 +78,7 @@ const GroveTiers = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 max-w-6xl mx-auto mb-8 md:mb-12">
         {tiers.map((tier) => (
           <div 
             key={tier.id}
@@ -101,7 +101,7 @@ const GroveTiers = () => {
                 <span className="text-[9px] md:text-[10px] font-bold text-teal-400 tracking-widest uppercase">{tier.unit}</span>
               </div>
               {tier.nextPrice && (
-                <div className="flex items-start gap-1.5 mt-1 text-slate-500 text-[9px] md:text-[10px] font-bold tracking-wider uppercase">
+                <div className="flex items-start gap-1.5 mt-1 text-slate-500 text-[9px] md:text-[10px] font-bold tracking-wider uppercase leading-tight">
                   <Info className="w-2.5 h-2.5 mt-0.5 shrink-0" />
                   <span>Standard {tier.nextPrice}/mo after month 1</span>
                 </div>
@@ -127,11 +127,7 @@ const GroveTiers = () => {
               type="button"
               onClick={(e) => handleCheckout(e, tier.id, tier.link)}
               disabled={loading !== null}
-              className={`w-full py-3 md:py-5 rounded-xl md:rounded-2xl font-black text-[9px] md:text-xs tracking-widest flex items-center justify-center gap-2 transition-all active:scale-95 ${
-                tier.highlight || tier.id === 'seedling'
-                ? 'bg-teal-600 hover:bg-teal-500 text-white shadow-lg shadow-teal-900/20'
-                : 'bg-[#2D2338] hover:bg-[#362b44] text-slate-100 border border-slate-700'
-              } uppercase disabled:opacity-50`}
+              className={`w-full py-3 md:py-5 rounded-xl md:rounded-2xl font-black text-[9px] md:text-xs tracking-widest flex items-center justify-center gap-2 transition-all active:scale-95 bg-teal-600 hover:bg-teal-500 text-white shadow-lg shadow-teal-900/20 uppercase disabled:opacity-50`}
             >
               {loading === tier.id ? 'WAITING...' : tier.buttonText}
               <ArrowRight className="w-3.5 h-3.5" />
@@ -140,14 +136,31 @@ const GroveTiers = () => {
         ))}
       </div>
 
-      <div className="mt-12 text-center pb-8">
-        <button 
-          onClick={() => window.open('https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02', '_blank')}
-          className="text-slate-500 hover:text-teal-400 transition-colors flex flex-col md:flex-row items-center justify-center gap-1 md:gap-2 mx-auto text-[9px] md:text-[10px] font-bold tracking-widest uppercase group"
-        >
-          <span>Want to simply plant a seed?</span>
-          <span className="underline italic group-hover:decoration-teal-400">Donate here.</span>
-        </button>
+      {/* PLANT A SEED - PROMINENT HORIZONTAL CARD */}
+      <div className="max-w-6xl mx-auto">
+        <div className="bg-[#241C2E]/50 border border-teal-500/20 rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 hover:border-teal-500/40 transition-all">
+          <div className="flex items-center gap-6 text-left w-full md:w-auto">
+            <div className="p-4 bg-[#1A1423] rounded-2xl hidden sm:block">
+              <Heart className="w-8 h-8 text-teal-400" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-bold text-teal-400 tracking-[0.2em] uppercase">Ethical Support</span>
+                <div className="h-px w-8 bg-teal-500/30"></div>
+              </div>
+              <h3 className="text-xl md:text-2xl font-bold text-slate-100">Plant a Seed</h3>
+              <p className="text-slate-400 text-sm italic">One-time contribution of your choice. No recurring fees.</p>
+            </div>
+          </div>
+          
+          <button 
+            onClick={() => window.open('https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02', '_blank')}
+            className="w-full md:w-auto px-10 py-4 bg-[#2D2338] hover:bg-[#362b44] border border-slate-700 text-slate-100 rounded-xl font-black text-[10px] tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-3 group"
+          >
+            Plant a Seed
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
       </div>
     </div>
   );
