@@ -45,7 +45,7 @@ const HorizonAudit = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#1A1423] p-8 md:p-12 text-slate-100 font-sans pb-32">
+    <div className="min-h-screen bg-[#1A1423] p-6 md:p-12 text-slate-100 font-sans pb-32">
       
       {/* HEADER SECTION */}
       <div className="mb-16 max-w-7xl mx-auto">
@@ -75,7 +75,7 @@ const HorizonAudit = () => {
                   key={state.id}
                   disabled={isSubmitting}
                   onClick={() => setSelectedEmoji(state.id)}
-                  className={`flex flex-col items-center gap-3 p-4 rounded-2xl border transition-all duration-300 transform ${
+                  className={`flex flex-col items-center gap-3 p-4 rounded-2xl border transition-all duration-200 transform active:scale-90 ${
                     selectedEmoji === state.id 
                     ? `bg-teal-400/10 border-teal-500/40 shadow-[0_0_25px_rgba(45,212,191,0.1)] scale-105` 
                     : 'bg-[#1A1423] border-white/5 hover:border-teal-500/20'
