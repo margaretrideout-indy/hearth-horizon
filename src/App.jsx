@@ -93,6 +93,7 @@ const App = () => {
                 <Route path="/library" element={<LibraryView />} />
                 <Route path="/chat" element={<EmbersChat />} />
                 <Route path="/canopy" element={<CanopyView />} />
+                <Route path="/success" element={<PaymentSuccess />} />
               </Routes>
             </main>
           </div>
