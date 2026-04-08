@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import Sidebar from './components/Sidebar'; 
+import Sidebar from './components/layout/Sidebar'; 
 import GroveTiers from './pages/GroveTiers';
 import Library from './pages/Library';
 import EmbersChat from './pages/EmbersChat';
