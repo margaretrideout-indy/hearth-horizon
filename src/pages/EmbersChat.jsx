@@ -37,7 +37,12 @@ export default function EmbersChat() {
   });
 
   useEffect(() => {
-    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }, [remotePosts]);
 
   const handleSend = async () => {
@@ -56,8 +61,10 @@ export default function EmbersChat() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#1A1423] rounded-[2.5rem] border border-white/5 overflow-hidden shadow-2xl relative">
+    <div className="flex flex-col h-[100dvh] md:h-full bg-[#1A1423] md:rounded-[2.5rem] md:border border-white/5 overflow-hidden shadow-2xl relative">
+      
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
+        {/* Static Welcome Group */}
         {FIXED_STARTERS.map((msg) => (
           <div key={msg.id} className="flex flex-col items-start opacity-90">
             <div className="flex items-center gap-2 mb-2 ml-1">
@@ -80,47 +87,61 @@ export default function EmbersChat() {
           <div className="flex-1 h-px bg-white" />
         </div>
 
+        {/* Dynamic Content */}
         <AnimatePresence initial={false}>
-          {remotePosts.map((msg) => {
-            const isOwn = msg.author_email === user?.email;
-            return (
-              <motion.div key={msg.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'}`}>
-                <div className="flex items-center gap-2 mb-2 px-1 text-[10px] text-slate-500 font-bold uppercase tracking-widest">
-                  {msg.author_name}
-                </div>
-                <div className={`max-w-[85%] p-4 rounded-2xl border transition-all ${isOwn ? 'bg-teal-600/10 border-teal-500/30 text-white' : 'bg-[#251D2F] border-white/5'}`}>
-                  <p className="text-slate-200 text-sm leading-relaxed">{msg.content}</p>
-                </div>
-                <span className="text-[9px] text-slate-700 mt-2 px-1 uppercase">
-                  {msg.created_date ? format(new Date(msg.created_date), 'h:mm a') : 'Now'}
-                </span>
-              </motion.div>
-            );
-          })}
+          {remotePosts.length === 0 && !isLoading ? (
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              className="py-12 text-center flex flex-col items-center gap-3"
+            >
+              <div className="w-10 h-10 rounded-full bg-white/[0.02] border border-white/5 flex items-center justify-center">
+                <Flame className="w-5 h-5 text-slate-600 animate-pulse" />
+              </div>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Waiting for the first spark...</p>
+            </motion.div>
+          ) : (
+            remotePosts.map((msg) => {
+              const isOwn = msg.author_email === user?.email;
+              return (
+                <motion.div key={msg.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'}`}>
+                  <div className="flex items-center gap-2 mb-2 px-1 text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+                    {msg.author_name}
+                  </div>
+                  <div className={`max-w-[85%] p-4 rounded-2xl border transition-all ${isOwn ? 'bg-teal-600/10 border-teal-500/30 text-white' : 'bg-[#251D2F] border-white/5'}`}>
+                    <p className="text-slate-200 text-sm leading-relaxed">{msg.content}</p>
+                  </div>
+                  <span className="text-[9px] text-slate-700 mt-2 px-1 uppercase">
+                    {msg.created_date ? format(new Date(msg.created_date), 'h:mm a') : 'Now'}
+                  </span>
+                </motion.div>
+              );
+            })
+          )}
         </AnimatePresence>
       </div>
 
-      <div className="p-6 bg-[#251D2F]/50 border-t border-white/5">
+      <div className="p-4 md:p-6 bg-[#251D2F]/80 backdrop-blur-xl border-t border-white/5">
         <div className="relative flex items-center gap-3">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Share something with the Hearth..."
-            className="w-full bg-[#1A1423] border border-white/10 rounded-2xl px-5 py-4 text-sm text-slate-200 focus:outline-none focus:border-teal-500/50 transition-all placeholder:text-slate-700"
+            placeholder="Share an ember..."
+            className="w-full bg-[#1A1423] border border-white/10 rounded-2xl px-5 py-4 text-sm text-slate-200 focus:outline-none focus:border-teal-500/50 transition-all placeholder:text-slate-800"
           />
           <button 
             onClick={handleSend} 
             disabled={!input.trim() || sending} 
-            className="bg-teal-600 hover:bg-teal-500 text-white p-4 rounded-2xl transition-all active:scale-95 disabled:opacity-50"
+            className="bg-teal-600 hover:bg-teal-500 text-white p-4 rounded-2xl transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-teal-900/20"
           >
             {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
           </button>
         </div>
         <div className="flex flex-col items-center mt-4 space-y-1">
-          <span className="text-[9px] text-slate-600 font-black uppercase tracking-[0.2em]">Sending to the Fire</span>
-          <p className="text-[8px] text-slate-700 italic">{TOS_TEXT}</p>
+          <span className="text-[9px] text-slate-600 font-black uppercase tracking-[0.2em]">Reciprocity is the fuel</span>
+          <p className="text-[8px] text-slate-700 italic text-center leading-tight max-w-[250px]">{TOS_TEXT}</p>
         </div>
       </div>
     </div>
