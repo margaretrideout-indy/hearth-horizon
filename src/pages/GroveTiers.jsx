@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Check, Heart, Sprout, Flame, Shield, Award, Loader2 } from 'lucide-react';
 
-// Live Stripe Links
 const PAYMENT_LINKS = {
-  HEARTHKEEPER: 'https://buy.stripe.com/eVq14n2Tm4TR4UcaG6dAk01',
-  STEWARD: 'https://buy.stripe.com/00w00jdy0gCz0DWaG6dAk00',
+  HEARTHKEEPER: 'https://buy.stripe.com/00w00jdy0gCz0DWaG6dAk00',
+  STEWARD: 'https://buy.stripe.com/eVq14n2Tm4TR4UcaG6dAk01',
   DONATION: 'https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02'
 };
 
@@ -12,7 +11,6 @@ const GroveTiers = () => {
   const [loading, setLoading] = useState(null);
 
   const handleCheckout = (e, id, link) => {
-    // This stops the app from trying to refresh or navigate internally
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -25,7 +23,6 @@ const GroveTiers = () => {
     
     setLoading(id);
 
-    // Hard redirect to Stripe
     try {
       window.location.href = link;
     } catch (err) {
