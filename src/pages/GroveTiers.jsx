@@ -65,10 +65,10 @@ const GroveTiers = () => {
   };
 
   return (
-    /* ADDED md:ml-64 TO PREVENT SIDEBAR OVERLAP */
-    <div className="min-h-screen bg-[#1A1423] py-8 md:py-16 px-4 md:ml-64 touch-manipulation">
+    /* REMOVED md:ml-64 so content fills the screen when sidebar is hidden */
+    <div className="min-h-screen bg-[#1A1423] py-8 md:py-16 px-4 touch-manipulation">
       <div className="max-w-4xl mx-auto text-center mb-8 md:mb-12">
-        <h1 className="text-2xl md:text-5xl font-bold text-slate-100 mb-2 tracking-tight">
+        <h1 className="text-3xl md:text-5xl font-bold text-slate-100 mb-2 tracking-tight">
           Cultivate Your Path
         </h1>
         <p className="text-slate-400 italic text-xs md:text-lg">
