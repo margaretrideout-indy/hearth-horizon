@@ -1,103 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --font-heading: 'Fraunces', serif;
-    --font-body: 'DM Sans', sans-serif;
-
-    --background: 280 22% 14%;
-    --foreground: 270 20% 92%;
-    --card: 280 20% 18%;
-    --card-foreground: 270 20% 92%;
-    --popover: 280 20% 18%;
-    --popover-foreground: 270 20% 92%;
-    --primary: 183 100% 24%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 183 80% 38%;
-    --secondary-foreground: 280 22% 10%;
-    --muted: 280 15% 22%;
-    --muted-foreground: 270 12% 60%;
-    --accent: 183 40% 28%;
-    --accent-foreground: 270 20% 92%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 280 15% 26%;
-    --input: 280 15% 26%;
-    --ring: 183 80% 38%;
-    --chart-1: 183 80% 38%;
-    --chart-2: 280 22% 50%;
-    --chart-3: 35 85% 65%;
-    --chart-4: 190 60% 50%;
-    --chart-5: 300 30% 55%;
-    --radius: 0.75rem;
-    --sidebar-background: 280 25% 10%;
-    --sidebar-foreground: 270 15% 80%;
-    --sidebar-primary: 183 80% 38%;
-    --sidebar-primary-foreground: 280 22% 10%;
-    --sidebar-accent: 280 20% 18%;
-    --sidebar-accent-foreground: 270 20% 92%;
-    --sidebar-border: 280 18% 20%;
-    --sidebar-ring: 183 80% 38%;
-
-    --sage: 183 80% 38%;
-    --sage-light: 183 40% 20%;
-    --navy: 280 22% 14%;
-    --navy-light: 280 18% 22%;
-    --warm: 35 85% 65%;
-  }
-
-  .dark {
-    --background: 280 22% 10%;
-    --foreground: 270 20% 92%;
-    --card: 280 20% 14%;
-    --card-foreground: 270 20% 92%;
-    --popover: 280 20% 14%;
-    --popover-foreground: 270 20% 92%;
-    --primary: 183 100% 24%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 183 80% 38%;
-    --secondary-foreground: 280 22% 10%;
-    --muted: 280 15% 18%;
-    --muted-foreground: 270 12% 55%;
-    --accent: 183 40% 22%;
-    --accent-foreground: 270 20% 92%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 280 15% 22%;
-    --input: 280 15% 22%;
-    --ring: 183 80% 38%;
-    --chart-1: 183 80% 38%;
-    --chart-2: 280 22% 50%;
-    --chart-3: 35 85% 65%;
-    --chart-4: 190 60% 50%;
-    --chart-5: 300 30% 55%;
-    --sidebar-background: 280 28% 8%;
-    --sidebar-foreground: 270 15% 80%;
-    --sidebar-primary: 183 80% 38%;
-    --sidebar-primary-foreground: 280 22% 10%;
-    --sidebar-accent: 280 20% 15%;
-    --sidebar-accent-foreground: 270 20% 92%;
-    --sidebar-border: 280 18% 16%;
-    --sidebar-ring: 183 80% 38%;
-
-    --sage: 183 80% 38%;
-    --sage-light: 183 40% 16%;
-    --navy: 280 22% 10%;
-    --navy-light: 280 18% 18%;
-    --warm: 35 85% 65%;
-  }
+:root {
+  background-color: #1A1423;
+  color-scheme: dark;
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  body {
-    @apply bg-background text-foreground font-body;
-  }
+/* Custom Embers Scrollbar */
+.embers-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+.embers-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.embers-scroll::-webkit-scrollbar-thumb {
+  background: #2D243A;
+  border-radius: 10px;
+}
+
+.embers-scroll::-webkit-scrollbar-thumb:hover {
+  background: #2DD4BF;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Global Transition Defaults */
+.transition-all {
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
