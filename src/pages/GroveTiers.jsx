@@ -1,8 +1,19 @@
-import React from 'react';
-import { Check, Sprout, Flame, Shield } from 'lucide-react';
+import React, { useState } from 'react';
+import { Check, Sprout, Flame, Shield, Heart } from 'lucide-react';
 
 const GroveTiers = () => {
+  const [donation, setDonation] = useState('');
+
   const tiers = [
+    {
+      name: "Plant a Seed",
+      icon: <Heart className="w-6 h-6 text-[#2DD4BF]" />,
+      price: "DONATE",
+      subtext: "One-time contribution",
+      description: "Support the ecosystem with a custom amount. Every bit helps the grove grow.",
+      features: ["Community gratitude", "Supporter badge in Embers", "General ecosystem updates"],
+      isDonation: true
+    },
     {
       name: "Seedling",
       icon: <Sprout className="w-6 h-6 text-[#2DD4BF]" />,
@@ -31,18 +42,20 @@ const GroveTiers = () => {
   ];
 
   return (
-    <div className="p-8 max-w-6xl mx-auto text-white">
+    <div className="p-8 max-w-7xl mx-auto text-white">
       <div className="mb-12">
-        <h1 className="text-3xl font-black tracking-tighter mb-2 italic">THE GROVE</h1>
-        <p className="text-gray-400 uppercase text-[10px] tracking-widest font-bold">Choose your growth path</p>
+        <h1 className="text-3xl font-black tracking-tighter mb-2 italic text-white">THE GROVE</h1>
+        <p className="text-gray-400 uppercase text-[10px] tracking-widest font-bold">Cultivate your path</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         {tiers.map((tier) => (
           <div 
             key={tier.name}
-            className={`relative p-8 rounded-3xl border transition-all duration-300 ${
-              tier.highlight ? 'border-[#2DD4BF] bg-white/5 shadow-[0_0_30px_rgba(45,212,191,0.1)]' : 'border-white/10 bg-[#1A1423]'
+            className={`relative p-8 rounded-3xl border transition-all duration-300 flex flex-col ${
+              tier.highlight 
+                ? 'border-[#2DD4BF] bg-[#2A1F3D] shadow-[0_0_30px_rgba(45,212,191,0.1)]' 
+                : 'border-white/10 bg-[#1A1423]'
             }`}
           >
             {tier.highlight && (
@@ -52,20 +65,35 @@ const GroveTiers = () => {
             )}
             
             <div className="mb-6">{tier.icon}</div>
-            <h3 className="text-xl font-bold mb-1 uppercase tracking-tight">{tier.name}</h3>
+            <h3 className="text-xl font-bold mb-1 uppercase tracking-tight text-white">{tier.name}</h3>
             
             <div className="flex flex-col mb-4">
                 <span className="text-3xl font-black text-[#2DD4BF]">{tier.price}</span>
-                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">{tier.subtext}</span>
+                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{tier.subtext}</span>
             </div>
             
-            <p className="text-sm text-gray-400 mb-8 leading-relaxed italic">{tier.description}</p>
+            {tier.isDonation ? (
+              <div className="mb-6">
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                  <input 
+                    type="number" 
+                    placeholder="0.00"
+                    value={donation}
+                    onChange={(e) => setDonation(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-8 pr-4 text-white text-sm focus:outline-none focus:border-[#2DD4BF] transition-colors"
+                  />
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-gray-400 mb-8 leading-relaxed italic">{tier.description}</p>
+            )}
             
-            <ul className="space-y-4 mb-8">
+            <ul className="space-y-4 mb-8 flex-1">
               {tier.features.map((feature) => (
-                <li key={feature} className="flex items-center gap-3 text-sm text-gray-300">
-                  <Check className="w-4 h-4 text-[#2DD4BF]" />
-                  <span className="text-[11px] font-medium uppercase tracking-tighter">{feature}</span>
+                <li key={feature} className="flex items-start gap-3 text-sm text-gray-300">
+                  <Check className="w-4 h-4 text-[#2DD4BF] mt-0.5 flex-shrink-0" />
+                  <span className="text-[11px] font-medium uppercase tracking-tighter leading-tight">{feature}</span>
                 </li>
               ))}
             </ul>
@@ -75,7 +103,7 @@ const GroveTiers = () => {
                 ? 'bg-[#2DD4BF] text-[#1A1423] hover:scale-[1.02] shadow-[0_0_15px_rgba(45,212,191,0.3)]' 
                 : 'border border-white/20 text-white hover:bg-white/5'
             }`}>
-              Begin {tier.name} Path
+              {tier.isDonation ? 'Plant Seed' : `Begin ${tier.name} Path`}
             </button>
           </div>
         ))}
