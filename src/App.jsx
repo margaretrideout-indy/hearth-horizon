@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout, Activity, Compass } from 'lucide-react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { AuthProvider } from '@/lib/AuthContext';
 import PaymentSuccess from './pages/PaymentSuccess';
 import GroveTiers from './pages/GroveTiers';
@@ -18,15 +18,32 @@ const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  const navLinks = [
-    { name: 'The Grove', path: '/', icon: <TreePine className="w-4 h-4" /> },
-    { name: 'Your Hearth', path: '/hearth', icon: <Activity className="w-4 h-4" /> },
-    { name: 'The Bridge', path: '/bridge', icon: <ArrowRightLeft className="w-4 h-4" /> },
-    { name: 'Alignment', path: '/alignment', icon: <Compass className="w-4 h-4" /> }, 
-    { name: 'Library', path: '/library', icon: <Library className="w-4 h-4" /> },
-    { name: 'Embers Chat', path: '/chat', icon: <MessageSquare className="w-4 h-4" /> },
-    { name: 'The Canopy', path: '/canopy', icon: <Layout className="w-4 h-4" /> }, 
+  const { data: user } = useQuery({ 
+    queryKey: ['me'], 
+    queryFn: () => window.base44.auth.me(),
+    retry: false 
+  });
+
+  const tier = user?.subscription_tier;
+
+  const allLinks = [
+    { name: 'The Grove', path: '/', icon: <TreePine className="w-4 h-4" />, public: true },
+    { name: 'Library', path: '/library', icon: <Library className="w-4 h-4" />, public: true },
+    { name: 'Your Hearth', path: '/hearth', icon: <Activity className="w-4 h-4" />, member: true },
+    { name: 'The Bridge', path: '/bridge', icon: <ArrowRightLeft className="w-4 h-4" />, member: true },
+    { name: 'Alignment', path: '/alignment', icon: <Compass className="w-4 h-4" />, steward: true },
+    { name: 'Embers Chat', path: '/chat', icon: <MessageSquare className="w-4 h-4" />, member: true },
+    { name: 'The Canopy', path: '/canopy', icon: <Layout className="w-4 h-4" />, public: true },
   ];
+
+  const navLinks = allLinks.filter(link => {
+    if (link.public) return true;
+    if (!user) return false;
+    if (link.steward) return tier === 'Steward' || tier === 'Sponsor';
+    if (link.member) return tier === 'Hearthkeeper' || tier === 'Steward' || tier === 'Sponsor';
+    return false;
+  });
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1A1423]/80 backdrop-blur-md border-b border-white/5">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
