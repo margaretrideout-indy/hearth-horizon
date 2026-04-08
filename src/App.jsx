@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout, Activity, Compass } from 'lucide-react';
+import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout, Activity, Compass, Download } from 'lucide-react';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { AuthProvider } from '@/lib/AuthContext';
 import PaymentSuccess from './pages/PaymentSuccess';
@@ -16,7 +16,23 @@ const queryClient = new QueryClient();
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
   const location = useLocation();
+
+  useEffect(() => {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    });
+  }, []);
+
+  const handleInstall = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') setDeferredPrompt(null);
+    }
+  };
 
   const { data: user } = useQuery({ 
     queryKey: ['me'], 
@@ -45,10 +61,10 @@ const Navigation = () => {
   });
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1A1423]/80 backdrop-blur-md border-b border-white/5">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1A1423]/90 border-b border-white/5">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center shadow-[0_0_15px_rgba(45,212,191,0.3)]">
+          <div className="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center">
             <TreePine className="text-[#1A1423] w-5 h-5" />
           </div>
           <span className="font-bold tracking-tighter text-slate-100 uppercase text-sm">Hearth Horizon</span>
@@ -60,33 +76,24 @@ const Navigation = () => {
               key={link.path}
               to={link.path}
               className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                location.pathname === link.path 
-                ? 'bg-[#FF6B35] text-white shadow-lg shadow-orange-900/20' 
-                : 'text-slate-400 hover:text-teal-400 hover:bg-white/5'
+                location.pathname === link.path ? 'text-teal-400 bg-white/5' : 'text-slate-400 hover:text-teal-400'
               }`}
             >
-              <div className="flex items-center gap-2">
-                {link.icon}
-                {link.name}
-              </div>
+              <div className="flex items-center gap-2">{link.icon}{link.name}</div>
             </Link>
           ))}
+          {deferredPrompt && (
+            <button onClick={handleInstall} className="ml-2 p-2 text-teal-400 hover:bg-teal-400/10 rounded-lg" title="Install App">
+              <Download className="w-4 h-4" />
+            </button>
+          )}
         </div>
-
-        <button className="md:hidden text-slate-100" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <X /> : <Menu />}
-        </button>
+        <button className="md:hidden text-slate-100" onClick={() => setIsOpen(!isOpen)}>{isOpen ? <X /> : <Menu />}</button>
       </div>
-
       {isOpen && (
-        <div className="md:hidden bg-[#251D2F] border-b border-white/5 p-6 flex flex-col gap-4">
+        <div className="md:hidden bg-[#251D2F] p-6 flex flex-col gap-4 border-b border-white/5">
           {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 text-xs font-bold text-slate-300 uppercase tracking-widest px-4 py-3 rounded-xl hover:bg-white/5"
-            >
+            <Link key={link.path} to={link.path} onClick={() => setIsOpen(false)} className="flex items-center gap-3 text-xs font-bold text-slate-300 uppercase px-4 py-3 rounded-xl hover:bg-white/5">
               {link.icon} {link.name}
             </Link>
           ))}
