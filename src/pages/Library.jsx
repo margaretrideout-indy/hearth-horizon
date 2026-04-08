@@ -1,144 +1,111 @@
 import React from 'react';
-import { Book, Sparkles, FileText, ShoppingBag, ExternalLink, GraduationCap, PenTool } from 'lucide-react';
+import { ExternalLink, Sparkles, Book, Box, Briefcase } from 'lucide-react';
 
-const PARTNERS = [
-  {
-    category: "The Digital Workshop",
-    items: [
-      {
-        title: "Teal Career Tracker",
-        desc: "An AI-powered resume builder and job tracker that keeps your pivot organized.",
-        btn: "Explore Teal",
-        icon: Sparkles,
-        link: "#"
-      },
-      {
-        title: "Jobscan ATS Match",
-        desc: "Compare your 'Linguistic Bridge' results against real job descriptions to ensure you pass the filters.",
-        btn: "Check Your Score",
-        icon: FileText,
-        link: "#"
-      }
-    ]
-  },
-  {
-    category: "Professional Growth",
-    items: [
-      {
-        title: "Coursera Certifications",
-        desc: "Bridge specific skill gaps with recognized certificates in Project Management or Data.",
-        btn: "View Courses",
-        icon: GraduationCap,
-        link: "#"
-      },
-      {
-        title: "Creative Market Templates",
-        desc: "High-aesthetic resume and portfolio templates for a modern tech look.",
-        btn: "Browse Designs",
-        icon: PenTool,
-        link: "#"
-      }
-    ]
-  }
-];
+const Library = () => {
+  const provisions = [
+    {
+      title: "Teal Career Tracker",
+      category: "THE DIGITAL WORKSHOP",
+      desc: "An AI-powered resume builder and job tracker that keeps your pivot organized.",
+      link: "https://www.tealhq.com",
+      icon: <Sparkles className="w-5 h-5 text-teal-400" />
+    },
+    {
+      title: "Jobscan ATS Match",
+      category: "THE DIGITAL WORKSHOP",
+      desc: "Compare your 'Linguistic Bridge' results against real job descriptions to ensure you pass the filters.",
+      link: "https://www.jobscan.co",
+      icon: <Box className="w-5 h-5 text-teal-400" />
+    }
+  ];
 
-const THE_STUDY = [
-  {
-    title: "Bookshop.org List",
-    desc: "Support local bookstores while building your professional library.",
-    icon: Book,
-    link: "#"
-  },
-  {
-    title: "Amazon Essentials",
-    desc: "A curated list of favorite hardware, ergonomic tools, and quick-ship resources.",
-    icon: ShoppingBag,
-    link: "#"
-  }
-];
-
-export default function Library() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12 space-y-16 min-h-screen">
-      <div className="space-y-6 border-b border-gray-800 pb-10">
-        <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-white font-heading italic">The Library & Provisions</h1>
-          <p className="text-gray-400 text-lg max-w-2xl leading-relaxed">
-            Curated tools and blueprints to support your transition.
-            <span className="block mt-2 text-sm italic text-teal-500/80 font-medium">
-              Transparently vetted by 13 years of leadership experience.
-            </span>
-          </p>
-        </div>
+    <div className="flex-1 p-6 md:p-10 bg-[#1A1423] min-h-screen font-sans">
+      {/* Header Section */}
+      <header className="max-w-6xl mx-auto mb-12">
+        <h1 className="text-4xl font-extrabold text-slate-100 italic tracking-tight mb-2">
+          The Library & Provisions
+        </h1>
+        <p className="text-slate-400 text-lg mb-4">
+          Curated tools and blueprints to support your transition.
+        </p>
+        <p className="text-teal-400 font-medium italic text-sm">
+          Transparently vetted by 13 years of leadership experience.
+        </p>
+      </header>
 
-        <div className="p-4 rounded-lg bg-teal-500/5 border border-teal-500/20 max-w-3xl">
-          <p className="text-xs text-gray-300 leading-relaxed">
-            <strong className="text-teal-400 font-bold tracking-wider uppercase mr-2">A Note on Reciprocity:</strong>
-            I only recommend provisions I have personally used or verified. Some links below are affiliate links — at no cost to you — that help keep the Linguistic Bridge free for all educators in transition.
+      {/* Reciprocity Note with Founder Glow */}
+      <div className="max-w-6xl mx-auto mb-16">
+        <div className="bg-[#2D243A] border border-purple-500/30 rounded-xl p-6 shadow-[0_0_20px_rgba(168,85,247,0.08)]">
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles className="w-4 h-4 text-purple-400" />
+            <h2 className="text-xs font-bold text-teal-400 uppercase tracking-widest">
+              A Note on Reciprocity
+            </h2>
+          </div>
+          <p className="text-slate-300 text-sm leading-relaxed max-w-4xl">
+            I only recommend provisions I have personally used or verified. Some links below are affiliate links — at no cost to you — that help keep the <span className="text-teal-400 font-semibold">Linguistic Bridge</span> free for all educators in transition.
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <div className="lg:col-span-2 space-y-12">
-          {PARTNERS.map((section, idx) => (
-            <div key={idx} className="space-y-6">
-              <h2 className="text-xs uppercase tracking-widest font-bold text-teal-500">{section.category}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {section.items.map((item, i) => (
-                  <div key={i} className="p-6 rounded-xl bg-[#2D2438]/40 border border-gray-800 hover:border-teal-500/50 transition-all flex flex-col justify-between group">
-                    <div className="space-y-4">
-                      <div className="p-2 w-fit rounded-lg bg-teal-500/10 text-teal-500">
-                        <item.icon className="w-5 h-5" />
-                      </div>
-                      <h3 className="font-bold text-white text-lg">{item.title}</h3>
-                      <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
-                    </div>
-                    <a
-                      href={item.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-6 flex items-center justify-center gap-2 py-2 px-4 rounded-md border border-teal-500/30 text-teal-400 text-sm font-bold hover:bg-teal-500/10 transition-colors"
-                    >
-                      {item.btn} <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="space-y-6">
-          <h2 className="text-xs uppercase tracking-widest font-bold text-yellow-500">The Study</h2>
-          <div className="space-y-4">
-            {THE_STUDY.map((shelf, i) => (
-              <div key={i} className="p-6 rounded-xl bg-[#1C1622] border border-gray-800 hover:border-yellow-500/50 transition-all">
-                <div className="space-y-4">
-                  <div className="p-3 w-fit rounded-full bg-yellow-500/10 text-yellow-500">
-                    <shelf.icon className="w-6 h-6" />
-                  </div>
-                  <h3 className="font-bold text-white">{shelf.title}</h3>
-                  <p className="text-sm text-gray-400 leading-relaxed">{shelf.desc}</p>
-                  <a
-                    href={shelf.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 py-2 px-4 rounded-md bg-yellow-600 hover:bg-yellow-500 text-white text-sm font-bold transition-colors"
-                  >
-                    View List <ExternalLink className="w-3 h-3" />
-                  </a>
+      {/* Grid Layout */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10">
+        
+        {/* Left Columns: Digital Workshop */}
+        <div className="lg:col-span-2">
+          <h3 className="text-xs font-bold text-teal-500 uppercase tracking-[0.2em] mb-6">The Digital Workshop</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {provisions.map((item, idx) => (
+              <div key={idx} className="bg-[#251D2F] border border-white/5 rounded-2xl p-8 hover:border-teal-500/30 hover:bg-[#2D243A] transition-all group">
+                <div className="mb-6 p-3 bg-[#1A1423] rounded-xl w-fit group-hover:scale-110 transition-transform">
+                  {item.icon}
                 </div>
+                <h4 className="text-xl font-bold text-slate-100 mb-3">{item.title}</h4>
+                <p className="text-slate-400 text-sm mb-8 leading-relaxed italic">{item.desc}</p>
+                <a 
+                  href={item.link} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="w-full flex items-center justify-center gap-2 py-3 border border-teal-500/20 rounded-lg text-teal-400 font-bold text-xs uppercase tracking-widest hover:bg-teal-500 hover:text-slate-100 transition-all active:scale-95"
+                >
+                  Explore {item.title.split(' ')[0]} <ExternalLink className="w-3 h-3" />
+                </a>
               </div>
             ))}
           </div>
-          <div className="p-4 rounded-lg bg-white/5 border border-dashed border-gray-800 mt-8">
-            <p className="text-[10px] text-gray-500 text-center leading-tight uppercase tracking-widest">
-              Every provision supports the Hearth.
+        </div>
+
+        {/* Right Column: The Study */}
+        <div className="lg:col-span-1">
+          <h3 className="text-xs font-bold text-amber-500 uppercase tracking-[0.2em] mb-6">The Study</h3>
+          <div className="bg-[#251D2F] border border-white/5 rounded-2xl p-8 hover:border-amber-500/30 transition-all">
+            <div className="mb-6 p-3 bg-amber-500/10 rounded-xl w-fit text-amber-500">
+              <Book className="w-6 h-6" />
+            </div>
+            <h4 className="text-xl font-bold text-slate-100 mb-3">Bookshop.org List</h4>
+            <p className="text-slate-400 text-sm mb-8 leading-relaxed">
+              Support local bookstores while building your professional library with my top-rated career transition reads.
             </p>
+            <button className="w-full py-4 bg-amber-600 text-[#1A1423] font-bold rounded-lg hover:bg-amber-500 transition-all flex items-center justify-center gap-2 active:scale-95">
+              View List <ExternalLink className="w-4 h-4" />
+            </button>
+          </div>
+          
+          <div className="mt-6 bg-[#251D2F] border border-white/5 rounded-2xl p-6 flex items-center gap-4 hover:border-orange-500/30 transition-all group">
+            <div className="p-3 bg-orange-500/10 rounded-lg text-orange-500 group-hover:rotate-12 transition-transform">
+              <Box className="w-5 h-5" />
+            </div>
+            <div className="flex-1">
+              <h5 className="text-slate-100 font-bold text-sm uppercase tracking-wide">Amazon Essentials</h5>
+            </div>
+            <ExternalLink className="w-4 h-4 text-slate-600" />
           </div>
         </div>
+
       </div>
     </div>
   );
-}
+};
+
+export default Library;
