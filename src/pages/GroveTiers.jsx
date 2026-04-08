@@ -8,7 +8,6 @@ const GroveTiers = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showBanner, setShowBanner] = useState(true);
   
-  // Listen for the install prompt on this page too
   useEffect(() => {
     const handler = (e) => {
       e.preventDefault();
@@ -84,18 +83,19 @@ const GroveTiers = () => {
 
   return (
     <div className="min-h-screen bg-[#1A1423] pb-12">
-      {/* THE INSTALL BANNER */}
       {deferredPrompt && showBanner && (
         <div className="bg-[#251D2F] border-b border-white/10 px-6 py-3 flex items-center justify-between animate-in fade-in slide-in-from-top duration-500">
           <button 
             onClick={handleInstall}
-            className="flex items-center gap-3 text-slate-200 hover:text-teal-400 transition-colors group"
+            className="flex items-center gap-3 text-slate-200 hover:text-teal-400 transition-colors group text-left"
           >
             <div className="p-2 bg-white/5 rounded-lg group-hover:bg-teal-500/10">
               <TabletSmartphone className="w-4 h-4 text-teal-400" />
             </div>
             <span className="text-xs font-bold tracking-wide">
-              📱 Take the Hearth with you. <span className="underline decoration-teal-500/50 underline-offset-4">Click here to add this app to your device.</span>
+              📱 Take the Hearth with you. 
+              <span className="hidden md:inline"> Click here to install.</span>
+              <span className="md:hidden ml-1"> Tap 'Share' then 'Add to Home Screen' on iPhone.</span>
             </span>
           </button>
           <button 
