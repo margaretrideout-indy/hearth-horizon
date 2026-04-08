@@ -5,13 +5,12 @@ import {
 } from 'lucide-react';
 
 const LinguisticBridge = () => {
-  const [viewMode, setViewMode] = useState('vault'); // 'vault' or 'jargon'
+  const [viewMode, setViewMode] = useState('vault'); 
   const [vaultData, setVaultData] = useState({});
   const [activeTranslation, setActiveTranslation] = useState(null);
   const [isCopied, setIsCopied] = useState(false);
   const [jargonInput, setJargonInput] = useState('');
 
-  // Jargon-to-Value Dictionary
   const jargonLibrary = {
     "differentiated instruction": "User-Centric Personalization & Adaptive Strategy",
     "classroom management": "Operational Orchestration & Conflict Resolution",
@@ -25,6 +24,7 @@ const LinguisticBridge = () => {
   };
 
   useEffect(() => {
+    // Pulling from the growth logs we created in Rootwork
     const saved = localStorage.getItem('rootwork_logs_v3');
     if (saved) setVaultData(JSON.parse(saved));
   }, []);
@@ -49,7 +49,7 @@ const LinguisticBridge = () => {
 
   const getJargonValue = (input) => {
     const key = input.toLowerCase().trim();
-    return jargonLibrary[key] || "No direct match in the current syntax library. Try 'Curriculum Design' or 'Lesson Planning'.";
+    return jargonLibrary[key] || "No direct match found. Try 'Curriculum Design'.";
   };
 
   const copyToClipboard = (text) => {
@@ -59,71 +59,81 @@ const LinguisticBridge = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1A1423] p-6 md:p-10 text-white font-sans pb-32">
+    <div className="min-h-screen bg-[#1A1423] p-6 md:p-12 text-slate-100 font-sans pb-32">
       
       {/* HEADER & TOGGLE */}
-      <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8 max-w-7xl mx-auto">
         <div>
-          <div className="flex items-center gap-2 mb-2 text-teal-400">
-            <ArrowRightLeft className="w-4 h-4" />
-            <span className="text-[9px] font-black uppercase tracking-[0.3em]">The Bridge</span>
+          <div className="flex items-center gap-2 mb-3 text-teal-400">
+            <ArrowRightLeft className="w-4 h-4 shadow-[0_0_10px_rgba(45,212,191,0.3)]" />
+            <span className="text-[9px] font-black uppercase tracking-[0.4em]">The Bridge</span>
           </div>
-          <h1 className="text-3xl font-serif font-bold tracking-tight text-white">Semantic Translator</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold italic tracking-tight text-slate-100">Semantic Translator</h1>
         </div>
 
-        <div className="flex bg-black/30 p-1.5 rounded-2xl border border-white/5 shadow-inner">
+        <div className="flex bg-[#251D2F] p-1.5 rounded-2xl border border-white/5 shadow-xl">
           <button 
             onClick={() => setViewMode('vault')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'vault' ? 'bg-[#FF6B35] text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all active:scale-95 ${viewMode === 'vault' ? 'bg-[#FF6B35] text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
           >
             <Repeat className="w-3.5 h-3.5" /> Vault Transformer
           </button>
           <button 
             onClick={() => setViewMode('jargon')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === 'jargon' ? 'bg-[#FF6B35] text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all active:scale-95 ${viewMode === 'jargon' ? 'bg-[#FF6B35] text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
           >
             <BookOpen className="w-3.5 h-3.5" /> Jargon Engine
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 max-w-7xl mx-auto">
         
-        {/* LEFT PANEL: INPUT SOURCE */}
+        {/* LEFT PANEL: SOURCE SELECTION */}
         <div className="lg:col-span-5 space-y-4">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-4 px-2 flex items-center gap-2">
+            <Terminal className="w-3.5 h-3.5" /> Source Material
+          </h2>
+          
           {viewMode === 'vault' ? (
-            <>
-              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600 mb-4 flex items-center gap-2">
-                <Terminal className="w-3.5 h-3.5" /> Source Material (The Vault)
-              </h2>
-              {Object.entries(vaultData).map(([key, value]) => value && (
-                <button 
-                  key={key}
-                  onClick={() => setActiveTranslation({ key, value })}
-                  className={`w-full text-left p-6 rounded-2xl border transition-all group ${activeTranslation?.key === key ? 'bg-white/[0.05] border-teal-500/30' : 'bg-white/[0.02] border-white/5'}`}
-                >
-                  <span className="text-[9px] font-bold text-teal-400/40 uppercase tracking-widest mb-2 block">{key}</span>
-                  <p className="text-xs text-gray-400 font-light italic line-clamp-2 leading-relaxed">"{value}"</p>
-                </button>
-              ))}
-            </>
+            <div className="space-y-3">
+              {Object.keys(vaultData).length > 0 ? (
+                Object.entries(vaultData).map(([key, value]) => value && (
+                  <button 
+                    key={key}
+                    onClick={() => setActiveTranslation({ key, value })}
+                    className={`w-full text-left p-6 rounded-2xl border transition-all active:scale-[0.98] group ${activeTranslation?.key === key ? 'bg-[#2D243A] border-teal-500/40 shadow-lg' : 'bg-[#251D2F] border-white/5 hover:border-teal-500/20'}`}
+                  >
+                    <span className="text-[9px] font-bold text-teal-400 uppercase tracking-[0.2em] mb-2 block">{key}</span>
+                    <p className="text-xs text-slate-400 font-light italic line-clamp-2 leading-relaxed group-hover:text-slate-200 transition-colors">"{value}"</p>
+                  </button>
+                ))
+              ) : (
+                <div className="p-8 rounded-2xl border border-dashed border-white/10 text-center">
+                  <p className="text-[10px] text-slate-600 uppercase font-bold tracking-widest">No Logs Found in Rootwork</p>
+                </div>
+              )}
+            </div>
           ) : (
-            <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8">
-              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600 mb-6 flex items-center gap-2">
-                <Search className="w-3.5 h-3.5" /> Jargon Lookup
-              </h2>
+            <div className="bg-[#251D2F] border border-white/5 rounded-[2rem] p-8 shadow-2xl">
               <input 
                 type="text"
                 value={jargonInput}
                 onChange={(e) => setJargonInput(e.target.value)}
                 placeholder="Ex: Differentiated Instruction..."
-                className="w-full bg-black/40 border border-white/10 rounded-xl p-4 text-sm text-gray-300 focus:outline-none focus:border-teal-500/30 transition-all mb-4"
+                className="w-full bg-[#1A1423] border border-white/10 rounded-xl p-5 text-sm text-slate-200 focus:outline-none focus:border-teal-500/30 transition-all mb-6 placeholder:text-slate-700"
               />
-              <div className="space-y-2 opacity-40">
-                <p className="text-[9px] font-bold text-gray-500 uppercase">Popular Terms:</p>
+              <div className="space-y-3">
+                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest ml-1">Quick Links:</p>
                 <div className="flex flex-wrap gap-2">
-                  {Object.keys(jargonLibrary).slice(0, 4).map(k => (
-                    <button key={k} onClick={() => setJargonInput(k)} className="text-[9px] bg-white/5 px-2 py-1 rounded hover:bg-white/10">{k}</button>
+                  {Object.keys(jargonLibrary).slice(0, 5).map(k => (
+                    <button 
+                      key={k} 
+                      onClick={() => setJargonInput(k)} 
+                      className="text-[9px] font-bold bg-[#1A1423] text-slate-500 border border-white/5 px-3 py-2 rounded-lg hover:text-teal-400 hover:border-teal-500/30 transition-all uppercase tracking-tighter"
+                    >
+                      {k}
+                    </button>
                   ))}
                 </div>
               </div>
@@ -131,64 +141,66 @@ const LinguisticBridge = () => {
           )}
         </div>
 
-        {/* RIGHT PANEL: THE TRANSLATOR */}
+        {/* RIGHT PANEL: THE LABORATORY */}
         <div className="lg:col-span-7">
-          <div className="bg-white/[0.03] border border-white/5 rounded-[2.5rem] p-10 relative overflow-hidden">
-            <div className="absolute -right-20 -top-20 opacity-[0.02] pointer-events-none">
-                <Zap className="w-80 h-80" />
+          <div className="bg-[#2D243A] border border-purple-500/10 rounded-[3rem] p-10 relative overflow-hidden shadow-2xl min-h-[500px]">
+            {/* Background Glow */}
+            <div className="absolute -right-20 -top-20 opacity-[0.05] pointer-events-none text-teal-400">
+                <Zap className="w-96 h-96" />
             </div>
 
-            <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-10">
-                    <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center">
-                        <Sparkles className="w-6 h-6 text-teal-400 shadow-[0_0_15px_rgba(45,212,191,0.3)]" />
-                    </div>
-                    <div>
-                        <h3 className="text-xl font-bold tracking-tight">Translation Laboratory</h3>
-                        <p className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.3em]">Semantic Power: High</p>
-                    </div>
+            <div className="relative z-10 h-full flex flex-col">
+              <div className="flex items-center gap-4 mb-12">
+                <div className="w-14 h-14 rounded-2xl bg-[#1A1423] border border-teal-500/20 flex items-center justify-center shadow-lg">
+                  <Sparkles className="w-7 h-7 text-teal-400" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-extrabold italic text-slate-100">The Lab</h3>
+                  <p className="text-[9px] font-black text-teal-500/60 uppercase tracking-[0.3em]">Processing Logic: Active</p>
+                </div>
+              </div>
+
+              <div className="space-y-12 flex-grow">
+                {/* INPUT */}
+                <div className="relative pl-6">
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-slate-800 rounded-full" />
+                  <label className="text-[9px] font-black text-slate-600 uppercase tracking-widest block mb-4">Legacy Syntax</label>
+                  <div className="bg-[#1A1423] border border-white/5 rounded-2xl p-6 text-sm text-slate-500 font-light italic min-h-[80px]">
+                    {viewMode === 'vault' ? (activeTranslation?.value || "Select a phrase to transform...") : (jargonInput || "Waiting for education jargon...")}
+                  </div>
                 </div>
 
-                <div className="space-y-12">
-                    {/* INPUT SECTION */}
-                    <div className="relative">
-                        <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-gray-800 to-transparent rounded-full" />
-                        <label className="text-[9px] font-black text-gray-600 uppercase tracking-widest block mb-4 ml-2">Legacy Context</label>
-                        <div className="bg-black/20 border border-white/5 rounded-2xl p-6 text-sm text-gray-500 font-light italic">
-                            {viewMode === 'vault' ? (activeTranslation?.value || "Select a Vault entry...") : (jargonInput || "Enter education jargon...")}
-                        </div>
+                {/* OUTPUT */}
+                <div className="relative pl-6">
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-teal-500 rounded-full shadow-[0_0_15px_rgba(45,212,191,0.5)]" />
+                  <label className="text-[9px] font-black text-teal-500 uppercase tracking-widest block mb-4">Optimized Capability</label>
+                  <div className="bg-[#1A1423]/60 border border-teal-500/20 rounded-[2rem] p-8 transition-all">
+                    <p className="text-2xl font-bold italic text-slate-100 leading-snug mb-8">
+                      {viewMode === 'vault' ? translate(activeTranslation?.value) : getJargonValue(jargonInput)}
+                    </p>
+                    
+                    <div className="flex flex-wrap items-center justify-between gap-6 pt-8 border-t border-white/5">
+                      <div className="flex gap-2">
+                        <span className="text-[8px] font-black bg-teal-500/10 text-teal-400 px-3 py-1 rounded-full uppercase tracking-widest border border-teal-500/20">SME-Vetted</span>
+                        <span className="text-[8px] font-black bg-purple-500/10 text-purple-400 px-3 py-1 rounded-full uppercase tracking-widest border border-purple-500/20">Scalable</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-4">
+                        <button 
+                          onClick={() => copyToClipboard(viewMode === 'vault' ? translate(activeTranslation?.value) : getJargonValue(jargonInput))}
+                          className="flex items-center gap-2 text-[10px] font-black text-slate-500 hover:text-teal-400 transition-colors uppercase tracking-widest active:scale-95"
+                        >
+                          {isCopied ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                          {isCopied ? "Synced" : "Copy"}
+                        </button>
+                        <button className="flex items-center gap-3 bg-[#FF6B35] px-6 py-4 rounded-xl text-[10px] font-black text-white uppercase tracking-widest hover:bg-[#ff8255] transition-all active:scale-95 shadow-lg shadow-orange-900/20">
+                          <Save className="w-4 h-4" /> Save to Resume
+                        </button>
+                      </div>
                     </div>
-
-                    {/* OUTPUT SECTION */}
-                    <div className="relative">
-                        <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-teal-500 to-transparent rounded-full shadow-[0_0_10px_rgba(45,212,191,0.5)]" />
-                        <label className="text-[9px] font-black text-teal-500 uppercase tracking-widest block mb-4 ml-2">Tech-Speak Result</label>
-                        <div className="bg-teal-500/[0.04] border border-teal-500/20 rounded-3xl p-8 transition-all">
-                            <p className="text-xl font-medium text-white leading-relaxed mb-8">
-                                {viewMode === 'vault' ? translate(activeTranslation?.value) : getJargonValue(jargonInput)}
-                            </p>
-                            
-                            <div className="flex items-center justify-between pt-8 border-t border-teal-500/10">
-                                <div className="flex gap-2">
-                                    <span className="text-[9px] font-bold bg-teal-500/10 text-teal-400 px-3 py-1 rounded-lg uppercase tracking-widest">#SME</span>
-                                    <span className="text-[9px] font-bold bg-teal-500/10 text-teal-400 px-3 py-1 rounded-lg uppercase tracking-widest">#Product</span>
-                                </div>
-                                <div className="flex gap-4">
-                                    <button 
-                                      onClick={() => copyToClipboard(viewMode === 'vault' ? translate(activeTranslation?.value) : getJargonValue(jargonInput))}
-                                      className="flex items-center gap-2 text-[10px] font-bold text-gray-400 hover:text-white transition-colors uppercase tracking-widest"
-                                    >
-                                        {isCopied ? <CheckCircle2 className="w-3.5 h-3.5 text-teal-400" /> : <Copy className="w-3.5 h-3.5" />}
-                                        {isCopied ? "Copied" : "Copy Syntax"}
-                                    </button>
-                                    <button className="flex items-center gap-2 bg-[#FF6B35] px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] transition-all">
-                                        <Save className="w-3.5 h-3.5" /> Save to Resume
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
           </div>
         </div>
