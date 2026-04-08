@@ -5,10 +5,45 @@ const GroveTiers = () => {
   const [donation, setDonation] = useState('');
 
   const tiers = [
-    { name: "Plant a Seed", price: "Donate", sub: "One-time", icon: <Heart size={20} />, desc: "Support the ecosystem.", features: ["Community gratitude", "Supporter badge"], isDonation: true },
-    { name: "Seedling", price: "Free", sub: "Always free", icon: <Sprout size={20} />, desc: "Start your journey.", features: ["Basic Library", "Rootwork Audit"] },
-    { name: "Hearthkeeper", price: "$3", sub: "First mo, then $5", icon: <Flame size={20} />, desc: "Keep the sanctuary open.", features: ["Linguistic Bridge", "Unlimited Uploads"], highlight: true },
-    { name: "Steward", price: "$5", sub: "First mo, then $8", icon: <Shield size={20} />, desc: "Sponsor a peer in transition.", features: ["Reciprocity model", "Full alignment"], highlight: true }
+    { 
+      name: "Plant a Seed", 
+      price: "Donate", 
+      sub: "One-time", 
+      icon: <Heart size={20} />, 
+      desc: "Support the ecosystem.", 
+      features: ["Community gratitude", "Supporter badge"], 
+      isDonation: true,
+      buttonText: "Plant Seed"
+    },
+    { 
+      name: "Seedling", 
+      price: "Free", 
+      sub: "Always free", 
+      icon: <Sprout size={20} />, 
+      desc: "Start your journey.", 
+      features: ["Basic Library", "Rootwork Audit"],
+      buttonText: "Tend the fire" 
+    },
+    { 
+      name: "Hearthkeeper", 
+      price: "$3", 
+      sub: "First mo, then $5", 
+      icon: <Flame size={20} />, 
+      desc: "Keep the sanctuary open.", 
+      features: ["Linguistic Bridge", "Unlimited Uploads"], 
+      highlight: true,
+      buttonText: "Tend the fire" 
+    },
+    { 
+      name: "Steward", 
+      price: "$5", 
+      sub: "First mo, then $8", 
+      icon: <Shield size={20} />, 
+      desc: "Sponsor a peer in transition.", 
+      features: ["Reciprocity model", "Full alignment"], 
+      highlight: true,
+      buttonText: "Tend the fire" 
+    }
   ];
 
   return (
@@ -29,7 +64,13 @@ const GroveTiers = () => {
             </div>
 
             {tier.isDonation ? (
-              <input type="number" placeholder="$ 0.00" value={donation} onChange={(e) => setDonation(e.target.value)} className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white text-sm mb-6 focus:border-[#0D9488] outline-none" />
+              <input 
+                type="number" 
+                placeholder="$ 0.00" 
+                value={donation} 
+                onChange={(e) => setDonation(e.target.value)} 
+                className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white text-sm mb-6 focus:border-[#0D9488] outline-none" 
+              />
             ) : <p className="text-sm text-gray-400 mb-8 italic leading-relaxed">{tier.desc}</p>}
 
             <ul className="space-y-4 mb-8 flex-1">
@@ -40,8 +81,9 @@ const GroveTiers = () => {
               ))}
             </ul>
 
-            <button className={`w-full py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest transition-all ${tier.highlight ? 'bg-[#0D9488] text-white shadow-lg shadow-[#0D9488]/10' : 'bg-white/5 text-gray-300 hover:bg-white/10'}`}>
-              {tier.isDonation ? 'Plant Seed' : 'Tend the fire'}
+            {/* UNIFIED TEAL BUTTONS */}
+            <button className="w-full py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest transition-all bg-[#0D9488] text-white shadow-lg shadow-[#0D9488]/10 hover:bg-[#0D9488]/80">
+              {tier.buttonText}
             </button>
           </div>
         ))}
