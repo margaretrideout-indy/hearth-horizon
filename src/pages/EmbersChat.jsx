@@ -38,12 +38,20 @@ export default function EmbersChat() {
 
   const purgeDatabase = async () => {
     if (!window.confirm("Clear all real messages from the database?")) return;
-    const all = await base44.entities.EmberPost.list();
-    for (const post of all) {
-      await base44.entities.EmberPost.delete(post.id);
+    try {
+      console.log("Starting deep purge...");
+      const all = await base44.entities.EmberPost.list();
+      console.log(`Found ${all.length} posts to delete.`);
+      for (const post of all) {
+        await base44.entities.EmberPost.delete(post.id);
+        console.log(`Deleted: ${post.id}`);
+      }
+      await queryClient.invalidateQueries({ queryKey: ['emberPosts'] });
+      alert("Fire cleared! Now remove this purge code block.");
+    } catch (err) {
+      console.error("Purge failed:", err);
+      alert("Delete failed. Are you signed in?");
     }
-    queryClient.invalidateQueries({ queryKey: ['emberPosts'] });
-    alert("Fire cleared! Now remove the Purge Button code.");
   };
 
   useEffect(() => {
@@ -69,7 +77,7 @@ export default function EmbersChat() {
     <div className="flex flex-col h-full bg-[#1A1423] rounded-[2.5rem] border border-white/5 overflow-hidden shadow-2xl relative">
       <button 
         onClick={purgeDatabase}
-        className="absolute top-4 right-4 z-50 bg-red-900/40 hover:bg-red-600 text-[9px] text-white px-3 py-1 rounded-full border border-red-500/50 flex items-center gap-2 transition-all"
+        className="absolute top-4 right-4 z-50 bg-red-900/40 hover:bg-red-600 text-[9px] text-white px-3 py-1 rounded-full border border-red-500/50 flex items-center gap-2"
       >
         <Trash2 className="w-3 h-3" /> PURGE DATABASE
       </button>
@@ -125,7 +133,7 @@ export default function EmbersChat() {
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Share something with the Hearth..."
-            className="w-full bg-[#1A1423] border border-white/10 rounded-2xl px-5 py-4 text-sm text-slate-200 focus:outline-none focus:border-teal-500/50 transition-all placeholder:text-slate-700"
+            className="w-full bg-[#1A1423] border border-white/10 rounded-2xl px-5 py-4 text-sm text-slate-200 focus:outline-none focus:border-teal-500/50 placeholder:text-slate-700"
           />
           <button 
             onClick={handleSend} 
