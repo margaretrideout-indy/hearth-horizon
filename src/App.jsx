@@ -66,7 +66,7 @@ const Navigation = () => {
           <div className="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center shadow-[0_0_15px_rgba(45,212,191,0.3)]">
             <TreePine className="text-[#1A1423] w-5 h-5" />
           </div>
-          <span className="font-bold tracking-tighter text-slate-100 uppercase text-sm">Hearth Horizon</span>
+          <span className="font-bold tracking-tighter text-slate-100 uppercase text-sm">Hearth and Horizon</span>
         </div>
 
         <div className="hidden md:flex items-center gap-1">
