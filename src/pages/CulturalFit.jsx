@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { 
   Compass, ShieldCheck, SearchCode, 
   ArrowRight, Zap, Target, AlertTriangle, 
@@ -14,12 +15,17 @@ const EcosystemAlignment = () => {
   const [selectedEthics, setSelectedEthics] = useState([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
+  // 1. THE STEWARD GATEKEEPER
+  const { data: user, isLoading } = useQuery({ 
+    queryKey: ['me'], 
+    queryFn: () => window.base44.auth.me() 
+  });
+
   useEffect(() => {
     const saved = localStorage.getItem('alignment_ethics_v1');
     if (saved) setSelectedEthics(JSON.parse(saved));
   }, []);
 
-  // Trigger simulated analysis when jobText changes
   useEffect(() => {
     if (jobText.length > 10) {
       setIsAnalyzing(true);
@@ -30,6 +36,37 @@ const EcosystemAlignment = () => {
     }
   }, [jobText]);
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#1A1423] flex flex-col items-center justify-center text-teal-500">
+        <Sparkles className="w-8 h-8 animate-pulse mb-4" />
+        <span className="text-[10px] font-black uppercase tracking-[0.4em]">Reading the stars...</span>
+      </div>
+    );
+  }
+
+  if (user?.subscription_tier !== 'Steward' && user?.subscription_tier !== 'Hearthkeeper') {
+    return (
+      <div className="min-h-screen bg-[#1A1423] flex flex-col items-center justify-center p-6 text-center">
+        <div className="w-16 h-16 rounded-full bg-orange-500/10 flex items-center justify-center mb-6">
+          <ShieldAlert className="text-orange-500 w-8 h-8" />
+        </div>
+        <h2 className="text-2xl font-serif text-white mb-4">This path is reserved for Stewards.</h2>
+        <p className="text-slate-400 mb-8 max-w-md text-sm leading-relaxed">
+          The Ecosystem Alignment tool and Culture Stress-Test are part of the Steward membership. 
+          Upgrade in The Grove to unlock full access.
+        </p>
+        <Link 
+          to="/" 
+          className="px-8 py-4 bg-teal-500 text-[#1A1423] font-black uppercase text-[10px] tracking-widest rounded-xl hover:bg-teal-400 transition-all"
+        >
+          Visit The Grove
+        </Link>
+      </div>
+    );
+  }
+
+  // 2. LOGIC FUNCTIONS
   const toggleEthic = (id) => {
     const updated = selectedEthics.includes(id) 
       ? selectedEthics.filter(e => e !== id) 
@@ -51,13 +88,12 @@ ${selectedEthics.map(id => `- ${ethicsOptions.find(e => e.id === id)?.label}`).j
 - Vibe: ${sectors[0].vibe}
 
 03. CULTURAL STRESS TEST SUMMARY
-- Compatibility: High alignment with ${getEthicLabel(0)}
-- Friction Alert: Review required for ${getEthicLabel(selectedEthics.length - 1)}
+- Compatibility: High alignment detected.
+- Friction Alert: Boundary review suggested.
 
 -----------------------------------------
-This report is a digital artifact of the Hearth Ecosystem.
+Artifact of the Hearth Ecosystem.
     `;
-
     const blob = new Blob([reportContent], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -77,8 +113,7 @@ This report is a digital artifact of the Hearth Ecosystem.
   const sectors = [
     { name: 'EdTech / Learning Platforms', match: 95, vibe: 'Growth-focused, mission-driven', tags: ['High Autonomy', 'Mission Alignment'] },
     { name: 'Language Data / AI Training', match: 82, vibe: 'Highly technical, iterative', tags: ['Async Heavy', 'Data-Driven'] },
-    { name: 'Public Sector Innovation', match: 74, vibe: 'Stable, high-impact, slower pace', tags: ['Stable', 'Community Impact'] },
-    { name: 'Early-Stage SaaS', match: 45, vibe: 'High-risk, intense hours', tags: ['Fast-Paced', 'Equity-Heavy'] }
+    { name: 'Public Sector Innovation', match: 74, vibe: 'Stable, high-impact', tags: ['Stable', 'Community Impact'] }
   ];
 
   const steps = [
@@ -96,7 +131,6 @@ This report is a digital artifact of the Hearth Ecosystem.
   return (
     <div className="min-h-screen bg-[#1A1423] p-6 md:p-10 text-white font-sans pb-32">
       
-      {/* HEADER */}
       <div className="mb-10">
         <div className="flex items-center gap-2 mb-2 text-teal-400">
           <Target className="w-4 h-4 shadow-[0_0_10px_rgba(45,212,191,0.3)]" />
@@ -105,7 +139,6 @@ This report is a digital artifact of the Hearth Ecosystem.
         <h1 className="text-3xl font-serif font-bold tracking-tight text-white">Ecosystem Alignment</h1>
       </div>
 
-      {/* STEP PROGRESS TRACKER */}
       <div className="flex justify-between mb-16 max-w-2xl mx-auto relative pt-4">
         <div className="absolute top-[2.25rem] left-0 w-full h-[1px] bg-white/5 -z-10" />
         {steps.map((s, idx) => (
@@ -131,15 +164,12 @@ This report is a digital artifact of the Hearth Ecosystem.
       </div>
 
       <div className="max-w-6xl mx-auto">
-        
-        {/* STEP 1: COMPASS */}
         {activeTab === 'compass' && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
               <div className="lg:col-span-7 bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-10">
                 <h3 className="text-xl font-bold mb-2 text-white">The Ethics Compass</h3>
                 <p className="text-xs text-gray-500 mb-8 font-light italic">Define your operational non-negotiables.</p>
-                
                 <div className="space-y-3">
                   {ethicsOptions.map(option => (
                     <button 
@@ -148,7 +178,7 @@ This report is a digital artifact of the Hearth Ecosystem.
                       className={`w-full flex items-center justify-between p-5 rounded-2xl border transition-all duration-300 ${selectedEthics.includes(option.id) ? 'bg-teal-500/10 border-teal-500/30 shadow-[0_0_15px_rgba(45,212,191,0.05)]' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
                     >
                       <div className="flex items-center gap-4">
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${selectedEthics.includes(option.id) ? 'bg-teal-400 text-black shadow-[0_0_10px_rgba(45,212,191,0.5)]' : 'bg-white/5 text-gray-600'}`}>
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${selectedEthics.includes(option.id) ? 'bg-teal-400 text-black' : 'bg-white/5 text-gray-600'}`}>
                           <option.icon className="w-4 h-4" />
                         </div>
                         <span className={`text-[11px] font-bold uppercase tracking-widest ${selectedEthics.includes(option.id) ? 'text-white' : 'text-gray-500'}`}>{option.label}</span>
@@ -162,11 +192,10 @@ This report is a digital artifact of the Hearth Ecosystem.
                 "Your ethics aren't just values—they're constraints that protect your focus."
               </div>
             </div>
-            
             <div className="flex justify-center">
               <button 
                 onClick={() => setActiveTab('scout')}
-                className={`flex items-center gap-4 px-10 py-5 rounded-full bg-[#FF6B35] text-white text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:scale-105 active:scale-95 shadow-xl shadow-orange-500/20 ${selectedEthics.length === 0 ? 'opacity-50 grayscale cursor-not-allowed' : ''}`}
+                className={`flex items-center gap-4 px-10 py-5 rounded-full bg-[#FF6B35] text-white text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:scale-105 ${selectedEthics.length === 0 ? 'opacity-50 grayscale cursor-not-allowed' : ''}`}
                 disabled={selectedEthics.length === 0}
               >
                 Continue to Sector Scouting <ArrowRight className="w-4 h-4" />
@@ -175,15 +204,11 @@ This report is a digital artifact of the Hearth Ecosystem.
           </div>
         )}
 
-        {/* STEP 2: SCOUTING */}
         {activeTab === 'scout' && (
           <div className="animate-in fade-in duration-700 space-y-8">
             <div className="grid grid-cols-1 gap-4">
               {sectors.map(sector => (
-                <div 
-                  key={sector.name} 
-                  className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 flex flex-col md:flex-row md:items-center justify-between group hover:bg-white/[0.04] hover:border-teal-500/40 transition-all duration-500 cursor-default"
-                >
+                <div key={sector.name} className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 flex flex-col md:flex-row md:items-center justify-between group hover:bg-white/[0.04] transition-all duration-500">
                   <div className="flex items-center gap-8 mb-4 md:mb-0">
                     <div className="relative">
                       <svg className="w-16 h-16 transform -rotate-90">
@@ -195,43 +220,24 @@ This report is a digital artifact of the Hearth Ecosystem.
                     <div>
                       <h4 className="text-base font-bold text-white mb-1 group-hover:text-teal-400 transition-colors">{sector.name}</h4>
                       <p className="text-xs text-gray-500 italic mb-3">{sector.vibe}</p>
-                      <div className="flex gap-2">
-                        {sector.tags.map(tag => (
-                          <span key={tag} className="text-[8px] font-bold bg-white/5 text-gray-400 px-2 py-1 rounded border border-white/5 uppercase tracking-tighter">{tag}</span>
-                        ))}
-                      </div>
                     </div>
                   </div>
-                  <button onClick={() => navigate('/canopy')} className="text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-[#FF6B35] transition-colors flex items-center gap-2 group/btn">
-                    Explore Market <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
+                  <button onClick={() => navigate('/canopy')} className="text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-[#FF6B35] transition-colors flex items-center gap-2">
+                    Explore Market <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
               ))}
             </div>
-
             <div className="flex justify-center pt-4">
-              <button 
-                onClick={() => setActiveTab('translator')}
-                className="flex items-center gap-4 px-10 py-5 rounded-full bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:bg-white/10 hover:border-teal-500/40"
-              >
+              <button onClick={() => setActiveTab('translator')} className="flex items-center gap-4 px-10 py-5 rounded-full bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.3em] transition-all">
                 Proceed to Stress Test <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
         )}
 
-        {/* STEP 3: TRANSLATOR */}
         {activeTab === 'translator' && (
           <div className="animate-in zoom-in-95 duration-700 lg:px-20">
-            {selectedEthics.length === 0 && (
-              <div className="mb-8 flex items-center gap-4 p-5 bg-orange-500/5 border border-orange-500/20 rounded-2xl">
-                <Info className="w-5 h-5 text-orange-400" />
-                <p className="text-[10px] font-bold text-orange-200 uppercase tracking-widest leading-relaxed">
-                  No Ethics detected. <button onClick={() => setActiveTab('compass')} className="underline">Define your Compass</button> in Step 01 to begin.
-                </p>
-              </div>
-            )}
-
             <div className={`bg-white/[0.03] border border-white/5 rounded-[3rem] p-12 relative overflow-hidden transition-all duration-500 ${selectedEthics.length === 0 ? 'opacity-30 grayscale pointer-events-none' : 'opacity-100'}`}>
               <div className="relative z-10">
                 <div className="flex items-center gap-4 mb-10">
@@ -243,25 +249,21 @@ This report is a digital artifact of the Hearth Ecosystem.
                     <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Stress-Testing Job Narrative</p>
                   </div>
                 </div>
-
                 <textarea 
                   value={jobText}
                   onChange={(e) => setJobText(e.target.value)}
                   placeholder="Paste a job description or company values statement here..."
-                  className="w-full h-56 bg-black/40 border border-white/5 rounded-3xl p-8 text-sm text-gray-300 focus:outline-none focus:border-orange-500/20 transition-all mb-8 font-light shadow-inner resize-none"
+                  className="w-full h-56 bg-black/40 border border-white/5 rounded-3xl p-8 text-sm text-gray-300 focus:outline-none focus:border-orange-500/20 transition-all mb-8 font-light resize-none shadow-inner"
                 />
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
                   {isAnalyzing && (
-                    <div className="absolute inset-0 z-30 flex items-center justify-center bg-[#1A1423]/90 backdrop-blur-md rounded-[2.5rem] animate-in fade-in duration-300">
+                    <div className="absolute inset-0 z-30 flex items-center justify-center bg-[#1A1423]/90 backdrop-blur-md rounded-[2.5rem]">
                       <div className="flex flex-col items-center gap-4 text-center">
                         <Binary className="w-10 h-10 text-teal-400 animate-pulse" />
                         <p className="text-[10px] font-black text-white uppercase tracking-[0.4em]">Scanning Cultural Syntax</p>
                       </div>
                     </div>
                   )}
-
-                  {/* SIGNALS */}
                   <div className="bg-teal-500/[0.03] border border-teal-500/10 rounded-[2rem] p-8 group transition-all hover:bg-teal-500/[0.05]">
                     <div className="flex items-center gap-2 mb-4">
                       <CheckCircle2 className="w-4 h-4 text-teal-400" />
@@ -271,13 +273,11 @@ This report is a digital artifact of the Hearth Ecosystem.
                       {jobText.length > 5 ? (
                         <div className="flex gap-3 text-white/80">
                           <Zap className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" /> 
-                          <span>Alignment detected with <span className="text-teal-400 font-bold uppercase tracking-tighter">"{getEthicLabel(0)}"</span>. The operational language matches your requirements.</span>
+                          <span>Alignment detected with <span className="text-teal-400 font-bold uppercase tracking-tighter">"{getEthicLabel(0)}"</span>.</span>
                         </div>
                       ) : "Awaiting analysis input..."}
                     </div>
                   </div>
-
-                  {/* FRICTION */}
                   <div className="bg-red-500/[0.03] border border-red-500/10 rounded-[2rem] p-8 group transition-all hover:bg-red-500/[0.05]">
                     <div className="flex items-center gap-2 mb-4">
                       <ShieldAlert className="w-4 h-4 text-red-400" />
@@ -287,7 +287,7 @@ This report is a digital artifact of the Hearth Ecosystem.
                       {jobText.length > 5 ? (
                         <div className="flex gap-3 text-white/80">
                           <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                          <span>Possible conflict with <span className="text-red-400 font-bold uppercase tracking-tighter">"{getEthicLabel(selectedEthics.length - 1)}"</span>. Terms like "fast-paced" may indicate boundary issues.</span>
+                          <span>Possible conflict with <span className="text-red-400 font-bold uppercase tracking-tighter">"{getEthicLabel(selectedEthics.length - 1)}"</span>.</span>
                         </div>
                       ) : "Waiting for narrative..."}
                     </div>
@@ -295,32 +295,14 @@ This report is a digital artifact of the Hearth Ecosystem.
                 </div>
               </div>
             </div>
-
-            {/* DOWNLOAD & NEXT STEP SECTION */}
             {jobText.length > 5 && !isAnalyzing && (
               <div className="mt-16 flex flex-col items-center animate-in fade-in slide-in-from-top-4 duration-1000">
-                <div className="w-24 h-[1px] bg-white/10 mb-8" />
-                
-                <div className="text-center mb-10">
-                  <p className="text-[10px] font-black text-teal-400 uppercase tracking-[0.4em] mb-3">Validation Cycle Complete</p>
-                  <h4 className="text-lg font-serif italic text-gray-400">Your alignment artifacts are ready.</h4>
-                </div>
-
                 <div className="flex flex-col md:flex-row gap-5">
-                  <button 
-                    onClick={handleDownloadReport}
-                    className="flex items-center gap-3 px-10 py-5 rounded-2xl bg-white/5 border border-white/10 text-white text-[9px] font-black uppercase tracking-widest hover:bg-white/10 transition-all group"
-                  >
-                    <Download className="w-4 h-4 text-teal-400 group-hover:translate-y-0.5 transition-transform" />
-                    Download Alignment Report
+                  <button onClick={handleDownloadReport} className="flex items-center gap-3 px-10 py-5 rounded-2xl bg-white/5 border border-white/10 text-white text-[9px] font-black uppercase tracking-widest hover:bg-white/10 transition-all">
+                    <Download className="w-4 h-4 text-teal-400" /> Download Report
                   </button>
-
-                  <button 
-                    onClick={() => navigate('/bridge')}
-                    className="flex items-center gap-4 px-10 py-5 rounded-2xl bg-[#FF6B35] text-white text-[9px] font-black uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl shadow-orange-500/20"
-                  >
-                    Enter Linguistic Bridge
-                    <ArrowRight className="w-4 h-4" />
+                  <button onClick={() => navigate('/bridge')} className="flex items-center gap-4 px-10 py-5 rounded-2xl bg-[#FF6B35] text-white text-[9px] font-black uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl shadow-orange-500/20">
+                    Enter Linguistic Bridge <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
