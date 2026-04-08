@@ -32,7 +32,7 @@ const GroveTiers = () => {
         "Hearthkeeper Badge"
       ],
       icon: <TreeDeciduous className="w-8 h-8 text-teal-400" />,
-      link: "https://buy.stripe.com/00w00jdy0gCz0DWaG6dAk00",
+      link: "https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03",
       color: "border-teal-500/20"
     },
     {
@@ -47,7 +47,7 @@ const GroveTiers = () => {
         "The Canopy Resource Hub"
       ],
       icon: <Leaf className="w-8 h-8 text-teal-400" />,
-      link: "https://buy.stripe.com/eVq14n2Tm4TR4UcaG6dAk01",
+      link: "https://buy.stripe.com/aFafZhfG8aebdqI4hIdAk04",
       color: "border-teal-500/20"
     }
   ];
