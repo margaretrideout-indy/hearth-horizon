@@ -29,10 +29,10 @@ const Navigation = () => {
   const allLinks = [
     { name: 'The Grove', path: '/', icon: <TreePine className="w-4 h-4" />, public: true },
     { name: 'Library', path: '/library', icon: <Library className="w-4 h-4" />, public: true },
-    { name: 'Your Hearth', path: '/hearth', icon: <Activity className="w-4 h-4" />, member: true },
+    { name: 'Your Hearth', path: '/hearth', icon: <Activity className="w-4 h-4" />, public: true },
     { name: 'The Bridge', path: '/bridge', icon: <ArrowRightLeft className="w-4 h-4" />, member: true },
     { name: 'Alignment', path: '/alignment', icon: <Compass className="w-4 h-4" />, steward: true },
-    { name: 'Embers Chat', path: '/chat', icon: <MessageSquare className="w-4 h-4" />, member: true },
+    { name: 'Embers Chat', path: '/chat', icon: <MessageSquare className="w-4 h-4" />, public: true },
     { name: 'The Canopy', path: '/canopy', icon: <Layout className="w-4 h-4" />, public: true },
   ];
 
