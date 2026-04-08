@@ -63,8 +63,11 @@ export default function EmbersChat() {
   return (
     <div className="flex flex-col h-[100dvh] md:h-full bg-[#1A1423] md:rounded-[2.5rem] md:border border-white/5 overflow-hidden shadow-2xl relative">
       
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
-        {/* Static Welcome Group */}
+      <div 
+        ref={scrollRef} 
+        className="flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-8 scroll-smooth scrollbar-hide md:custom-scrollbar"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
         {FIXED_STARTERS.map((msg) => (
           <div key={msg.id} className="flex flex-col items-start opacity-90">
             <div className="flex items-center gap-2 mb-2 ml-1">
@@ -87,7 +90,6 @@ export default function EmbersChat() {
           <div className="flex-1 h-px bg-white" />
         </div>
 
-        {/* Dynamic Content */}
         <AnimatePresence initial={false}>
           {remotePosts.length === 0 && !isLoading ? (
             <motion.div 
@@ -121,7 +123,7 @@ export default function EmbersChat() {
         </AnimatePresence>
       </div>
 
-      <div className="p-4 md:p-6 bg-[#251D2F]/80 backdrop-blur-xl border-t border-white/5">
+      <div className="p-4 md:p-6 bg-[#251D2F]/80 backdrop-blur-xl border-t border-white/5 shrink-0">
         <div className="relative flex items-center gap-3">
           <input
             type="text"
