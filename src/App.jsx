@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout } from 'lucide-react';
 
 import GroveTiers from './pages/GroveTiers';
-import LinguisticBridge from './components/LinguisticBridge';
+import LinguisticBridge from './pages/LinguisticBridge';
 import LibraryView from './components/Library';
 import EmbersChat from './components/EmbersChat';
 import CanopyView from './components/Canopy';
