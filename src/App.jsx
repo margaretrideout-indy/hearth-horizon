@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout } from 'lucide-react';
+import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout, Activity } from 'lucide-react';
 
 import GroveTiers from './pages/GroveTiers';
 import LinguisticBridge from './pages/SkillTranslator';
 import LibraryView from './pages/Library';
 import EmbersChat from './pages/EmbersChat';
 import CanopyView from './pages/Canopy';
+import YourHearth from './pages/YourHearth';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +15,7 @@ const Navigation = () => {
 
   const navLinks = [
     { name: 'The Grove', path: '/', icon: <TreePine className="w-4 h-4" /> },
+    { name: 'Your Hearth', path: '/hearth', icon: <Activity className="w-4 h-4" /> },
     { name: 'The Bridge', path: '/bridge', icon: <ArrowRightLeft className="w-4 h-4" /> },
     { name: 'Library', path: '/library', icon: <Library className="w-4 h-4" /> },
     { name: 'Embers Chat', path: '/chat', icon: <MessageSquare className="w-4 h-4" /> },
@@ -80,6 +82,7 @@ const App = () => {
         <main className="pt-16">
           <Routes>
             <Route path="/" element={<GroveTiers />} />
+            <Route path="/hearth" element={<YourHearth />} />
             <Route path="/bridge" element={<LinguisticBridge />} />
             <Route path="/library" element={<LibraryView />} />
             <Route path="/chat" element={<EmbersChat />} />
