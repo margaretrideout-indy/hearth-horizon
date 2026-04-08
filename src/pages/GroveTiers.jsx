@@ -11,22 +11,25 @@ const PAYMENT_LINKS = {
 const GroveTiers = () => {
   const [loading, setLoading] = useState(null);
 
-  const handleCheckout = (id, link) => {
+  const handleCheckout = (e, id, link) => {
+    // This stops the app from trying to refresh or navigate internally
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     if (!link) {
-      // Seedling Path: You can add a navigate('/dashboard') here later
       console.log("Starting Free Path");
       return;
     }
     
     setLoading(id);
 
-    // Using .assign() for a cleaner external handoff to Stripe
+    // Hard redirect to Stripe
     try {
-      setTimeout(() => {
-        window.location.assign(link);
-      }, 150);
-    } catch (error) {
-      console.error("Redirect failed:", error);
+      window.location.href = link;
+    } catch (err) {
+      console.error("Redirect error:", err);
       setLoading(null);
     }
   };
@@ -91,7 +94,7 @@ const GroveTiers = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {tiers.map((tier) => (
           <div 
-            key={tier.name} 
+            key={tier.id} 
             className={`bg-[#2D2438] border border-white/5 rounded-[1.5rem] p-6 flex flex-col transition-all hover:border-white/10 ${
               tier.highlight ? 'ring-1 ring-[#0D9488]/30 shadow-[0_0_20px_rgba(13,148,136,0.05)]' : ''
             }`}
@@ -108,13 +111,13 @@ const GroveTiers = () => {
               <span className="text-[9px] text-gray-500 uppercase tracking-wider">{tier.sub}</span>
             </div>
 
-            <div className="h-[60px] mb-6 border-b border-white/5 pb-4">
+            <div className="h-[60px] mb-6 border-b border-white/5 pb-4 text-left">
               <p className="text-[12px] text-gray-400 italic leading-snug">{tier.desc}</p>
             </div>
 
-            <ul className="space-y-3 mb-6 flex-1">
-              {tier.features.map(f => (
-                <li key={f} className="flex items-start gap-2 text-[10px] text-gray-300 uppercase tracking-tight leading-tight text-left">
+            <ul className="space-y-3 mb-6 flex-1 text-left">
+              {tier.features.map((f, i) => (
+                <li key={i} className="flex items-start gap-2 text-[10px] text-gray-300 uppercase tracking-tight leading-tight">
                   <Check size={12} className="text-[#0D9488] mt-0.5 flex-shrink-0" />
                   <span>{f}</span>
                 </li>
@@ -123,7 +126,7 @@ const GroveTiers = () => {
 
             <button 
               disabled={loading === tier.id}
-              onClick={() => handleCheckout(tier.id, tier.link)}
+              onClick={(e) => handleCheckout(e, tier.id, tier.link)}
               className="w-full py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all bg-[#0D9488] text-white shadow-md hover:bg-[#11B1A3] active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading === tier.id ? (
