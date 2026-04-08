@@ -32,25 +32,29 @@ export default function EmbersChat() {
   
   const { data: remotePosts = [], isLoading } = useQuery({
     queryKey: ['emberPosts'],
-    queryFn: () => base44.entities.EmberPost.list('created_date', 50),
-    refetchInterval: 10000,
+    queryFn: () => base44.entities.EmberPost.list('created_date', 100),
+    refetchInterval: 5000,
   });
 
   const purgeDatabase = async () => {
-    if (!window.confirm("Clear all real messages from the database?")) return;
+    if (!window.confirm("FORCE CLEAR: This will attempt to delete every message in the database. Proceed?")) return;
     try {
-      console.log("Starting deep purge...");
       const all = await base44.entities.EmberPost.list();
-      console.log(`Found ${all.length} posts to delete.`);
-      for (const post of all) {
-        await base44.entities.EmberPost.delete(post.id);
-        console.log(`Deleted: ${post.id}`);
+      if (all.length === 0) {
+        alert("Database already appears empty.");
+        return;
       }
+
+      await Promise.all(all.map(post => base44.entities.EmberPost.delete(post.id)));
+      
+      // Force the UI to realize they are gone
+      await queryClient.setQueryData(['emberPosts'], []);
       await queryClient.invalidateQueries({ queryKey: ['emberPosts'] });
-      alert("Fire cleared! Now remove this purge code block.");
+      
+      alert(`Success! Deleted ${all.length} messages. Now remove the Purge button.`);
     } catch (err) {
-      console.error("Purge failed:", err);
-      alert("Delete failed. Are you signed in?");
+      console.error(err);
+      alert("Error: Make sure you are logged in to the site, not just viewing the preview.");
     }
   };
 
@@ -77,9 +81,9 @@ export default function EmbersChat() {
     <div className="flex flex-col h-full bg-[#1A1423] rounded-[2.5rem] border border-white/5 overflow-hidden shadow-2xl relative">
       <button 
         onClick={purgeDatabase}
-        className="absolute top-4 right-4 z-50 bg-red-900/40 hover:bg-red-600 text-[9px] text-white px-3 py-1 rounded-full border border-red-500/50 flex items-center gap-2"
+        className="absolute top-4 right-4 z-50 bg-red-600 hover:bg-red-500 text-[10px] font-bold text-white px-4 py-2 rounded-xl shadow-lg border border-white/20 flex items-center gap-2"
       >
-        <Trash2 className="w-3 h-3" /> PURGE DATABASE
+        <Trash2 className="w-4 h-4" /> FORCE PURGE
       </button>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
@@ -133,7 +137,7 @@ export default function EmbersChat() {
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Share something with the Hearth..."
-            className="w-full bg-[#1A1423] border border-white/10 rounded-2xl px-5 py-4 text-sm text-slate-200 focus:outline-none focus:border-teal-500/50 placeholder:text-slate-700"
+            className="w-full bg-[#1A1423] border border-white/10 rounded-2xl px-5 py-4 text-sm text-slate-200 focus:outline-none focus:border-teal-500/50 transition-all placeholder:text-slate-700"
           />
           <button 
             onClick={handleSend} 
