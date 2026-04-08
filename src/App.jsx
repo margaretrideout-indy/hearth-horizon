@@ -20,18 +20,19 @@ const Navigation = () => {
   const location = useLocation();
 
   useEffect(() => {
-    window.addEventListener('beforeinstallprompt', (e) => {
+    const handler = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
-    });
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
   const handleInstall = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') setDeferredPrompt(null);
-    }
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') setDeferredPrompt(null);
   };
 
   const { data: user } = useQuery({ 
@@ -42,7 +43,7 @@ const Navigation = () => {
 
   const tier = user?.subscription_tier;
 
-  const allLinks = [
+  const navLinks = [
     { name: 'The Grove', path: '/', icon: <TreePine className="w-4 h-4" />, public: true },
     { name: 'Library', path: '/library', icon: <Library className="w-4 h-4" />, public: true },
     { name: 'Your Hearth', path: '/hearth', icon: <Activity className="w-4 h-4" />, public: true },
@@ -50,9 +51,7 @@ const Navigation = () => {
     { name: 'Alignment', path: '/alignment', icon: <Compass className="w-4 h-4" />, steward: true },
     { name: 'Embers Chat', path: '/chat', icon: <MessageSquare className="w-4 h-4" />, public: true },
     { name: 'The Canopy', path: '/canopy', icon: <Layout className="w-4 h-4" />, public: true },
-  ];
-
-  const navLinks = allLinks.filter(link => {
+  ].filter(link => {
     if (link.public) return true;
     if (!user) return false;
     if (link.steward) return tier === 'Steward' || tier === 'Sponsor';
@@ -61,10 +60,10 @@ const Navigation = () => {
   });
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1A1423]/90 border-b border-white/5">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1A1423]/90 backdrop-blur-md border-b border-white/5">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center shadow-[0_0_15px_rgba(45,212,191,0.3)]">
             <TreePine className="text-[#1A1423] w-5 h-5" />
           </div>
           <span className="font-bold tracking-tighter text-slate-100 uppercase text-sm">Hearth Horizon</span>
@@ -82,21 +81,38 @@ const Navigation = () => {
               <div className="flex items-center gap-2">{link.icon}{link.name}</div>
             </Link>
           ))}
+          {/* Button only appears if browser supports installation and is not in incognito */}
           {deferredPrompt && (
-            <button onClick={handleInstall} className="ml-2 p-2 text-teal-400 hover:bg-teal-400/10 rounded-lg" title="Install App">
-              <Download className="w-4 h-4" />
+            <button 
+              onClick={handleInstall}
+              className="ml-4 px-3 py-1.5 bg-teal-500/10 border border-teal-500/30 rounded-lg text-teal-400 text-[9px] font-black uppercase tracking-widest hover:bg-teal-500 hover:text-[#1A1423] transition-all flex items-center gap-2"
+            >
+              <Download className="w-3 h-3" />
+              Install App
             </button>
           )}
         </div>
-        <button className="md:hidden text-slate-100" onClick={() => setIsOpen(!isOpen)}>{isOpen ? <X /> : <Menu />}</button>
+
+        <button className="md:hidden text-slate-100" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? <X /> : <Menu />}
+        </button>
       </div>
+
       {isOpen && (
-        <div className="md:hidden bg-[#251D2F] p-6 flex flex-col gap-4 border-b border-white/5">
+        <div className="md:hidden bg-[#251D2F] border-b border-white/5 p-6 flex flex-col gap-4">
           {navLinks.map((link) => (
-            <Link key={link.path} to={link.path} onClick={() => setIsOpen(false)} className="flex items-center gap-3 text-xs font-bold text-slate-300 uppercase px-4 py-3 rounded-xl hover:bg-white/5">
+            <Link key={link.path} to={link.path} onClick={() => setIsOpen(false)} className="flex items-center gap-3 text-xs font-bold text-slate-300 uppercase tracking-widest px-4 py-3 rounded-xl hover:bg-white/5">
               {link.icon} {link.name}
             </Link>
           ))}
+          {deferredPrompt && (
+            <button 
+              onClick={handleInstall}
+              className="flex items-center gap-3 text-xs font-bold text-teal-400 uppercase tracking-widest px-4 py-3 rounded-xl border border-teal-400/20"
+            >
+              <Download className="w-4 h-4" /> Install App
+            </button>
+          )}
         </div>
       )}
     </nav>
