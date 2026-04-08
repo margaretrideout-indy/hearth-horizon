@@ -29,7 +29,7 @@ const GroveTiers = () => {
       icon: <Flame className="w-5 h-5 md:w-6 md:h-6 text-teal-400" />,
       features: ['FULL LIBRARY ACCESS', 'POST TO EMBERS CHAT', 'HEARTH UPDATES'],
       buttonText: 'TEND THE FIRE',
-      link: 'https://buy.stripe.com/5kA02o7U3gyu86s6op',
+      link: 'https://buy.stripe.com/00w00jdy0gCz0DWaG6dAk00',
       highlight: true
     },
     {
@@ -42,20 +42,33 @@ const GroveTiers = () => {
       icon: <MapPin className="w-5 h-5 md:w-6 md:h-6 text-teal-400" />,
       features: ['ALL HEARTHKEEPER PERKS', 'BETA FEATURE ACCESS', 'FOUNDING BADGE'],
       buttonText: 'GUIDE THE WAY',
-      link: 'https://buy.stripe.com/14kdRcb2fbem3QccMO',
+      link: 'https://buy.stripe.com/eVq14n2Tm4TR4UcaG6dAk01',
       highlight: false
     }
   ];
 
   const handleCheckout = (e, id, link) => {
-    if (e) { e.preventDefault(); e.stopPropagation(); }
-    if (!link) { navigate('/library'); return; }
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    if (!link) {
+      navigate('/library');
+      return;
+    }
+
     setLoading(id);
-    try { window.location.href = link; } catch (err) { setLoading(null); }
+    
+    try {
+      window.location.assign(link);
+    } catch (err) {
+      window.location.href = link;
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#1A1423] py-8 md:py-16 px-4">
+    <div className="min-h-screen bg-[#1A1423] py-8 md:py-16 px-4 touch-manipulation">
       <div className="max-w-4xl mx-auto text-center mb-8 md:mb-12">
         <h1 className="text-2xl md:text-5xl font-bold text-slate-100 mb-2 tracking-tight">
           Cultivate Your Path
@@ -85,7 +98,7 @@ const GroveTiers = () => {
             <div className="mb-4">
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl md:text-4xl font-black text-slate-100">{tier.price}</span>
-                <span className="text-[9px] md:text-[10px] font-bold text-teal-400 tracking-widest">{tier.unit}</span>
+                <span className="text-[9px] md:text-[10px] font-bold text-teal-400 tracking-widest uppercase">{tier.unit}</span>
               </div>
               {tier.nextPrice && (
                 <div className="flex items-start gap-1.5 mt-1 text-slate-500 text-[9px] md:text-[10px] font-bold tracking-wider uppercase">
@@ -103,7 +116,7 @@ const GroveTiers = () => {
 
             <ul className="space-y-3 mb-8 flex-grow">
               {tier.features.map((f, i) => (
-                <li key={i} className="flex items-center gap-2 text-slate-300 font-bold text-[9px] md:text-[10px] tracking-widest uppercase">
+                <li key={i} className="flex items-center gap-2 text-slate-300 font-bold text-[9px] md:text-[10px] tracking-widest uppercase text-left">
                   <Check className="w-3.5 h-3.5 text-teal-400 shrink-0" />
                   <span>{f}</span>
                 </li>
@@ -111,13 +124,14 @@ const GroveTiers = () => {
             </ul>
 
             <button
+              type="button"
               onClick={(e) => handleCheckout(e, tier.id, tier.link)}
               disabled={loading !== null}
               className={`w-full py-3 md:py-5 rounded-xl md:rounded-2xl font-black text-[9px] md:text-xs tracking-widest flex items-center justify-center gap-2 transition-all active:scale-95 ${
                 tier.highlight || tier.id === 'seedling'
                 ? 'bg-teal-600 hover:bg-teal-500 text-white shadow-lg shadow-teal-900/20'
                 : 'bg-[#2D2338] hover:bg-[#362b44] text-slate-100 border border-slate-700'
-              } uppercase`}
+              } uppercase disabled:opacity-50`}
             >
               {loading === tier.id ? 'WAITING...' : tier.buttonText}
               <ArrowRight className="w-3.5 h-3.5" />
@@ -126,10 +140,9 @@ const GroveTiers = () => {
         ))}
       </div>
 
-      {/* DONATION SECTION - Works on all devices */}
-      <div className="mt-12 text-center">
+      <div className="mt-12 text-center pb-8">
         <button 
-          onClick={() => window.open('https://buy.stripe.com/14kbRcb2fbem3QccMP', '_blank')}
+          onClick={() => window.open('https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02', '_blank')}
           className="text-slate-500 hover:text-teal-400 transition-colors flex flex-col md:flex-row items-center justify-center gap-1 md:gap-2 mx-auto text-[9px] md:text-[10px] font-bold tracking-widest uppercase group"
         >
           <span>Want to simply plant a seed?</span>
