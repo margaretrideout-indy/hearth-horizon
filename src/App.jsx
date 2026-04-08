@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout, Activity } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/lib/AuthContext';
-
+import PaymentSuccess from './pages/PaymentSuccess';
 import GroveTiers from './pages/GroveTiers';
 import LinguisticBridge from './pages/SkillTranslator';
 import LibraryView from './pages/Library';
