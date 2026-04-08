@@ -12,15 +12,15 @@ const LinguisticBridge = () => {
   const [jargonInput, setJargonInput] = useState('');
 
   const jargonLibrary = {
-    "differentiated instruction": "User-Centric Personalization & Adaptive Strategy",
-    "classroom management": "Operational Orchestration & Conflict Resolution",
-    "lesson planning": "Iterative Product Roadmap Design",
-    "parent-teacher conferences": "External Stakeholder Alignment",
-    "standardized testing": "KPI Benchmarking & Data Validation",
-    "iep development": "Tailored Solutions Architecture",
-    "professional development": "Internal Capability Building",
-    "curriculum design": "Strategic Content Frameworks",
-    "student engagement": "User Retention & Experience Optimization"
+    "customer service": "Experience Optimization & Conflict Resolution",
+    "team management": "Operational Orchestration & Resource Allocation",
+    "project planning": "Strategic Roadmap Design & Execution",
+    "training staff": "Internal Capability Building & Knowledge Transfer",
+    "budgeting": "Fiscal Governance & Capital Optimization",
+    "scheduling": "Logistical Synchronization",
+    "problem solving": "Root Cause Analysis & Solution Architecture",
+    "public speaking": "High-Impact Stakeholder Communication",
+    "inventory management": "Supply Chain Integrity & Asset Oversight"
   };
 
   useEffect(() => {
@@ -33,14 +33,17 @@ const LinguisticBridge = () => {
     let translated = text.toLowerCase();
     
     const glossary = [
-      { find: /teacher|instructor/g, replace: "SME (Subject Matter Expert)" },
-      { find: /classroom|students/g, replace: "User Ecosystem" },
-      { find: /lesson plan|curriculum/g, replace: "Product Roadmap & Content Framework" },
-      { find: /grading|assessment/g, replace: "Performance Metrics & Data Validation" },
-      { find: /managed/g, replace: "Orchestrated" },
-      { find: /meetings|conferences/g, replace: "Stakeholder Alignment Sessions" },
-      { find: /teaching|instruction/g, replace: "Knowledge Transfer & Enablement" },
-      { find: /behavioral issues/g, replace: "Conflict Mitigation & Risk Management" }
+      { find: /helped|assisted/g, replace: "facilitated" },
+      { find: /did|worked on/g, replace: "executed" },
+      { find: /started|made/g, replace: "pioneered" },
+      { find: /managed|led/g, replace: "orchestrated" },
+      { find: /watched|checked/g, replace: "audited" },
+      { find: /customers|clients|people/g, replace: "end-users" },
+      { find: /problem|issue/g, replace: "operational friction" },
+      { find: /plan|schedule/g, replace: "strategic roadmap" },
+      { find: /meeting|talk/g, replace: "stakeholder alignment" },
+      { find: /rules|policy/g, replace: "governance framework" },
+      { find: /trained|showed/g, replace: "upskilled" }
     ];
 
     glossary.forEach(item => {
@@ -51,7 +54,7 @@ const LinguisticBridge = () => {
 
   const getJargonValue = (input) => {
     const key = input.toLowerCase().trim();
-    return jargonLibrary[key] || "No direct match found. Try 'Curriculum Design'.";
+    return jargonLibrary[key] || "Optimization logic ready. Try terms like 'management' or 'planning'.";
   };
 
   const copyToClipboard = (text) => {
@@ -120,11 +123,11 @@ const LinguisticBridge = () => {
                 type="text"
                 value={jargonInput}
                 onChange={(e) => setJargonInput(e.target.value)}
-                placeholder="Ex: Differentiated Instruction..."
+                placeholder="Ex: Team Management..."
                 className="w-full bg-[#1A1423] border border-white/10 rounded-xl p-5 text-sm text-slate-200 focus:outline-none focus:border-teal-500/30 transition-all mb-6 placeholder:text-slate-700"
               />
               <div className="space-y-3">
-                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest ml-1">Quick Links:</p>
+                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest ml-1">Universal Categories:</p>
                 <div className="flex flex-wrap gap-2">
                   {Object.keys(jargonLibrary).slice(0, 5).map(k => (
                     <button 
@@ -163,7 +166,7 @@ const LinguisticBridge = () => {
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-slate-800 rounded-full" />
                   <label className="text-[9px] font-black text-slate-600 uppercase tracking-widest block mb-4">Legacy Syntax</label>
                   <div className="bg-[#1A1423] border border-white/5 rounded-2xl p-6 text-sm text-slate-500 font-light italic min-h-[80px]">
-                    {viewMode === 'vault' ? (activeTranslation?.value || "Select a phrase to transform...") : (jargonInput || "Waiting for education jargon...")}
+                    {viewMode === 'vault' ? (activeTranslation?.value || "Select material to optimize...") : (jargonInput || "Enter professional context...")}
                   </div>
                 </div>
 
@@ -177,7 +180,7 @@ const LinguisticBridge = () => {
                     
                     <div className="flex flex-wrap items-center justify-between gap-6 pt-8 border-t border-white/5">
                       <div className="flex gap-2">
-                        <span className="text-[8px] font-black bg-teal-500/10 text-teal-400 px-3 py-1 rounded-full uppercase tracking-widest border border-teal-500/20">SME-Vetted</span>
+                        <span className="text-[8px] font-black bg-teal-500/10 text-teal-400 px-3 py-1 rounded-full uppercase tracking-widest border border-teal-500/20">Market-Aligned</span>
                         <span className="text-[8px] font-black bg-purple-500/10 text-purple-400 px-3 py-1 rounded-full uppercase tracking-widest border border-purple-500/20">Scalable</span>
                       </div>
                       
