@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Sprout, TreePine, CheckCircle2 } from 'lucide-react';
+import { Sprout, TreePine, Heart, CheckCircle2 } from 'lucide-react';
 
 const GroveTiers = () => {
   const navigate = useNavigate();
@@ -56,6 +56,17 @@ const GroveTiers = () => {
       action: () => handleSubscribe('price_steward_id'),
       buttonText: 'Select Plan',
       current: user?.subscription_tier === 'Steward'
+    },
+    {
+      name: 'Plant A Seed',
+      price: 'DONATE',
+      subtext: 'SUPPORT THE GROVE',
+      description: 'Pay it forward to help keep the Hearth accessible for all.',
+      icon: <Heart className="w-8 h-8 text-rose-400" />,
+      features: ['Sponsor Badge', 'Community Recognition', 'Supports Open Access', 'Warm Fuzzies Included'],
+      action: () => handleSubscribe('price_donation_id'),
+      buttonText: 'Give a Seed',
+      isDonation: true
     }
   ];
 
@@ -65,7 +76,9 @@ const GroveTiers = () => {
         {tiers.map((tier) => (
           <div 
             key={tier.name}
-            className="relative rounded-[2.5rem] p-10 bg-[#251D2F] border border-white/5 flex flex-col items-center text-center shadow-xl"
+            className={`relative rounded-[2.5rem] p-10 bg-[#251D2F] border flex flex-col items-center text-center shadow-xl transition-all ${
+              tier.isDonation ? 'border-rose-500/20' : 'border-white/5'
+            }`}
           >
             <div className="w-20 h-20 rounded-full bg-[#1A1423] flex items-center justify-center mb-6 shadow-inner">
               {tier.icon}
@@ -73,7 +86,7 @@ const GroveTiers = () => {
             
             <h3 className="text-3xl font-serif font-bold text-white mb-2">{tier.name}</h3>
             <div className="text-5xl font-black text-white">{tier.price}</div>
-            <div className="text-[10px] font-black text-teal-400 uppercase tracking-[0.3em] mt-2 mb-6">
+            <div className={`text-[10px] font-black uppercase tracking-[0.3em] mt-2 mb-6 ${tier.isDonation ? 'text-rose-400' : 'text-teal-400'}`}>
               {tier.subtext}
             </div>
 
@@ -84,7 +97,7 @@ const GroveTiers = () => {
             <div className="w-full space-y-4 mb-10 text-left border-t border-white/5 pt-10 max-w-sm">
               {tier.features.map((feature) => (
                 <div key={feature} className="flex items-center gap-4">
-                  <CheckCircle2 className="w-5 h-5 text-teal-500 shrink-0" />
+                  <CheckCircle2 className={`w-5 h-5 shrink-0 ${tier.isDonation ? 'text-rose-500' : 'text-teal-500'}`} />
                   <span className="text-sm text-slate-300 font-medium">{feature}</span>
                 </div>
               ))}
@@ -96,6 +109,8 @@ const GroveTiers = () => {
               className={`w-full py-5 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center max-w-sm ${
                 tier.name === 'Seedling' 
                 ? 'bg-[#3D2B52] text-teal-400 border border-teal-400/20' 
+                : tier.isDonation
+                ? 'bg-rose-600 text-white hover:bg-rose-500 shadow-lg shadow-rose-900/20'
                 : 'bg-teal-500 text-[#1A1423] hover:bg-teal-400 shadow-lg shadow-teal-500/10'
               } ${tier.current && tier.name === 'Seedling' ? 'opacity-30' : ''}`}
             >
