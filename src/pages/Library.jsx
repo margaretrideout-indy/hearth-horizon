@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { BookOpen, Bookmark, Sparkles, ExternalLink, ArrowRight, PenTool, ShoppingBag } from 'lucide-react';
+import { BookOpen, Bookmark, Sparkles, ExternalLink, ArrowRight, PenTool } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Library() {
@@ -10,9 +10,20 @@ export default function Library() {
     queryFn: () => base44.entities.SavedResource.list(), 
   });
 
+  const scrollToProvisions = () => {
+    const section = document.getElementById('curated-provisions');
+    if (section) section.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-8 space-y-16 pb-24">
       
+      {/* HEADER SECTION */}
+      <header className="space-y-2 ml-1">
+        <h1 className="text-4xl font-black text-white tracking-tighter">Library & Provisions</h1>
+        <p className="text-slate-500 text-sm font-medium">Curated tools and personal keepsakes for the transition ahead.</p>
+      </header>
+
       {/* 1. THE MANTLE (User's Personal Collection) */}
       <section className="space-y-6">
         <div className="flex items-center gap-3 ml-1">
@@ -38,10 +49,13 @@ export default function Library() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-slate-300 text-sm font-medium">Your mantle is currently empty.</p>
-                  <p className="text-slate-500 text-[11px] italic">Visit the Canopy to gather the tools that speak to your journey.</p>
+                  <p className="text-slate-500 text-[11px] italic">Save resources as you explore to keep them within reach.</p>
                 </div>
-                <button className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-teal-500 pt-2">
-                  Go to Canopy <ArrowRight className="w-3 h-3" />
+                <button 
+                  onClick={scrollToProvisions}
+                  className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-teal-500 pt-2 hover:text-teal-400 transition-colors"
+                >
+                  Explore Provisions Below <ArrowRight className="w-3 h-3" />
                 </button>
               </motion.div>
             ) : (
@@ -60,7 +74,10 @@ export default function Library() {
         </div>
       </section>
 
-      {/* 2. DIGITAL WORKSHOP (Curated Action Tools) */}
+      {/* ANCHOR FOR SCROLL */}
+      <div id="curated-provisions" className="pt-4" />
+
+      {/* 2. DIGITAL WORKSPACE */}
       <section className="space-y-6">
         <div className="flex items-center gap-3 ml-1">
           <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
@@ -91,7 +108,7 @@ export default function Library() {
         </div>
       </section>
 
-      {/* 3. THE STUDY (Educational Resources) */}
+      {/* 3. THE STUDY */}
       <section className="space-y-6">
         <div className="flex items-center gap-3 ml-1">
           <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center border border-orange-500/20">
