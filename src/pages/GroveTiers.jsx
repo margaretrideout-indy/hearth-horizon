@@ -12,15 +12,9 @@ const GroveTiers = () => {
     retry: false 
   });
 
-  const handleSubscribe = async (priceId) => {
-    if (!user) { navigate('/hearth'); return; }
-    try {
-      const { url } = await window.base44.payment.checkout(priceId, {
-        successUrl: `${window.location.origin}/success`,
-        cancelUrl: window.location.href,
-      });
-      window.location.href = url;
-    } catch (err) { console.error('Subscription error:', err); }
+  // Updated to handle direct Stripe URLs
+  const handleExternalLink = (url) => {
+    window.open(url, '_blank');
   };
 
   const tiers = [
@@ -42,7 +36,7 @@ const GroveTiers = () => {
       description: 'Removing limits to keep the fires burning bright.',
       icon: <TreePine className="w-8 h-8 text-teal-400" />,
       features: ['Everything in Seedling', 'Unlimited PDF uploads', 'Hearthkeeper Badge'],
-      action: () => handleSubscribe('price_hearthkeeper_id'),
+      action: () => handleExternalLink('https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03'),
       buttonText: 'Select Plan',
       current: user?.subscription_tier === 'Hearthkeeper'
     },
@@ -53,7 +47,7 @@ const GroveTiers = () => {
       description: 'Full oversight and total access to the entire Grove.',
       icon: <TreePine className="w-8 h-8 text-teal-400" />,
       features: ['Everything in Hearthkeeper', 'Full Website Access', 'Ecosystem Alignment Tools', 'The Canopy Resource Hub'],
-      action: () => handleSubscribe('price_steward_id'),
+      action: () => handleExternalLink('https://buy.stripe.com/aFafZhfG8aebdqI4hIdAk04'),
       buttonText: 'Select Plan',
       current: user?.subscription_tier === 'Steward'
     },
@@ -64,7 +58,7 @@ const GroveTiers = () => {
       description: 'Pay it forward to help keep the Hearth accessible for all.',
       icon: <Heart className="w-8 h-8 text-rose-400" />,
       features: ['Sponsor Badge', 'Community Recognition', 'Supports Open Access', 'Warm Fuzzies Included'],
-      action: () => handleSubscribe('price_donation_id'),
+      action: () => handleExternalLink('https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02'),
       buttonText: 'Give a Seed',
       isDonation: true
     }
@@ -118,6 +112,9 @@ const GroveTiers = () => {
             </button>
           </div>
         ))}
+      </div>
+      <div className="mt-12 text-center">
+         <p className="text-slate-500 text-[10px] uppercase tracking-[0.3em] font-medium">All tiers include access to the core community guidelines</p>
       </div>
     </div>
   );
