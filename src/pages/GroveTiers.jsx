@@ -52,14 +52,11 @@ const GroveTiers = () => {
       e.preventDefault();
       e.stopPropagation();
     }
-
     if (!link) {
       navigate('/library');
       return;
     }
-
     setLoading(id);
-    
     try {
       window.location.assign(link);
     } catch (err) {
@@ -68,7 +65,8 @@ const GroveTiers = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1A1423] py-8 md:py-16 px-4 touch-manipulation">
+    /* ADDED md:ml-64 TO PREVENT SIDEBAR OVERLAP */
+    <div className="min-h-screen bg-[#1A1423] py-8 md:py-16 px-4 md:ml-64 touch-manipulation">
       <div className="max-w-4xl mx-auto text-center mb-8 md:mb-12">
         <h1 className="text-2xl md:text-5xl font-bold text-slate-100 mb-2 tracking-tight">
           Cultivate Your Path
@@ -78,13 +76,13 @@ const GroveTiers = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 max-w-6xl mx-auto mb-8 md:mb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 max-w-6xl mx-auto mb-8 md:mb-12">
         {tiers.map((tier) => (
           <div 
             key={tier.id}
             className={`flex flex-col p-6 md:p-10 rounded-[1.5rem] md:rounded-[2.5rem] border transition-all duration-300 ${
               tier.highlight 
-              ? 'bg-[#2D2338] border-teal-500/40 shadow-lg md:scale-105 z-10' 
+              ? 'bg-[#2D2338] border-teal-500/40 shadow-lg lg:scale-105 z-10' 
               : 'bg-[#241C2E] border-slate-800'
             }`}
           >
@@ -127,7 +125,7 @@ const GroveTiers = () => {
               type="button"
               onClick={(e) => handleCheckout(e, tier.id, tier.link)}
               disabled={loading !== null}
-              className={`w-full py-3 md:py-5 rounded-xl md:rounded-2xl font-black text-[9px] md:text-xs tracking-widest flex items-center justify-center gap-2 transition-all active:scale-95 bg-teal-600 hover:bg-teal-500 text-white shadow-lg shadow-teal-900/20 uppercase disabled:opacity-50`}
+              className="w-full py-3 md:py-5 rounded-xl md:rounded-2xl font-black text-[9px] md:text-xs tracking-widest flex items-center justify-center gap-2 transition-all active:scale-95 bg-teal-600 hover:bg-teal-500 text-white shadow-lg shadow-teal-900/20 uppercase disabled:opacity-50"
             >
               {loading === tier.id ? 'WAITING...' : tier.buttonText}
               <ArrowRight className="w-3.5 h-3.5" />
@@ -136,7 +134,6 @@ const GroveTiers = () => {
         ))}
       </div>
 
-      {/* PLANT A SEED - PROMINENT HORIZONTAL CARD */}
       <div className="max-w-6xl mx-auto">
         <div className="bg-[#241C2E]/50 border border-teal-500/20 rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 hover:border-teal-500/40 transition-all">
           <div className="flex items-center gap-6 text-left w-full md:w-auto">
