@@ -8,8 +8,8 @@ const Library = () => {
         
         {/* Header Section */}
         <header className="mb-12">
-          <h1 className="text-5xl font-bold text-white mb-2 italic tracking-tight uppercase">The Library & Provisions</h1>
-          <p className="text-xl text-stone-400 mb-4 font-light">Curated tools and blueprints to support your transition.</p>
+          <h1 className="text-5xl font-bold text-white mb-2 italic tracking-tight uppercase text-stone-100">The Library & Provisions</h1>
+          <p className="text-xl text-stone-400 mb-4 font-light italic">Curated tools and blueprints to support your transition.</p>
           <div className="flex items-center gap-2">
             <div className="h-[1px] w-8 bg-[#149184]"></div>
             <p className="text-[#149184] font-medium italic text-sm tracking-wide">Transparently vetted by 13 years of leadership experience.</p>
@@ -22,8 +22,8 @@ const Library = () => {
             <Sparkles size={14} />
             <span>A Note on Reciprocity</span>
           </div>
-          <p className="text-stone-300 text-sm leading-relaxed max-w-3xl">
-            I only recommend provisions I have personally used or verified. Some links below are affiliate links — at no cost to you — that help keep the <span className="text-[#149184] font-bold">LINGUISTIC BRIDGE</span> free for all educators in transition. 
+          <p className="text-stone-300 text-sm leading-relaxed max-w-3xl font-light">
+            I only recommend provisions I have personally used or verified. Some links below are affiliate links — at no cost to you — that help keep the <span className="text-[#149184] font-bold">HEARTH HORIZON</span> resources free for all educators in transition. 
           </p>
           <p className="mt-4 text-[10px] uppercase tracking-tighter text-stone-600 font-medium italic">
             As an Amazon Associate, I earn from qualifying purchases.
@@ -64,15 +64,15 @@ const Library = () => {
             <ResourceCard 
               icon={<Book size={24} className="text-[#149184]" />}
               title="Bookshop.org List"
-              description="Support local bookstores while building your professional library with my top-rated career transition reads."
+              description="Support local bookstores while building your professional library with top-rated career transition reads."
               link="#" 
               buttonText="VIEW LIST"
             />
             <ResourceCard 
               icon={<ShoppingBag size={24} className="text-[#149184]" />}
               title="Amazon Starter Kit"
-              description="Hand-picked workspace essentials, from ergonomic tech to the journals that kept me grounded during my 13-year tenure."
-              link="https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?tag=hearthandh0a6-20"
+              description="A curated 10-item toolkit for the educator's pivot: from essential connectivity hubs to the focus-driven tools that bridge the gap."
+              link="https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?ref_=wl_share"
               buttonText="EXPLORE KIT"
             />
           </div>
