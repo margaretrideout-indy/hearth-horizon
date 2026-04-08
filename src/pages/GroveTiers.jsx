@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Check, Heart, Sprout, Flame, Shield, Award, Loader2 } from 'lucide-react';
 
-// Mapped Stripe Links
+// Live Stripe Links
 const PAYMENT_LINKS = {
   HEARTHKEEPER: 'https://buy.stripe.com/eVq14n2Tm4TR4UcaG6dAk01',
   STEWARD: 'https://buy.stripe.com/00w00jdy0gCz0DWaG6dAk00',
@@ -13,12 +13,22 @@ const GroveTiers = () => {
 
   const handleCheckout = (id, link) => {
     if (!link) {
-      // For Seedling/Free path
+      // Seedling Path: You can add a navigate('/dashboard') here later
       console.log("Starting Free Path");
       return;
     }
+    
     setLoading(id);
-    window.location.href = link;
+
+    // Using .assign() for a cleaner external handoff to Stripe
+    try {
+      setTimeout(() => {
+        window.location.assign(link);
+      }, 150);
+    } catch (error) {
+      console.error("Redirect failed:", error);
+      setLoading(null);
+    }
   };
 
   const tiers = [
@@ -80,7 +90,12 @@ const GroveTiers = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {tiers.map((tier) => (
-          <div key={tier.name} className={`bg-[#2D2438] border border-white/5 rounded-[1.5rem] p-6 flex flex-col transition-all hover:border-white/10 ${tier.highlight ? 'ring-1 ring-[#0D9488]/30 shadow-[0_0_20px_rgba(13,148,136,0.05)]' : ''}`}>
+          <div 
+            key={tier.name} 
+            className={`bg-[#2D2438] border border-white/5 rounded-[1.5rem] p-6 flex flex-col transition-all hover:border-white/10 ${
+              tier.highlight ? 'ring-1 ring-[#0D9488]/30 shadow-[0_0_20px_rgba(13,148,136,0.05)]' : ''
+            }`}
+          >
             <div className="flex justify-between items-start mb-4 text-[#0D9488]">
               {tier.icon}
               <Award size={14} className="text-gray-600" />
@@ -100,7 +115,8 @@ const GroveTiers = () => {
             <ul className="space-y-3 mb-6 flex-1">
               {tier.features.map(f => (
                 <li key={f} className="flex items-start gap-2 text-[10px] text-gray-300 uppercase tracking-tight leading-tight text-left">
-                  <Check size={12} className="text-[#0D9488] mt-0.5 flex-shrink-0" /> {f}
+                  <Check size={12} className="text-[#0D9488] mt-0.5 flex-shrink-0" />
+                  <span>{f}</span>
                 </li>
               ))}
             </ul>
@@ -110,7 +126,11 @@ const GroveTiers = () => {
               onClick={() => handleCheckout(tier.id, tier.link)}
               className="w-full py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all bg-[#0D9488] text-white shadow-md hover:bg-[#11B1A3] active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {loading === tier.id ? <Loader2 className="w-3 h-3 animate-spin" /> : tier.buttonText}
+              {loading === tier.id ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : (
+                tier.buttonText
+              )}
             </button>
           </div>
         ))}
