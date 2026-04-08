@@ -1,37 +1,30 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Sidebar from './components/layout/Sidebar';
-
-import Dashboard from './pages/Dashboard'; 
-import Library from './pages/Library';
-import HorizonAudit from './pages/HorizonAudit'; 
-import SkillTranslator from './pages/SkillTranslator'; 
-import CulturalFit from './pages/CulturalFit';
-import EmbersChat from './pages/EmbersChat';
 import GroveTiers from './pages/GroveTiers';
+// Import your other components here (e.g., Dashboard, Profile, etc.)
 
-const App = () => {
+function App() {
   return (
     <Router>
-      <div className="flex bg-[#1A1423] min-h-screen">
-        <Sidebar />
-        {/* Added lg:ml-64 so the margin ONLY exists on big screens */}
-        <main className="flex-1 lg:ml-64 w-full min-h-screen overflow-x-hidden">
-          <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/library" element={<Library />} />
-            <Route path="/audit" element={<HorizonAudit />} />
-            <Route path="/translator" element={<SkillTranslator />} />
-            <Route path="/grove" element={<GroveTiers />} /> 
-            <Route path="/cultural-fit" element={<CulturalFit />} />
-            <Route path="/embers" element={<EmbersChat />} />
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
-        </main>
+      <div className="min-h-screen bg-[#1A1423]">
+        <Routes>
+          {/* THE NEW HOMEPAGE: The Grove is now the first thing people see */}
+          <Route path="/" element={<GroveTiers />} />
+
+          {/* REDIRECT: If someone types /grove, it sends them to the homepage (/) */}
+          <Route path="/grove" element={<Navigate to="/" replace />} />
+
+          {/* ADDITIONAL ROUTES: 
+            As you build out the rest of the app, add them here. 
+            Example: <Route path="/dashboard" element={<Dashboard />} />
+          */}
+
+          {/* FALLBACK: Sends any broken links back to the Grove */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </div>
     </Router>
   );
-};
+}
 
 export default App;
