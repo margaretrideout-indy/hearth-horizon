@@ -22,10 +22,10 @@ const Navigation = () => {
     { name: 'The Grove', path: '/', icon: <TreePine className="w-4 h-4" /> },
     { name: 'Your Hearth', path: '/hearth', icon: <Activity className="w-4 h-4" /> },
     { name: 'The Bridge', path: '/bridge', icon: <ArrowRightLeft className="w-4 h-4" /> },
-    { name: 'Alignment', path: '/alignment', icon: <Compass className="w-4 h-4" /> }, // Add this!
+    { name: 'Alignment', path: '/alignment', icon: <Compass className="w-4 h-4" /> }, 
     { name: 'Library', path: '/library', icon: <Library className="w-4 h-4" /> },
     { name: 'Embers Chat', path: '/chat', icon: <MessageSquare className="w-4 h-4" /> },
-    { name: 'The Canopy', path: '/canopy', icon: <Layout className="w-4 h-4" /> }, // Kept it short for the menu
+    { name: 'The Canopy', path: '/canopy', icon: <Layout className="w-4 h-4" /> }, 
   ];
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1A1423]/80 backdrop-blur-md border-b border-white/5">
