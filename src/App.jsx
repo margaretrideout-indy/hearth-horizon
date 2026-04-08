@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout } from 'lucide-react';
 
 import GroveTiers from './pages/GroveTiers';
-import LinguisticBridge from './pages/LinguisticBridge';
-import LibraryView from './components/Library';
-import EmbersChat from './components/EmbersChat';
-import CanopyView from './components/Canopy';
+import LinguisticBridge from './pages/SkillTranslator';
+import LibraryView from './pages/Library';
+import EmbersChat from './pages/EmbersChat';
+import CanopyView from './pages/Canopy';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +37,7 @@ const Navigation = () => {
               to={link.path}
               className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                 location.pathname === link.path 
-                ? 'bg-[#FF6B35] text-white shadow-lg' 
+                ? 'bg-[#FF6B35] text-white shadow-lg shadow-orange-900/20' 
                 : 'text-slate-400 hover:text-teal-400 hover:bg-white/5'
               }`}
             >
