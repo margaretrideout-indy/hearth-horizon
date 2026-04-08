@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Flame, Send, Sparkles, Loader2, Trash2 } from 'lucide-react';
+import { Flame, Send, Sparkles, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 
@@ -36,28 +36,6 @@ export default function EmbersChat() {
     refetchInterval: 5000,
   });
 
-  const purgeDatabase = async () => {
-    if (!window.confirm("FORCE CLEAR: This will attempt to delete every message in the database. Proceed?")) return;
-    try {
-      const all = await base44.entities.EmberPost.list();
-      if (all.length === 0) {
-        alert("Database already appears empty.");
-        return;
-      }
-
-      await Promise.all(all.map(post => base44.entities.EmberPost.delete(post.id)));
-      
-      // Force the UI to realize they are gone
-      await queryClient.setQueryData(['emberPosts'], []);
-      await queryClient.invalidateQueries({ queryKey: ['emberPosts'] });
-      
-      alert(`Success! Deleted ${all.length} messages. Now remove the Purge button.`);
-    } catch (err) {
-      console.error(err);
-      alert("Error: Make sure you are logged in to the site, not just viewing the preview.");
-    }
-  };
-
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [remotePosts]);
@@ -79,13 +57,6 @@ export default function EmbersChat() {
 
   return (
     <div className="flex flex-col h-full bg-[#1A1423] rounded-[2.5rem] border border-white/5 overflow-hidden shadow-2xl relative">
-      <button 
-        onClick={purgeDatabase}
-        className="absolute top-4 right-4 z-50 bg-red-600 hover:bg-red-500 text-[10px] font-bold text-white px-4 py-2 rounded-xl shadow-lg border border-white/20 flex items-center gap-2"
-      >
-        <Trash2 className="w-4 h-4" /> FORCE PURGE
-      </button>
-
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
         {FIXED_STARTERS.map((msg) => (
           <div key={msg.id} className="flex flex-col items-start opacity-90">
