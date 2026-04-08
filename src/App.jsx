@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout, Activity } from 'lucide-react';
+import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout, Activity, Compass } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/lib/AuthContext';
 import PaymentSuccess from './pages/PaymentSuccess';
