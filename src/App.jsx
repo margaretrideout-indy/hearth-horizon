@@ -10,6 +10,7 @@ import LibraryView from './pages/Library';
 import EmbersChat from './pages/EmbersChat';
 import CanopyView from './pages/Canopy';
 import YourHearth from './pages/YourHearth';
+import EcosystemAlignment from './pages/CulturalFit';
 
 const queryClient = new QueryClient();
 
@@ -21,11 +22,11 @@ const Navigation = () => {
     { name: 'The Grove', path: '/', icon: <TreePine className="w-4 h-4" /> },
     { name: 'Your Hearth', path: '/hearth', icon: <Activity className="w-4 h-4" /> },
     { name: 'The Bridge', path: '/bridge', icon: <ArrowRightLeft className="w-4 h-4" /> },
+    { name: 'Alignment', path: '/alignment', icon: <Compass className="w-4 h-4" /> }, // Add this!
     { name: 'Library', path: '/library', icon: <Library className="w-4 h-4" /> },
     { name: 'Embers Chat', path: '/chat', icon: <MessageSquare className="w-4 h-4" /> },
-    { name: 'Canopy', path: '/canopy', icon: <Layout className="w-4 h-4" /> },
+    { name: 'The Canopy', path: '/canopy', icon: <Layout className="w-4 h-4" /> }, // Kept it short for the menu
   ];
-
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1A1423]/80 backdrop-blur-md border-b border-white/5">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -94,6 +95,7 @@ const App = () => {
                 <Route path="/chat" element={<EmbersChat />} />
                 <Route path="/canopy" element={<CanopyView />} />
                 <Route path="/success" element={<PaymentSuccess />} />
+                <Route path="/alignment" element={<EcosystemAlignment />} />
               </Routes>
             </main>
           </div>
