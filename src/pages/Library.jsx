@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalLink, Sparkles, Book, Box, Briefcase } from 'lucide-react';
+import { ExternalLink, Sparkles, Book, Box, ShoppingBag } from 'lucide-react';
 
 const Library = () => {
   const provisions = [
@@ -44,7 +44,7 @@ const Library = () => {
             </h2>
           </div>
           <p className="text-slate-300 text-sm leading-relaxed max-w-4xl">
-            I only recommend provisions I have personally used or verified. Some links below are affiliate links — at no cost to you — that help keep the <span className="text-teal-400 font-semibold">Linguistic Bridge</span> free for all educators in transition.
+            I only recommend provisions I have personally used or verified. Some links below are affiliate links — at no cost to you — that help keep the <span className="text-teal-400 font-semibold uppercase tracking-tighter">Linguistic Bridge</span> free for all educators in transition.
           </p>
         </div>
       </div>
@@ -77,29 +77,41 @@ const Library = () => {
         </div>
 
         {/* Right Column: The Study */}
-        <div className="lg:col-span-1">
-          <h3 className="text-xs font-bold text-amber-500 uppercase tracking-[0.2em] mb-6">The Study</h3>
-          <div className="bg-[#251D2F] border border-white/5 rounded-2xl p-8 hover:border-amber-500/30 transition-all">
-            <div className="mb-6 p-3 bg-amber-500/10 rounded-xl w-fit text-amber-500">
+        <div className="lg:col-span-1 flex flex-col gap-6">
+          <h3 className="text-xs font-bold text-amber-500 uppercase tracking-[0.2em] mb-0">The Study</h3>
+          
+          {/* Bookshop Card */}
+          <div className="bg-[#251D2F] border border-white/5 rounded-2xl p-8 hover:border-amber-500/30 transition-all group">
+            <div className="mb-6 p-3 bg-amber-500/10 rounded-xl w-fit text-amber-500 group-hover:scale-110 transition-transform">
               <Book className="w-6 h-6" />
             </div>
             <h4 className="text-xl font-bold text-slate-100 mb-3">Bookshop.org List</h4>
             <p className="text-slate-400 text-sm mb-8 leading-relaxed">
               Support local bookstores while building your professional library with my top-rated career transition reads.
             </p>
-            <button className="w-full py-4 bg-amber-600 text-[#1A1423] font-bold rounded-lg hover:bg-amber-500 transition-all flex items-center justify-center gap-2 active:scale-95">
+            <a 
+              href="#" 
+              className="w-full py-4 bg-amber-600 text-[#1A1423] font-bold rounded-lg hover:bg-amber-500 transition-all flex items-center justify-center gap-2 active:scale-95 uppercase text-xs tracking-widest"
+            >
               View List <ExternalLink className="w-4 h-4" />
-            </button>
+            </a>
           </div>
-          
-          <div className="mt-6 bg-[#251D2F] border border-white/5 rounded-2xl p-6 flex items-center gap-4 hover:border-orange-500/30 transition-all group">
-            <div className="p-3 bg-orange-500/10 rounded-lg text-orange-500 group-hover:rotate-12 transition-transform">
-              <Box className="w-5 h-5" />
+
+          {/* New Full Amazon Essentials Card */}
+          <div className="bg-[#251D2F] border border-white/5 rounded-2xl p-8 hover:border-orange-500/30 transition-all group">
+            <div className="mb-6 p-3 bg-orange-500/10 rounded-xl w-fit text-orange-500 group-hover:scale-110 transition-transform">
+              <ShoppingBag className="w-6 h-6" />
             </div>
-            <div className="flex-1">
-              <h5 className="text-slate-100 font-bold text-sm uppercase tracking-wide">Amazon Essentials</h5>
-            </div>
-            <ExternalLink className="w-4 h-4 text-slate-600" />
+            <h4 className="text-xl font-bold text-slate-100 mb-3">Amazon Essentials</h4>
+            <p className="text-slate-400 text-sm mb-8 leading-relaxed">
+              My hand-picked workspace essentials, from ergonomic tech to the journals that kept me grounded during my 13-year tenure.
+            </p>
+            <a 
+              href="#" 
+              className="w-full py-4 border border-orange-500/20 text-orange-500 font-bold rounded-lg hover:bg-orange-500 hover:text-[#1A1423] transition-all flex items-center justify-center gap-2 active:scale-95 uppercase text-xs tracking-widest"
+            >
+              Explore Shop <ExternalLink className="w-4 h-4" />
+            </a>
           </div>
         </div>
 
