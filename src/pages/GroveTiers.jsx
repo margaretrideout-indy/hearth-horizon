@@ -66,52 +66,58 @@ const GroveTiers = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1A1423] py-20 px-6 font-sans">
-      <div className="max-w-6xl mx-auto text-center mb-16">
-        <h1 className="text-4xl md:text-5xl font-bold text-slate-100 mb-4 tracking-tight">Cultivate Your Path</h1>
-        <p className="text-lg text-slate-400 italic">Join the Grove as a Founding Wayfarer.</p>
+    <div className="min-h-screen bg-[#1A1423] py-12 md:py-20 px-4 sm:px-6 font-sans">
+      <div className="max-w-6xl mx-auto text-center mb-10 md:mb-16">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-100 mb-4 tracking-tight px-2">
+          Cultivate Your Path
+        </h1>
+        <p className="text-base sm:text-lg text-slate-400 italic">
+          Join the Grove as a Founding Wayfarer.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto items-stretch">
         {tiers.map((tier) => (
           <div 
             key={tier.id}
-            className={`relative p-10 rounded-[2.5rem] border transition-all duration-300 flex flex-col ${
+            className={`relative p-6 sm:p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border transition-all duration-300 flex flex-col ${
               tier.highlight 
-              ? 'bg-[#2D2338] border-teal-500/30 shadow-[0_0_40px_rgba(32,178,170,0.1)] scale-105 z-10' 
+              ? 'bg-[#2D2338] border-teal-500/30 shadow-[0_0_40px_rgba(32,178,170,0.1)] md:scale-105 z-10' 
               : 'bg-[#241C2E] border-slate-800/50 hover:border-teal-500/20'
             }`}
           >
-            <div className="flex justify-between items-start mb-8">
+            <div className="flex justify-between items-start mb-6 md:mb-8">
               <div className="p-3 bg-[#1A1423] rounded-xl">{tier.icon}</div>
               <Leaf className="w-5 h-5 text-slate-700" />
             </div>
 
-            <h3 className="text-3xl font-bold text-slate-100 mb-3">{tier.name}</h3>
+            <h3 className="text-2xl md:text-3xl font-bold text-slate-100 mb-3">{tier.name}</h3>
             
             <div className="mb-6">
               <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-black text-slate-100">{tier.price}</span>
-                <span className="text-xs font-bold text-teal-400 tracking-widest uppercase">{tier.unit}</span>
+                <span className="text-3xl md:text-4xl font-black text-slate-100">{tier.price}</span>
+                <span className="text-[10px] md:text-xs font-bold text-teal-400 tracking-widest uppercase">
+                  {tier.unit}
+                </span>
               </div>
               {tier.nextPrice && (
-                <div className="flex items-center gap-1.5 mt-1 text-slate-500 text-[10px] font-bold tracking-wider uppercase">
-                  <Info className="w-3 h-3" />
+                <div className="flex items-start gap-1.5 mt-2 text-slate-500 text-[10px] font-bold tracking-wider uppercase leading-tight">
+                  <Info className="w-3 h-3 mt-0.5 shrink-0" />
                   <span>Standard rate of {tier.nextPrice}/mo applies after month 1</span>
                 </div>
               )}
             </div>
 
-            <p className="text-slate-400 mb-8 italic text-lg leading-relaxed">
+            <p className="text-slate-400 mb-8 italic text-base md:text-lg leading-relaxed">
               {tier.description}
             </p>
             
-            <div className="w-full h-px bg-slate-800/50 mb-10" />
+            <div className="w-full h-px bg-slate-800/50 mb-8 md:mb-10" />
 
-            <ul className="space-y-6 mb-12 flex-grow">
+            <ul className="space-y-4 md:space-y-6 mb-10 md:mb-12 flex-grow">
               {tier.features.map((feature, idx) => (
-                <li key={idx} className="flex items-center gap-4 text-slate-300 font-bold text-[10px] tracking-widest uppercase">
-                  <Check className="w-4 h-4 text-teal-400" />
+                <li key={idx} className="flex items-center gap-3 md:gap-4 text-slate-300 font-bold text-[9px] md:text-[10px] tracking-widest uppercase">
+                  <Check className="w-4 h-4 text-teal-400 shrink-0" />
                   <span>{feature}</span>
                 </li>
               ))}
@@ -120,7 +126,7 @@ const GroveTiers = () => {
             <button
               onClick={(e) => handleCheckout(e, tier.id, tier.link)}
               disabled={loading !== null}
-              className={`w-full py-5 rounded-2xl font-black text-xs tracking-[0.2em] flex items-center justify-center gap-2 transition-all active:scale-95 ${
+              className={`w-full py-4 md:py-5 rounded-2xl font-black text-[10px] md:text-xs tracking-[0.2em] flex items-center justify-center gap-2 transition-all active:scale-95 ${
                 tier.highlight || tier.id === 'seedling'
                 ? 'bg-teal-600 hover:bg-teal-500 text-white shadow-lg shadow-teal-900/20'
                 : 'bg-[#2D2338] hover:bg-[#362b44] text-slate-100 border border-slate-700'
@@ -133,12 +139,15 @@ const GroveTiers = () => {
         ))}
       </div>
       
-      <div className="mt-20 text-center">
+      <div className="mt-12 md:mt-20 text-center px-4">
         <button 
           onClick={() => window.open('https://buy.stripe.com/14kbRcb2fbem3QccMP', '_blank')}
-          className="text-slate-500 hover:text-teal-400 transition-colors flex items-center gap-2 mx-auto text-[10px] font-bold tracking-[0.2em] group"
+          className="text-slate-500 hover:text-teal-400 transition-colors flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 mx-auto text-[10px] font-bold tracking-[0.2em] group uppercase"
         >
-          WANT TO SIMPLY PLANT A SEED? <span className="underline italic decoration-slate-700 group-hover:decoration-teal-400">DONATE HERE.</span>
+          <span>Want to simply plant a seed?</span>
+          <span className="underline italic decoration-slate-700 group-hover:decoration-teal-400">
+            Donate here.
+          </span>
         </button>
       </div>
     </div>
