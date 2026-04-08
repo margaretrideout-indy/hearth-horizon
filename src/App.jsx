@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Menu, X, Home, TreePine, Bridge, Library, MessageSquare, Layout } from 'lucide-react';
+import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout } from 'lucide-react';
 
-// Import your components
 import GroveTiers from './components/GroveTiers';
 import LinguisticBridge from './components/LinguisticBridge';
 import LibraryView from './components/Library';
@@ -28,10 +27,9 @@ const Navigation = () => {
           <div className="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center">
             <TreePine className="text-[#1A1423] w-5 h-5" />
           </div>
-          <span className="font-bold tracking-tighter text-slate-100">HEARTH HORIZON</span>
+          <span className="font-bold tracking-tighter text-slate-100 uppercase text-sm">Hearth Horizon</span>
         </div>
 
-        {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => (
             <Link
@@ -48,13 +46,11 @@ const Navigation = () => {
           ))}
         </div>
 
-        {/* Mobile Toggle */}
         <button className="md:hidden text-slate-100" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X /> : <Menu />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-[#251D2F] border-b border-white/5 p-6 flex flex-col gap-4">
           {navLinks.map((link) => (
@@ -78,17 +74,10 @@ const App = () => {
     <Router>
       <div className="min-h-screen bg-[#1A1423]">
         <Navigation />
-        
-        {/* Main Content Area */}
         <main className="pt-16">
           <Routes>
-            {/* The Grove is the default landing page */}
             <Route path="/" element={<GroveTiers />} />
-            
-            {/* The Linguistic Bridge / Skill Translator */}
             <Route path="/bridge" element={<LinguisticBridge />} />
-            
-            {/* Other Views */}
             <Route path="/library" element={<LibraryView />} />
             <Route path="/chat" element={<EmbersChat />} />
             <Route path="/canopy" element={<CanopyView />} />
