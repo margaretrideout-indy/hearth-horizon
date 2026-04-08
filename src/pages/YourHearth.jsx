@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Activity, Plus, History, BookOpen } from 'lucide-react';
+import { Download, Activity, History, Send } from 'lucide-react';
 
 const YourHearth = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [checkIn, setCheckIn] = useState('');
+  const [selectedEmoji, setSelectedEmoji] = useState(null);
+  const [reflection, setReflection] = useState('');
   const [logs, setLogs] = useState([
-    { id: 1, date: '2026-04-08', text: 'Started the Grove migration. Core tiers established.' },
-    { id: 2, date: '2026-04-07', text: 'Finalized Stripe integration and Plum/Teal theme.' }
+    { id: 1, date: '2026-04-08', emoji: '🌲', text: 'Feeling grounded as the Grove comes together.' },
+    { id: 2, date: '2026-04-07', emoji: '✨', text: 'Finalized the Plum & Teal aesthetic. It feels right.' }
   ]);
+
+  const emojis = [
+    { icon: '🌱', label: 'Growing' },
+    { icon: '🔥', label: 'Energized' },
+    { icon: '🍃', label: 'Peaceful' },
+    { icon: '🪵', label: 'Grounded' },
+    { icon: '✨', label: 'Inspired' },
+    { icon: '☁️', label: 'Dreamy' },
+    { icon: '🌊', label: 'Fluid' },
+    { icon: '🌙', label: 'Reflective' }
+  ];
 
   useEffect(() => {
     const handler = (e) => {
@@ -25,103 +37,114 @@ const YourHearth = () => {
     if (outcome === 'accepted') setDeferredPrompt(null);
   };
 
-  const handleAddLog = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!checkIn.trim()) return;
-    const newLog = {
+    if (!selectedEmoji) return;
+    
+    const newEntry = {
       id: Date.now(),
-      date: new Date().toISOString().split('T')[0],
-      text: checkIn
+      date: new Date().toLocaleDateString('en-CA'),
+      emoji: selectedEmoji,
+      text: reflection
     };
-    setLogs([newLog, ...logs]);
-    setCheckIn('');
+    
+    setLogs([newEntry, ...logs]);
+    setSelectedEmoji(null);
+    setReflection('');
   };
 
   return (
-    <div className="min-h-screen bg-[#1A1423] p-6 pt-24">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="min-h-screen bg-[#1A1423] pt-24 pb-20 px-6">
+      <div className="max-w-4xl mx-auto space-y-12">
         
-        {/* Header Section */}
-        <div className="text-center space-y-4 mb-12">
-          <div className="w-16 h-16 bg-teal-500/10 rounded-2xl flex items-center justify-center mx-auto border border-teal-500/20 shadow-lg shadow-teal-500/5">
-            <Activity className="text-teal-400 w-8 h-8" />
+        {/* Main Entry Card */}
+        <div className="bg-[#251D2F] rounded-[3rem] p-10 md:p-16 border border-white/5 shadow-2xl text-center">
+          <div className="w-16 h-16 bg-[#1A1423] rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-inner border border-white/5">
+            <Activity className="text-teal-400 w-6 h-6" />
           </div>
-          <h1 className="text-4xl font-serif font-bold text-white tracking-tight">Your Hearth</h1>
-          <p className="text-slate-400 italic">"The foundational space for your daily rhythm."</p>
+
+          <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4 tracking-tight">Your Hearth</h1>
+          <p className="text-slate-400 italic mb-12">How is your internal weather today?</p>
+
+          {/* Emoji Selection Grid */}
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-4 mb-10 max-w-2xl mx-auto">
+            {emojis.map((e) => (
+              <button
+                key={e.label}
+                onClick={() => setSelectedEmoji(e.icon)}
+                className={`group flex flex-col items-center gap-2 p-3 rounded-2xl transition-all ${
+                  selectedEmoji === e.icon ? 'bg-teal-500/20 scale-110 ring-1 ring-teal-500/50' : 'hover:bg-white/5'
+                }`}
+              >
+                <span className="text-2xl grayscale group-hover:grayscale-0 transition-all">{e.icon}</span>
+                <span className="text-[8px] font-black uppercase tracking-widest text-slate-500 group-hover:text-teal-400 transition-colors">
+                  {e.label}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          {/* Optional Reflection */}
+          <form onSubmit={handleSubmit} className="max-w-xl mx-auto space-y-6">
+            <textarea
+              value={reflection}
+              onChange={(e) => setReflection(e.target.value)}
+              placeholder="Add an optional reflection..."
+              className="w-full bg-[#1A1423]/50 border border-white/5 rounded-3xl p-6 text-slate-300 text-center italic focus:outline-none focus:border-teal-500/30 transition-all resize-none shadow-inner"
+            />
+            
+            <button
+              disabled={!selectedEmoji}
+              type="submit"
+              className={`px-10 py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] transition-all flex items-center gap-3 mx-auto shadow-lg ${
+                selectedEmoji 
+                ? 'bg-teal-500 text-[#1A1423] hover:bg-teal-400 shadow-teal-500/10' 
+                : 'bg-white/5 text-slate-600 cursor-not-allowed'
+              }`}
+            >
+              <Send className="w-3 h-3" /> Log Entry
+            </button>
+          </form>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Check-In Form */}
-          <div className="lg:col-span-1 space-y-6">
-            <div className="bg-[#251D2F] rounded-3xl p-6 border border-white/5 shadow-xl">
-              <h3 className="text-teal-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
-                <Plus className="w-3 h-3" /> New Check-In
-              </h3>
-              <form onSubmit={handleAddLog} className="space-y-4">
-                <textarea 
-                  value={checkIn}
-                  onChange={(e) => setCheckIn(e.target.value)}
-                  placeholder="What's on your mind today?"
-                  className="w-full h-32 bg-[#1A1423] border border-white/5 rounded-2xl p-4 text-slate-300 text-sm focus:outline-none focus:border-teal-500/50 transition-all resize-none"
-                />
-                <button 
-                  type="submit"
-                  className="w-full py-4 bg-teal-500 text-[#1A1423] rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-teal-400 transition-all active:scale-95"
-                >
-                  Log Entry
-                </button>
-              </form>
+        {/* Logbook History */}
+        {logs.length > 0 && (
+          <div className="space-y-6">
+            <div className="flex items-center gap-4 px-6">
+              <History className="w-4 h-4 text-slate-500" />
+              <h3 className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em]">Hearth Logbook</h3>
+              <div className="h-px bg-white/5 flex-grow" />
             </div>
 
-            {/* Install Button (Sidecard) */}
-            {deferredPrompt && (
-              <div className="bg-teal-500/5 rounded-3xl p-6 border border-teal-500/20">
-                <h3 className="text-teal-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Native Access</h3>
-                <button 
-                  onClick={handleInstall}
-                  className="w-full flex items-center justify-center gap-2 py-3 border border-teal-400/30 rounded-xl text-teal-400 text-[9px] font-black uppercase tracking-widest hover:bg-teal-400 hover:text-[#1A1423] transition-all"
-                >
-                  <Download className="w-3 h-3" /> Install App
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Logbook Feed */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-[#251D2F] rounded-3xl p-8 border border-white/5 shadow-xl min-h-[400px]">
-              <h3 className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-8 flex items-center gap-2">
-                <History className="w-3 h-3" /> Recent History
-              </h3>
-              
-              <div className="space-y-6">
-                {logs.map(log => (
-                  <div key={log.id} className="group relative pl-6 border-l border-white/5">
-                    <div className="absolute left-[-4px] top-1.5 w-2 h-2 rounded-full bg-teal-500/30 group-hover:bg-teal-500 transition-all" />
-                    <div className="text-[10px] text-slate-500 font-bold mb-1">{log.date}</div>
-                    <p className="text-slate-300 text-sm leading-relaxed">{log.text}</p>
+            <div className="grid gap-4">
+              {logs.map((log) => (
+                <div key={log.id} className="bg-[#251D2F]/50 border border-white/5 rounded-3xl p-6 flex items-start gap-6 hover:bg-[#251D2F] transition-colors group">
+                  <div className="text-3xl bg-[#1A1423] w-16 h-16 rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
+                    {log.emoji}
                   </div>
-                ))}
-              </div>
-
-              {logs.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-20 text-slate-600">
-                  <BookOpen className="w-12 h-12 mb-4 opacity-20" />
-                  <p className="text-xs italic">The logbook is empty. Write your first entry.</p>
+                  <div className="flex-grow pt-1">
+                    <div className="text-[9px] font-black text-teal-500/50 uppercase tracking-widest mb-2">{log.date}</div>
+                    <p className="text-slate-300 italic font-light leading-relaxed">
+                      {log.text || "No reflection added."}
+                    </p>
+                  </div>
                 </div>
-              )}
+              ))}
             </div>
           </div>
+        )}
 
-        </div>
-
-        <div className="text-center py-12 opacity-30">
-          <p className="text-slate-500 text-[9px] uppercase tracking-[0.4em] font-medium">
-            Personal Workspace • Secure & Encrypted
-          </p>
-        </div>
-
+        {/* Discrete Install Button */}
+        {deferredPrompt && (
+          <div className="pt-12 flex justify-center">
+            <button 
+              onClick={handleInstall}
+              className="text-[9px] text-slate-600 uppercase tracking-[0.5em] hover:text-teal-400 transition-colors flex items-center gap-2"
+            >
+              <Download className="w-3 h-3" /> System: Native Install Ready
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
