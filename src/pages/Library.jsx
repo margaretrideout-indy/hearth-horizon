@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { BookOpen, Bookmark, Sparkles, ExternalLink, ArrowRight, PenTool, Check } from 'lucide-react';
+import { BookOpen, Bookmark, Sparkles, ExternalLink, ArrowRight, PenTool, Check, ShoppingBag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Library() {
@@ -53,20 +53,13 @@ export default function Library() {
         <div className="bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-6 md:p-8">
           <AnimatePresence mode="wait">
             {savedItems.length === 0 ? (
-              <motion.div 
-                initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
-                className="flex flex-col items-center justify-center py-10 text-center space-y-4 border-2 border-dashed border-white/5 rounded-[1.5rem]"
-              >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-10 text-center space-y-4 border-2 border-dashed border-white/5 rounded-[1.5rem]">
                 <Sparkles className="w-5 h-5 text-slate-700" />
                 <div className="space-y-1">
                   <p className="text-slate-300 text-sm font-medium">Your mantle is currently empty.</p>
                   <p className="text-slate-500 text-[11px] italic">Adopt a tool from the workshop below to see it here.</p>
                 </div>
-                <button 
-                  onClick={scrollToProvisions} 
-                  className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-teal-500 pt-2"
-                >
+                <button onClick={scrollToProvisions} className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-teal-500 pt-2">
                   Explore Provisions Below <ArrowRight className="w-3 h-3" />
                 </button>
               </motion.div>
@@ -97,23 +90,25 @@ export default function Library() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
-            { name: 'Teal', desc: 'Manage your job search and optimize applications.' },
-            { name: 'Jobscan', desc: 'Match your resume against job descriptions.' }
+            { name: 'Teal', desc: 'Manage your job search and optimize applications.', url: 'https://www.tealhq.com/' },
+            { name: 'Jobscan', desc: 'Match your resume against job descriptions.', url: 'https://www.jobscan.co/' }
           ].map((tool) => (
-            <div key={tool.name} className="bg-[#251D2F] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/30 transition-all group">
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-2xl font-black text-white">{tool.name}</h3>
-                <button 
-                  onClick={() => handleAddToMantle(tool.name, tool.desc)}
-                  className={`p-2 rounded-xl border transition-all ${addingId === tool.name ? 'bg-teal-500/20 border-teal-500 text-teal-400' : 'bg-white/5 border-white/10 text-slate-500 hover:text-white'}`}
-                >
-                  {addingId === tool.name ? <Check className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
-                </button>
+            <div key={tool.name} className="bg-[#251D2F] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/30 transition-all group flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-2xl font-black text-white">{tool.name}</h3>
+                  <button 
+                    onClick={() => handleAddToMantle(tool.name, tool.desc)}
+                    className={`p-2 rounded-xl border transition-all ${addingId === tool.name ? 'bg-teal-500/20 border-teal-500 text-teal-400' : 'bg-white/5 border-white/10 text-slate-500 hover:text-white'}`}
+                  >
+                    {addingId === tool.name ? <Check className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
+                  </button>
+                </div>
+                <p className="text-slate-400 text-sm leading-relaxed mb-8">{tool.desc}</p>
               </div>
-              <p className="text-slate-400 text-sm leading-relaxed mb-8">{tool.desc}</p>
-              <button className="w-full py-4 bg-teal-600 hover:bg-teal-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2">
+              <a href={tool.url} target="_blank" rel="noopener noreferrer" className="w-full py-4 bg-teal-600 hover:bg-teal-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 text-center">
                 Explore Tool <ExternalLink className="w-3.5 h-3.5" />
-              </button>
+              </a>
             </div>
           ))}
         </div>
@@ -127,21 +122,43 @@ export default function Library() {
           </div>
           <h2 className="text-xl font-bold text-white tracking-tight leading-none">The Study</h2>
         </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-[#251D2F] border border-white/5 p-8 rounded-[2.5rem] hover:border-orange-500/30 transition-all group">
-            <h3 className="text-2xl font-black text-white mb-2">Bookshop.org List</h3>
-            <p className="text-slate-400 text-sm leading-relaxed mb-6">Support local bookstores while building your professional library with my top-rated reads.</p>
-            <button className="w-full py-4 bg-orange-600 hover:bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2">
-              View List <ExternalLink className="w-3.5 h-3.5" />
-            </button>
+          {/* Bookshop.org */}
+          <div className="bg-[#251D2F] border border-white/5 p-8 rounded-[2.5rem] hover:border-orange-500/30 transition-all group flex flex-col justify-between">
+            <div>
+              <div className="flex justify-between items-start mb-4">
+                <ShoppingBag className="w-6 h-6 text-orange-500/50" />
+              </div>
+              <h3 className="text-2xl font-black text-white mb-2">Bookshop.org List</h3>
+              <p className="text-slate-400 text-sm leading-relaxed mb-6">Support local bookstores while building your professional library with my top-rated reads for leadership and career pivots.</p>
+            </div>
+            <div className="space-y-4">
+              <a href="#" className="w-full py-4 bg-orange-600 hover:bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 text-center">
+                View List <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+              <p className="text-[9px] text-slate-600 text-center italic uppercase tracking-tighter">Your support helps keep the hearth burning.</p>
+            </div>
           </div>
 
-          <div className="bg-[#251D2F] border border-white/5 p-8 rounded-[2.5rem] hover:border-orange-500/30 transition-all group">
-            <h3 className="text-2xl font-black text-white mb-2">Amazon Essentials</h3>
-            <p className="text-slate-400 text-sm leading-relaxed mb-6">Hand-picked workspace essentials and journals that kept me grounded during my 13-year tenure.</p>
-            <button className="w-full py-4 bg-orange-600 hover:bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2">
-              Explore Shop <ExternalLink className="w-3.5 h-3.5" />
-            </button>
+          {/* Amazon Essentials */}
+          <div className="bg-[#251D2F] border border-white/5 p-8 rounded-[2.5rem] hover:border-orange-500/30 transition-all group flex flex-col justify-between">
+            <div>
+              <div className="flex justify-between items-start mb-4">
+                <ShoppingBag className="w-6 h-6 text-orange-500/50" />
+              </div>
+              <h3 className="text-2xl font-black text-white mb-2">Amazon Essentials</h3>
+              <p className="text-slate-400 text-sm leading-relaxed mb-6">Hand-picked workspace essentials and journals that kept me grounded during 13 years of leadership.</p>
+            </div>
+            <div className="space-y-4">
+              <a href="#" className="w-full py-4 bg-orange-600 hover:bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl transition-all flex items-center justify-center gap-2 text-center">
+                Explore Shop <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+              {/* MANDATORY AMAZON DISCLOSURE */}
+              <p className="text-[9px] text-slate-600 text-center italic uppercase tracking-tighter leading-tight">
+                As an Amazon Associate I earn from qualifying purchases.
+              </p>
+            </div>
           </div>
         </div>
       </section>
