@@ -43,7 +43,7 @@ export default function CulturalFit({ userAnalysis, targetJob }) {
       {/* THE TREK TRACKER */}
       <nav className="flex justify-center items-center gap-8 md:gap-16 border-b border-white/5 pb-10">
         {[
-          { id: 1, label: "01. THE CLEARING", icon: TreePine }, // Updated from DECODE
+          { id: 1, label: "01. THE CLEARING", icon: TreePine },
           { id: 2, label: "02. ALIGN", icon: Compass },
           { id: 3, label: "03. SURVEY", icon: Mountain }
         ].map((step) => (
@@ -69,14 +69,13 @@ export default function CulturalFit({ userAnalysis, targetJob }) {
               <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Equipping the Traveler</p>
             </header>
 
-            {/* CARD 1: THE LINGUISTIC BRIDGE */}
             <Card className="p-8 bg-[#1C1622]/60 border-white/10 shadow-2xl space-y-8">
               <div className="space-y-1">
                 <div className="flex items-center gap-2 text-teal-500">
                   <ArrowRightLeft size={18} />
                   <h3 className="text-white font-black text-sm uppercase tracking-widest">The Linguistic Bridge</h3>
                 </div>
-                <p className="text-[10px] text-gray-500 uppercase font-bold tracking-tight italic">Translate your local achievements into the dialects of the new world</p>
+                <p className="text-[10px] text-gray-500 uppercase font-bold tracking-tight italic">Translate your achievements into the dialects of the new world</p>
               </div>
 
               <div className="flex gap-3">
@@ -112,36 +111,76 @@ export default function CulturalFit({ userAnalysis, targetJob }) {
               </div>
             </Card>
 
-            {/* CARD 2: THE NARRATIVE BEACON */}
-            <Card className={`p-8 border-dashed backdrop-blur-xl transition-all duration-500 ${userAnalysis ? 'bg-teal-500/[0.03] border-teal-500/30' : 'bg-white/[0.02] border-white/10'}`}>
+            <Card className={`p-8 border-dashed backdrop-blur-xl transition-all duration-500 ${userAnalysis ? 'bg-teal-500/[0.03] border-teal-500/30 shadow-[0_0_40px_rgba(20,184,166,0.05)]' : 'bg-white/[0.02] border-white/10'}`}>
               {userAnalysis ? (
                 <div className="space-y-6">
-                  <div className="space-y-1">
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-2 text-teal-500">
-                        <Sparkles size={18} />
-                        <h3 className="text-white font-black text-sm uppercase tracking-widest">The Narrative Beacon</h3>
-                      </div>
-                      <Badge className="bg-teal-500 text-black font-black text-[9px] tracking-widest px-2">HEARTH SYNTHESIS ACTIVE</Badge>
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2 text-teal-500">
+                      <Sparkles size={18} />
+                      <h3 className="text-white font-black text-sm uppercase tracking-widest">The Narrative Beacon</h3>
                     </div>
+                    <Badge className="bg-teal-500 text-black font-black text-[9px] tracking-widest px-2 uppercase">Hearth Synthesis Active</Badge>
                   </div>
-                  
-                  <h2 className="text-2xl text-gray-100 italic font-medium leading-relaxed">
+                  <h2 className="text-2xl text-gray-100 italic font-medium leading-relaxed italic">
                     "{userAnalysis.identityStatement}"
                   </h2>
                 </div>
               ) : (
-                <div className="py-6 text-center space-y-4 text-gray-500 italic text-xs">
-                  Anchor your history in The Hearth to light your Narrative Beacon.
-                </div>
+                <div className="py-6 text-center text-gray-500 italic text-xs">Anchor your history in The Hearth to light your Narrative Beacon.</div>
               )}
             </Card>
 
             {userAnalysis && (
-              <Button onClick={() => setActiveStep(2)} className="w-full h-16 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl gap-3">
+              <Button onClick={() => setActiveStep(2)} className="w-full h-16 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl gap-3 shadow-[0_10px_40px_rgba(20,184,166,0.2)]">
                 ESTABLISH A BEARING <ArrowRight size={20} />
               </Button>
             )}
+          </div>
+        )}
+
+        {/* STAGE 02: THE COMPASS (The Fix) */}
+        {activeStep === 2 && (
+          <div className="space-y-8 animate-in slide-in-from-right-4 duration-500 text-center">
+             <header className="space-y-2">
+              <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">The Compass</h1>
+              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2 tracking-[0.3em]">Narrative Alignment</p>
+            </header>
+            <Card className="p-8 bg-[#1C1622]/80 border-white/10 space-y-8 shadow-2xl">
+              <div className="p-10 bg-black/40 rounded-2xl border border-white/5 space-y-6">
+                <div className="flex justify-between items-center border-b border-white/5 pb-4">
+                  <span className="text-[10px] font-black text-teal-400 uppercase tracking-widest">Market Topography</span>
+                  <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 font-black tracking-widest italic uppercase tracking-widest">$100,290 Avg. Target</Badge>
+                </div>
+                <p className="text-gray-300 italic text-xl leading-relaxed max-w-2xl mx-auto italic">
+                  "Mapping your expertise in **{userAnalysis?.legacyDomain}** against the high-value terrain of **{userAnalysis?.corporateEquivalent}**. This is your most viable path through the wild."
+                </p>
+              </div>
+              <Button onClick={handleAlign} disabled={isAligning} className="w-full h-20 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl text-lg tracking-widest shadow-xl uppercase tracking-widest">
+                {isAligning ? <Loader2 className="animate-spin mr-3" size={24} /> : <><Zap size={22} className="mr-3" /> ALIGN NARRATIVE</>}
+              </Button>
+            </Card>
+          </div>
+        )}
+
+        {/* STAGE 03: THE WILDS */}
+        {activeStep === 3 && (
+          <div className="animate-in zoom-in-95 duration-700 text-center space-y-8">
+            <header className="space-y-2">
+              <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">The Wilds</h1>
+              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2 tracking-[0.3em]">Surveying Opportunities</p>
+            </header>
+            <Card className="p-16 bg-[#1C1622]/90 border-teal-500/20 shadow-2xl space-y-10 border-double border-4">
+              <div className="w-24 h-24 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto border border-teal-500/20">
+                <Mountain className="w-12 h-12 text-teal-400" />
+              </div>
+              <div className="space-y-4">
+                <h2 className="text-3xl font-bold text-white italic underline underline-offset-[12px] decoration-teal-500">Your Bearing is Fixed.</h2>
+                <p className="text-gray-500 italic max-w-sm mx-auto text-sm pt-4 leading-relaxed italic">Your professional crossing is complete. The new world is open to you.</p>
+              </div>
+              <Button onClick={() => window.location.href='/canopy'} className="bg-teal-600 hover:bg-teal-500 text-white px-16 h-20 rounded-2xl font-black gap-3 shadow-2xl text-lg uppercase tracking-widest">
+                <Binoculars size={24} /> SURVEY THE LANDSCAPE
+              </Button>
+            </Card>
           </div>
         )}
       </main>
