@@ -37,7 +37,6 @@ export default function CulturalFit({ userAnalysis }) {
     }, 2000);
   };
 
-  // Expanded market options for the Compass
   const marketTrajectories = [
     { domain: "L&D Strategy", salary: "$100,290", fit: "98%", desc: "Focus on curriculum scaling and educational operations." },
     { domain: "Project Management", salary: "$95,500", fit: "92%", desc: "Focus on lifecycle deliverables and cross-functional alignment." },
@@ -76,7 +75,6 @@ export default function CulturalFit({ userAnalysis }) {
               <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Equipping the Traveler</p>
             </header>
 
-            {/* THE LINGUISTIC BRIDGE */}
             <Card className="p-8 bg-[#1C1622]/60 border-white/10 shadow-2xl space-y-8">
               <div className="space-y-1">
                 <div className="flex items-center gap-2 text-teal-500">
@@ -93,7 +91,7 @@ export default function CulturalFit({ userAnalysis }) {
                 </div>
                 <div className="flex gap-3">
                   <Input 
-                    placeholder="e.g., 'I managed the classroom budget' or 'I led parent-teacher conferences'..."
+                    placeholder="e.g., 'I managed the classroom budget'..."
                     className="bg-black/40 border-white/10 text-gray-200 h-14 italic focus:border-teal-500/50 transition-colors"
                     value={manualInput}
                     onChange={(e) => setManualInput(e.target.value)}
@@ -126,7 +124,6 @@ export default function CulturalFit({ userAnalysis }) {
               </div>
             </Card>
 
-            {/* THE NARRATIVE BEACON */}
             <Card className="p-8 border-dashed border-teal-500/30 bg-teal-500/[0.03] backdrop-blur-xl">
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
@@ -137,7 +134,7 @@ export default function CulturalFit({ userAnalysis }) {
                   <Badge className="bg-teal-500 text-black font-black text-[9px] tracking-widest px-2 uppercase">Hearth Synthesis Active</Badge>
                 </div>
                 <h2 className="text-2xl text-gray-100 italic font-medium leading-relaxed">
-                  "{userAnalysis?.identityStatement || "A strategic architect of human capital with 13 years of expertise in curriculum scaling and educational operations."}"
+                  "A strategic architect of human capital with <span className="text-teal-400 font-bold">13 years</span> of expertise in <span className="text-teal-400 font-bold">curriculum scaling</span> and <span className="text-teal-400 font-bold">educational operations</span>."
                 </h2>
               </div>
             </Card>
@@ -148,7 +145,7 @@ export default function CulturalFit({ userAnalysis }) {
           </div>
         )}
 
-        {/* STAGE 02: THE COMPASS (Expanded with multiple trajectories) */}
+        {/* STAGE 02: THE COMPASS */}
         {activeStep === 2 && (
           <div className="space-y-8 animate-in slide-in-from-right-4 duration-500 text-center">
              <header className="space-y-2">
@@ -182,7 +179,7 @@ export default function CulturalFit({ userAnalysis }) {
 
             <Card className="p-8 bg-black/40 border border-white/5">
                 <p className="text-gray-400 italic text-sm leading-relaxed max-w-lg mx-auto">
-                  "The Compass reveals multiple viable paths through the Canadian landscape. While **Human Capital & L&D** is your strongest bearing, your expertise in **Operations** and **Project Management** remains highly valuable."
+                  "The Compass reveals multiple viable paths through the Canadian landscape. While <span className="text-teal-400 font-bold">Human Capital & L&D</span> is your strongest bearing, your expertise in <span className="text-teal-400 font-bold">Operations</span> and <span className="text-teal-400 font-bold">Project Management</span> remains highly valuable."
                 </p>
             </Card>
 
