@@ -21,7 +21,8 @@ const EcosystemAlignment = () => {
     retry: false
   });
 
-  const isAdmin = user?.email === 'margaretpardy@gmail.com'; 
+  const userEmail = user?.email?.toLowerCase() || '';
+  const isAdmin = userEmail === 'margaretpardy@gmail.com'; 
   const isAuthorized = isAdmin || user?.subscription_tier === 'Steward' || user?.subscription_tier === 'Hearthkeeper';
 
   useEffect(() => {
@@ -58,9 +59,7 @@ const EcosystemAlignment = () => {
   const runScanner = () => {
     if (jobText.length < 10) return { compatibility: null, friction: null };
     const lowercase = jobText.toLowerCase();
-    
     const activeEthics = ethicsOptions.filter(o => selectedEthics.includes(o.id));
-    
     const matched = activeEthics.find(o => o.keywords.some(k => lowercase.includes(k)));
     const frictionKeywords = ['fast-paced', 'high-pressure', 'hustle', 'urgent', 'always-on', 'tight deadlines'];
     const hasFriction = frictionKeywords.some(k => lowercase.includes(k));
@@ -170,7 +169,7 @@ const EcosystemAlignment = () => {
                   ))}
                 </div>
               </div>
-              <div className="lg:col-span-5 p-8 border border-dashed border-white/5 rounded-3xl flex flex-col justify-center text-center italic text-gray-500 text-sm leading-relaxed">
+              <div className="lg:col-span-5 p-8 border border-dashed border-white/5 rounded-3xl flex flex-col justify-center text-center italic text-gray-500 text-sm leading-relaxed font-light">
                 "Your ethics aren't just values—they're constraints that protect your focus."
               </div>
             </div>
@@ -233,7 +232,7 @@ const EcosystemAlignment = () => {
                   value={jobText}
                   onChange={(e) => setJobText(e.target.value)}
                   placeholder="Paste a job description or company values statement here..."
-                  className="w-full h-56 bg-black/40 border border-white/5 rounded-3xl p-8 text-sm text-gray-300 focus:outline-none focus:border-orange-500/20 transition-all mb-8 font-light resize-none"
+                  className="w-full h-56 bg-black/40 border border-white/5 rounded-3xl p-8 text-sm text-gray-300 focus:outline-none focus:border-orange-500/20 transition-all mb-8 font-light resize-none shadow-inner"
                 />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
                   {isAnalyzing && (
@@ -249,7 +248,7 @@ const EcosystemAlignment = () => {
                       <CheckCircle2 className="w-4 h-4 text-teal-400" />
                       <span className="text-[9px] font-black text-teal-400 uppercase tracking-[0.2em]">Compatibility Signals</span>
                     </div>
-                    <div className="text-xs text-gray-400 italic">
+                    <div className="text-xs text-gray-400 font-light italic leading-relaxed">
                       {jobText.length > 5 ? (
                         <div className="flex gap-3 text-white/80">
                           <Zap className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" /> 
@@ -263,7 +262,7 @@ const EcosystemAlignment = () => {
                       <ShieldAlert className="w-4 h-4 text-red-400" />
                       <span className="text-[9px] font-black text-red-400 uppercase tracking-[0.2em]">Operational Friction</span>
                     </div>
-                    <div className="text-xs text-gray-400 italic">
+                    <div className="text-xs text-gray-400 font-light italic leading-relaxed">
                       {jobText.length > 5 ? (
                         <div className="flex gap-3 text-white/80">
                           <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
