@@ -15,16 +15,6 @@ const EcosystemAlignment = () => {
   const [selectedEthics, setSelectedEthics] = useState([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  const { data: user, isLoading } = useQuery({ 
-    queryKey: ['me'], 
-    queryFn: () => window.base44.auth.me(),
-    retry: false
-  });
-
-  const userEmail = user?.email?.toLowerCase() || '';
-  const isAdmin = userEmail === 'margaretpardy@gmail.com'; 
-  const isAuthorized = isAdmin || user?.subscription_tier === 'Steward' || user?.subscription_tier === 'Hearthkeeper';
-
   useEffect(() => {
     const saved = localStorage.getItem('alignment_ethics_v1');
     if (saved) setSelectedEthics(JSON.parse(saved));
@@ -80,29 +70,6 @@ const EcosystemAlignment = () => {
     link.download = `Hearth_Alignment_Report.txt`;
     link.click();
   };
-
-  if (isLoading) return (
-    <div className="min-h-screen bg-[#1A1423] flex flex-col items-center justify-center text-teal-500">
-      <Sparkles className="w-8 h-8 animate-pulse mb-4" />
-      <span className="text-[10px] font-black uppercase tracking-[0.4em]">Reading the stars...</span>
-    </div>
-  );
-
-  if (!isAuthorized) return (
-    <div className="min-h-screen bg-[#1A1423] flex flex-col items-center justify-center p-6 text-center">
-      <div className="w-16 h-16 rounded-full bg-orange-500/10 flex items-center justify-center mb-6 border border-orange-500/20">
-        <ShieldAlert className="text-orange-500 w-8 h-8" />
-      </div>
-      <h2 className="text-2xl font-serif text-white mb-4">This path is reserved for Stewards.</h2>
-      <p className="text-slate-400 mb-8 max-w-md text-sm leading-relaxed font-light">
-        The Ecosystem Alignment tool and Culture Stress-Test are part of the Steward membership. 
-        Upgrade in The Grove to unlock full access.
-      </p>
-      <Link to="/" className="px-8 py-4 bg-teal-500 text-[#1A1423] font-black uppercase text-[10px] tracking-widest rounded-xl hover:bg-teal-400 transition-all shadow-[0_0_20px_rgba(45,212,191,0.2)]">
-        Visit The Grove
-      </Link>
-    </div>
-  );
 
   const sectors = [
     { name: 'EdTech / Learning Platforms', match: 95, vibe: 'Growth-focused, mission-driven' },
