@@ -1,159 +1,159 @@
-import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ShieldCheck, CheckCircle, Loader2, Users } from 'lucide-react';
-import { toast } from 'sonner';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { 
+  Users, 
+  Crown, 
+  Activity, 
+  Search, 
+  Settings, 
+  ShieldCheck, 
+  Mail, 
+  Clock 
+} from 'lucide-react';
 
-const ADMIN_EMAILS = ['margaret@hearthandhorizon.ca'];
+const AdminDashboard = () => {
+  const [users, setUsers] = useState([]);
+  const [seatRequests, setSeatRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const teal = "#2DD4BF";
 
-export default function AdminDashboard() {
-  const queryClient = useQueryClient();
-  const [approving, setApproving] = React.useState(null);
+  useEffect(() => {
+    const fetchForestData = async () => {
+      try {
+        const m = await import('@/api/base44Client');
+        
+        // Fetching Users and Sponsorship Requests simultaneously
+        const [userRes, seatRes] = await Promise.all([
+          m.base44.entities.UserProfile.list(),
+          m.base44.entities.SeatRequest.list()
+        ]);
 
-  const { data: user } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
-  const { data: requests = [], isLoading } = useQuery({
-    queryKey: ['seatRequests'],
-    queryFn: () => base44.entities.SeatRequest.list('-created_date', 100),
-  });
-  const { data: vouchers = [] } = useQuery({
-    queryKey: ['vouchers'],
-    queryFn: () => base44.entities.VoucherPool.list(),
-  });
-
-  const isAdmin = user?.role === 'admin' || ADMIN_EMAILS.includes(user?.email);
-
-  if (!isAdmin) {
-    return (
-      <div className="flex items-center justify-center h-[60vh]">
-        <div className="text-center space-y-2">
-          <ShieldCheck className="w-10 h-10 text-muted-foreground mx-auto" />
-          <p className="text-muted-foreground text-sm">Access restricted to administrators.</p>
-        </div>
-      </div>
-    );
-  }
-
-  const handleApprove = async (request) => {
-    setApproving(request.id);
-    const now = new Date();
-    const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
-
-    await base44.entities.SeatRequest.update(request.id, {
-      status: 'approved',
-      approved_date: now.toISOString(),
-      approved_until: expiresAt.toISOString(),
-    });
-
-    await base44.entities.VoucherPool.create({
-      sponsor_email: 'admin@hearthandhorizon.ca',
-      amount_paid: 0,
-      status: 'claimed',
-      claimed_by: request.email,
-      claimed_date: now.toISOString(),
-    });
-
-    queryClient.invalidateQueries({ queryKey: ['seatRequests'] });
-    queryClient.invalidateQueries({ queryKey: ['vouchers'] });
-    toast.success(`Seat approved for ${request.name}. Access granted for 30 days.`);
-    setApproving(null);
-  };
-
-  const pending = requests.filter(r => r.status === 'pending');
-  const approved = requests.filter(r => r.status === 'approved');
+        setUsers(userRes.data || []);
+        setSeatRequests(seatRes.data || []);
+      } catch (error) {
+        console.error("Failed to sync with the mycelium network:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchForestData();
+  }, []);
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
-      <div>
-        <div className="flex items-center gap-2 mb-1">
-          <ShieldCheck className="w-4 h-4 text-secondary" />
-          <p className="text-sm text-secondary font-medium">Admin only</p>
+    <div className="min-h-screen bg-[#1A1423] text-slate-200 p-8 font-sans">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <ShieldCheck style={{ color: teal }} className="w-5 h-5" />
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">System Oversight</span>
+          </div>
+          <h1 className="text-4xl font-serif font-bold text-white tracking-tight">Forest Admin</h1>
         </div>
-        <h1 className="font-heading text-3xl mb-1" style={{ fontWeight: 600 }}>Voucher Queue Manager</h1>
-        <p className="text-muted-foreground text-sm">Review and approve sponsored seat requests from the Seedling queue.</p>
+        
+        <div className="relative w-full md:w-64">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <input 
+            type="text" 
+            placeholder="Search dwellers..." 
+            className="w-full bg-[#251D2F] border border-white/5 rounded-xl py-3 pl-10 pr-4 text-xs focus:outline-none focus:border-[#2DD4BF]/50 transition-all shadow-inner"
+          />
+        </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {[
-          { label: 'Pending', value: pending.length, color: 'text-yellow-400' },
-          { label: 'Approved', value: approved.length, color: 'text-secondary' },
-          { label: 'Available Vouchers', value: vouchers.filter(v => v.status === 'available').length, color: 'text-foreground' },
-        ].map(s => (
-          <Card key={s.label} className="p-4 rounded-2xl text-center">
-            <div className={`text-2xl font-heading font-bold ${s.color}`}>{s.value}</div>
-            <div className="text-xs text-muted-foreground mt-0.5">{s.label}</div>
-          </Card>
+          { label: 'Total Dwellers', value: users.length, icon: Users, color: teal },
+          { label: 'Seat Requests', value: seatRequests.length, icon: Mail, color: '#A855F7' },
+          { label: 'Active Tiers', value: 'Found Founding', icon: Activity, color: '#F43F5E' },
+        ].map((stat, i) => (
+          <div key={i} className="bg-[#251D2F] p-8 rounded-[2rem] border border-white/5 relative overflow-hidden group hover:border-white/10 transition-all shadow-2xl">
+            <stat.icon style={{ color: stat.color }} className="absolute right-[-10px] bottom-[-10px] w-24 h-24 opacity-5 group-hover:opacity-10 transition-opacity" />
+            <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-black mb-2">{stat.label}</p>
+            <p className="text-4xl font-bold text-white tracking-tighter">{stat.value}</p>
+          </div>
         ))}
       </div>
 
-      {/* Pending Requests */}
-      <div>
-        <h2 className="font-heading font-semibold mb-3 flex items-center gap-2" style={{ fontWeight: 600 }}>
-          <Users className="w-4 h-4 text-secondary" /> Pending Requests
-        </h2>
-        {isLoading ? (
-          <div className="flex justify-center py-10"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
-        ) : pending.length === 0 ? (
-          <Card className="p-6 rounded-2xl text-center text-muted-foreground text-sm">No pending requests.</Card>
-        ) : (
-          <div className="space-y-3">
-            {pending.map((req, i) => (
-              <motion.div
-                key={req.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="rounded-2xl border border-border/50 p-4 flex items-center justify-between gap-4"
-                style={{ background: 'rgba(45,31,52,0.60)', backdropFilter: 'blur(10px)' }}
-              >
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-sm">{req.name}</div>
-                  <div className="text-xs text-muted-foreground">{req.email}</div>
-                  <Badge className="mt-1 text-[10px] bg-card border-border/50 text-muted-foreground">{req.field}</Badge>
-                </div>
-                <Button
-                  size="sm"
-                  onClick={() => handleApprove(req)}
-                  disabled={approving === req.id}
-                  className="gap-2 shrink-0"
-                >
-                  {approving === req.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
-                  Approve Seat
-                </Button>
-              </motion.div>
-            ))}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* User Table (Main Section) */}
+        <div className="lg:col-span-2 bg-[#251D2F] rounded-[2.5rem] border border-white/5 overflow-hidden shadow-2xl">
+          <div className="p-8 border-b border-white/5 flex justify-between items-center">
+            <h3 className="text-white font-bold text-lg flex items-center gap-2">
+              Recent Members
+            </h3>
+            <button className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors">View All</button>
           </div>
-        )}
-      </div>
-
-      {/* Approved */}
-      {approved.length > 0 && (
-        <div>
-          <h2 className="font-heading font-semibold mb-3" style={{ fontWeight: 600 }}>Approved</h2>
-          <div className="space-y-2">
-            {approved.map(req => (
-              <div key={req.id} className="rounded-xl border border-secondary/20 bg-secondary/5 p-3 flex items-center justify-between">
-                <div>
-                  <span className="text-sm font-medium">{req.name}</span>
-                  <span className="text-xs text-muted-foreground ml-2">{req.email}</span>
-                </div>
-                <div className="text-right">
-                  <Badge className="bg-secondary/15 text-secondary border-none text-xs">Approved</Badge>
-                  {req.approved_until && (
-                    <div className="text-[10px] text-muted-foreground mt-0.5">
-                      Until {new Date(req.approved_until).toLocaleDateString()}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
+          
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-white/[0.02]">
+                  <th className="px-8 py-4 text-[9px] uppercase tracking-widest text-slate-500 font-black">Dwellers</th>
+                  <th className="px-8 py-4 text-[9px] uppercase tracking-widest text-slate-500 font-black">Tier</th>
+                  <th className="px-8 py-4 text-right text-[9px] uppercase tracking-widest text-slate-500 font-black">Manage</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {loading ? (
+                  <tr><td colSpan="3" className="p-12 text-center italic text-slate-500 text-sm">Scanning the mycelium network...</td></tr>
+                ) : users.length === 0 ? (
+                  <tr><td colSpan="3" className="p-12 text-center text-slate-500 text-sm">No dwellers found yet.</td></tr>
+                ) : users.map((u) => (
+                  <tr key={u.id} className="hover:bg-white/[0.01] transition-colors group">
+                    <td className="px-8 py-6">
+                      <div className="font-bold text-white text-sm">{u.name || u.email}</div>
+                      <div className="text-[10px] text-slate-500 mt-0.5">{u.email}</div>
+                    </td>
+                    <td className="px-8 py-6">
+                      <span 
+                        style={{ backgroundColor: u.tier === 'Steward' ? `${teal}15` : 'rgba(255,255,255,0.05)', color: u.tier === 'Steward' ? teal : '#94a3b8' }} 
+                        className="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter border border-white/5"
+                      >
+                        {u.tier || 'Seedling'}
+                      </span>
+                    </td>
+                    <td className="px-8 py-6 text-right">
+                      <button className="p-2 text-slate-600 hover:text-white transition-colors"><Settings className="w-4 h-4" /></button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
-      )}
+
+        {/* Sidebar: Requests & Logs */}
+        <div className="space-y-8">
+          <div className="bg-[#251D2F] rounded-[2rem] p-8 border border-white/5 shadow-2xl">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-white font-bold text-sm uppercase tracking-widest flex items-center gap-2">
+                <Clock className="w-4 h-4 text-purple-400" />
+                Seat Requests
+              </h3>
+              <span className="bg-purple-500/20 text-purple-400 text-[9px] font-black px-2 py-0.5 rounded-full">
+                {seatRequests.length}
+              </span>
+            </div>
+            
+            <div className="space-y-4">
+              {seatRequests.length === 0 ? (
+                <p className="text-slate-600 text-xs italic">No pending sponsorships.</p>
+              ) : seatRequests.map(req => (
+                <div key={req.id} className="p-4 bg-white/[0.02] border border-white/5 rounded-xl">
+                  <p className="text-white text-xs font-bold">{req.requesterName}</p>
+                  <p className="text-[10px] text-slate-500 mt-1 line-clamp-1 italic">"{req.reason}"</p>
+                  <button className="mt-3 w-full py-2 bg-white/5 hover:bg-white/10 text-[9px] font-black uppercase tracking-widest text-slate-300 rounded-lg transition-all">
+                    Review Request
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default AdminDashboard;
