@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout, Activity, Compass, Download, ShieldAlert, Lock } from 'lucide-react';
+import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout, Activity, Compass, ShieldAlert, Lock, Binoculars, Sparkles } from 'lucide-react';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { AuthProvider } from '@/lib/AuthContext';
 import PaymentSuccess from './pages/PaymentSuccess';
@@ -12,6 +12,7 @@ import CanopyView from './pages/Canopy';
 import YourHearth from './pages/YourHearth';
 import EcosystemAlignment from './pages/CulturalFit';
 import AdminDashboard from './pages/AdminDashboard';
+import HorizonScan from './pages/GapAnalyzer';
 
 const queryClient = new QueryClient();
 
@@ -30,13 +31,6 @@ const Navigation = () => {
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
-  const handleInstall = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') setDeferredPrompt(null);
-  };
-
   const { data: user } = useQuery({ 
     queryKey: ['me'], 
     queryFn: () => window.base44.auth.me(),
@@ -44,7 +38,9 @@ const Navigation = () => {
   });
 
   const userTier = user?.subscription_tier || 'Seedling';
-  const isAdmin = user?.email === 'your-actual-email@gmail.com'; // UPDATE THIS EMAIL
+  
+  // Admin bypass check for your primary email
+  const isAdmin = user?.email === 'margaretpardy@gmail.com'; 
 
   const navLinks = [
     { name: 'The Grove', path: '/', icon: <TreePine className="w-4 h-4" />, public: true },
@@ -52,6 +48,7 @@ const Navigation = () => {
     { name: 'Your Hearth', path: '/hearth', icon: <Activity className="w-4 h-4" />, public: true },
     { name: 'The Bridge', path: '/bridge', icon: <ArrowRightLeft className="w-4 h-4" />, minTier: 'Hearthkeeper' },
     { name: 'Alignment', path: '/alignment', icon: <Compass className="w-4 h-4" />, minTier: 'Steward' },
+    { name: 'Horizon Scan', path: '/horizon-scan', icon: <Binoculars className="w-4 h-4" />, minTier: 'Steward' },
     { name: 'Embers Chat', path: '/chat', icon: <MessageSquare className="w-4 h-4" />, public: true },
     { name: 'The Canopy', path: '/canopy', icon: <Layout className="w-4 h-4" />, public: true },
     { name: 'Admin', path: '/admin', icon: <ShieldAlert className="w-4 h-4" />, adminOnly: true },
@@ -150,6 +147,7 @@ const App = () => {
                 <Route path="/canopy" element={<CanopyView />} />
                 <Route path="/success" element={<PaymentSuccess />} />
                 <Route path="/alignment" element={<EcosystemAlignment />} />
+                <Route path="/horizon-scan" element={<HorizonScan />} />
                 <Route path="/admin" element={<AdminDashboard />} /> 
               </Routes>
             </main>
