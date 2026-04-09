@@ -38,11 +38,11 @@ const Sidebar = ({ currentTier = "Seedling", activePage = "The Grove" }) => {
         <div className="w-8 h-8 bg-[#39D7B8] rounded-lg flex items-center justify-center">
           <Compass className="text-[#0F0A15]" size={20} />
         </div>
-        <h2 className="text-white font-serif italic text-lg tracking-tight">Hearth & Horizon</h2>
+        <h2 className="text-white font-serif italic text-lg tracking-tight leading-tight">Hearth & Horizon</h2>
       </div>
 
       {/* NAVIGATION MOVEMENTS */}
-      <nav className="flex-1 space-y-10">
+      <nav className="flex-1 space-y-10 overflow-y-auto pr-2">
         {movements.map((movement) => (
           <div key={movement.label}>
             <h3 className="px-4 text-[9px] font-black uppercase tracking-[0.4em] text-slate-600 mb-4">
@@ -54,9 +54,12 @@ const Sidebar = ({ currentTier = "Seedling", activePage = "The Grove" }) => {
                 const isActive = activePage === item.name;
 
                 return (
-                  <div key={item.name} className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all group cursor-pointer ${
-                    isActive ? 'bg-[#39D7B8]/10 text-[#39D7B8]' : 'text-slate-500 hover:text-slate-300'
-                  } ${locked ? 'opacity-30' : 'opacity-100'}`}>
+                  <div 
+                    key={item.name} 
+                    className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all group cursor-pointer ${
+                      isActive ? 'bg-[#39D7B8]/10 text-[#39D7B8] border border-[#39D7B8]/20' : 'text-slate-500 hover:text-slate-300'
+                    } ${locked ? 'opacity-30' : 'opacity-100'}`}
+                  >
                     <div className="flex items-center gap-3">
                       <span className={isActive ? 'text-[#39D7B8]' : 'text-slate-600'}>{item.icon}</span>
                       <span className="text-[10px] font-bold uppercase tracking-widest">{item.name}</span>
@@ -70,7 +73,7 @@ const Sidebar = ({ currentTier = "Seedling", activePage = "The Grove" }) => {
         ))}
       </nav>
 
-      {/* USER CONTEXT FOOTER */}
+      {/* USER FOOTER */}
       <div className="mt-auto pt-6 border-t border-white/5">
         <div className="flex items-center gap-3 px-2">
           <div className="w-8 h-8 rounded-full bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-[10px] font-bold text-teal-400 uppercase">
