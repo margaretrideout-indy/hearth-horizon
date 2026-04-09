@@ -41,7 +41,7 @@ export default function Canopy() {
       alignment: 96, 
       tags: ["L&D", "Public Sector Pivot"],
       salary: "$80k - $105k",
-      url: "https://www.linkedin.com/jobs" 
+      url: "https://voltaeffect.com/careers/" 
     },
     { 
       id: 2, 
@@ -51,7 +51,7 @@ export default function Canopy() {
       alignment: 91, 
       tags: ["Project Management", "Gov-Tech"],
       salary: "$75k - $95k",
-      url: "https://www.linkedin.com/jobs"
+      url: "https://cybernb.ca/Contact-Us"
     },
     { 
       id: 3, 
@@ -61,7 +61,7 @@ export default function Canopy() {
       alignment: 93, 
       tags: ["AI Operations", "Strategy"],
       salary: "$110k - $145k",
-      url: "https://www.linkedin.com/jobs"
+      url: "https://vectorinstitute.ai/about/careers/"
     },
     { 
       id: 4, 
@@ -71,7 +71,7 @@ export default function Canopy() {
       alignment: 87, 
       tags: ["Social Impact", "SaaS"],
       salary: "$90k - $120k",
-      url: "https://www.linkedin.com/jobs"
+      url: "https://www.benevity.com/careers"
     }
   ];
 
@@ -161,7 +161,7 @@ export default function Canopy() {
                   href={job.url} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="no-underline"
+                  className="no-underline inline-block"
                 >
                   <Button size="sm" variant="ghost" className="text-teal-400 hover:text-teal-300 hover:bg-teal-500/10 gap-1 group/btn px-0 md:px-3">
                     View Path <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
