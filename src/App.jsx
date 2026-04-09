@@ -4,14 +4,15 @@ import {
   Compass, Activity, Repeat, Zap, Binoculars, MessageSquare, Library, Layers, Lock 
 } from 'lucide-react';
 
-import GroveTiers from './pages/grove/GroveTiers';
-import Hearth from './pages/hearth/Hearth'; 
-import Bridge from './pages/bridge/Bridge';
-import Alignment from './pages/alignment/Alignment';
-import HorizonScan from './pages/horizon/HorizonScan';
-import EmbersChat from './pages/embers/EmbersChat';
-import LibraryPage from './pages/library/Library';
-import CanopyIndex from './pages/canopy/Canopy';
+// --- EXACT IMPORTS FROM YOUR PAGES FOLDER ---
+import GroveTiers from './pages/GroveTiers';
+import Hearth from './pages/Hearth'; 
+import Gateway from './pages/Gateway'; // Using Gateway for The Bridge
+import GapAnalyzer from './pages/GapAnalyzer'; // Using GapAnalyzer for Alignment
+import HorizonAudit from './pages/HorizonAudit'; // Using HorizonAudit for Horizon Scan
+import EmbersChat from './pages/EmbersChat';
+import LibraryPage from './pages/Library';
+import CanopyIndex from './pages/Canopy';
 
 const AppLayout = ({ children, currentTier = "Seedling" }) => {
   const location = useLocation();
@@ -84,9 +85,9 @@ const App = () => {
           <Route path="/" element={<GroveTiers />} />
           <Route path="/grove" element={<GroveTiers />} />
           <Route path="/hearth" element={<Hearth />} />
-          <Route path="/bridge" element={<Bridge />} />
-          <Route path="/alignment" element={<Alignment />} />
-          <Route path="/horizon" element={<HorizonScan />} />
+          <Route path="/bridge" element={<Gateway />} />
+          <Route path="/alignment" element={<GapAnalyzer />} />
+          <Route path="/horizon" element={<HorizonAudit />} />
           <Route path="/embers" element={<EmbersChat />} />
           <Route path="/library" element={<LibraryPage />} />
           <Route path="/canopy" element={<CanopyIndex />} />
