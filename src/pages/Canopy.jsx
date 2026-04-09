@@ -40,7 +40,8 @@ export default function Canopy() {
       location: "Halifax, NS", 
       alignment: 96, 
       tags: ["L&D", "Public Sector Pivot"],
-      salary: "$80k - $105k"
+      salary: "$80k - $105k",
+      url: "https://www.linkedin.com/jobs" 
     },
     { 
       id: 2, 
@@ -49,7 +50,8 @@ export default function Canopy() {
       location: "Fredericton, NB", 
       alignment: 91, 
       tags: ["Project Management", "Gov-Tech"],
-      salary: "$75k - $95k"
+      salary: "$75k - $95k",
+      url: "https://www.linkedin.com/jobs"
     },
     { 
       id: 3, 
@@ -58,7 +60,8 @@ export default function Canopy() {
       location: "Toronto, ON (Remote)", 
       alignment: 93, 
       tags: ["AI Operations", "Strategy"],
-      salary: "$110k - $145k"
+      salary: "$110k - $145k",
+      url: "https://www.linkedin.com/jobs"
     },
     { 
       id: 4, 
@@ -67,12 +70,13 @@ export default function Canopy() {
       location: "Calgary, AB", 
       alignment: 87, 
       tags: ["Social Impact", "SaaS"],
-      salary: "$90k - $120k"
+      salary: "$90k - $120k",
+      url: "https://www.linkedin.com/jobs"
     }
   ];
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto pb-20">
+    <div className="space-y-8 max-w-6xl mx-auto pb-20 p-6">
       <header className="space-y-4">
         <div className="flex items-center gap-2 text-teal-400">
           <Trees className="w-5 h-5" />
@@ -115,7 +119,7 @@ export default function Canopy() {
         {jobs.map((job) => (
           <Card 
             key={job.id} 
-            className="group p-6 bg-[#1C1622]/60 border-white/5 hover:border-teal-500/30 transition-all cursor-pointer relative overflow-hidden"
+            className="group p-6 bg-[#1C1622]/60 border-white/5 hover:border-teal-500/30 transition-all relative overflow-hidden"
           >
             {job.alignment > 90 && (
               <div className="absolute top-0 left-0 w-1 h-full bg-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.5)]" />
@@ -152,9 +156,17 @@ export default function Canopy() {
                   <span className="text-3xl font-black text-teal-500 block leading-none">{job.alignment}%</span>
                   <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mt-1">Timber Alignment</p>
                 </div>
-                <Button size="sm" variant="ghost" className="text-teal-400 hover:text-teal-300 hover:bg-teal-500/10 gap-1 group/btn px-0 md:px-3">
-                  View Path <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-                </Button>
+                
+                <a 
+                  href={job.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="no-underline"
+                >
+                  <Button size="sm" variant="ghost" className="text-teal-400 hover:text-teal-300 hover:bg-teal-500/10 gap-1 group/btn px-0 md:px-3">
+                    View Path <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                  </Button>
+                </a>
               </div>
             </div>
           </Card>
