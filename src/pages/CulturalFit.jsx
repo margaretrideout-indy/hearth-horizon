@@ -1,164 +1,146 @@
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { 
-  Compass, 
-  Mountain, 
-  Sparkles, 
-  Loader2, 
-  Binoculars, 
-  TreePine,
-  ArrowRight,
-  ShieldCheck,
-  Zap
+  Compass, Mountain, Sparkles, Loader2, 
+  Binoculars, TreePine, ArrowRight, ShieldCheck,
+  Zap, MoveRight, ChevronRight
 } from 'lucide-react';
 
-export default function CulturalFit({ userBridgeData }) {
+export default function CulturalFit({ userAnalysis }) {
   const [activeStep, setActiveStep] = useState(1);
   const [isAligning, setIsAligning] = useState(false);
 
-  // Fallback data for the UI if props aren't passed yet
-  const decodedIdentity = userBridgeData?.identityStatement || 
-    "Your background is not just a list of previous duties—it is the high-level management of human capital, complex data pipelines, and organizational strategy.";
-  
-  const legacyDomain = userBridgeData?.legacyDomain || "Legacy Professional Domain";
-  const corporateEquivalent = userBridgeData?.corporateEquivalent || "Strategic Market Equivalent";
+  const hasData = !!userAnalysis;
 
-  const handleAlignNarrative = () => {
+  // Synthesis Handler
+  const handleSynthesis = () => {
     setIsAligning(true);
     setTimeout(() => {
       setIsAligning(false);
       setActiveStep(3);
-    }, 1800);
+    }, 2000);
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-6 space-y-12">
+    <div className="max-w-4xl mx-auto py-12 px-6 space-y-10 animate-in fade-in duration-700">
       
-      {/* --- TOP NAVIGATION BREADCRUMBS --- */}
-      <nav className="flex justify-center items-center gap-8 md:gap-16 pb-8 border-b border-white/5">
-        <button 
-          onClick={() => setActiveStep(1)}
-          className={`flex flex-col items-center gap-2 transition-all ${activeStep === 1 ? 'opacity-100 scale-105' : 'opacity-30 hover:opacity-60'}`}
-        >
-          <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center transition-colors ${activeStep === 1 ? 'border-teal-500 bg-teal-500/10 shadow-[0_0_15px_rgba(20,184,166,0.2)]' : 'border-white/20'}`}>
-            <TreePine className={activeStep === 1 ? 'text-teal-400' : 'text-white'} size={20} />
-          </div>
-          <span className={`text-[10px] font-black uppercase tracking-widest ${activeStep === 1 ? 'text-teal-400' : 'text-gray-500'}`}>01. The Clearing</span>
-        </button>
+      {/* --- THE BREADCRUMB TRACKER --- */}
+      <div className="flex items-center justify-center gap-4 mb-4">
+        {[1, 2, 3].map((num) => (
+          <React.Fragment key={num}>
+            <div 
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black border transition-all
+              ${activeStep === num ? 'bg-teal-500 border-teal-500 text-black shadow-[0_0_15px_rgba(20,184,166,0.4)]' : 'border-white/10 text-gray-500'}`}
+            >
+              0{num}
+            </div>
+            {num < 3 && <div className="w-12 h-px bg-white/5" />}
+          </React.Fragment>
+        ))}
+      </div>
 
-        <button 
-          onClick={() => setActiveStep(2)}
-          className={`flex flex-col items-center gap-2 transition-all ${activeStep === 2 ? 'opacity-100 scale-105' : 'opacity-30 hover:opacity-60'}`}
-        >
-          <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center transition-colors ${activeStep === 2 ? 'border-teal-500 bg-teal-500/10 shadow-[0_0_15px_rgba(20,184,166,0.2)]' : 'border-white/20'}`}>
-            <Compass className={activeStep === 2 ? 'text-teal-400' : 'text-white'} size={20} />
-          </div>
-          <span className={`text-[10px] font-black uppercase tracking-widest ${activeStep === 2 ? 'text-teal-400' : 'text-gray-500'}`}>02. The Compass</span>
-        </button>
-
-        <button 
-          onClick={() => setActiveStep(3)}
-          className={`flex flex-col items-center gap-2 transition-all ${activeStep === 3 ? 'opacity-100 scale-105' : 'opacity-30 hover:opacity-60'}`}
-        >
-          <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center transition-colors ${activeStep === 3 ? 'border-teal-500 bg-teal-500/10 shadow-[0_0_15px_rgba(20,184,166,0.2)]' : 'border-white/20'}`}>
-            <Mountain className={activeStep === 3 ? 'text-teal-400' : 'text-white'} size={20} />
-          </div>
-          <span className={`text-[10px] font-black uppercase tracking-widest ${activeStep === 3 ? 'text-teal-400' : 'text-gray-500'}`}>03. The Wilds</span>
-        </button>
-      </nav>
-
-      {/* --- DYNAMIC CONTENT AREA --- */}
-      <main className="min-h-[450px]">
+      <main className="min-h-[550px]">
         
-        {/* STEP 1: THE CLEARING (Dynamic Summary) */}
+        {/* --- STAGE 01: THE CLEARING (DECODE) --- */}
         {activeStep === 1 && (
-          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <header className="text-center space-y-2">
-              <h2 className="text-3xl font-bold text-white italic">Your Professional Baseline</h2>
-              <p className="text-gray-400 text-sm max-w-md mx-auto">This is how the Bridge has decoded your legacy experience into market value.</p>
-            </header>
+          <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
+            <div className="text-center">
+              <h1 className="text-4xl font-bold text-white italic tracking-tight">The Clearing</h1>
+              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Stage 01: Baseline Decoded</p>
+            </div>
 
-            <Card className="p-8 bg-[#1C1622]/60 border-teal-500/20 backdrop-blur-xl relative overflow-hidden">
-              <div className="space-y-8 relative z-10">
+            <Card className="p-10 bg-[#1C1622]/80 border-teal-500/20 backdrop-blur-xl relative overflow-hidden">
+              <div className="relative z-10 space-y-10">
                 <div className="space-y-4">
-                  <Badge variant="outline" className="text-teal-500 border-teal-500/30 bg-teal-500/5 px-3 py-1 text-[10px] font-black tracking-widest uppercase">
-                    Decoded Identity
-                  </Badge>
-                  <p className="text-gray-200 leading-relaxed italic text-xl">
-                    "{decodedIdentity}"
+                  <div className="flex items-center gap-2 text-teal-500">
+                    <Sparkles size={14} />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Synthesis Output</span>
+                  </div>
+                  <p className="text-2xl text-gray-100 italic leading-relaxed font-medium">
+                    "{userAnalysis?.identityStatement || "Please anchor your resume in the Hearth to generate your baseline identity."}"
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-5 bg-white/5 rounded-2xl border border-white/5">
-                    <p className="text-[10px] text-gray-500 font-black uppercase mb-2 tracking-tighter">Legacy Domain</p>
-                    <p className="text-white font-bold">{legacyDomain}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-8 border-y border-white/5">
+                  <div className="space-y-1">
+                    <span className="text-[10px] text-gray-500 font-black uppercase">Legacy Domain</span>
+                    <p className="text-white font-bold text-lg italic">{userAnalysis?.legacyDomain || "Locked"}</p>
                   </div>
-                  <div className="p-5 bg-teal-500/10 rounded-2xl border border-teal-500/20 shadow-inner">
-                    <p className="text-[10px] text-teal-400 font-black uppercase mb-2 tracking-tighter">Corporate Equivalent</p>
-                    <p className="text-white font-bold">{corporateEquivalent}</p>
+                  <div className="space-y-1">
+                    <span className="text-[10px] text-teal-500 font-black uppercase">Market Equivalent</span>
+                    <p className="text-white font-bold text-lg italic">{userAnalysis?.corporateEquivalent || "Pending"}</p>
                   </div>
                 </div>
 
-                <div className="flex justify-center pt-4">
-                  <Button 
-                    onClick={() => setActiveStep(2)}
-                    className="bg-teal-600 hover:bg-teal-500 text-white font-black px-12 h-14 rounded-2xl gap-2 shadow-[0_0_20px_rgba(20,184,166,0.3)]"
-                  >
-                    Enter The Compass <ArrowRight size={18} />
-                  </Button>
-                </div>
+                <Button 
+                  onClick={() => setActiveStep(2)}
+                  disabled={!hasData}
+                  className="w-full bg-teal-600 hover:bg-teal-500 text-white font-black h-16 rounded-2xl gap-3 shadow-lg"
+                >
+                  ESTABLISH A BEARING <ArrowRight size={20} />
+                </Button>
               </div>
-              <ShieldCheck className="absolute -bottom-6 -right-6 w-32 h-32 text-white/5 rotate-12" />
             </Card>
           </div>
         )}
 
-        {/* STEP 2: THE COMPASS */}
+        {/* --- STAGE 02: THE COMPASS (ALIGN) --- */}
         {activeStep === 2 && (
-          <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
-             <Card className="p-8 bg-[#1C1622]/60 border-white/5 backdrop-blur-xl">
-                <div className="p-6 bg-black/40 rounded-2xl border border-white/5 mb-8">
-                  <h4 className="text-teal-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Current Bearing: Market Opportunity</h4>
-                  <p className="text-gray-300 leading-relaxed italic text-lg">
-                    Analyze specific roles to see how your decoded baseline intersects with national salary averages and operational duties.
+          <div className="space-y-8 animate-in slide-in-from-right-4 duration-500">
+            <div className="text-center">
+              <h1 className="text-4xl font-bold text-white italic tracking-tight">The Compass</h1>
+              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Stage 02: Narrative Alignment</p>
+            </div>
+
+            <Card className="p-8 bg-[#1C1622]/80 border-white/10">
+              <div className="space-y-8">
+                <div className="p-6 bg-black/40 rounded-2xl border border-white/5">
+                  <h4 className="text-teal-400 text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <Compass size={12} /> Target Context
+                  </h4>
+                  <p className="text-gray-300 italic text-lg leading-relaxed">
+                    You are currently testing your bearing against roles in **Cloud Infrastructure**. 
+                    The market values your background in **Operational Strategy** and **Compliance Management**.
                   </p>
                 </div>
 
                 <Button 
-                  onClick={handleAlignNarrative}
+                  onClick={handleSynthesis}
                   disabled={isAligning}
-                  className="w-full bg-teal-600 hover:bg-teal-500 text-white font-black h-16 rounded-2xl shadow-lg transition-all"
+                  className="w-full bg-teal-600 hover:bg-teal-500 text-white font-black h-16 rounded-2xl transition-all"
                 >
                   {isAligning ? (
-                    <span className="flex items-center gap-3 italic"><Loader2 className="animate-spin" /> SYNTHESIZING NARRATIVE...</span>
+                    <span className="flex items-center gap-3 italic"><Loader2 className="animate-spin" /> ALIGNING NARRATIVE...</span>
                   ) : (
-                    <span className="flex items-center gap-3"><Sparkles size={20} /> ALIGN NARRATIVE</span>
+                    <span className="flex items-center gap-3"><Zap size={20} /> ALIGN NARRATIVE</span>
                   )}
                 </Button>
-             </Card>
+              </div>
+            </Card>
           </div>
         )}
-        
-        {/* STEP 3: THE WILDS */}
+
+        {/* --- STAGE 03: THE WILDS (SURVEY) --- */}
         {activeStep === 3 && (
-          <div className="animate-in zoom-in-95 duration-700">
-            <Card className="p-12 bg-[#1C1622]/90 border-teal-500/20 backdrop-blur-2xl text-center relative overflow-hidden">
-              <Zap className="absolute top-4 right-4 text-teal-500/20 w-12 h-12" />
-              <div className="w-20 h-20 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-teal-500/20">
-                <Mountain className="w-10 h-10 text-teal-400" />
+          <div className="space-y-8 animate-in zoom-in-95 duration-700">
+            <div className="text-center">
+              <h1 className="text-4xl font-bold text-white italic tracking-tight">The Wilds</h1>
+              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Stage 03: Market Entry</p>
+            </div>
+
+            <Card className="p-12 bg-[#1C1622]/90 border-teal-500/20 text-center shadow-2xl">
+              <div className="w-24 h-24 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-teal-500/20">
+                <Mountain className="w-12 h-12 text-teal-400" />
               </div>
-              
-              <h2 className="text-4xl font-bold text-white mb-2 italic font-heading">Market Topography</h2>
-              <p className="text-gray-400 uppercase tracking-[0.3em] text-[10px] font-black mb-12">Identifying Landscapes that Match Your Bearing</p>
-              
+              <h2 className="text-2xl font-bold text-white mb-4">Your Bearing is Set.</h2>
+              <p className="text-gray-500 italic mb-10 max-w-sm mx-auto">
+                Your narrative has been recoded. You are ready to survey the Canadian landscape for opportunities that match your value.
+              </p>
               <Button 
-                onClick={() => console.log("Final Survey Triggered")}
-                className="bg-teal-600 hover:bg-teal-500 text-white px-12 h-16 rounded-2xl font-black gap-3 shadow-[0_0_40px_rgba(20,184,166,0.3)] transition-all transform hover:scale-105"
+                className="bg-teal-600 hover:bg-teal-500 text-white px-12 h-16 rounded-2xl font-black gap-3 shadow-[0_0_30px_rgba(20,184,166,0.3)]"
               >
-                <Binoculars size={20} /> SURVEY THE LANDSCAPE
+                <Binoculars /> SURVEY THE LANDSCAPE
               </Button>
             </Card>
           </div>
