@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { 
   Compass, Mountain, Loader2, 
   Binoculars, TreePine, ArrowRight, 
-  Zap, ClipboardCheck, Lock, ArrowRightLeft, Search
+  Zap, ClipboardCheck, ArrowRightLeft, Search, Sparkles
 } from 'lucide-react';
 
 export default function CulturalFit({ userAnalysis, targetJob }) {
@@ -16,16 +16,9 @@ export default function CulturalFit({ userAnalysis, targetJob }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [manualResult, setManualResult] = useState(null);
 
-  // Fallback data in case the resume hasn't been uploaded yet
-  const displayIdentity = userAnalysis?.identityStatement || "Ready to decode your professional legacy.";
-  const displayPM = userAnalysis?.variations?.pm || manualResult?.pm;
-  const displayData = userAnalysis?.variations?.data || manualResult?.data;
-  const displayOps = userAnalysis?.variations?.ops || manualResult?.ops;
-
   const handleManualGenerate = () => {
     if (!manualInput) return;
     setIsGenerating(true);
-    // This simulates the "magic" of the bridge for manual users
     setTimeout(() => {
       setManualResult({
         pm: "Directed complex lifecycle initiatives, ensuring strategic alignment across multi-disciplinary stakeholders.",
@@ -57,7 +50,8 @@ export default function CulturalFit({ userAnalysis, targetJob }) {
           <button 
             key={step.id}
             onClick={() => setActiveStep(step.id)}
-            className={`flex items-center gap-3 transition-all ${activeStep === step.id ? 'opacity-100 scale-105 text-teal-400' : 'opacity-30 text-white hover:opacity-50'}`}
+            disabled={!userAnalysis && step.id > 1}
+            className={`flex items-center gap-3 transition-all ${activeStep === step.id ? 'opacity-100 scale-105 text-teal-400' : 'opacity-30 text-white'} ${(!userAnalysis && step.id > 1) ? 'cursor-not-allowed' : 'hover:opacity-50'}`}
           >
             <step.icon size={18} />
             <span className="text-[10px] font-black tracking-[0.2em]">{step.label}</span>
@@ -66,67 +60,96 @@ export default function CulturalFit({ userAnalysis, targetJob }) {
       </nav>
 
       <main className="min-h-[500px]">
-        {/* STAGE 01: THE CLEARING (The Bridge) */}
         {activeStep === 1 && (
-          <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
+          <div className="space-y-10 animate-in slide-in-from-bottom-4 duration-500">
             <header className="text-center">
               <h1 className="text-4xl font-bold text-white italic">The Clearing</h1>
-              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Stage 01: Identity & Language</p>
+              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Stage 01: Identity & Translation</p>
             </header>
 
-            <Card className="p-8 bg-[#1C1622]/60 border-teal-500/20 backdrop-blur-xl space-y-10 shadow-2xl">
-              <div className="space-y-4">
-                <Badge className="bg-teal-500/10 text-teal-400 border-none uppercase text-[10px] tracking-widest px-3 py-1">Synthesis</Badge>
-                <p className="text-2xl text-gray-100 italic leading-relaxed font-medium">"{displayIdentity}"</p>
-              </div>
-
-              {/* MANUAL INPUT (Only shows if no resume is uploaded) */}
-              {!userAnalysis && !manualResult && (
-                <div className="space-y-4 p-6 bg-white/5 rounded-2xl border border-white/10">
-                  <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Manual Decoder</p>
-                  <div className="flex gap-2">
-                    <Input 
-                      placeholder="Paste a bullet point from your old job..."
-                      className="bg-black/20 border-white/10 italic"
-                      value={manualInput}
-                      onChange={(e) => setManualInput(e.target.value)}
-                    />
-                    <Button onClick={handleManualGenerate} className="bg-teal-600 font-black">
-                      {isGenerating ? <Loader2 className="animate-spin" /> : "DECODE"}
-                    </Button>
+            {/* SECTION A: THE DEEP ANALYSIS (Visible only if resume uploaded) */}
+            {userAnalysis && (
+              <Card className="p-8 bg-teal-500/[0.03] border-teal-500/30 backdrop-blur-xl space-y-6 shadow-2xl border-dashed">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-1">
+                    <Badge className="bg-teal-500 text-black font-black uppercase text-[8px] tracking-widest px-2 py-0.5">Resume Anchored</Badge>
+                    <h3 className="text-white font-bold text-lg italic">Hearth Synthesis</h3>
+                  </div>
+                  <Sparkles className="text-teal-400" size={20} />
+                </div>
+                <p className="text-xl text-gray-200 italic leading-relaxed font-medium">
+                  "{userAnalysis.identityStatement}"
+                </p>
+                <div className="flex gap-4">
+                  <div className="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-[10px] text-gray-400">
+                    <span className="text-teal-500 font-bold tracking-tighter mr-2">LEGACY:</span> {userAnalysis.legacyDomain}
+                  </div>
+                  <div className="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-[10px] text-gray-400">
+                    <span className="text-teal-500 font-bold tracking-tighter mr-2">EQUIVALENT:</span> {userAnalysis.corporateEquivalent}
                   </div>
                 </div>
-              )}
+              </Card>
+            )}
 
-              {/* LINGUISTIC BRIDGE RESULTS */}
-              <div className="space-y-6 pt-8 border-t border-white/5">
+            {/* SECTION B: LINGUISTIC BRIDGE (Always Functional) */}
+            <Card className="p-8 bg-[#1C1622]/60 border-white/5 space-y-8 shadow-2xl">
+              <div className="space-y-4">
                 <div className="flex items-center gap-2 text-teal-500">
                   <ArrowRightLeft size={16} />
-                  <h3 className="text-white font-bold text-sm">Linguistic Bridge Generator</h3>
+                  <h3 className="text-white font-bold text-sm tracking-wide">Linguistic Bridge Generator</h3>
                 </div>
+                
+                <div className="flex gap-2">
+                  <Input 
+                    placeholder="Paste a legacy bullet point to see its market value..."
+                    className="bg-black/40 border-white/10 italic h-12"
+                    value={manualInput}
+                    onChange={(e) => setManualInput(e.target.value)}
+                  />
+                  <Button onClick={handleManualGenerate} className="bg-teal-600 hover:bg-teal-500 font-black px-8">
+                    {isGenerating ? <Loader2 className="animate-spin" /> : "DECODE"}
+                  </Button>
+                </div>
+              </div>
 
-                <div className="grid grid-cols-1 gap-4">
-                  {[
-                    { title: 'Project Management', text: displayPM },
-                    { title: 'Data Analysis', text: displayData },
-                    { title: 'Operations', text: displayOps }
-                  ].map((v, i) => (
-                    <div key={i} className={`p-5 bg-white/[0.02] rounded-2xl border border-white/5 transition-all ${!v.text && 'opacity-20'}`}>
+              {/* GENERATED RESULTS TABLE */}
+              <div className="grid grid-cols-1 gap-4 pt-4">
+                {[
+                  { title: 'Project Management', text: manualResult?.pm || (userAnalysis ? userAnalysis.variations?.pm : null) },
+                  { title: 'Data Analysis', text: manualResult?.data || (userAnalysis ? userAnalysis.variations?.data : null) },
+                  { title: 'Operations', text: manualResult?.ops || (userAnalysis ? userAnalysis.variations?.ops : null) }
+                ].map((v, i) => (
+                  <div key={i} className={`group p-5 bg-white/[0.02] rounded-2xl border border-white/5 transition-all hover:border-teal-500/30 flex justify-between items-center ${!v.text && 'opacity-20 italic'}`}>
+                    <div className="space-y-1 pr-4">
                       <p className="text-[9px] font-black text-teal-500 uppercase tracking-tighter mb-1">{v.title}</p>
                       <p className="text-sm text-gray-400 italic">"{v.text || "Awaiting professional input..."}"</p>
                     </div>
-                  ))}
-                </div>
+                    {v.text && (
+                      <button 
+                        onClick={() => navigator.clipboard.writeText(v.text)}
+                        className="p-2 bg-white/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:text-teal-400"
+                      >
+                        <ClipboardCheck size={16} />
+                      </button>
+                    )}
+                  </div>
+                ))}
               </div>
 
-              <Button onClick={() => setActiveStep(2)} className="w-full h-16 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl gap-3 shadow-lg">
-                ESTABLISH A BEARING <ArrowRight size={20} />
-              </Button>
+              {userAnalysis ? (
+                <Button onClick={() => setActiveStep(2)} className="w-full h-16 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl gap-3">
+                  ESTABLISH A BEARING <ArrowRight size={20} />
+                </Button>
+              ) : (
+                <div className="text-center pt-4 border-t border-white/5">
+                  <p className="text-[10px] text-gray-600 italic uppercase tracking-[0.2em]">Anchor your resume in the hearth to unlock narrative alignment</p>
+                </div>
+              )}
             </Card>
           </div>
         )}
 
-        {/* STAGE 02: THE COMPASS (Alignment) */}
+        {/* STAGES 02 & 03 REMAIN AS IS */}
         {activeStep === 2 && (
           <div className="space-y-8 animate-in slide-in-from-right-4 duration-500">
             <header className="text-center text-white italic">
@@ -141,8 +164,8 @@ export default function CulturalFit({ userAnalysis, targetJob }) {
                   <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 font-black tracking-widest">$100,290 Avg.</Badge>
                 </div>
                 <p className="text-gray-300 italic text-lg leading-relaxed">
-                  "Analyzing the **Market Opportunity** landscape. This bearing rewards your deep background in 
-                  **{userAnalysis?.legacyDomain || "Strategic Implementation"}** re-positioned as **{userAnalysis?.corporateEquivalent || "Operations Management"}**."
+                  "This bearing rewards your background in 
+                  **{userAnalysis?.legacyDomain || "Strategic Strategy"}** re-positioned as **{userAnalysis?.corporateEquivalent || "Operations Strategy"}**."
                 </p>
               </div>
 
@@ -153,11 +176,10 @@ export default function CulturalFit({ userAnalysis, targetJob }) {
           </div>
         )}
 
-        {/* STAGE 03: THE WILDS (Survey) */}
         {activeStep === 3 && (
           <div className="animate-in zoom-in-95 duration-700 text-center space-y-8">
             <header className="space-y-2">
-              <h1 className="text-4xl font-bold text-white italic">The Wilds</h1>
+              <h1 className="text-4xl font-bold text-white italic tracking-tight">The Wilds</h1>
               <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em]">Stage 03: Surveying Opportunities</p>
             </header>
 
@@ -167,8 +189,8 @@ export default function CulturalFit({ userAnalysis, targetJob }) {
               </div>
               <div className="space-y-2">
                 <h2 className="text-2xl font-bold text-white italic underline decoration-teal-500/50 underline-offset-8">Your Bearing is Fixed.</h2>
-                <p className="text-gray-500 italic max-w-sm mx-auto text-sm">
-                  The crossing is complete. Your legacy is now translated into the modern market topography.
+                <p className="text-gray-500 italic max-w-sm mx-auto text-sm leading-relaxed">
+                  The crossing is complete. Your narrative is now aligned with the current market topography.
                 </p>
               </div>
               <Button onClick={() => window.location.href='/canopy'} className="bg-teal-600 hover:bg-teal-500 text-white px-12 h-16 rounded-2xl font-black gap-3 shadow-lg">
