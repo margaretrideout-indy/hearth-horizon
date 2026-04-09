@@ -7,7 +7,7 @@ import {
   Compass, Mountain, Loader2, 
   Binoculars, TreePine, ArrowRight, 
   Zap, ArrowRightLeft, Sparkles, TrendingUp,
-  Copy, Check
+  Copy, Check, ClipboardCheck
 } from 'lucide-react';
 
 export default function CulturalFit({ userAnalysis }) {
@@ -61,7 +61,7 @@ export default function CulturalFit({ userAnalysis }) {
         {[
           { id: 1, label: "01. THE CLEARING", icon: TreePine },
           { id: 2, label: "02. THE COMPASS", icon: Compass },
-          { id: 3, label: "03. THE WILDS", icon: Mountain }
+          { id: 3, label: "03. TREK REPORT", icon: ClipboardCheck }
         ].map((step) => (
           <button 
             key={step.id}
@@ -202,25 +202,25 @@ export default function CulturalFit({ userAnalysis }) {
           </div>
         )}
 
-        {/* STAGE 03: THE WILDS (Summary & Victory Lap) */}
+        {/* STAGE 03: TREK REPORT */}
         {activeStep === 3 && (
           <div className="animate-in zoom-in-95 duration-700 text-center space-y-8">
             <header className="space-y-2">
-              <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">THE WILDS</h1>
+              <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">TREK REPORT</h1>
               <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Crossing Complete</p>
             </header>
 
-            <Card className="p-12 bg-[#1C1622]/90 border-teal-500/20 shadow-2xl space-y-10 border-double border-4 relative overflow-hidden">
+            <Card className="p-12 bg-[#1C1622]/90 border-teal-500/20 shadow-2xl space-y-10 border-double border-4 relative overflow-hidden text-center">
               <Mountain className="absolute -right-8 -bottom-8 w-48 h-48 text-teal-500/5 rotate-12" />
               
               <div className="space-y-6 relative z-10">
-                <div className="w-20 h-20 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto border border-teal-500/20">
-                  <Mountain className="w-10 h-10 text-teal-400" />
+                <div className="w-20 h-20 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto border border-teal-500/20 shadow-[0_0_30px_rgba(20,184,166,0.05)]">
+                  <ClipboardCheck className="w-10 h-10 text-teal-400" />
                 </div>
                 
                 <div className="space-y-2">
                   <h2 className="text-3xl font-bold text-white italic">Your Bearing is Fixed.</h2>
-                  <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.4em]">Final Trek Report</p>
+                  <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.4em]">Professional Synthesis Finalized</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto pt-4">
@@ -233,7 +233,6 @@ export default function CulturalFit({ userAnalysis }) {
                     <p className="text-white font-bold italic">$100,290 Avg. Target</p>
                   </div>
                   
-                  {/* COPYABLE SUMMARY SECTION */}
                   <div className="p-6 bg-black/40 rounded-xl border border-teal-500/20 space-y-4 md:col-span-2 relative">
                     <div className="flex justify-between items-center border-b border-white/5 pb-2">
                        <p className="text-[9px] font-black text-teal-500 uppercase tracking-widest">Narrative Beacon</p>
