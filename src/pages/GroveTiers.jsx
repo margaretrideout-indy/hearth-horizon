@@ -1,146 +1,142 @@
 import React from 'react';
 import { 
-  Flame, 
-  Wind, 
-  Zap, 
-  BookOpen, 
-  Lock,
-  ChevronRight,
-  TrendingUp,
-  MessagesSquare,
-  Compass
+  Flame, Wind, Zap, BookOpen, Lock, ChevronRight, 
+  TrendingUp, MessagesSquare, Compass, Check, Leaf, Mountain, Heart 
 } from 'lucide-react';
 
 const GroveTiers = () => {
-  // Navigation items with their "locked" status based on user tier
   const navigationItems = [
+    { title: "The Grove", status: "unlocked", icon: <Compass className="w-5 h-5" /> },
+    { title: "Your Hearth", status: "unlocked", icon: <Flame className="w-5 h-5" /> },
+    { title: "The Bridge", status: "locked", icon: <Wind className="w-5 h-5" /> },
+    { title: "Alignment", status: "locked", icon: <Zap className="w-5 h-5" /> },
+    { title: "Horizon Scan", status: "locked", icon: <TrendingUp className="w-5 h-5" /> },
+    { title: "Embers Chat", status: "unlocked", icon: <MessagesSquare className="w-5 h-5" /> },
+    { title: "The Canopy", status: "unlocked", icon: <Compass className="w-5 h-5" /> }
+  ];
+
+  const tiers = [
     {
-      title: "Your Hearth",
-      desc: "Your personal sanctuary. Profile, journey tracking, and private reflections.",
-      icon: <Flame className="w-6 h-6" />,
-      status: "unlocked",
-      path: "/hearth"
+      name: "Seedling",
+      price: "FREE",
+      period: "ALWAYS OPEN",
+      desc: '"Foundational access for those starting their journey."',
+      features: ["Foundational Badge", "2 Free PDFs/mo", "Access to Library", "Embers Chat"],
+      button: "SELECT PLAN",
+      active: true,
+      icon: <Leaf className="w-5 h-5 text-teal-400" />
     },
     {
-      title: "The Bridge",
-      desc: "Blueprints for the transition. Mapping your classroom expertise to the tech landscape.",
-      icon: <Wind className="w-6 h-6" />,
-      status: "locked",
-      path: "/bridge"
+      name: "Hearthkeeper",
+      price: "$3",
+      period: "$5/MO AFTER FIRST MONTH",
+      desc: '"Removing limits to keep the fires burning bright."',
+      features: ["Everything in Seedling", "Unlimited PDF uploads", "Hearthkeeper Badge"],
+      button: "SELECT PLAN",
+      active: false,
+      highlight: true,
+      icon: <Flame className="w-5 h-5 text-teal-400" />
     },
     {
-      title: "The Library",
-      desc: "Provisions for the journey: essential kits, vetted tools, and mental health sanctuaries.",
-      icon: <BookOpen className="w-6 h-6" />,
-      status: "unlocked",
-      path: "/library"
+      name: "Steward",
+      price: "$5",
+      period: "$8/MO AFTER FIRST MONTH",
+      desc: '"Full oversight and total access to the entire Grove."',
+      features: ["Everything in Hearthkeeper", "Ecosystem Alignment", "The Canopy Hub"],
+      button: "SELECT PLAN",
+      active: false,
+      icon: <Mountain className="w-5 h-5 text-teal-400" />
     },
     {
-      title: "Horizon Scan",
-      desc: "Forward-looking analysis of tech trends, language data, and the future of work.",
-      icon: <TrendingUp className="w-6 h-6" />,
-      status: "locked",
-      path: "/horizon"
-    },
-    {
-      title: "Embers Chat",
-      desc: "Community dialogues and real-time support from fellow guides and pivoters.",
-      icon: <MessagesSquare className="w-6 h-6" />,
-      status: "locked",
-      path: "/embers"
-    },
-    {
-      title: "The Canopy",
-      desc: "The bird's-eye view. Resource index, site-wide search, and archival materials.",
-      icon: <Compass className="w-6 h-6" />,
-      status: "unlocked",
-      path: "/canopy"
+      name: "Plant A Seed",
+      price: "DONATE",
+      period: "SUPPORT THE GROVE",
+      desc: '"Pay it forward to keep the Hearth accessible."',
+      features: ["Sponsor Badge", "Supports Open Access", "Warm Fuzzies"],
+      button: "GIVE A SEED",
+      active: false,
+      isDonation: true,
+      icon: <Heart className="w-5 h-5 text-rose-500" />
     }
   ];
 
   return (
-    <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-8 md:p-12 lg:p-16 font-sans">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-8 md:p-12 lg:p-16 font-sans selection:bg-teal-500/30">
+      <div className="max-w-7xl mx-auto">
         
-        {/* THE GUIDE'S NOTE (The "Why") */}
+        {/* FOUNDER HEADER (THE WHY) */}
         <header className="mb-32 text-center animate-in fade-in duration-1000">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/5 border border-teal-500/10 mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-500/80">
-              Welcome to the Grove
-            </span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-400">Welcome to the Grove</span>
           </div>
-          
-          <h1 className="text-4xl md:text-5xl font-serif italic text-white mb-10 leading-tight">
-            A migration of the self.
-          </h1>
-          
-          <div className="relative max-w-3xl mx-auto">
-            <p className="text-lg md:text-xl text-slate-400 font-light leading-relaxed mb-10 italic">
-              "After thirteen years in the classroom and a Master’s spent studying the deep roots of community and identity, I realized that a career pivot is more than a strategy—it’s a migration of the self. Hearth & Horizon is the sanctuary I wish I had when I stepped away from the chalkboard. We bring editorial rigor and psychological depth to the space between your past expertise and your future horizon."
-            </p>
-          </div>
-          
+          <h1 className="text-4xl md:text-6xl font-serif italic text-white mb-10 tracking-tight">A migration of the self.</h1>
+          <p className="max-w-3xl mx-auto text-lg md:text-xl text-slate-400 font-light leading-relaxed mb-12 italic text-center">
+            "After thirteen years in the classroom and a Master’s spent studying the deep roots of community and identity, I realized that a career pivot is more than a strategy—it’s a migration of the self. Hearth & Horizon is the sanctuary I wish I had when I stepped away from the chalkboard. We bring editorial rigor and psychological depth to the space between your past expertise and your future horizon."
+          </p>
           <div className="flex flex-col items-center gap-1">
-            <span className="text-white font-serif italic text-xl">— Margaret</span>
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-600">Founder</span>
+            <span className="text-white font-serif italic text-2xl">— Margaret</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-600">Founder</span>
           </div>
         </header>
 
-        {/* TIERS / NAVIGATION GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {navigationItems.map((item, idx) => (
-            <div 
-              key={idx} 
-              className={`group relative p-8 rounded-[2rem] border transition-all duration-500 ${
-                item.status === 'unlocked' 
-                ? 'bg-white/[0.02] border-white/5 hover:bg-white/[0.04] cursor-pointer' 
-                : 'bg-black/20 border-white/[0.02] opacity-60'
-              }`}
-            >
-              {/* Lock Icon for Sub-Tiers */}
-              {item.status === 'locked' && (
-                <div className="absolute top-6 right-6 text-slate-700">
-                  <Lock className="w-4 h-4" />
+        {/* PRICING TIERS SECTION */}
+        <section className="mb-40">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {tiers.map((tier, idx) => (
+              <div key={idx} className={`relative flex flex-col p-8 rounded-[2.5rem] border transition-all duration-500 bg-[#1A1423]/40 ${
+                tier.highlight ? 'border-teal-500/30 shadow-[0_20px_50px_rgba(0,0,0,0.3)]' : 'border-white/5'
+              }`}>
+                <div className="mb-6">{tier.icon}</div>
+                <h4 className="text-white font-bold text-xl mb-1 tracking-tight">{tier.name}</h4>
+                <div className="mb-2">
+                  <span className="text-3xl font-bold text-white tracking-tighter">{tier.price}</span>
                 </div>
-              )}
+                <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-6">{tier.period}</p>
+                <p className="text-[11px] text-slate-400 mb-8 leading-relaxed italic min-h-[40px]">{tier.desc}</p>
+                
+                <div className="h-[1px] w-full bg-white/5 mb-8" />
+                
+                <ul className="space-y-4 mb-12 flex-1">
+                  {tier.features.map((feat, fIdx) => (
+                    <li key={fIdx} className="flex items-center gap-3 text-[10px] text-slate-400">
+                      <Check className={`w-3.5 h-3.5 shrink-0 ${tier.isDonation ? 'text-rose-500' : 'text-teal-500'}`} /> {feat}
+                    </li>
+                  ))}
+                </ul>
 
-              <div className="flex justify-between items-start mb-12">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border transition-all ${
-                  item.status === 'unlocked' 
-                  ? 'bg-teal-500/5 border-teal-500/10 text-teal-400 group-hover:scale-110' 
-                  : 'bg-white/5 border-white/5 text-slate-600'
+                <button className={`w-full py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${
+                  tier.active 
+                  ? 'bg-white/5 text-slate-500 cursor-default border border-white/5' 
+                  : tier.isDonation 
+                    ? 'bg-[#FF4D6D] text-white hover:bg-[#FF758F] shadow-[0_0_20px_rgba(255,77,109,0.2)]'
+                    : 'bg-[#39D7B8] text-[#0F0A15] hover:bg-[#4df7d5]'
                 }`}>
-                  {item.icon}
-                </div>
-                {item.status === 'unlocked' && (
-                  <ChevronRight className="w-5 h-5 text-slate-600 group-hover:translate-x-1 transition-transform" />
-                )}
+                  {tier.button}
+                </button>
               </div>
+            ))}
+          </div>
+        </section>
 
-              <h3 className={`font-bold text-lg mb-2 ${item.status === 'unlocked' ? 'text-white' : 'text-slate-500'}`}>
+        {/* COMPACT NAV GRID */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 border-t border-white/5 pt-20">
+          {navigationItems.map((item, idx) => (
+            <div key={idx} className={`p-6 rounded-[2rem] border flex flex-col items-center text-center group transition-all ${
+              item.status === 'unlocked' 
+              ? 'bg-white/[0.02] border-white/5 hover:border-teal-500/30' 
+              : 'bg-black/40 border-white/[0.01] opacity-20'
+            }`}>
+              <div className={`mb-4 ${item.status === 'unlocked' ? 'text-slate-400 group-hover:text-teal-400' : 'text-slate-800'}`}>
+                {item.icon}
+              </div>
+              <span className={`text-[8px] font-black uppercase tracking-widest ${item.status === 'unlocked' ? 'text-white' : 'text-slate-800'}`}>
                 {item.title}
-              </h3>
-              <p className={`text-[11px] leading-relaxed font-light ${item.status === 'unlocked' ? 'text-slate-500' : 'text-slate-700'}`}>
-                {item.desc}
-              </p>
-
-              {/* Status Indicator */}
-              {item.status === 'locked' && (
-                <div className="mt-6 pt-4 border-t border-white/[0.03]">
-                  <span className="text-[8px] font-black uppercase tracking-widest text-slate-800">Requires Canopy Access</span>
-                </div>
-              )}
+              </span>
+              {item.status === 'locked' && <Lock className="w-2.5 h-2.5 mt-3 text-slate-800" />}
             </div>
           ))}
         </div>
-
-        {/* SITE MAP FLOW FOOTER */}
-        <footer className="mt-32 py-12 border-t border-white/5 text-center">
-          <p className="text-[9px] font-medium uppercase tracking-[0.6em] text-slate-700">
-            Grove &bull; Hearth &bull; Bridge &bull; Library &bull; Scan &bull; Embers &bull; Canopy
-          </p>
-        </footer>
 
       </div>
     </div>
