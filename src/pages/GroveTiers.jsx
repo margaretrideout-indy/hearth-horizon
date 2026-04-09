@@ -42,9 +42,15 @@ const GroveTiers = () => {
       description: 'Foundational access for those starting their journey.',
       icon: <Sprout className="w-6 h-6 text-teal-400" />,
       features: ['Foundational Badge', '2 Free PDFs/mo', 'Access to Library', 'Embers Chat'],
-      action: () => navigate('/hearth'),
+      action: () => {
+        if (!user) {
+          import('@/api/base44Client').then(m => m.base44.auth.redirectToLogin('/hearth'));
+        } else {
+          navigate('/hearth');
+        }
+      },
       buttonText: 'Get Started',
-      current: user?.subscription_tier === 'Free' 
+      current: user?.subscription_tier === 'Free'
     },
     {
       name: 'Hearthkeeper',
@@ -83,7 +89,6 @@ const GroveTiers = () => {
 
   return (
     <div className="min-h-screen bg-[#1A1423] pb-12 overflow-x-hidden">
-      {/* PWA Install Banner */}
       {deferredPrompt && showBanner && (
         <div className="bg-[#251D2F] border-b border-white/10 px-6 py-3 flex items-center justify-between animate-in fade-in slide-in-from-top duration-500 relative z-50">
           <button 
@@ -157,14 +162,12 @@ const GroveTiers = () => {
           ))}
         </div>
         
-        {/* Footer Branding */}
         <div className="mt-12 text-center opacity-40">
            <p className="text-slate-500 text-[9px] uppercase tracking-[0.3em] font-medium">
              Hearth & Horizon Ecosystem Tiers
            </p>
         </div>
 
-        {/* The Login Link (Now safely inside the container) */}
         <div className="text-center mt-16 mb-12">
           <p className="text-slate-500 text-xs uppercase tracking-[0.2em]">
             Already a member of the forest? 
