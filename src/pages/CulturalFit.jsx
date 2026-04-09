@@ -21,7 +21,7 @@ const EcosystemAlignment = () => {
     retry: false
   });
 
-  const isAdmin = user?.email === 'your-actual-email@gmail.com'; 
+  const isAdmin = user?.email === 'margaretpardy@gmail.com'; 
   const isAuthorized = isAdmin || user?.subscription_tier === 'Steward' || user?.subscription_tier === 'Hearthkeeper';
 
   useEffect(() => {
