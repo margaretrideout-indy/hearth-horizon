@@ -5,7 +5,7 @@ import {
   Compass, ShieldCheck, SearchCode, 
   ArrowRight, Zap, Target, AlertTriangle, 
   CheckCircle2, Globe, Building2, ChevronRight,
-  ShieldAlert, Sparkles, Binary, Info, Download
+  ShieldAlert, Sparkles, Binary, Info, Download, Lock
 } from 'lucide-react';
 
 const EcosystemAlignment = () => {
@@ -15,11 +15,14 @@ const EcosystemAlignment = () => {
   const [selectedEthics, setSelectedEthics] = useState([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  // 1. THE STEWARD GATEKEEPER
   const { data: user, isLoading } = useQuery({ 
     queryKey: ['me'], 
-    queryFn: () => window.base44.auth.me() 
+    queryFn: () => window.base44.auth.me(),
+    retry: false
   });
+
+  const isAdmin = user?.email === 'your-actual-email@gmail.com'; 
+  const isAuthorized = isAdmin || user?.subscription_tier === 'Steward' || user?.subscription_tier === 'Hearthkeeper';
 
   useEffect(() => {
     const saved = localStorage.getItem('alignment_ethics_v1');
@@ -27,46 +30,15 @@ const EcosystemAlignment = () => {
   }, []);
 
   useEffect(() => {
-    if (jobText.length > 10) {
+    if (jobText.length > 20) {
       setIsAnalyzing(true);
       const timer = setTimeout(() => {
         setIsAnalyzing(false);
-      }, 2500); 
+      }, 2000); 
       return () => clearTimeout(timer);
     }
   }, [jobText]);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#1A1423] flex flex-col items-center justify-center text-teal-500">
-        <Sparkles className="w-8 h-8 animate-pulse mb-4" />
-        <span className="text-[10px] font-black uppercase tracking-[0.4em]">Reading the stars...</span>
-      </div>
-    );
-  }
-
-  if (user?.subscription_tier !== 'Steward' && user?.subscription_tier !== 'Hearthkeeper') {
-    return (
-      <div className="min-h-screen bg-[#1A1423] flex flex-col items-center justify-center p-6 text-center">
-        <div className="w-16 h-16 rounded-full bg-orange-500/10 flex items-center justify-center mb-6">
-          <ShieldAlert className="text-orange-500 w-8 h-8" />
-        </div>
-        <h2 className="text-2xl font-serif text-white mb-4">This path is reserved for Stewards.</h2>
-        <p className="text-slate-400 mb-8 max-w-md text-sm leading-relaxed">
-          The Ecosystem Alignment tool and Culture Stress-Test are part of the Steward membership. 
-          Upgrade in The Grove to unlock full access.
-        </p>
-        <Link 
-          to="/" 
-          className="px-8 py-4 bg-teal-500 text-[#1A1423] font-black uppercase text-[10px] tracking-widest rounded-xl hover:bg-teal-400 transition-all"
-        >
-          Visit The Grove
-        </Link>
-      </div>
-    );
-  }
-
-  // 2. LOGIC FUNCTIONS
   const toggleEthic = (id) => {
     const updated = selectedEthics.includes(id) 
       ? selectedEthics.filter(e => e !== id) 
@@ -75,65 +47,81 @@ const EcosystemAlignment = () => {
     localStorage.setItem('alignment_ethics_v1', JSON.stringify(updated));
   };
 
+  const ethicsOptions = [
+    { id: 'remote', label: 'Remote-First / Async Operations', icon: Globe, keywords: ['remote', 'async', 'distributed', 'work from home'] },
+    { id: 'mission', label: 'Equity-Focused / Social Impact', icon: ShieldCheck, keywords: ['impact', 'purpose', 'social', 'equity', 'diversity'] },
+    { id: 'balance', label: 'Hard Work-Life Equilibrium', icon: Zap, keywords: ['flexible', 'balance', 'sustainable', 'well-being'] },
+    { id: 'autonomy', label: 'High Individual Autonomy', icon: Binary, keywords: ['self-starter', 'independent', 'autonomous', 'ownership'] },
+    { id: 'transparency', label: 'Radical Salary/Role Transparency', icon: CheckCircle2, keywords: ['transparent', 'open', 'salary', 'clarity'] }
+  ];
+
+  const runScanner = () => {
+    if (jobText.length < 10) return { compatibility: null, friction: null };
+    const lowercase = jobText.toLowerCase();
+    
+    const activeEthics = ethicsOptions.filter(o => selectedEthics.includes(o.id));
+    
+    const matched = activeEthics.find(o => o.keywords.some(k => lowercase.includes(k)));
+    const frictionKeywords = ['fast-paced', 'high-pressure', 'hustle', 'urgent', 'always-on', 'tight deadlines'];
+    const hasFriction = frictionKeywords.some(k => lowercase.includes(k));
+
+    return {
+      compatibility: matched ? `Alignment detected with "${matched.label}"` : "General ecosystem alignment detected.",
+      friction: hasFriction ? "Operational Friction: High-velocity keywords detected." : "No significant cultural red flags found."
+    };
+  };
+
+  const results = runScanner();
+
   const handleDownloadReport = () => {
-    const reportContent = `
-ECOSYSTEM ALIGNMENT REPORT
-Generated on: ${new Date().toLocaleDateString()}
-
-01. VERIFIED NON-NEGOTIABLES
-${selectedEthics.map(id => `- ${ethicsOptions.find(e => e.id === id)?.label}`).join('\n')}
-
-02. TOP ECOSYSTEM MATCH
-- ${sectors[0].name} (${sectors[0].match}% Alignment)
-- Vibe: ${sectors[0].vibe}
-
-03. CULTURAL STRESS TEST SUMMARY
-- Compatibility: High alignment detected.
-- Friction Alert: Boundary review suggested.
-
------------------------------------------
-Artifact of the Hearth Ecosystem.
-    `;
+    const reportContent = `ECOSYSTEM ALIGNMENT REPORT\nGenerated: ${new Date().toLocaleDateString()}\n\n01. NON-NEGOTIABLES\n${selectedEthics.map(id => `- ${ethicsOptions.find(e => e.id === id)?.label}`).join('\n')}\n\n02. STRESS TEST RESULTS\n- ${results.compatibility}\n- ${results.friction}`;
     const blob = new Blob([reportContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = url;
+    link.href = URL.createObjectURL(blob);
     link.download = `Hearth_Alignment_Report.txt`;
     link.click();
   };
 
-  const ethicsOptions = [
-    { id: 'remote', label: 'Remote-First / Async Operations', icon: Globe },
-    { id: 'mission', label: 'Equity-Focused / Social Impact', icon: ShieldCheck },
-    { id: 'balance', label: 'Hard Work-Life Equilibrium', icon: Zap },
-    { id: 'autonomy', label: 'High Individual Autonomy', icon: Binary },
-    { id: 'transparency', label: 'Radical Salary/Role Transparency', icon: CheckCircle2 }
-  ];
+  if (isLoading) return (
+    <div className="min-h-screen bg-[#1A1423] flex flex-col items-center justify-center text-teal-500">
+      <Sparkles className="w-8 h-8 animate-pulse mb-4" />
+      <span className="text-[10px] font-black uppercase tracking-[0.4em]">Reading the stars...</span>
+    </div>
+  );
+
+  if (!isAuthorized) return (
+    <div className="min-h-screen bg-[#1A1423] flex flex-col items-center justify-center p-6 text-center">
+      <div className="w-16 h-16 rounded-full bg-orange-500/10 flex items-center justify-center mb-6 border border-orange-500/20">
+        <ShieldAlert className="text-orange-500 w-8 h-8" />
+      </div>
+      <h2 className="text-2xl font-serif text-white mb-4">This path is reserved for Stewards.</h2>
+      <p className="text-slate-400 mb-8 max-w-md text-sm leading-relaxed font-light">
+        The Ecosystem Alignment tool and Culture Stress-Test are part of the Steward membership. 
+        Upgrade in The Grove to unlock full access.
+      </p>
+      <Link to="/" className="px-8 py-4 bg-teal-500 text-[#1A1423] font-black uppercase text-[10px] tracking-widest rounded-xl hover:bg-teal-400 transition-all shadow-[0_0_20px_rgba(45,212,191,0.2)]">
+        Visit The Grove
+      </Link>
+    </div>
+  );
 
   const sectors = [
-    { name: 'EdTech / Learning Platforms', match: 95, vibe: 'Growth-focused, mission-driven', tags: ['High Autonomy', 'Mission Alignment'] },
-    { name: 'Language Data / AI Training', match: 82, vibe: 'Highly technical, iterative', tags: ['Async Heavy', 'Data-Driven'] },
-    { name: 'Public Sector Innovation', match: 74, vibe: 'Stable, high-impact', tags: ['Stable', 'Community Impact'] }
+    { name: 'EdTech / Learning Platforms', match: 95, vibe: 'Growth-focused, mission-driven' },
+    { name: 'Language Data / AI Training', match: 82, vibe: 'Highly technical, iterative' },
+    { name: 'Public Sector Innovation', match: 74, vibe: 'Stable, high-impact' }
   ];
 
   const steps = [
-    { id: 'compass', label: '01. Define Ethics' },
-    { id: 'scout', label: '02. Scout Sectors' },
-    { id: 'translator', label: '03. Stress Test' }
+    { id: 'compass', label: '01. Define Ethics', icon: <Compass className="w-4 h-4" /> },
+    { id: 'scout', label: '02. Scout Sectors', icon: <Building2 className="w-4 h-4" /> },
+    { id: 'translator', label: '03. Stress Test', icon: <SearchCode className="w-4 h-4" /> }
   ];
-
-  const getEthicLabel = (index) => {
-    const id = selectedEthics[index];
-    const option = ethicsOptions.find(e => e.id === id);
-    return option ? option.label : "Core Values";
-  };
 
   return (
     <div className="min-h-screen bg-[#1A1423] p-6 md:p-10 text-white font-sans pb-32">
-      
       <div className="mb-10">
         <div className="flex items-center gap-2 mb-2 text-teal-400">
-          <Target className="w-4 h-4 shadow-[0_0_10px_rgba(45,212,191,0.3)]" />
+          <Target className="w-4 h-4" />
           <span className="text-[9px] font-black uppercase tracking-[0.3em]">Validation Layer</span>
         </div>
         <h1 className="text-3xl font-serif font-bold tracking-tight text-white">Ecosystem Alignment</h1>
@@ -142,24 +130,18 @@ Artifact of the Hearth Ecosystem.
       <div className="flex justify-between mb-16 max-w-2xl mx-auto relative pt-4">
         <div className="absolute top-[2.25rem] left-0 w-full h-[1px] bg-white/5 -z-10" />
         {steps.map((s, idx) => (
-          <React.Fragment key={s.id}>
-            <button 
-              onClick={() => setActiveTab(s.id)}
-              className="flex flex-col items-center gap-3 bg-[#1A1423] px-6 transition-all group"
-            >
-              <div className={`w-10 h-10 rounded-full border flex items-center justify-center text-[10px] font-black transition-all duration-500 ${activeTab === s.id ? 'border-teal-400 bg-teal-400/20 text-teal-400 shadow-[0_0_20px_rgba(45,212,191,0.4)]' : 'border-white/10 text-gray-700 group-hover:border-white/20'}`}>
-                {s.id === 'compass' ? <Compass className="w-4 h-4" /> : s.id === 'scout' ? <Building2 className="w-4 h-4" /> : <SearchCode className="w-4 h-4" />}
-              </div>
-              <span className={`text-[8px] uppercase tracking-[0.25em] font-black transition-colors ${activeTab === s.id ? 'text-teal-400' : 'text-gray-700'}`}>
-                {s.label}
-              </span>
-            </button>
-            {idx < steps.length - 1 && (
-              <div className="hidden md:flex items-center pt-2 opacity-10">
-                <ChevronRight className="w-4 h-4 text-white" />
-              </div>
-            )}
-          </React.Fragment>
+          <button 
+            key={s.id}
+            onClick={() => setActiveTab(s.id)}
+            className="flex flex-col items-center gap-3 bg-[#1A1423] px-6 transition-all group"
+          >
+            <div className={`w-10 h-10 rounded-full border flex items-center justify-center text-[10px] font-black transition-all duration-500 ${activeTab === s.id ? 'border-teal-400 bg-teal-400/20 text-teal-400 shadow-[0_0_20px_rgba(45,212,191,0.4)]' : 'border-white/10 text-gray-700'}`}>
+              {s.icon}
+            </div>
+            <span className={`text-[8px] uppercase tracking-[0.25em] font-black transition-colors ${activeTab === s.id ? 'text-teal-400' : 'text-gray-700'}`}>
+              {s.label}
+            </span>
+          </button>
         ))}
       </div>
 
@@ -168,14 +150,14 @@ Artifact of the Hearth Ecosystem.
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
               <div className="lg:col-span-7 bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-10">
-                <h3 className="text-xl font-bold mb-2 text-white">The Ethics Compass</h3>
+                <h3 className="text-xl font-bold mb-2">The Ethics Compass</h3>
                 <p className="text-xs text-gray-500 mb-8 font-light italic">Define your operational non-negotiables.</p>
                 <div className="space-y-3">
                   {ethicsOptions.map(option => (
                     <button 
                       key={option.id}
                       onClick={() => toggleEthic(option.id)}
-                      className={`w-full flex items-center justify-between p-5 rounded-2xl border transition-all duration-300 ${selectedEthics.includes(option.id) ? 'bg-teal-500/10 border-teal-500/30 shadow-[0_0_15px_rgba(45,212,191,0.05)]' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
+                      className={`w-full flex items-center justify-between p-5 rounded-2xl border transition-all duration-300 ${selectedEthics.includes(option.id) ? 'bg-teal-500/10 border-teal-500/30' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
                     >
                       <div className="flex items-center gap-4">
                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${selectedEthics.includes(option.id) ? 'bg-teal-400 text-black' : 'bg-white/5 text-gray-600'}`}>
@@ -188,15 +170,15 @@ Artifact of the Hearth Ecosystem.
                   ))}
                 </div>
               </div>
-              <div className="lg:col-span-5 p-8 border border-dashed border-white/5 rounded-3xl flex flex-col justify-center text-center italic text-gray-500 text-sm">
+              <div className="lg:col-span-5 p-8 border border-dashed border-white/5 rounded-3xl flex flex-col justify-center text-center italic text-gray-500 text-sm leading-relaxed">
                 "Your ethics aren't just values—they're constraints that protect your focus."
               </div>
             </div>
             <div className="flex justify-center">
               <button 
                 onClick={() => setActiveTab('scout')}
-                className={`flex items-center gap-4 px-10 py-5 rounded-full bg-[#FF6B35] text-white text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:scale-105 ${selectedEthics.length === 0 ? 'opacity-50 grayscale cursor-not-allowed' : ''}`}
                 disabled={selectedEthics.length === 0}
+                className={`flex items-center gap-4 px-10 py-5 rounded-full bg-[#FF6B35] text-white text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:scale-105 ${selectedEthics.length === 0 ? 'opacity-50 grayscale cursor-not-allowed' : ''}`}
               >
                 Continue to Sector Scouting <ArrowRight className="w-4 h-4" />
               </button>
@@ -205,30 +187,28 @@ Artifact of the Hearth Ecosystem.
         )}
 
         {activeTab === 'scout' && (
-          <div className="animate-in fade-in duration-700 space-y-8">
-            <div className="grid grid-cols-1 gap-4">
-              {sectors.map(sector => (
-                <div key={sector.name} className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 flex flex-col md:flex-row md:items-center justify-between group hover:bg-white/[0.04] transition-all duration-500">
-                  <div className="flex items-center gap-8 mb-4 md:mb-0">
-                    <div className="relative">
-                      <svg className="w-16 h-16 transform -rotate-90">
-                        <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="2" fill="transparent" className="text-white/5" />
-                        <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="2" fill="transparent" strokeDasharray={175.9} strokeDashoffset={175.9 - (175.9 * sector.match) / 100} className="text-teal-400" />
-                      </svg>
-                      <span className="absolute inset-0 flex items-center justify-center text-[10px] font-black text-white">{sector.match}%</span>
-                    </div>
-                    <div>
-                      <h4 className="text-base font-bold text-white mb-1 group-hover:text-teal-400 transition-colors">{sector.name}</h4>
-                      <p className="text-xs text-gray-500 italic mb-3">{sector.vibe}</p>
-                    </div>
+          <div className="animate-in fade-in duration-700 space-y-6">
+            {sectors.map(sector => (
+              <div key={sector.name} className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 flex flex-col md:flex-row md:items-center justify-between group hover:bg-white/[0.04] transition-all">
+                <div className="flex items-center gap-8">
+                  <div className="relative">
+                    <svg className="w-16 h-16 transform -rotate-90">
+                      <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="2" fill="transparent" className="text-white/5" />
+                      <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="2" fill="transparent" strokeDasharray={175.9} strokeDashoffset={175.9 - (175.9 * sector.match) / 100} className="text-teal-400" />
+                    </svg>
+                    <span className="absolute inset-0 flex items-center justify-center text-[10px] font-black">{sector.match}%</span>
                   </div>
-                  <button onClick={() => navigate('/canopy')} className="text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-[#FF6B35] transition-colors flex items-center gap-2">
-                    Explore Market <ArrowRight className="w-3 h-3" />
-                  </button>
+                  <div>
+                    <h4 className="text-base font-bold group-hover:text-teal-400 transition-colors">{sector.name}</h4>
+                    <p className="text-xs text-gray-500 italic">{sector.vibe}</p>
+                  </div>
                 </div>
-              ))}
-            </div>
-            <div className="flex justify-center pt-4">
+                <button onClick={() => navigate('/canopy')} className="text-[9px] font-black uppercase tracking-widest text-gray-500 hover:text-[#FF6B35] transition-colors flex items-center gap-2 mt-4 md:mt-0">
+                  Explore Market <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+            <div className="flex justify-center pt-8">
               <button onClick={() => setActiveTab('translator')} className="flex items-center gap-4 px-10 py-5 rounded-full bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.3em] transition-all">
                 Proceed to Stress Test <ArrowRight className="w-4 h-4" />
               </button>
@@ -253,7 +233,7 @@ Artifact of the Hearth Ecosystem.
                   value={jobText}
                   onChange={(e) => setJobText(e.target.value)}
                   placeholder="Paste a job description or company values statement here..."
-                  className="w-full h-56 bg-black/40 border border-white/5 rounded-3xl p-8 text-sm text-gray-300 focus:outline-none focus:border-orange-500/20 transition-all mb-8 font-light resize-none shadow-inner"
+                  className="w-full h-56 bg-black/40 border border-white/5 rounded-3xl p-8 text-sm text-gray-300 focus:outline-none focus:border-orange-500/20 transition-all mb-8 font-light resize-none"
                 />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
                   {isAnalyzing && (
@@ -264,30 +244,30 @@ Artifact of the Hearth Ecosystem.
                       </div>
                     </div>
                   )}
-                  <div className="bg-teal-500/[0.03] border border-teal-500/10 rounded-[2rem] p-8 group transition-all hover:bg-teal-500/[0.05]">
+                  <div className="bg-teal-500/[0.03] border border-teal-500/10 rounded-[2rem] p-8">
                     <div className="flex items-center gap-2 mb-4">
                       <CheckCircle2 className="w-4 h-4 text-teal-400" />
                       <span className="text-[9px] font-black text-teal-400 uppercase tracking-[0.2em]">Compatibility Signals</span>
                     </div>
-                    <div className="text-xs text-gray-400 leading-relaxed font-light italic">
+                    <div className="text-xs text-gray-400 italic">
                       {jobText.length > 5 ? (
                         <div className="flex gap-3 text-white/80">
                           <Zap className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" /> 
-                          <span>Alignment detected with <span className="text-teal-400 font-bold uppercase tracking-tighter">"{getEthicLabel(0)}"</span>.</span>
+                          <span>{results.compatibility}</span>
                         </div>
                       ) : "Awaiting analysis input..."}
                     </div>
                   </div>
-                  <div className="bg-red-500/[0.03] border border-red-500/10 rounded-[2rem] p-8 group transition-all hover:bg-red-500/[0.05]">
+                  <div className="bg-red-500/[0.03] border border-red-500/10 rounded-[2rem] p-8">
                     <div className="flex items-center gap-2 mb-4">
                       <ShieldAlert className="w-4 h-4 text-red-400" />
                       <span className="text-[9px] font-black text-red-400 uppercase tracking-[0.2em]">Operational Friction</span>
                     </div>
-                    <div className="text-xs text-gray-400 leading-relaxed font-light italic">
+                    <div className="text-xs text-gray-400 italic">
                       {jobText.length > 5 ? (
                         <div className="flex gap-3 text-white/80">
                           <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                          <span>Possible conflict with <span className="text-red-400 font-bold uppercase tracking-tighter">"{getEthicLabel(selectedEthics.length - 1)}"</span>.</span>
+                          <span>{results.friction}</span>
                         </div>
                       ) : "Waiting for narrative..."}
                     </div>
