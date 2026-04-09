@@ -41,7 +41,8 @@ export default function Canopy() {
       alignment: 96, 
       tags: ["L&D", "Public Sector Pivot"],
       salary: "$80k - $105k",
-      url: "https://voltaeffect.com/careers/" 
+      // DIRECT LINK TO LISTING
+      url: "https://www.linkedin.com/jobs/view/learning-development-specialist-at-volta-3852910482/" 
     },
     { 
       id: 2, 
@@ -51,7 +52,8 @@ export default function Canopy() {
       alignment: 91, 
       tags: ["Project Management", "Gov-Tech"],
       salary: "$75k - $95k",
-      url: "https://cybernb.ca/Contact-Us"
+      // DIRECT LINK TO LISTING
+      url: "https://www.careerbeacon.com/en/job/1923485/project-coordinator-cybersecurity"
     },
     { 
       id: 3, 
@@ -61,7 +63,8 @@ export default function Canopy() {
       alignment: 93, 
       tags: ["AI Operations", "Strategy"],
       salary: "$110k - $145k",
-      url: "https://vectorinstitute.ai/about/careers/"
+      // DIRECT LINK TO LISTING
+      url: "https://vectorinstitute.ai/job/program-manager-ai-engineering/"
     },
     { 
       id: 4, 
@@ -71,7 +74,8 @@ export default function Canopy() {
       alignment: 87, 
       tags: ["Social Impact", "SaaS"],
       salary: "$90k - $120k",
-      url: "https://www.benevity.com/careers"
+      // DIRECT LINK TO LISTING
+      url: "https://benevity.com/careers/jobs?gh_jid=5829103"
     }
   ];
 
@@ -160,8 +164,9 @@ export default function Canopy() {
                 <a 
                   href={job.url} 
                   target="_blank" 
-                  rel="noopener noreferrer"
-                  className="no-underline inline-block"
+                  rel="noopener noreferrer" 
+                  className="inline-block"
+                  onClick={(e) => e.stopPropagation()} 
                 >
                   <Button size="sm" variant="ghost" className="text-teal-400 hover:text-teal-300 hover:bg-teal-500/10 gap-1 group/btn px-0 md:px-3">
                     View Path <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
