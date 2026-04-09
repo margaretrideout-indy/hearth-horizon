@@ -134,30 +134,38 @@ const GroveTiers = () => {
         ))}
       </div>
 
-      <div className="mt-24 border-t border-white/5 pt-16 text-center max-w-2xl mx-auto">
-        {!isSubmitted ? (
-          <div className="flex flex-col items-center gap-6">
-            <div className="p-4 bg-teal-500/5 rounded-full">
-              <Heart className="w-6 h-6 text-teal-500/40" />
+      {/* The Sprout Clearing */}
+      <div className="mt-24 mb-12 max-w-3xl mx-auto">
+        <div className="relative bg-white/[0.02] border border-white/5 backdrop-blur-sm rounded-[3rem] p-12 text-center overflow-hidden group">
+          <div className="absolute -top-24 -left-24 w-48 h-48 bg-teal-500/5 blur-[100px] rounded-full" />
+          
+          {!isSubmitted ? (
+            <div className="relative z-10 flex flex-col items-center gap-6">
+              <div className="p-4 bg-teal-500/10 rounded-full transition-transform group-hover:scale-110 duration-500">
+                <Heart className="w-6 h-6 text-teal-400" />
+              </div>
+              
+              <div className="space-y-3">
+                <p className="text-slate-200 text-sm font-light italic leading-relaxed max-w-lg mx-auto">
+                  "The forest grows together. If you are currently navigating a challenging transition and need a hand crossing the bridge, our Steward pool provides sponsored Hearthkeeper seats."
+                </p>
+              </div>
+
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="mt-2 text-teal-400 font-black text-[10px] uppercase tracking-[0.4em] hover:text-teal-300 transition-all border-b border-teal-400/20 pb-2 flex items-center gap-3"
+              >
+                Request to Sprout a Seat
+              </button>
             </div>
-            <p className="text-slate-400 text-sm font-light italic leading-relaxed">
-              Is the path currently steep? Through the collective support of our Stewards, we offer 
-              sponsored <span className="text-white font-bold">Hearthkeeper</span> seats for those navigating difficult transitions.
-            </p>
-            <button 
-              onClick={() => setIsModalOpen(true)}
-              className="text-teal-400 font-black text-[10px] uppercase tracking-[0.3em] hover:text-teal-300 transition-all border-b border-teal-400/20 pb-2"
-            >
-              Request to Sprout a Seat
-            </button>
-          </div>
-        ) : (
-          <div className="animate-in fade-in zoom-in duration-700">
-            <CheckCircle className="w-10 h-10 text-teal-400 mx-auto mb-6" />
-            <h3 className="text-white font-black uppercase text-xs tracking-[0.3em]">Intention Received</h3>
-            <p className="text-slate-500 text-sm italic mt-3">The forest will reach out as soon as a seat becomes available.</p>
-          </div>
-        )}
+          ) : (
+            <div className="relative z-10 animate-in fade-in zoom-in duration-700 py-4">
+              <CheckCircle className="w-10 h-10 text-teal-400 mx-auto mb-6" />
+              <h3 className="text-white font-black uppercase text-xs tracking-[0.3em]">Intention Cast Into the Embers</h3>
+              <p className="text-slate-500 text-sm italic mt-3">We will reach out as soon as a sponsored path opens for you.</p>
+            </div>
+          )}
+        </div>
       </div>
 
       {isModalOpen && (
