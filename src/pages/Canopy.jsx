@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Link } from 'react-router-dom';
 
 const CANADIAN_HUBS = [
   "All Canada",
@@ -26,7 +27,9 @@ export default function Canopy() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedHub, setSelectedHub] = useState('All Canada');
   
+  // Checking for user data and a hypothetical flag for resume upload
   const { data: user } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
+  const hasUploadedResume = user?.resumeParsed || false; 
 
   const allJobs = [
     { 
@@ -71,7 +74,6 @@ export default function Canopy() {
     }
   ];
 
-  // LOGIC: Filter jobs based on search input and dropdown selection
   const filteredJobs = allJobs.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           job.tags.some(t => t.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -126,7 +128,7 @@ export default function Canopy() {
               key={job.id} 
               className="group p-6 bg-[#1C1622]/60 border-white/5 hover:border-teal-500/30 transition-all relative overflow-hidden"
             >
-              {job.alignment > 90 && (
+              {(hasUploadedResume && job.alignment > 90) && (
                 <div className="absolute top-0 left-0 w-1 h-full bg-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.5)]" />
               )}
               
@@ -137,7 +139,7 @@ export default function Canopy() {
                       <h3 className="text-xl font-bold text-white group-hover:text-teal-400 transition-colors">
                         {job.title}
                       </h3>
-                      {job.alignment > 95 && <Zap className="w-4 h-4 text-yellow-400 fill-yellow-400" />}
+                      {(hasUploadedResume && job.alignment > 95) && <Zap className="w-4 h-4 text-yellow-400 fill-yellow-400" />}
                     </div>
                     <p className="text-gray-400 font-medium mt-1">
                       {job.company} • <span className="text-gray-500 text-sm">{job.location}</span>
@@ -158,8 +160,22 @@ export default function Canopy() {
 
                 <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-2 border-t md:border-t-0 md:border-l border-white/5 pt-4 md:pt-0 md:pl-8">
                   <div className="text-right">
-                    <span className="text-3xl font-black text-teal-500 block leading-none">{job.alignment}%</span>
-                    <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mt-1">Timber Alignment</p>
+                    {hasUploadedResume ? (
+                      <>
+                        <span className="text-3xl font-black text-teal-500 block leading-none">{job.alignment}%</span>
+                        <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mt-1">Timber Alignment</p>
+                      </>
+                    ) : (
+                      <Link to="/hearth">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="border-teal-500/30 text-teal-400 text-[10px] font-black uppercase hover:bg-teal-500/10 mb-2"
+                        >
+                          <Zap className="w-3 h-3 mr-1" /> Match Me
+                        </Button>
+                      </Link>
+                    )}
                   </div>
                   
                   <a 
@@ -178,7 +194,7 @@ export default function Canopy() {
             </Card>
           ))
         ) : (
-          <div className="text-center py-20 bg-white/[0.02] border-2 border-dashed border-white/5 rounded-3xl">
+          <div className="text-center py-20 bg-white/[0.02] border-2 border-dashed border-white/5 rounded-3xl w-full">
             <Search className="w-10 h-10 text-gray-600 mx-auto mb-4 opacity-20" />
             <h3 className="text-white font-medium italic">No matches found in this sector.</h3>
             <p className="text-gray-500 text-sm">Try broadening your search or choosing "All Canada."</p>
