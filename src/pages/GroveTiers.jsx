@@ -35,8 +35,8 @@ const GroveTiers = () => {
       description: '"Foundational access for those starting their journey."',
       icon: <Sprout className="w-5 h-5 text-teal-400" />,
       features: ['Foundational Badge', '2 Free PDFs/mo', 'Access to Library', 'Embers Chat'],
-      buttonText: 'CURRENT PATH',
-      active: user?.subscription_tier === 'Free' || !user,
+      buttonText: 'SELECT PLAN',
+      active: user && user.subscription_tier === 'Free', 
     },
     {
       name: 'Hearthkeeper',
@@ -92,10 +92,10 @@ const GroveTiers = () => {
                 className={`w-full py-5 rounded-2xl font-black text-[11px] tracking-[0.2em] transition-all duration-300 ${
                   tier.active 
                   ? 'bg-white/[0.03] text-slate-600 cursor-default border border-white/5' 
-                  : 'bg-[#2DD4BF] text-[#1A1423] hover:bg-[#26bba8] hover:shadow-[0_0_30px_rgba(45,212,191,0.3)]'
+                  : 'bg-[#2DD4BF] text-[#1A1423] hover:bg-[#26bba8] hover:shadow-[0_0_30px_rgba(45,212,191,0.3)] shadow-[0_0_20px_rgba(45,212,191,0.1)]'
                 }`}
               >
-                {tier.buttonText}
+                {tier.active ? 'CURRENT PATH' : tier.buttonText}
               </button>
             </div>
           ))}
@@ -152,10 +152,6 @@ const GroveTiers = () => {
               </div>
             )}
           </div>
-        </div>
-        
-        <div className="text-center mt-20 opacity-30">
-          <p className="text-[10px] font-black text-slate-500 tracking-[0.5em] uppercase">Hearth & Horizon Ecosystem Tiers</p>
         </div>
       </div>
 
