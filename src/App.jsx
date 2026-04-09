@@ -1,27 +1,34 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Link } from 'react-router-dom';
 import { 
   Compass, Activity, Repeat, Zap, Binoculars, MessageSquare, Library, Layers, Lock 
 } from 'lucide-react';
 
 import GroveTiers from './pages/GroveTiers';
+import Hearth from './pages/Hearth'; 
+import Bridge from './pages/Bridge';
+import Alignment from './pages/Alignment';
+import HorizonScan from './pages/HorizonScan';
+import EmbersChat from './pages/EmbersChat';
+import LibraryPage from './pages/Library';
+import CanopyIndex from './pages/Canopy';
 
 const AppLayout = ({ children, currentTier = "Seedling" }) => {
   const location = useLocation();
   const isGrove = location.pathname === '/' || location.pathname === '/grove';
 
   const pathItems = [
-    { name: "THE GROVE", icon: <Compass size={14} />, tier: "Seedling" },
-    { name: "YOUR HEARTH", icon: <Activity size={14} />, tier: "Seedling" },
-    { name: "THE BRIDGE", icon: <Repeat size={14} />, tier: "Hearthkeeper" },
-    { name: "ECOSYSTEM ALIGNMENT", icon: <Zap size={14} />, tier: "Steward" },
-    { name: "HORIZON SCAN", icon: <Binoculars size={14} />, tier: "Steward" },
+    { name: "THE GROVE", icon: <Compass size={14} />, path: "/grove", tier: "Seedling" },
+    { name: "YOUR HEARTH", icon: <Activity size={14} />, path: "/hearth", tier: "Seedling" },
+    { name: "THE BRIDGE", icon: <Repeat size={14} />, path: "/bridge", tier: "Hearthkeeper" },
+    { name: "ECOSYSTEM ALIGNMENT", icon: <Zap size={14} />, path: "/alignment", tier: "Steward" },
+    { name: "HORIZON SCAN", icon: <Binoculars size={14} />, path: "/horizon", tier: "Steward" },
   ];
 
   const collectiveItems = [
-    { name: "EMBERS CHAT", icon: <MessageSquare size={14} />, tier: "Seedling" },
-    { name: "THE LIBRARY", icon: <Library size={14} />, tier: "Seedling" },
-    { name: "THE CANOPY", icon: <Layers size={14} />, tier: "Seedling" },
+    { name: "EMBERS CHAT", icon: <MessageSquare size={14} />, path: "/embers", tier: "Seedling" },
+    { name: "THE LIBRARY", icon: <Library size={14} />, path: "/library", tier: "Seedling" },
+    { name: "THE CANOPY", icon: <Layers size={14} />, path: "/canopy", tier: "Seedling" },
   ];
 
   const isLocked = (itemTier) => {
@@ -30,28 +37,36 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F0A15]">
+    <div className="min-h-screen bg-[#0F0A15] text-white">
       {!isGrove && (
         <nav className="flex items-center justify-center py-4 bg-[#0F0A15]/95 backdrop-blur-md border-b border-white/5 sticky top-0 z-50 px-6">
           <div className="flex items-center gap-6">
             <span className="text-[8px] font-black tracking-[0.3em] text-slate-600 uppercase">The Path</span>
             {pathItems.map(item => (
-              <div key={item.name} className={`flex items-center gap-2 group cursor-pointer ${isLocked(item.tier) ? 'opacity-25' : 'opacity-100'}`}>
-                <span className="text-slate-500 group-hover:text-[#39D7B8]">{item.icon}</span>
-                <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-white">{item.name}</span>
+              <Link 
+                key={item.name} 
+                to={item.path}
+                className={`flex items-center gap-2 group cursor-pointer no-underline ${isLocked(item.tier) ? 'opacity-25' : 'opacity-100'}`}
+              >
+                <span className="text-slate-500 group-hover:text-[#39D7B8] transition-colors">{item.icon}</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-white transition-colors">{item.name}</span>
                 {isLocked(item.tier) && <Lock size={10} className="text-slate-700" />}
-              </div>
+              </Link>
             ))}
           </div>
           <div className="h-4 w-[1px] bg-white/10 mx-10" />
           <div className="flex items-center gap-6">
             <span className="text-[8px] font-black tracking-[0.3em] text-slate-600 uppercase">The Collective</span>
             {collectiveItems.map(item => (
-              <div key={item.name} className={`flex items-center gap-2 group cursor-pointer ${isLocked(item.tier) ? 'opacity-25' : 'opacity-100'}`}>
-                <span className="text-slate-500 group-hover:text-[#39D7B8]">{item.icon}</span>
-                <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-white">{item.name}</span>
+              <Link 
+                key={item.name} 
+                to={item.path}
+                className={`flex items-center gap-2 group cursor-pointer no-underline ${isLocked(item.tier) ? 'opacity-25' : 'opacity-100'}`}
+              >
+                <span className="text-slate-500 group-hover:text-[#39D7B8] transition-colors">{item.icon}</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-white transition-colors">{item.name}</span>
                 {isLocked(item.tier) && <Lock size={10} className="text-slate-700" />}
-              </div>
+              </Link>
             ))}
           </div>
         </nav>
@@ -68,7 +83,13 @@ const App = () => {
         <Routes>
           <Route path="/" element={<GroveTiers />} />
           <Route path="/grove" element={<GroveTiers />} />
-          {/* Add other routes here */}
+          <Route path="/hearth" element={<Hearth />} />
+          <Route path="/bridge" element={<Bridge />} />
+          <Route path="/alignment" element={<Alignment />} />
+          <Route path="/horizon" element={<HorizonScan />} />
+          <Route path="/embers" element={<EmbersChat />} />
+          <Route path="/library" element={<LibraryPage />} />
+          <Route path="/canopy" element={<CanopyIndex />} />
         </Routes>
       </AppLayout>
     </BrowserRouter>
