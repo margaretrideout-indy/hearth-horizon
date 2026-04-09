@@ -1,111 +1,171 @@
 import React from 'react';
-import { ExternalLink, Book, ShoppingBag, Sparkles, Box } from 'lucide-react';
+import { 
+  BookOpen, 
+  ShieldCheck, 
+  FileText, 
+  Wind, 
+  Zap, 
+  ExternalLink, 
+  ShoppingBag,
+  ArrowRight,
+  Heart
+} from 'lucide-react';
 
 const Library = () => {
+  const provisions = {
+    sanctuary: [
+      {
+        title: "Pivot Resilience Toolkit",
+        desc: "Free, 24/7 counseling and mental health support for Canadians navigating major life shifts.",
+        links: [
+          { label: "Wellness Together Canada", url: "https://www.wellnesstogether.ca/" },
+          { label: "Crisis Text Line (Text HOME to 686868)", url: "https://www.crisistextline.ca/" }
+        ],
+        icon: <ShieldCheck className="w-5 h-5" />,
+        badge: "24/7 Support",
+        color: "teal"
+      },
+      {
+        title: "Burnout to Balance",
+        desc: "Vetted, free PDF workbooks designed to help regulate your nervous system after leaving a draining environment.",
+        links: [{ label: "Download PDF Guides", url: "https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself/Stress" }],
+        icon: <FileText className="w-5 h-5" />,
+        color: "slate"
+      },
+      {
+        title: "The Inner Advocate",
+        desc: "Guided audio sessions to help you quiet the inner critic during high-stakes career transitions.",
+        links: [{ label: "Listen to Sessions", url: "https://self-compassion.org/guided-self-compassion-meditations-mp3-2/" }],
+        icon: <Wind className="w-5 h-5" />,
+        color: "slate"
+      }
+    ],
+    workshop: [
+      {
+        title: "Teal HQ",
+        desc: "An all-in-one platform to manage your job search, track applications, and optimize your resume.",
+        links: [{ label: "Explore Teal", url: "https://www.tealhq.com/" }],
+        icon: <Zap className="w-5 h-5" />,
+        badge: "Next Step"
+      },
+      {
+        title: "Jobscan ATS",
+        desc: "Check how well your resume matches specific job descriptions to bypass automated filters.",
+        links: [{ label: "Scan Resume", url: "https://www.jobscan.co/" }],
+        icon: <BookOpen className="w-5 h-5" />
+      }
+    ]
+  };
+
   return (
-    <div className="min-h-screen bg-[#1a1425] text-stone-300 py-16 px-6 font-sans selection:bg-[#149184]/30">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-8 md:p-12 font-sans selection:bg-teal-500/30">
+      <div className="max-w-6xl mx-auto">
         
-        {/* Header Section */}
-        <header className="mb-12">
-          <h1 className="text-5xl font-bold text-white mb-2 italic tracking-tight uppercase text-stone-100">The Library & Provisions</h1>
-          <p className="text-xl text-stone-400 mb-4 font-light italic">Curated tools and blueprints to support your transition.</p>
-          <div className="flex items-center gap-2">
-            <div className="h-[1px] w-8 bg-[#149184]"></div>
-            <p className="text-[#149184] font-medium italic text-sm tracking-wide">Transparently vetted by 13 years of leadership experience.</p>
+        {/* HEADER */}
+        <header className="mb-24">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20">
+              <BookOpen className="w-5 h-5" />
+            </div>
+            <h1 className="text-2xl font-serif italic text-white">The Library</h1>
           </div>
+          <p className="max-w-xl text-xs leading-relaxed text-slate-500 font-light">
+            A curated collection of provisions for the journey. From technical tools to mental 
+            sanctuary, these resources are selected to support the whole person through the pivot.
+          </p>
         </header>
 
-        {/* Note on Reciprocity */}
-        <div className="bg-[#130f1c] border border-stone-800/60 rounded-xl p-8 mb-16 shadow-2xl relative overflow-hidden">
-          <div className="flex items-center gap-2 text-[#149184] text-[10px] font-black uppercase tracking-[0.2em] mb-4">
-            <Sparkles size={14} />
-            <span>A Note on Reciprocity</span>
+        {/* SECTION: THE SANCTUARY */}
+        <section className="mb-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="flex items-center gap-4 mb-10">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">
+              The Sanctuary
+            </h3>
+            <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
-          <p className="text-stone-300 text-sm leading-relaxed max-w-3xl font-light">
-            I only recommend provisions I have personally used or verified. Some links below are affiliate links — at no cost to you — that help keep the <span className="text-[#149184] font-bold">HEARTH HORIZON</span> resources free for all educators in transition. 
-          </p>
-          <p className="mt-4 text-[10px] uppercase tracking-tighter text-stone-600 font-medium italic">
-            As an Amazon Associate, I earn from qualifying purchases.
-          </p>
-        </div>
 
-        {/* THE DIGITAL WORKSHOP SECTION */}
-        <div className="mb-20">
-          <div className="flex items-center gap-3 mb-8">
-            <span className="text-[#149184] uppercase text-[10px] font-black tracking-[0.2em]">The Digital Workshop</span>
-            <div className="h-[1px] flex-grow bg-stone-800/40"></div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {provisions.sanctuary.map((item, idx) => (
+              <div key={idx} className="bg-[#1A1423] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col h-full shadow-2xl group">
+                {item.badge && (
+                  <div className="absolute -top-3 -right-3 px-3 py-1 bg-teal-500/10 rounded-full border border-teal-400/20 backdrop-blur-md">
+                    <span className="text-[7px] font-black uppercase tracking-widest text-teal-400">{item.badge}</span>
+                  </div>
+                )}
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border transition-colors ${
+                  item.color === 'teal' ? 'bg-teal-400/5 text-teal-400 border-teal-400/10' : 'bg-white/5 text-slate-400 border-white/5'
+                }`}>
+                  {item.icon}
+                </div>
+                <h4 className="text-white font-bold text-sm mb-2">{item.title}</h4>
+                <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-6 italic">
+                  {item.desc}
+                </p>
+                <div className="mt-auto pt-4 flex flex-col gap-3">
+                  {item.links.map((link, lIdx) => (
+                    <a 
+                      key={lIdx}
+                      href={link.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2"
+                    >
+                      {link.label} <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
-            <ResourceCard 
-              icon={<Sparkles size={24} className="text-[#149184]" />}
-              title="Teal Career Tracker"
-              description="An AI-powered resume builder and job tracker that keeps your pivot organized and your applications intentional."
-              link="https://www.tealhq.com"
-              buttonText="EXPLORE TEAL"
-            />
-            <ResourceCard 
-              icon={<Box size={24} className="text-[#149184]" />}
-              title="Jobscan ATS Match"
-              description="Compare your 'Linguistic Bridge' results against real job descriptions to ensure you pass through automated filters."
-              link="https://www.jobscan.co"
-              buttonText="EXPLORE JOBSCAN"
-            />
-          </div>
-        </div>
+        </section>
 
-        {/* THE STUDY SECTION */}
-        <div className="mb-16">
-          <div className="flex items-center gap-3 mb-8">
-            <span className="text-[#149184] uppercase text-[10px] font-black tracking-[0.2em]">The Study</span>
-            <div className="h-[1px] flex-grow bg-stone-800/40"></div>
+        {/* SECTION: THE WORKSHOP */}
+        <section className="mb-24">
+          <div className="flex items-center gap-4 mb-10">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500/60 whitespace-nowrap">
+              The Digital Workshop
+            </h3>
+            <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent" />
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
-            <ResourceCard 
-              icon={<Book size={24} className="text-[#149184]" />}
-              title="Bookshop.org List"
-              description="Support local bookstores while building your professional library with top-rated career transition reads."
-              link="#" 
-              buttonText="VIEW LIST"
-            />
-            <ResourceCard 
-              icon={<ShoppingBag size={24} className="text-[#149184]" />}
-              title="Amazon Starter Kit"
-              description="A curated 10-item toolkit for the educator's pivot: from essential connectivity hubs to the focus-driven tools that bridge the gap."
-              link="https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?ref_=wl_share"
-              buttonText="EXPLORE KIT"
-            />
-          </div>
-        </div>
 
-        {/* Footer Accent */}
-        <footer className="mt-32 text-center opacity-20">
-          <p className="text-[10px] uppercase tracking-[0.3em] text-stone-600 font-bold">Hearth Horizon • 2026</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {provisions.workshop.map((item, idx) => (
+              <div key={idx} className="bg-white/[0.02] border border-white/5 p-8 rounded-[2.5rem] hover:bg-white/[0.04] transition-all flex gap-8 items-center">
+                <div className="w-16 h-16 rounded-3xl bg-white/5 flex items-center justify-center text-slate-400 shrink-0">
+                  {item.icon}
+                </div>
+                <div className="flex-1">
+                  <div className="flex justify-between items-start mb-1">
+                    <h4 className="text-white font-bold text-sm">{item.title}</h4>
+                    {item.badge && (
+                      <span className="text-[7px] font-black text-teal-500 uppercase tracking-tighter bg-teal-500/10 px-2 py-0.5 rounded-full border border-teal-500/20">
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-4">
+                    {item.desc}
+                  </p>
+                  <a href={item.links[0].url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-colors">
+                    Access Tool <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* FOOTER NOTE */}
+        <footer className="mt-32 pt-12 border-t border-white/5 text-center">
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.02] border border-white/5">
+            <ShoppingBag className="w-3 h-3 text-slate-500" />
+            <span className="text-[8px] font-medium uppercase tracking-[0.2em] text-slate-500">
+              Note on Reciprocity: Some links may be affiliate-based.
+            </span>
+          </div>
         </footer>
-      </div>
-    </div>
-  );
-};
 
-// Reusable ResourceCard Component
-const ResourceCard = ({ icon, title, description, link, buttonText }) => {
-  return (
-    <div className="bg-[#130f1c] border border-stone-800/40 p-10 rounded-[1.5rem] flex flex-col h-full transition-all duration-300 hover:border-[#149184]/40 hover:-translate-y-1 shadow-lg group">
-      <div className="bg-[#149184]/5 border border-[#149184]/10 w-14 h-14 rounded-xl flex items-center justify-center mb-8 shadow-inner transition-colors group-hover:bg-[#149184]/10">
-        {icon}
       </div>
-      <h3 className="text-2xl font-bold text-white mb-4 tracking-tight">{title}</h3>
-      <p className="text-stone-400 text-sm leading-relaxed mb-10 flex-grow font-light">
-        {description}
-      </p>
-      <a 
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="bg-[#149184] hover:bg-[#1bb0a1] text-black font-black text-[10px] tracking-[0.2em] py-5 rounded-lg flex items-center justify-center gap-3 transition-all active:scale-95 shadow-md shadow-black/20 uppercase"
-      >
-        {buttonText} <ExternalLink size={14} strokeWidth={3} />
-      </a>
     </div>
   );
 };
