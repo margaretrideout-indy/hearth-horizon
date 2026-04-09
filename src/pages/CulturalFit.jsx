@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { 
   Compass, Mountain, Loader2, 
   Binoculars, TreePine, ArrowRight, 
-  Zap, ArrowRightLeft, Sparkles, Map
+  Zap, ArrowRightLeft, Sparkles, TrendingUp
 } from 'lucide-react';
 
 export default function CulturalFit({ userAnalysis }) {
@@ -37,9 +37,17 @@ export default function CulturalFit({ userAnalysis }) {
     }, 2000);
   };
 
+  // Expanded market options for the Compass
+  const marketTrajectories = [
+    { domain: "L&D Strategy", salary: "$100,290", fit: "98%", desc: "Focus on curriculum scaling and educational operations." },
+    { domain: "Project Management", salary: "$95,500", fit: "92%", desc: "Focus on lifecycle deliverables and cross-functional alignment." },
+    { domain: "Data Operations", salary: "$108,000", fit: "85%", desc: "Focus on measurable performance indicators and success metrics." }
+  ];
+
   return (
     <div className="max-w-4xl mx-auto py-12 px-6 space-y-10 animate-in fade-in duration-700">
       
+      {/* TREK NAVIGATION */}
       <nav className="flex justify-center items-center gap-8 md:gap-16 border-b border-white/5 pb-10">
         {[
           { id: 1, label: "01. THE CLEARING", icon: TreePine },
@@ -60,6 +68,7 @@ export default function CulturalFit({ userAnalysis }) {
 
       <main className="min-h-[600px] space-y-8">
         
+        {/* STAGE 01: THE CLEARING */}
         {activeStep === 1 && (
           <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
             <header className="text-center">
@@ -67,6 +76,7 @@ export default function CulturalFit({ userAnalysis }) {
               <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Equipping the Traveler</p>
             </header>
 
+            {/* THE LINGUISTIC BRIDGE */}
             <Card className="p-8 bg-[#1C1622]/60 border-white/10 shadow-2xl space-y-8">
               <div className="space-y-1">
                 <div className="flex items-center gap-2 text-teal-500">
@@ -116,6 +126,7 @@ export default function CulturalFit({ userAnalysis }) {
               </div>
             </Card>
 
+            {/* THE NARRATIVE BEACON */}
             <Card className="p-8 border-dashed border-teal-500/30 bg-teal-500/[0.03] backdrop-blur-xl">
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
@@ -126,7 +137,7 @@ export default function CulturalFit({ userAnalysis }) {
                   <Badge className="bg-teal-500 text-black font-black text-[9px] tracking-widest px-2 uppercase">Hearth Synthesis Active</Badge>
                 </div>
                 <h2 className="text-2xl text-gray-100 italic font-medium leading-relaxed">
-                  "{userAnalysis?.identityStatement || "Anchor your history in The Hearth to light your Narrative Beacon."}"
+                  "{userAnalysis?.identityStatement || "A strategic architect of human capital with 13 years of expertise in curriculum scaling and educational operations."}"
                 </h2>
               </div>
             </Card>
@@ -137,6 +148,7 @@ export default function CulturalFit({ userAnalysis }) {
           </div>
         )}
 
+        {/* STAGE 02: THE COMPASS (Expanded with multiple trajectories) */}
         {activeStep === 2 && (
           <div className="space-y-8 animate-in slide-in-from-right-4 duration-500 text-center">
              <header className="space-y-2">
@@ -144,39 +156,43 @@ export default function CulturalFit({ userAnalysis }) {
               <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Market Topography</p>
             </header>
             
-            <Card className="p-8 bg-[#1C1622]/80 border-white/10 space-y-8 shadow-2xl">
-              <div className="p-10 bg-black/40 rounded-2xl border border-white/5 space-y-8">
-                <div className="flex justify-between items-center border-b border-white/5 pb-4">
-                  <span className="text-[10px] font-black text-teal-400 uppercase tracking-widest">The Alignment</span>
-                  <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 font-black tracking-widest italic uppercase">$100,290 Avg. Target</Badge>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {marketTrajectories.map((path, idx) => (
+                <Card key={idx} className={`p-6 bg-[#1C1622]/80 border-white/10 hover:border-teal-500/40 transition-all cursor-pointer group ${idx === 0 ? 'ring-2 ring-teal-500/50' : ''}`}>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-start">
+                      <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 text-[9px] font-black">{path.fit} MATCH</Badge>
+                      <TrendingUp size={16} className="text-teal-500 opacity-50 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                    <div className="text-left space-y-1">
+                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest italic">Trajectory</p>
+                      <h4 className="text-white font-bold text-lg leading-tight">{path.domain}</h4>
+                    </div>
+                    <div className="text-left py-3 border-y border-white/5">
+                      <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest">Avg. Target</p>
+                      <p className="text-xl text-white font-black italic">{path.salary}</p>
+                    </div>
+                    <p className="text-[11px] text-gray-400 italic text-left leading-relaxed">
+                      {path.desc}
+                    </p>
+                  </div>
+                </Card>
+              ))}
+            </div>
 
-                <div className="grid grid-cols-3 items-center gap-4 text-center px-4">
-                    <div className="space-y-1">
-                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Legacy Domain</p>
-                        <p className="text-white font-bold italic tracking-wide">{userAnalysis?.legacyDomain || "Education"}</p>
-                    </div>
-                    <div className="flex justify-center">
-                      <ArrowRight className="text-teal-500 opacity-50" size={24} />
-                    </div>
-                    <div className="space-y-1">
-                        <p className="text-[9px] font-black text-teal-500 uppercase tracking-widest">Corporate Equivalent</p>
-                        <p className="text-white font-bold italic tracking-wide">{userAnalysis?.corporateEquivalent || "Human Capital Strategy"}</p>
-                    </div>
-                </div>
-
-                <p className="text-gray-400 italic text-sm leading-relaxed max-w-lg mx-auto border-t border-white/5 pt-6">
-                  "The Compass confirms that your crossing is viable. In the Canadian market, your expertise carries a premium in this specific sector."
+            <Card className="p-8 bg-black/40 border border-white/5">
+                <p className="text-gray-400 italic text-sm leading-relaxed max-w-lg mx-auto">
+                  "The Compass reveals multiple viable paths through the Canadian landscape. While **Human Capital & L&D** is your strongest bearing, your expertise in **Operations** and **Project Management** remains highly valuable."
                 </p>
-              </div>
-
-              <Button onClick={handleAlign} disabled={isAligning} className="w-full h-20 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl text-lg uppercase tracking-widest transition-all shadow-xl">
-                {isAligning ? <Loader2 className="animate-spin mr-3" size={24} /> : <><Zap size={22} className="mr-3" /> ALIGN NARRATIVE</>}
-              </Button>
             </Card>
+
+            <Button onClick={handleAlign} disabled={isAligning} className="w-full h-20 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl text-lg uppercase tracking-widest transition-all shadow-xl">
+              {isAligning ? <Loader2 className="animate-spin mr-3" size={24} /> : <><Zap size={22} className="mr-3" /> ALIGN NARRATIVE</>}
+            </Button>
           </div>
         )}
 
+        {/* STAGE 03: THE WILDS */}
         {activeStep === 3 && (
           <div className="animate-in zoom-in-95 duration-700 text-center space-y-8">
             <header className="space-y-2">
