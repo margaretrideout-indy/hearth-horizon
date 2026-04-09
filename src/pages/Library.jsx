@@ -10,7 +10,8 @@ import {
   FileText, 
   Wind, 
   ArrowRight,
-  ShoppingBag
+  ShoppingBag,
+  MessageSquare
 } from 'lucide-react';
 
 const Library = () => {
@@ -51,9 +52,9 @@ const Library = () => {
         title: "Pivot Resilience Toolkit",
         desc: "Free, 24/7 counseling and mental health support for Canadians navigating major life shifts.",
         links: [
-          { label: "Wellness Together Canada", url: "https://www.wellnesstogether.ca/en-CA/referrals/service-navigator" }
+          { label: "Wellness Together Canada", url: "https://wellnesstogether.ca/en-CA" }
         ],
-        extraInfo: "Crisis Text Line: Text HOME to 686868",
+        emergencyInfo: "Text HOME to 686868",
         icon: <ShieldCheck className="w-5 h-5" />,
         badge: "24/7 Support",
         color: "teal"
@@ -93,8 +94,8 @@ const Library = () => {
           </p>
         </header>
 
-        {/* 01. THE STUDY (Affiliates) */}
-        <section className="mb-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        {/* 01. THE STUDY */}
+        <section className="mb-24">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500/60 whitespace-nowrap">
               The Study
@@ -112,9 +113,7 @@ const Library = () => {
                 <a href={item.links[0].url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 bg-teal-600/10 border border-teal-500/20 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] text-teal-400 hover:bg-teal-600 hover:text-white transition-all mb-6">
                   {item.links[0].label} <ExternalLink className="ml-2 w-3 h-3" />
                 </a>
-                <p className="text-[8px] text-slate-600 uppercase tracking-tighter text-center italic">
-                  {item.footer}
-                </p>
+                <p className="text-[8px] text-slate-600 uppercase tracking-tighter text-center italic">{item.footer}</p>
               </div>
             ))}
           </div>
@@ -137,11 +136,7 @@ const Library = () => {
                 <div className="flex-1">
                   <div className="flex justify-between items-start mb-1">
                     <h4 className="text-white font-bold text-sm">{item.title}</h4>
-                    {item.badge && (
-                      <span className="text-[7px] font-black text-teal-500 uppercase tracking-tighter bg-teal-500/10 px-2 py-0.5 rounded-full border border-teal-500/20">
-                        {item.badge}
-                      </span>
-                    )}
+                    {item.badge && <span className="text-[7px] font-black text-teal-500 uppercase tracking-tighter bg-teal-500/10 px-2 py-0.5 rounded-full border border-teal-500/20">{item.badge}</span>}
                   </div>
                   <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-4">{item.desc}</p>
                   <a href={item.links[0].url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors">
@@ -165,8 +160,8 @@ const Library = () => {
             {provisions.sanctuary.map((item, idx) => (
               <div key={idx} className="bg-[#1A1423] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col h-full shadow-2xl relative group">
                 {item.badge && (
-                  <div className="absolute -top-3 -right-3 px-3 py-1 bg-teal-500/10 rounded-full border border-teal-400/20 backdrop-blur-md">
-                    <span className="text-[7px] font-black uppercase tracking-widest text-teal-400">{item.badge}</span>
+                  <div className="absolute -top-3 -right-3 px-3 py-1 bg-teal-500/20 rounded-full border border-teal-400/30 backdrop-blur-md z-10">
+                    <span className="text-[7px] font-black uppercase tracking-widest text-teal-300">{item.badge}</span>
                   </div>
                 )}
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border ${
@@ -176,21 +171,23 @@ const Library = () => {
                 </div>
                 <h4 className="text-white font-bold text-sm mb-2">{item.title}</h4>
                 <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-6 italic">{item.desc}</p>
-                <div className="mt-auto pt-4 flex flex-col gap-3">
-                  {item.links.map((link, lIdx) => (
-                    <a 
-                      key={lIdx} 
-                      href={link.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2"
-                    >
-                      {link.label} <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                    </a>
-                  ))}
-                  {item.extraInfo && (
-                    <div className="mt-1 text-[8px] font-bold text-slate-400 uppercase tracking-widest border-t border-white/5 pt-3">
-                      {item.extraInfo}
+                
+                <div className="mt-auto space-y-4">
+                  <div className="flex flex-col gap-3">
+                    {item.links.map((link, lIdx) => (
+                      <a key={lIdx} href={link.url} target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2">
+                        {link.label} <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                      </a>
+                    ))}
+                  </div>
+
+                  {item.emergencyInfo && (
+                    <div className="p-4 rounded-2xl bg-teal-500/5 border border-teal-500/20 flex items-start gap-3 mt-2">
+                      <MessageSquare className="w-3 h-3 text-teal-400 mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-[7px] font-black uppercase tracking-[0.2em] text-teal-500 mb-1">Crisis Text Line</p>
+                        <p className="text-[10px] font-bold text-white tracking-wide">{item.emergencyInfo}</p>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -199,7 +196,7 @@ const Library = () => {
           </div>
         </section>
 
-        {/* FINAL FOOTER */}
+        {/* FOOTER */}
         <footer className="mt-32 pt-12 border-t border-white/5 text-center">
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.02] border border-white/5">
             <ShoppingBag className="w-3 h-3 text-slate-500" />
