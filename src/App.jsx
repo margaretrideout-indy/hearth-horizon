@@ -54,7 +54,7 @@ const Navigation = () => {
   ].filter(link => {
     if (link.public) return true;
     if (!user) return false;
-    if (link.admin) return user?.email === 'your-email@example.com'; 
+    if (link.admin) return user?.email === 'margaretpardy@gmail.com'; 
     return false;
   });
 
