@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // Page Imports
-import HearthV2 from './pages/Hearth'; // We keep the filename but rename the import
+import Hearth from './pages/Hearth';
 import CulturalFit from './pages/CulturalFit';
 import Canopy from './pages/Canopy';
 import Library from './pages/Library';
 import GroveTiers from './pages/GroveTiers';
 
 export default function App() {
-  const [globalUser, setGlobalUser] = useState(() => {
-    // New key 'hearth_final_v5' to bypass all previous browser memory
-    const saved = localStorage.getItem('hearth_final_v5');
+  const [sanctuaryState, setSanctuaryState] = useState(() => {
+    // Changing the key to 'vault_reset_final' wipes the old data cache
+    const saved = localStorage.getItem('vault_reset_final');
     return saved ? JSON.parse(saved) : {
       name: "Traveler",
       tier: "Free",
@@ -22,27 +22,27 @@ export default function App() {
   });
 
   useEffect(() => {
-    localStorage.setItem('hearth_final_v5', JSON.stringify(globalUser));
-  }, [globalUser]);
+    localStorage.setItem('vault_reset_final', JSON.stringify(sanctuaryState));
+  }, [sanctuaryState]);
 
-  const sync = (updates) => setGlobalUser(prev => ({ ...prev, ...updates }));
+  const forceSync = (updates) => setSanctuaryState(prev => ({ ...prev, ...updates }));
 
   return (
     <Router>
-      <div className="min-h-screen bg-[#0F0A15] text-white selection:bg-teal-500/30">
+      <div className="min-h-screen bg-[#0F0A15] text-white selection:bg-teal-500/30 font-sans">
         <Routes>
           <Route path="/" element={<Navigate to="/hearth" replace />} />
           
-          {/* Using the renamed component reference */}
+          {/* We are now passing the 'vault' prop instead of 'userData' */}
           <Route 
             path="/hearth" 
-            element={<HearthV2 userData={globalUser} onSync={sync} />} 
+            element={<Hearth vault={sanctuaryState} onSync={forceSync} />} 
           />
           
-          <Route path="/alignment" element={<CulturalFit userData={globalUser} onSync={sync} />} />
-          <Route path="/canopy" element={<Canopy userData={globalUser} onSync={sync} />} />
-          <Route path="/library" element={<Library userData={globalUser} />} />
-          <Route path="/grove" element={<GroveTiers userData={globalUser} onSync={sync} />} />
+          <Route path="/alignment" element={<CulturalFit vault={sanctuaryState} onSync={forceSync} />} />
+          <Route path="/canopy" element={<Canopy vault={sanctuaryState} onSync={forceSync} />} />
+          <Route path="/library" element={<Library vault={sanctuaryState} />} />
+          <Route path="/grove" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} />} />
           
           <Route path="*" element={<Navigate to="/hearth" replace />} />
         </Routes>
