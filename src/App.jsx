@@ -1,14 +1,15 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { 
   Compass, Activity, Repeat, Zap, Binoculars, MessageSquare, Library, Layers, Lock 
 } from 'lucide-react';
+
+import GroveTiers from './pages/GroveTiers';
 
 const AppLayout = ({ children, currentTier = "Seedling" }) => {
   const location = useLocation();
   const isGrove = location.pathname === '/' || location.pathname === '/grove';
 
-  // THE PATH (The 5)
   const pathItems = [
     { name: "THE GROVE", icon: <Compass size={14} />, tier: "Seedling" },
     { name: "YOUR HEARTH", icon: <Activity size={14} />, tier: "Seedling" },
@@ -17,7 +18,6 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
     { name: "HORIZON SCAN", icon: <Binoculars size={14} />, tier: "Steward" },
   ];
 
-  // THE COLLECTIVE (The 3)
   const collectiveItems = [
     { name: "EMBERS CHAT", icon: <MessageSquare size={14} />, tier: "Seedling" },
     { name: "THE LIBRARY", icon: <Library size={14} />, tier: "Seedling" },
@@ -39,6 +39,7 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
               <div key={item.name} className={`flex items-center gap-2 group cursor-pointer ${isLocked(item.tier) ? 'opacity-25' : 'opacity-100'}`}>
                 <span className="text-slate-500 group-hover:text-[#39D7B8]">{item.icon}</span>
                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-white">{item.name}</span>
+                {isLocked(item.tier) && <Lock size={10} className="text-slate-700" />}
               </div>
             ))}
           </div>
@@ -49,14 +50,29 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
               <div key={item.name} className={`flex items-center gap-2 group cursor-pointer ${isLocked(item.tier) ? 'opacity-25' : 'opacity-100'}`}>
                 <span className="text-slate-500 group-hover:text-[#39D7B8]">{item.icon}</span>
                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-white">{item.name}</span>
+                {isLocked(item.tier) && <Lock size={10} className="text-slate-700" />}
               </div>
             ))}
           </div>
         </nav>
       )}
-      <main>{children}</main>
+      <main className="w-full">{children}</main>
     </div>
   );
 };
 
-export default AppLayout;
+const App = () => {
+  return (
+    <BrowserRouter>
+      <AppLayout>
+        <Routes>
+          <Route path="/" element={<GroveTiers />} />
+          <Route path="/grove" element={<GroveTiers />} />
+          {/* Add other routes here */}
+        </Routes>
+      </AppLayout>
+    </BrowserRouter>
+  );
+};
+
+export default App;
