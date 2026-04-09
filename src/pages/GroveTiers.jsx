@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Check, Sprout, Flame, Mountain, Heart, Send, CheckCircle } from 'lucide-react';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { CheckCircle2, Sprout, Flame, Mountain, Heart, Send, CheckCircle } from 'lucide-react';
 
 const GroveTiers = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [intention, setIntention] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -25,151 +24,159 @@ const GroveTiers = () => {
         requestDate: new Date().toISOString(),
       });
     },
-    onSuccess: () => {
-      setIsSubmitted(true);
-    }
+    onSuccess: () => setIsSubmitted(true)
   });
 
   const tiers = [
     {
       name: 'Seedling',
-      price: 'Free',
-      description: 'Foundational access for those starting their journey.',
+      price: 'FREE',
+      subtext: 'ALWAYS OPEN',
+      description: '"Foundational access for those starting their journey."',
       icon: <Sprout className="w-5 h-5 text-teal-400" />,
-      features: ['Linguistic Bridge: Gallery Access', '2 Resume Scans Per Month', '2 Library Downloads Per Month', 'Community View-only Access'],
-      buttonText: 'Current Path',
-      active: user?.subscription_tier === 'Free' || !user
+      features: ['Foundational Badge', '2 Free PDFs/mo', 'Access to Library', 'Embers Chat'],
+      buttonText: 'CURRENT PATH',
+      active: user?.subscription_tier === 'Free' || !user,
     },
     {
       name: 'Hearthkeeper',
-      price: '$5',
-      unit: '/mo',
-      description: 'Active transition tools to fuel your career pivot.',
-      icon: <Flame className="w-5 h-5 text-orange-400" />,
-      features: ['Unlimited Linguistic Bridge', 'Unlimited Resume Analysis', 'Full Library Access', 'Active Community Participation'],
-      buttonText: 'Step into the Hearth',
-      active: user?.subscription_tier === 'Hearthkeeper'
+      price: '$3',
+      subtext: '$5/MO AFTER FIRST MONTH',
+      description: '"Removing limits to keep the fires burning bright."',
+      icon: <Flame className="w-5 h-5 text-teal-400" />,
+      features: ['Everything in Seedling', 'Unlimited PDF uploads', 'Hearthkeeper Badge'],
+      buttonText: 'SELECT PLAN',
+      active: user?.subscription_tier === 'Hearthkeeper',
     },
     {
       name: 'Steward',
-      price: '$8',
-      unit: '/mo',
-      description: 'Guard the forest and support fellow dwellers.',
-      icon: <Mountain className="w-5 h-5 text-indigo-400" />,
-      features: ['Everything in Hearthkeeper', 'Ecosystem Alignment Tools', 'Sponsor 1 Hearthkeeper Seat', 'Steward Badge & Recognition'],
-      buttonText: 'Become a Steward',
-      active: user?.subscription_tier === 'Steward'
+      price: '$5',
+      subtext: '$8/MO AFTER FIRST MONTH',
+      description: '"Full oversight and total access to the entire Grove."',
+      icon: <Mountain className="w-5 h-5 text-teal-400" />,
+      features: ['Everything in Hearthkeeper', 'Ecosystem Alignment', 'The Canopy Hub'],
+      buttonText: 'SELECT PLAN',
+      active: user?.subscription_tier === 'Steward',
     }
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-20 bg-[#1A1423]">
-      {/* Header - Muted Teal and Slates */}
-      <div className="text-center mb-20">
-        <span className="text-[10px] font-black text-teal-500/40 uppercase tracking-[0.5em]">Membership Tiers</span>
-        <h1 className="text-6xl font-black text-teal-500/80 italic tracking-tighter uppercase mt-4">The Grove</h1>
-        <p className="text-slate-500 font-light italic mt-4 max-w-xl mx-auto text-sm">
-          Choose your pace. Whether you are seeking shelter or guarding the path, there is a place for you.
-        </p>
-      </div>
+    <div className="min-h-screen bg-[#1A1423] py-20 px-6 font-sans selection:bg-teal-500/30">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+          
+          {tiers.map((tier) => (
+            <div key={tier.name} className="bg-[#241B2E] rounded-[2.5rem] p-10 flex flex-col border border-white/5 transition-all duration-500 hover:border-teal-500/20 shadow-2xl">
+              <div className="mb-8 text-left">
+                <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-10">
+                  {tier.icon}
+                </div>
+                <h3 className="text-2xl font-bold text-white tracking-tight mb-1">{tier.name}</h3>
+                <div className="text-4xl font-black text-white mb-1">{tier.price}</div>
+                <div className="text-[10px] font-black text-teal-400 tracking-widest uppercase mb-6">{tier.subtext}</div>
+                <p className="text-slate-400 text-sm italic font-light leading-relaxed">{tier.description}</p>
+              </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {tiers.map((tier) => (
-          <div 
-            key={tier.name}
-            className={`relative bg-[#251D2F] border ${tier.active ? 'border-teal-500/30 shadow-[0_0_30px_rgba(45,212,191,0.05)]' : 'border-white/5'} rounded-[2.5rem] p-10 flex flex-col transition-all duration-500`}
-          >
-            {tier.active && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-teal-500/10 text-teal-400 border border-teal-500/20 text-[8px] font-black uppercase px-4 py-1 rounded-full tracking-widest backdrop-blur-md">
-                Your Current Path
-              </div>
-            )}
-            
-            <div className="mb-10">
-              <div className="p-3 bg-white/5 w-fit rounded-xl mb-6">
-                {tier.icon}
-              </div>
-              <h3 className="text-2xl font-black text-slate-300 italic uppercase tracking-tighter">{tier.name}</h3>
-              <div className="flex items-baseline gap-1 mt-2">
-                <span className="text-4xl font-black text-slate-200">{tier.price}</span>
-                {tier.unit && <span className="text-slate-600 text-[10px] font-black uppercase tracking-widest ml-1">{tier.unit}</span>}
-              </div>
-              <p className="text-slate-500 text-xs italic mt-4 leading-relaxed font-light">{tier.description}</p>
+              <div className="h-px bg-white/5 w-full mb-8" />
+
+              <ul className="space-y-5 mb-12 flex-grow">
+                {tier.features.map((f) => (
+                  <li key={f} className="flex items-center gap-4 text-xs font-medium text-slate-200 tracking-wide">
+                    <CheckCircle2 className="w-4 h-4 text-teal-500/60" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+
+              <button 
+                className={`w-full py-5 rounded-2xl font-black text-[11px] tracking-[0.2em] transition-all duration-300 ${
+                  tier.active 
+                  ? 'bg-white/[0.03] text-slate-600 cursor-default border border-white/5' 
+                  : 'bg-[#2DD4BF] text-[#1A1423] hover:bg-[#26bba8] hover:shadow-[0_0_30px_rgba(45,212,191,0.3)]'
+                }`}
+              >
+                {tier.buttonText}
+              </button>
             </div>
+          ))}
 
-            <ul className="space-y-4 mb-12 flex-grow">
-              {tier.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-3 text-[10px] text-slate-400 font-bold uppercase tracking-tight leading-tight">
-                  <Check className="w-3.5 h-3.5 text-teal-500/40 shrink-0 mt-0.5" />
-                  {feature}
+          {/* Plant A Seed Card */}
+          <div className="bg-[#241B2E] rounded-[2.5rem] p-10 flex flex-col border border-rose-500/10 shadow-2xl">
+            <div className="mb-8 text-left">
+              <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-10 text-rose-500">
+                <Heart className="w-5 h-5 fill-current" />
+              </div>
+              <h3 className="text-2xl font-bold text-white tracking-tight mb-1">Plant A Seed</h3>
+              <div className="text-4xl font-black text-white mb-1">DONATE</div>
+              <div className="text-[10px] font-black text-rose-500 tracking-widest uppercase mb-6">SUPPORT THE GROVE</div>
+              <p className="text-slate-400 text-sm italic font-light leading-relaxed">"Pay it forward to keep the Hearth accessible."</p>
+            </div>
+            <div className="h-px bg-white/5 w-full mb-8" />
+            <ul className="space-y-5 mb-12 flex-grow">
+              {['Sponsor Badge', 'Supports Open Access', 'Warm Fuzzies'].map((f) => (
+                <li key={f} className="flex items-center gap-4 text-xs font-medium text-slate-200 tracking-wide">
+                  <CheckCircle2 className="w-4 h-4 text-rose-500/60" />
+                  {f}
                 </li>
               ))}
             </ul>
-
-            <button 
-              disabled={tier.active}
-              className={`w-full py-4 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] transition-all duration-300 ${
-                tier.active 
-                ? 'bg-white/5 text-slate-600 cursor-default border border-white/5' 
-                : 'bg-teal-500/80 text-[#1A1423] hover:bg-teal-400 hover:shadow-[0_0_20px_rgba(45,212,191,0.15)]'
-              }`}
-            >
-              {tier.buttonText}
+            <button className="w-full py-5 bg-[#F43F5E] text-white rounded-2xl font-black text-[11px] tracking-[0.2em] hover:bg-[#e11d48] transition-all shadow-lg shadow-rose-500/20 uppercase">
+              GIVE A SEED
             </button>
           </div>
-        ))}
-      </div>
+        </div>
 
-      {/* The Sprout Clearing - Low White / High Atmosphere */}
-      <div className="mt-32 max-w-3xl mx-auto">
-        <div className="relative bg-white/[0.01] border border-white/5 backdrop-blur-sm rounded-[3rem] p-12 text-center overflow-hidden group">
-          <div className="absolute -top-24 -left-24 w-48 h-48 bg-teal-500/5 blur-[100px] rounded-full" />
-          
-          {!isSubmitted ? (
-            <div className="relative z-10 flex flex-col items-center gap-6">
-              <div className="p-4 bg-teal-500/10 rounded-full transition-transform group-hover:scale-110 duration-700">
-                <Heart className="w-6 h-6 text-teal-500/50" />
+        {/* The Sprout Clearing */}
+        <div className="mt-32 max-w-4xl mx-auto">
+          <div className="relative bg-white/[0.01] border border-white/5 backdrop-blur-sm rounded-[3rem] p-16 text-center overflow-hidden group">
+            {!isSubmitted ? (
+              <div className="relative z-10 flex flex-col items-center gap-8">
+                <div className="p-5 bg-teal-500/5 rounded-full border border-teal-500/10">
+                  <Heart className="w-6 h-6 text-teal-400" />
+                </div>
+                <p className="text-slate-300 text-base font-light italic leading-relaxed max-w-xl mx-auto">
+                  "The forest grows together. If you are currently navigating a challenging transition and need a hand crossing the bridge, our Steward pool provides sponsored Hearthkeeper seats."
+                </p>
+                <button 
+                  onClick={() => setIsModalOpen(true)}
+                  className="text-teal-400 font-black text-[11px] uppercase tracking-[0.4em] hover:text-teal-300 transition-all border-b border-teal-400/20 pb-2"
+                >
+                  REQUEST TO SPROUT A SEAT
+                </button>
               </div>
-              
-              <p className="text-slate-400 text-sm font-light italic leading-relaxed max-w-lg mx-auto">
-                "The forest grows together. If you are currently navigating a challenging transition and need a hand crossing the bridge, our Steward pool provides sponsored Hearthkeeper seats."
-              </p>
-
-              <button 
-                onClick={() => setIsModalOpen(true)}
-                className="mt-4 text-teal-500/70 font-black text-[10px] uppercase tracking-[0.4em] hover:text-teal-300 transition-all border-b border-teal-500/20 pb-2"
-              >
-                Request to Sprout a Seat
-              </button>
-            </div>
-          ) : (
-            <div className="relative z-10 animate-in fade-in zoom-in duration-700 py-4">
-              <CheckCircle className="w-10 h-10 text-teal-500/40 mx-auto mb-6" />
-              <h3 className="text-slate-300 font-black uppercase text-xs tracking-[0.3em]">Intention Received</h3>
-              <p className="text-slate-500 text-sm italic mt-3">The forest will reach out as soon as a path opens.</p>
-            </div>
-          )}
+            ) : (
+              <div className="relative z-10 animate-in fade-in zoom-in duration-1000">
+                <CheckCircle className="w-12 h-12 text-teal-400/40 mx-auto mb-6" />
+                <h3 className="text-slate-200 font-black uppercase text-xs tracking-[0.4em]">Intention Received</h3>
+                <p className="text-slate-500 text-sm italic mt-4 tracking-wide">The forest will reach out as soon as a path opens.</p>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        <div className="text-center mt-20 opacity-30">
+          <p className="text-[10px] font-black text-slate-500 tracking-[0.5em] uppercase">Hearth & Horizon Ecosystem Tiers</p>
         </div>
       </div>
 
-      {/* Modal - Darkened with Blur */}
+      {/* Sprout Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#1A1423]/95 backdrop-blur-xl">
-          <div className="bg-[#251D2F] border border-white/10 w-full max-w-md rounded-[2.5rem] p-12 shadow-2xl">
-            <h2 className="text-teal-500/80 font-black uppercase text-[10px] tracking-[0.3em] mb-8">Seedling Intention</h2>
+          <div className="bg-[#241B2E] border border-white/10 w-full max-w-md rounded-[3rem] p-12 shadow-2xl animate-in fade-in slide-in-from-bottom-12">
+            <h2 className="text-teal-500/80 font-black uppercase text-[10px] tracking-[0.3em] mb-10 text-left">Seedling Intention</h2>
             <textarea 
               value={intention}
               onChange={(e) => setIntention(e.target.value)}
-              className="w-full h-40 bg-black/40 border border-white/5 rounded-2xl p-6 text-slate-300 text-sm focus:ring-1 focus:ring-teal-500/30 transition-all resize-none mb-8 outline-none placeholder:text-slate-700"
+              className="w-full h-44 bg-black/40 border border-white/5 rounded-3xl p-6 text-slate-300 text-sm focus:ring-1 focus:ring-teal-500/30 transition-all resize-none mb-10 outline-none placeholder:text-slate-700 font-light italic"
               placeholder="Briefly share your mission..."
             />
-            <div className="flex gap-4 font-black uppercase text-[10px] tracking-widest">
-              <button onClick={() => setIsModalOpen(false)} className="flex-1 text-slate-600 hover:text-slate-300 transition-all text-left">Cancel</button>
+            <div className="flex gap-8 font-black uppercase text-[10px] tracking-widest items-center">
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-600 hover:text-slate-300 transition-all">CANCEL</button>
               <button 
                 onClick={() => { if(intention) { requestMutation.mutate(intention); setIsModalOpen(false); } }}
-                className="flex-[2] py-4 bg-teal-500/80 text-[#1A1423] rounded-xl hover:bg-teal-400 transition-all"
+                className="flex-grow py-5 bg-[#2DD4BF] text-[#1A1423] rounded-2xl hover:bg-[#26bba8] transition-all"
               >
-                Send Request
+                SEND REQUEST
               </button>
             </div>
           </div>
