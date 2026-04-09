@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-// Page Imports
+// Page Imports - Ensure these files exist in your src/pages folder
 import Hearth from './pages/Hearth';
 import CulturalFit from './pages/CulturalFit';
 import Canopy from './pages/Canopy';
@@ -10,14 +10,15 @@ import GroveTiers from './pages/GroveTiers';
 
 function App() {
   // --- PERSISTENT ECOSYSTEM STATE ---
+  // This replaces the old 'userAnalysis' with a full 'userData' vault
   const [userData, setUserData] = useState(() => {
     const saved = localStorage.getItem('hearth_vault');
     return saved ? JSON.parse(saved) : {
-      name: "Traveler",
+      name: "Traveler", // Dynamic name for your users
       tier: "Free", 
       journey: "Classroom to New Horizon",
       isAligned: false,
-      pulses: [],
+      pulses: [], // This will store the "Recent Reflections" seen in your screenshots
       analysis: {
         identityStatement: "Awaiting ecosystem synthesis...",
         legacyDomain: "",
@@ -27,12 +28,12 @@ function App() {
     };
   });
 
-  // Sync state to local storage whenever it changes
+  // Save the vault to the browser so data isn't lost on refresh
   useEffect(() => {
     localStorage.setItem('hearth_vault', JSON.stringify(userData));
   }, [userData]);
 
-  // Global Sync Function passed to all children
+  // Global Function to update the sanctuary from any page
   const syncEcosystem = (updates) => {
     setUserData(prev => ({ ...prev, ...updates }));
   };
@@ -41,7 +42,7 @@ function App() {
     <Router>
       <div className="min-h-screen bg-[#0F0A15] text-white font-sans selection:bg-teal-500/30">
         <Routes>
-          {/* ENTRY POINT */}
+          {/* THE ENTRY POINT */}
           <Route path="/" element={<Navigate to="/hearth" replace />} />
           
           {/* YOUR HEARTH (The Sanctuary / Intake / Logbook) */}
@@ -68,13 +69,13 @@ function App() {
             element={<Library userData={userData} />} 
           />
 
-          {/* GROVE TIERS (Membership / Reciprocity Model) */}
+          {/* THE GROVE (Membership / Reciprocity Model) */}
           <Route 
             path="/grove" 
             element={<GroveTiers userData={userData} onSync={syncEcosystem} />} 
           />
 
-          {/* CATCH-ALL REDIRECT */}
+          {/* CATCH-ALL REDIRECT (Prevents broken links) */}
           <Route path="*" element={<Navigate to="/hearth" replace />} />
         </Routes>
       </div>
