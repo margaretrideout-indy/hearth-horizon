@@ -44,7 +44,7 @@ const GroveTiers = () => {
       features: ['Foundational Badge', '2 Free PDFs/mo', 'Access to Library', 'Embers Chat'],
       action: () => navigate('/hearth'),
       buttonText: 'Get Started',
-      current: user?.subscription_tier === 'Free' || !user
+      current: user?.subscription_tier === 'Free' 
     },
     {
       name: 'Hearthkeeper',
