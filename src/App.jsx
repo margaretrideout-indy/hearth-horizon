@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout, Activity, Compass, Download } from 'lucide-react';
+import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout, Activity, Compass, Download, ShieldAlert } from 'lucide-react';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { AuthProvider } from '@/lib/AuthContext';
 import PaymentSuccess from './pages/PaymentSuccess';
@@ -11,6 +11,7 @@ import EmbersChat from './pages/EmbersChat';
 import CanopyView from './pages/Canopy';
 import YourHearth from './pages/YourHearth';
 import EcosystemAlignment from './pages/CulturalFit';
+import AdminDashboard from './pages/AdminDashboard'; // <-- Added this import
 
 const queryClient = new QueryClient();
 
@@ -51,9 +52,12 @@ const Navigation = () => {
     { name: 'Alignment', path: '/alignment', icon: <Compass className="w-4 h-4" />, steward: true },
     { name: 'Embers Chat', path: '/chat', icon: <MessageSquare className="w-4 h-4" />, public: true },
     { name: 'The Canopy', path: '/canopy', icon: <Layout className="w-4 h-4" />, public: true },
+    // Only show Admin in the nav if the user is Margaret/Admin
+    { name: 'Admin', path: '/admin', icon: <ShieldAlert className="w-4 h-4" />, admin: true },
   ].filter(link => {
     if (link.public) return true;
     if (!user) return false;
+    if (link.admin) return user?.email === 'your-email@example.com'; // Change this to your actual email
     if (link.steward) return tier === 'Steward' || tier === 'Sponsor';
     if (link.member) return tier === 'Hearthkeeper' || tier === 'Steward' || tier === 'Sponsor';
     return false;
@@ -81,7 +85,6 @@ const Navigation = () => {
               <div className="flex items-center gap-2">{link.icon}{link.name}</div>
             </Link>
           ))}
-          {/* Button only appears if browser supports installation and is not in incognito */}
           {deferredPrompt && (
             <button 
               onClick={handleInstall}
@@ -105,14 +108,6 @@ const Navigation = () => {
               {link.icon} {link.name}
             </Link>
           ))}
-          {deferredPrompt && (
-            <button 
-              onClick={handleInstall}
-              className="flex items-center gap-3 text-xs font-bold text-teal-400 uppercase tracking-widest px-4 py-3 rounded-xl border border-teal-400/20"
-            >
-              <Download className="w-4 h-4" /> Install App
-            </button>
-          )}
         </div>
       )}
     </nav>
@@ -136,6 +131,7 @@ const App = () => {
                 <Route path="/canopy" element={<CanopyView />} />
                 <Route path="/success" element={<PaymentSuccess />} />
                 <Route path="/alignment" element={<EcosystemAlignment />} />
+                <Route path="/admin" element={<AdminDashboard />} /> 
               </Routes>
             </main>
           </div>
