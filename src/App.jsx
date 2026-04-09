@@ -85,7 +85,7 @@ const App = () => {
           <Route path="/" element={<GroveTiers />} />
           <Route path="/grove" element={<GroveTiers />} />
           <Route path="/hearth" element={<Hearth />} />
-          <Route path="/bridge" element={<SkillTranslator />} />
+          <Route path="/bridge" element={<Gateway />} />
           <Route path="/alignment" element={<GapAnalyzer />} />
           <Route path="/horizon" element={<HorizonAudit />} />
           <Route path="/embers" element={<EmbersChat />} />
