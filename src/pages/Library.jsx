@@ -26,7 +26,7 @@ const Library = () => {
       {
         title: "Amazon Starter Kit",
         desc: "A curated toolkit for the pivot: from essential connectivity hubs to focus-driven office tools.",
-        links: [{ label: "Explore Kit", url: "https://amazon.ca" }],
+        links: [{ label: "Explore Kit", url: "https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?ref_=wl_share" }],
         icon: <Package className="w-5 h-5" />,
         footer: "As an Amazon Associate I earn from qualifying purchases."
       }
@@ -52,7 +52,7 @@ const Library = () => {
         desc: "Free, 24/7 counseling and mental health support for Canadians navigating major life shifts.",
         links: [
           { label: "Wellness Together Canada", url: "https://www.wellnesstogether.ca/" },
-          { label: "Crisis Text Line (Text HOME to 686868)", url: "https://www.crisistextline.ca/" }
+          { label: "Crisis Text Line", url: "https://www.crisistextline.ca/" }
         ],
         icon: <ShieldCheck className="w-5 h-5" />,
         badge: "24/7 Support",
@@ -61,7 +61,7 @@ const Library = () => {
       {
         title: "Burnout to Balance",
         desc: "Vetted, free PDF workbooks designed to help regulate your nervous system after a career pivot.",
-        links: [{ label: "Download PDF Guides", url: "https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself/Stress" }],
+        links: [{ label: "Download PDF Guides", url: "https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself" }],
         icon: <FileText className="w-5 h-5" />,
         color: "slate"
       },
@@ -163,7 +163,7 @@ const Library = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {provisions.sanctuary.map((item, idx) => (
-              <div key={idx} className="bg-[#1A1423] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col h-full shadow-2xl relative">
+              <div key={idx} className="bg-[#1A1423] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col h-full shadow-2xl relative group">
                 {item.badge && (
                   <div className="absolute -top-3 -right-3 px-3 py-1 bg-teal-500/10 rounded-full border border-teal-400/20 backdrop-blur-md">
                     <span className="text-[7px] font-black uppercase tracking-widest text-teal-400">{item.badge}</span>
@@ -178,8 +178,14 @@ const Library = () => {
                 <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-6 italic">{item.desc}</p>
                 <div className="mt-auto pt-4 flex flex-col gap-3">
                   {item.links.map((link, lIdx) => (
-                    <a key={lIdx} href={link.url} target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2">
-                      {link.label} <ArrowRight className="w-3 h-3" />
+                    <a 
+                      key={lIdx} 
+                      href={link.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2"
+                    >
+                      {link.label} <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </a>
                   ))}
                 </div>
