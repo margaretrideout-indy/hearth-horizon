@@ -51,9 +51,9 @@ const Library = () => {
         title: "Pivot Resilience Toolkit",
         desc: "Free, 24/7 counseling and mental health support for Canadians navigating major life shifts.",
         links: [
-          { label: "Wellness Together Canada", url: "https://www.wellnesstogether.ca/" },
-          { label: "Crisis Text Line", url: "https://www.crisistextline.ca/" }
+          { label: "Wellness Together Canada", url: "https://www.wellnesstogether.ca/en-CA/referrals/service-navigator" }
         ],
+        extraInfo: "Crisis Text Line: Text HOME to 686868",
         icon: <ShieldCheck className="w-5 h-5" />,
         badge: "24/7 Support",
         color: "teal"
@@ -188,6 +188,11 @@ const Library = () => {
                       {link.label} <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </a>
                   ))}
+                  {item.extraInfo && (
+                    <div className="mt-1 text-[8px] font-bold text-slate-400 uppercase tracking-widest border-t border-white/5 pt-3">
+                      {item.extraInfo}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
