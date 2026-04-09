@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout, Activity, Compass, Download, ShieldAlert } from 'lucide-react';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, X, TreePine, ArrowRightLeft, Library, MessageSquare, Layout, Activity, Compass, Download, ShieldAlert, Lock } from 'lucide-react';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { AuthProvider } from '@/lib/AuthContext';
 import PaymentSuccess from './pages/PaymentSuccess';
@@ -19,6 +19,7 @@ const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handler = (e) => {
@@ -42,21 +43,35 @@ const Navigation = () => {
     retry: false 
   });
 
+  const userTier = user?.subscription_tier || 'Seedling';
+  const isAdmin = user?.email === 'your-actual-email@gmail.com'; // UPDATE THIS EMAIL
+
   const navLinks = [
     { name: 'The Grove', path: '/', icon: <TreePine className="w-4 h-4" />, public: true },
     { name: 'Library', path: '/library', icon: <Library className="w-4 h-4" />, public: true },
     { name: 'Your Hearth', path: '/hearth', icon: <Activity className="w-4 h-4" />, public: true },
-    { name: 'The Bridge', path: '/bridge', icon: <ArrowRightLeft className="w-4 h-4" />, public: true },
-    { name: 'Alignment', path: '/alignment', icon: <Compass className="w-4 h-4" />, public: true },
+    { name: 'The Bridge', path: '/bridge', icon: <ArrowRightLeft className="w-4 h-4" />, minTier: 'Hearthkeeper' },
+    { name: 'Alignment', path: '/alignment', icon: <Compass className="w-4 h-4" />, minTier: 'Steward' },
     { name: 'Embers Chat', path: '/chat', icon: <MessageSquare className="w-4 h-4" />, public: true },
     { name: 'The Canopy', path: '/canopy', icon: <Layout className="w-4 h-4" />, public: true },
-    { name: 'Admin', path: '/admin', icon: <ShieldAlert className="w-4 h-4" />, public: true },
-  ].filter(link => {
-    if (link.public) return true;
-    if (!user) return false;
-    if (link.admin) return user?.email === 'margaretpardy@gmail.com'; 
-    return false;
-  });
+    { name: 'Admin', path: '/admin', icon: <ShieldAlert className="w-4 h-4" />, adminOnly: true },
+  ];
+
+  const checkAccess = (link) => {
+    if (isAdmin || link.public) return true;
+    if (link.adminOnly && !isAdmin) return false;
+    
+    const tiers = ['Seedling', 'Hearthkeeper', 'Steward', 'Sponsor'];
+    return tiers.indexOf(userTier) >= tiers.indexOf(link.minTier);
+  };
+
+  const handleNavClick = (e, link) => {
+    if (!checkAccess(link)) {
+      e.preventDefault();
+      alert(`The ${link.name} is reserved for ${link.minTier}s. Please upgrade in The Grove!`);
+      navigate('/');
+    }
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1A1423]/90 backdrop-blur-md border-b border-white/5">
@@ -69,26 +84,25 @@ const Navigation = () => {
         </div>
 
         <div className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                location.pathname === link.path ? 'text-teal-400 bg-white/5' : 'text-slate-400 hover:text-teal-400'
-              }`}
-            >
-              <div className="flex items-center gap-2">{link.icon}{link.name}</div>
-            </Link>
-          ))}
-          {deferredPrompt && (
-            <button 
-              onClick={handleInstall}
-              className="ml-4 px-3 py-1.5 bg-teal-500/10 border border-teal-500/30 rounded-lg text-teal-400 text-[9px] font-black uppercase tracking-widest hover:bg-teal-500 hover:text-[#1A1423] transition-all flex items-center gap-2"
-            >
-              <Download className="w-3 h-3" />
-              Install App
-            </button>
-          )}
+          {navLinks.map((link) => {
+            const hasAccess = checkAccess(link);
+            if (link.adminOnly && !isAdmin) return null;
+
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={(e) => handleNavClick(e, link)}
+                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
+                  location.pathname === link.path ? 'text-teal-400 bg-white/5' : 'text-slate-400 hover:text-teal-400'
+                } ${!hasAccess ? 'opacity-60 cursor-not-allowed' : ''}`}
+              >
+                {link.icon}
+                {link.name}
+                {!hasAccess && <Lock className="w-3 h-3 ml-1 text-slate-500" />}
+              </Link>
+            );
+          })}
         </div>
 
         <button className="md:hidden text-slate-100" onClick={() => setIsOpen(!isOpen)}>
@@ -98,11 +112,21 @@ const Navigation = () => {
 
       {isOpen && (
         <div className="md:hidden bg-[#251D2F] border-b border-white/5 p-6 flex flex-col gap-4">
-          {navLinks.map((link) => (
-            <Link key={link.path} to={link.path} onClick={() => setIsOpen(false)} className="flex items-center gap-3 text-xs font-bold text-slate-300 uppercase tracking-widest px-4 py-3 rounded-xl hover:bg-white/5">
-              {link.icon} {link.name}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+             const hasAccess = checkAccess(link);
+             if (link.adminOnly && !isAdmin) return null;
+             return (
+              <Link 
+                key={link.path} 
+                to={link.path} 
+                onClick={(e) => { handleNavClick(e, link); setIsOpen(false); }} 
+                className="flex items-center justify-between text-xs font-bold text-slate-300 uppercase tracking-widest px-4 py-3 rounded-xl hover:bg-white/5"
+              >
+                <div className="flex items-center gap-3">{link.icon} {link.name}</div>
+                {!hasAccess && <Lock className="w-4 h-4 text-slate-500" />}
+              </Link>
+             );
+          })}
         </div>
       )}
     </nav>
