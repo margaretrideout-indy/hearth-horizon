@@ -4,14 +4,14 @@ import {
   Compass, Activity, Repeat, Zap, Binoculars, MessageSquare, Library, Layers, Lock 
 } from 'lucide-react';
 
-import GroveTiers from './pages/GroveTiers';
-import Hearth from './pages/Hearth'; 
-import Bridge from './pages/Bridge';
-import Alignment from './pages/Alignment';
-import HorizonScan from './pages/HorizonScan';
-import EmbersChat from './pages/EmbersChat';
-import LibraryPage from './pages/Library';
-import CanopyIndex from './pages/Canopy';
+import GroveTiers from './pages/grove/GroveTiers';
+import Hearth from './pages/hearth/Hearth'; 
+import Bridge from './pages/bridge/Bridge';
+import Alignment from './pages/alignment/Alignment';
+import HorizonScan from './pages/horizon/HorizonScan';
+import EmbersChat from './pages/embers/EmbersChat';
+import LibraryPage from './pages/library/Library';
+import CanopyIndex from './pages/canopy/Canopy';
 
 const AppLayout = ({ children, currentTier = "Seedling" }) => {
   const location = useLocation();
