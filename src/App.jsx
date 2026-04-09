@@ -11,7 +11,7 @@ import EmbersChat from './pages/EmbersChat';
 import CanopyView from './pages/Canopy';
 import YourHearth from './pages/YourHearth';
 import EcosystemAlignment from './pages/CulturalFit';
-import AdminDashboard from './pages/AdminDashboard'; // <-- Added this import
+import AdminDashboard from './pages/AdminDashboard';
 
 const queryClient = new QueryClient();
 
@@ -42,24 +42,19 @@ const Navigation = () => {
     retry: false 
   });
 
-  const tier = user?.subscription_tier;
-
   const navLinks = [
     { name: 'The Grove', path: '/', icon: <TreePine className="w-4 h-4" />, public: true },
     { name: 'Library', path: '/library', icon: <Library className="w-4 h-4" />, public: true },
     { name: 'Your Hearth', path: '/hearth', icon: <Activity className="w-4 h-4" />, public: true },
-    { name: 'The Bridge', path: '/bridge', icon: <ArrowRightLeft className="w-4 h-4" />, member: true },
-    { name: 'Alignment', path: '/alignment', icon: <Compass className="w-4 h-4" />, steward: true },
+    { name: 'The Bridge', path: '/bridge', icon: <ArrowRightLeft className="w-4 h-4" />, public: true },
+    { name: 'Alignment', path: '/alignment', icon: <Compass className="w-4 h-4" />, public: true },
     { name: 'Embers Chat', path: '/chat', icon: <MessageSquare className="w-4 h-4" />, public: true },
     { name: 'The Canopy', path: '/canopy', icon: <Layout className="w-4 h-4" />, public: true },
-    // Only show Admin in the nav if the user is Margaret/Admin
-    { name: 'Admin', path: '/admin', icon: <ShieldAlert className="w-4 h-4" />, admin: true },
+    { name: 'Admin', path: '/admin', icon: <ShieldAlert className="w-4 h-4" />, public: true },
   ].filter(link => {
     if (link.public) return true;
     if (!user) return false;
-    if (link.admin) return user?.email === 'your-email@example.com'; // Change this to your actual email
-    if (link.steward) return tier === 'Steward' || tier === 'Sponsor';
-    if (link.member) return tier === 'Hearthkeeper' || tier === 'Steward' || tier === 'Sponsor';
+    if (link.admin) return user?.email === 'your-email@example.com'; 
     return false;
   });
 
