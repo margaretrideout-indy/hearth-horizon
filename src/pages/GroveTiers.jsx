@@ -82,9 +82,10 @@ const GroveTiers = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#1A1423] pb-12">
+    <div className="min-h-screen bg-[#1A1423] pb-12 overflow-x-hidden">
+      {/* PWA Install Banner */}
       {deferredPrompt && showBanner && (
-        <div className="bg-[#251D2F] border-b border-white/10 px-6 py-3 flex items-center justify-between animate-in fade-in slide-in-from-top duration-500">
+        <div className="bg-[#251D2F] border-b border-white/10 px-6 py-3 flex items-center justify-between animate-in fade-in slide-in-from-top duration-500 relative z-50">
           <button 
             onClick={handleInstall}
             className="flex items-center gap-3 text-slate-200 hover:text-teal-400 transition-colors group text-left"
@@ -156,10 +157,25 @@ const GroveTiers = () => {
           ))}
         </div>
         
+        {/* Footer Branding */}
         <div className="mt-12 text-center opacity-40">
            <p className="text-slate-500 text-[9px] uppercase tracking-[0.3em] font-medium">
-             Hearth Horizon Ecosystem Tiers
+             Hearth & Horizon Ecosystem Tiers
            </p>
+        </div>
+
+        {/* The Login Link (Now safely inside the container) */}
+        <div className="text-center mt-16 mb-12">
+          <p className="text-slate-500 text-xs uppercase tracking-[0.2em]">
+            Already a member of the forest? 
+            <button 
+              onClick={() => import('@/api/base44Client').then(m => m.base44.auth.redirectToLogin('/hearth'))}
+              style={{ color: '#2DD4BF' }} 
+              className="font-black hover:underline ml-2 transition-all bg-transparent border-none cursor-pointer"
+            >
+              Log in here
+            </button>
+          </p>
         </div>
       </div>
     </div>
