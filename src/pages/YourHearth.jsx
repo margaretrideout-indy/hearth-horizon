@@ -1,128 +1,127 @@
 import React, { useState } from 'react';
-import { Activity, History, Send } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Database, FileText, CheckCircle2, Loader2, ThermometerSun } from 'lucide-react';
+import ResumeUploader from '../components/gap/ResumeUploader';
 
-const YourHearth = () => {
-  const [selectedEmoji, setSelectedEmoji] = useState(null);
+const MOODS = [
+  { label: 'GROWING', emoji: '🌱' }, { label: 'ENERGIZED', emoji: '🔥' },
+  { label: 'PEACEFUL', emoji: '🍃' }, { label: 'GROUNDED', emoji: '🪵' },
+  { label: 'INSPIRED', emoji: '✨' }, { label: 'DREAMY', emoji: '☁️' },
+  { label: 'FLUID', emoji: '🌊' }, { label: 'REFLECTIVE', emoji: '🌙' }
+];
+
+export default function YourHearth() {
+  const [selectedMood, setSelectedMood] = useState(null);
   const [reflection, setReflection] = useState('');
-  const [logs, setLogs] = useState([
-    { id: 1, date: '2026-04-08', emoji: '🌱', text: 'Started the Grove migration. Core tiers established.' },
-    { id: 2, date: '2026-04-07', emoji: '✨', text: 'Finalized Stripe integration and Plum/Teal theme.' }
-  ]);
+  const [isLogging, setIsLogging] = useState(false);
+  const queryClient = useQueryClient();
 
-  const emojis = [
-    { icon: '🌱', label: 'GROWING' }, { icon: '🔥', label: 'ENERGIZED' },
-    { icon: '🍃', label: 'PEACEFUL' }, { icon: '🪵', label: 'GROUNDED' },
-    { icon: '✨', label: 'INSPIRED' }, { icon: '☁️', label: 'DREAMY' },
-    { icon: '🌊', label: 'FLUID' }, { icon: '🌙', label: 'REFLECTIVE' }
-  ];
+  const { data: profiles } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: () => base44.entities.UserProfile.list(),
+    initialData: [],
+  });
+  const profile = profiles[0] || null;
 
-  const teal = "#2DD4BF"; 
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!selectedEmoji) return;
-    const newEntry = {
-      id: Date.now(),
-      date: new Date().toLocaleDateString('en-CA'),
-      emoji: selectedEmoji,
-      text: reflection
-    };
-    setLogs([newEntry, ...logs]);
-    setSelectedEmoji(null);
-    setReflection('');
+  const handleLogHearth = async () => {
+    if (!selectedMood) return;
+    setIsLogging(true);
+    try {
+      await base44.entities.DailyCheckIn.create({
+        mood: selectedMood,
+        reflection,
+        timestamp: new Date().toISOString()
+      });
+      setReflection('');
+      setSelectedMood(null);
+    } finally {
+      setIsLogging(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#1A1423] pt-24 pb-20 px-4">
-      <div className="max-w-xl mx-auto space-y-10">
+    <div className="min-h-screen bg-[#1A1423] text-slate-200 p-6 md:p-12 pb-32">
+      <div className="max-w-2xl mx-auto space-y-12">
         
-        {/* Main Entry Card */}
-        <div className="bg-[#251D2F] rounded-[2rem] p-8 border border-white/5 shadow-2xl text-center relative overflow-hidden">
-          
-          {/* Persistent Top Teal Bar */}
-          <div style={{ backgroundColor: teal, boxShadow: `0 0 20px ${teal}`, position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '120px', height: '4px', zIndex: 10 }} />
-          
-          <div style={{ backgroundColor: 'rgba(45, 212, 191, 0.1)', borderColor: 'rgba(45, 212, 191, 0.3)' }} className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-6 border">
-            <Activity style={{ color: teal }} className="w-5 h-5" />
+        <section className="bg-white/[0.03] border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-md shadow-2xl">
+          <div className="flex flex-col items-center text-center mb-10">
+            <div className="w-12 h-12 rounded-2xl bg-teal-500/20 flex items-center justify-center mb-4 border border-teal-500/30">
+              <ThermometerSun className="text-teal-400 w-6 h-6" />
+            </div>
+            <h1 className="text-4xl font-serif font-bold italic text-white mb-2">Your Hearth</h1>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60">Internal Weather Check-In</p>
           </div>
 
-          <h1 className="text-3xl font-serif font-bold text-white mb-2 tracking-tight">Your Hearth</h1>
-          <p style={{ color: teal }} className="text-[10px] font-black uppercase tracking-[0.3em] mb-10 italic">
-            "Internal Weather Check-In"
-          </p>
-
-          {/* Emoji Selection Grid */}
-          <div className="grid grid-cols-4 gap-3 mb-10">
-            {emojis.map((e) => (
+          <div className="grid grid-cols-4 gap-3 mb-8">
+            {MOODS.map((m) => (
               <button
-                key={e.label}
-                onClick={() => setSelectedEmoji(e.icon)}
-                style={{ 
-                  backgroundColor: selectedEmoji === e.icon ? teal : '#1A1423',
-                  borderColor: selectedEmoji === e.icon ? teal : 'rgba(255,255,255,0.05)',
-                  boxShadow: selectedEmoji === e.icon ? `0 0 20px ${teal}50` : 'none',
-                  transition: '0.2s all'
-                }}
-                className="flex flex-col items-center gap-2 p-3 rounded-xl border"
+                key={m.label}
+                onClick={() => setSelectedMood(m.label)}
+                className={`flex flex-col items-center gap-2 p-4 rounded-2xl transition-all border ${
+                  selectedMood === m.label 
+                    ? 'bg-teal-500/20 border-teal-500/50 scale-105 shadow-lg' 
+                    : 'bg-white/[0.02] border-white/5 hover:bg-white/5'
+                }`}
               >
-                <span className="text-2xl">{e.icon}</span>
-                <span style={{ color: selectedEmoji === e.icon ? '#1A1423' : '#64748b' }} className="text-[7px] font-black uppercase tracking-tighter">
-                  {e.label}
-                </span>
+                <span className="text-2xl">{m.emoji}</span>
+                <span className="text-[8px] font-black uppercase tracking-widest opacity-60">{m.label}</span>
               </button>
             ))}
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <textarea
-              value={reflection}
-              onChange={(e) => setReflection(e.target.value)}
-              placeholder="Add a reflection to your log..."
-              className="w-full bg-[#1A1423] border border-white/10 rounded-2xl p-6 text-slate-300 text-sm italic focus:outline-none min-h-[120px]"
-            />
-            
-            {/* THE ALWAYS-TEAL BUTTON */}
-            <button
-              type="submit"
-              style={{ 
-                backgroundColor: teal, 
-                color: '#1A1423',
-                boxShadow: `0 10px 25px ${teal}40`,
-                cursor: 'pointer',
-                opacity: selectedEmoji ? 1 : 0.7 
-              }}
-              className="w-full py-4 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-2 transition-transform active:scale-95"
-            >
-              <Send className="w-4 h-4" /> LOG TO HEARTH
-            </button>
-          </form>
-        </div>
+          <textarea
+            value={reflection}
+            onChange={(e) => setReflection(e.target.value)}
+            placeholder="Add a reflection to your log..."
+            className="w-full bg-black/40 border border-white/10 rounded-2xl p-6 text-sm text-slate-300 placeholder:text-slate-600 focus:ring-1 focus:ring-teal-500/30 min-h-[120px] transition-all"
+          />
 
-        {/* History Section */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-4 px-2">
-            <History style={{ color: teal }} className="w-3 h-3 opacity-50" />
-            <h3 style={{ color: teal }} className="text-[9px] font-black uppercase tracking-[0.4em] opacity-50">Hearth Logbook</h3>
-            <div style={{ backgroundColor: teal, opacity: 0.2 }} className="h-px flex-grow" />
+          <button
+            onClick={handleLogHearth}
+            disabled={isLogging || !selectedMood}
+            className="w-full mt-6 h-14 bg-teal-500 hover:bg-teal-400 text-[#1A1423] rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-[0_10px_30px_rgba(45,212,191,0.2)] disabled:opacity-50"
+          >
+            {isLogging ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'Log to Hearth'}
+          </button>
+        </section>
+
+        <section className="space-y-4">
+          <div className="flex items-center gap-2 px-4 text-slate-500">
+            <Database className="w-3 h-3" />
+            <h2 className="text-[9px] font-black uppercase tracking-[0.3em]">The Root System</h2>
           </div>
 
-          <div className="space-y-3">
-            {logs.map((log) => (
-              <div key={log.id} className="bg-[#251D2F] border border-white/5 rounded-2xl p-5 flex items-center gap-6 shadow-lg">
-                <div className="text-2xl bg-[#1A1423] w-14 h-14 rounded-xl flex items-center justify-center border border-white/5">
-                  {log.emoji}
-                </div>
-                <div className="flex-grow">
-                  <span style={{ color: teal }} className="text-[8px] font-black uppercase tracking-widest opacity-60">{log.date}</span>
-                  <p className="text-slate-300 text-xs italic font-light">{log.text || "A quiet moment of reflection."}</p>
-                </div>
+          <div className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-8 flex flex-col md:flex-row items-center justify-between gap-6 transition-all hover:bg-white/[0.03]">
+            <div className="flex items-center gap-5">
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border ${
+                profile?.resume_url ? 'bg-teal-500/10 border-teal-500/20 text-teal-400' : 'bg-white/5 border-white/10 text-slate-600'
+              }`}>
+                <FileText className="w-6 h-6" />
               </div>
-            ))}
+              <div>
+                <h3 className="text-sm font-bold text-white">Legacy Document</h3>
+                <p className="text-[10px] text-slate-500 italic">Sync your resume to power the Bridge and Horizon Scan.</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              {profile?.resume_url && (
+                <div className="flex items-center gap-2 text-teal-500 bg-teal-500/5 px-4 py-2 rounded-full border border-teal-500/10">
+                  <CheckCircle2 className="w-3 h-3" />
+                  <span className="text-[9px] font-black uppercase tracking-widest">Document Synced</span>
+                </div>
+              )}
+              
+              <ResumeUploader 
+                profileId={profile?.id}
+                onUploadSuccess={() => queryClient.invalidateQueries({ queryKey: ['userProfile'] })} 
+              />
+            </div>
           </div>
-        </div>
+        </section>
+
       </div>
     </div>
   );
-};
-
-export default YourHearth;
+}
