@@ -1,14 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Link } from 'react-router-dom';
 import { 
-  Compass, Activity, Repeat, Zap, Binoculars, MessageSquare, Library, Layers, Lock 
+  Compass, Activity, Repeat, Zap, MessageSquare, Library, Layers, Lock 
 } from 'lucide-react';
 
 import GroveTiers from './pages/GroveTiers';
 import YourHearth from './pages/YourHearth'; 
-import Gateway from './pages/Gateway'; 
-import GapAnalyzer from './pages/GapAnalyzer';
-import HorizonAudit from './pages/HorizonAudit';
+import SkillTranslator from './pages/SkillTranslator';
+import CulturalFit from './pages/CulturalFit';
 import EmbersChat from './pages/EmbersChat';
 import LibraryPage from './pages/Library';
 import CanopyIndex from './pages/Canopy';
@@ -22,12 +21,11 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
     { name: "YOUR HEARTH", icon: <Activity size={14} />, path: "/hearth", tier: "Seedling" },
     { name: "THE BRIDGE", icon: <Repeat size={14} />, path: "/bridge", tier: "Hearthkeeper" },
     { name: "ECOSYSTEM ALIGNMENT", icon: <Zap size={14} />, path: "/alignment", tier: "Steward" },
-    { name: "HORIZON SCAN", icon: <Binoculars size={14} />, path: "/horizon", tier: "Steward" },
   ];
 
   const collectiveItems = [
     { name: "EMBERS CHAT", icon: <MessageSquare size={14} />, path: "/embers", tier: "Seedling" },
-    { name: "THE LIBRARY", icon: <Library size={14} />, path: "/library", tier: "Seedling" },
+    { name: "LIBRARY & PROVISIONS", icon: <Library size={14} />, path: "/library", tier: "Seedling" },
     { name: "THE CANOPY", icon: <Layers size={14} />, path: "/canopy", tier: "Seedling" },
   ];
 
@@ -86,7 +84,6 @@ const App = () => {
           <Route path="/hearth" element={<YourHearth />} />
           <Route path="/bridge" element={<SkillTranslator />} />
           <Route path="/alignment" element={<CulturalFit />} />
-          <Route path="/horizon" element={<HorizonAudit />} />
           <Route path="/embers" element={<EmbersChat />} />
           <Route path="/library" element={<LibraryPage />} />
           <Route path="/canopy" element={<CanopyIndex />} />
