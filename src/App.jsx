@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // Page Imports
-import Hearth from './pages/Hearth';
+import YourHearth from './pages/YourHearth';
 import CulturalFit from './pages/CulturalFit';
 import Canopy from './pages/Canopy';
 import Library from './pages/Library';
@@ -10,7 +10,6 @@ import GroveTiers from './pages/GroveTiers';
 
 export default function App() {
   const [sanctuaryState, setSanctuaryState] = useState(() => {
-    // Changing the key to 'vault_reset_final' wipes the old data cache
     const saved = localStorage.getItem('vault_reset_final');
     return saved ? JSON.parse(saved) : {
       name: "Traveler",
@@ -33,10 +32,9 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/hearth" replace />} />
           
-          {/* We are now passing the 'vault' prop instead of 'userData' */}
           <Route 
             path="/hearth" 
-            element={<Hearth vault={sanctuaryState} onSync={forceSync} />} 
+            element={<YourHearth vault={sanctuaryState} onSync={forceSync} />} 
           />
           
           <Route path="/alignment" element={<CulturalFit vault={sanctuaryState} onSync={forceSync} />} />
