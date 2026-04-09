@@ -6,10 +6,10 @@ import { Input } from '@/components/ui/input';
 import { 
   Compass, Mountain, Loader2, 
   Binoculars, TreePine, ArrowRight, 
-  Zap, ClipboardCheck, ArrowRightLeft, Sparkles, Lock, Map
+  Zap, ArrowRightLeft, Sparkles, Map
 } from 'lucide-react';
 
-export default function CulturalFit({ userAnalysis, targetJob }) {
+export default function CulturalFit({ userAnalysis }) {
   const [activeStep, setActiveStep] = useState(1);
   const [isAligning, setIsAligning] = useState(false);
   const [manualInput, setManualInput] = useState("");
@@ -21,12 +21,12 @@ export default function CulturalFit({ userAnalysis, targetJob }) {
     setIsGenerating(true);
     setTimeout(() => {
       setBridgeData({
-        pm: `Managed lifecycle deliverables for "${manualInput}", ensuring cross-functional alignment and milestone adherence.`,
-        data: `Translated core objectives of "${manualInput}" into measurable performance indicators and success metrics.`,
-        ops: `Optimized resource workflows surrounding "${manualInput}" to maintain operational continuity and excellence.`
+        pm: `Lead strategic delivery for "${manualInput}", aligning resources with provincial standards.`,
+        data: `Derived success metrics from "${manualInput}" to optimize curriculum performance.`,
+        ops: `Managed operational logistics for "${manualInput}" across multi-faceted environments.`
       });
       setIsGenerating(false);
-    }, 1000);
+    }, 1200);
   };
 
   const handleAlign = () => {
@@ -40,12 +40,11 @@ export default function CulturalFit({ userAnalysis, targetJob }) {
   return (
     <div className="max-w-4xl mx-auto py-12 px-6 space-y-10 animate-in fade-in duration-700">
       
-      {/* THE TREK TRACKER */}
       <nav className="flex justify-center items-center gap-8 md:gap-16 border-b border-white/5 pb-10">
         {[
           { id: 1, label: "01. THE CLEARING", icon: TreePine },
-          { id: 2, label: "02. ALIGN", icon: Compass },
-          { id: 3, label: "03. SURVEY", icon: Mountain }
+          { id: 2, label: "02. THE COMPASS", icon: Compass },
+          { id: 3, label: "03. THE WILDS", icon: Mountain }
         ].map((step) => (
           <button 
             key={step.id}
@@ -61,7 +60,6 @@ export default function CulturalFit({ userAnalysis, targetJob }) {
 
       <main className="min-h-[600px] space-y-8">
         
-        {/* STAGE 01: THE CLEARING */}
         {activeStep === 1 && (
           <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
             <header className="text-center">
@@ -73,37 +71,44 @@ export default function CulturalFit({ userAnalysis, targetJob }) {
               <div className="space-y-1">
                 <div className="flex items-center gap-2 text-teal-500">
                   <ArrowRightLeft size={18} />
-                  <h3 className="text-white font-black text-sm uppercase tracking-widest">The Linguistic Bridge</h3>
+                  <h3 className="text-white font-black text-sm uppercase tracking-widest text-teal-400">The Linguistic Bridge</h3>
                 </div>
-                <p className="text-[10px] text-gray-500 uppercase font-bold tracking-tight italic">Translate your achievements into the dialects of the new world</p>
+                <p className="text-[10px] text-gray-500 uppercase font-bold tracking-tight italic">Translate your achievements into professional dialects</p>
               </div>
 
-              <div className="flex gap-3">
-                <Input 
-                  placeholder="Recall a moment from your journey..."
-                  className="bg-black/40 border-white/10 text-gray-200 h-14 italic"
-                  value={manualInput}
-                  onChange={(e) => setManualInput(e.target.value)}
-                />
-                <Button 
-                  onClick={handleDecode}
-                  className="h-14 bg-teal-600 hover:bg-teal-500 px-10 font-black tracking-widest text-xs"
-                >
-                  {isGenerating ? <Loader2 className="animate-spin" /> : "DECODE"}
-                </Button>
+              <div className="space-y-3">
+                <div className="flex justify-between items-end px-1">
+                  <label className="text-[10px] font-black text-teal-500 uppercase tracking-[0.2em]">Your Local Dialect</label>
+                  <span className="text-[9px] text-gray-600 font-bold uppercase tracking-widest italic">(What you did in your previous role)</span>
+                </div>
+                <div className="flex gap-3">
+                  <Input 
+                    placeholder="e.g., 'I managed the classroom budget' or 'I led parent-teacher conferences'..."
+                    className="bg-black/40 border-white/10 text-gray-200 h-14 italic focus:border-teal-500/50 transition-colors"
+                    value={manualInput}
+                    onChange={(e) => setManualInput(e.target.value)}
+                  />
+                  <Button 
+                    onClick={handleDecode}
+                    disabled={isGenerating || !manualInput}
+                    className="h-14 bg-teal-600 hover:bg-teal-500 px-10 font-black tracking-widest text-xs uppercase transition-all active:scale-95 shadow-lg shadow-teal-900/20"
+                  >
+                    {isGenerating ? <Loader2 className="animate-spin" /> : "CROSS THE BRIDGE"}
+                  </Button>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 gap-4">
                 {[
-                  { title: 'Project Management', text: bridgeData?.pm || (userAnalysis?.variations?.pm) },
-                  { title: 'Data Analysis', text: bridgeData?.data || (userAnalysis?.variations?.data) },
-                  { title: 'Operations', text: bridgeData?.ops || (userAnalysis?.variations?.ops) }
+                  { title: 'Project Management Dialect', text: bridgeData?.pm },
+                  { title: 'Data Strategy Dialect', text: bridgeData?.data },
+                  { title: 'Operations Dialect', text: bridgeData?.ops }
                 ].map((v, i) => (
-                  <div key={i} className={`group p-6 bg-white/[0.02] rounded-2xl border border-white/5 flex justify-between items-center transition-all hover:border-teal-500/30 ${!v.text && 'opacity-20'}`}>
+                  <div key={i} className={`group p-6 bg-white/[0.02] rounded-2xl border border-white/5 flex justify-between items-center transition-all hover:border-teal-400/20 ${!v.text && 'opacity-20'}`}>
                     <div className="space-y-1">
                       <p className="text-[9px] font-black text-teal-500 uppercase tracking-tighter mb-1">{v.title}</p>
                       <p className="text-sm text-gray-400 italic leading-relaxed">
-                        {v.text ? `"${v.text}"` : "Awaiting the translation of your experience..."}
+                        {v.text ? `"${v.text}"` : "Waiting for you to input your experience..."}
                       </p>
                     </div>
                   </div>
@@ -111,74 +116,85 @@ export default function CulturalFit({ userAnalysis, targetJob }) {
               </div>
             </Card>
 
-            <Card className={`p-8 border-dashed backdrop-blur-xl transition-all duration-500 ${userAnalysis ? 'bg-teal-500/[0.03] border-teal-500/30 shadow-[0_0_40px_rgba(20,184,166,0.05)]' : 'bg-white/[0.02] border-white/10'}`}>
-              {userAnalysis ? (
-                <div className="space-y-6">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2 text-teal-500">
-                      <Sparkles size={18} />
-                      <h3 className="text-white font-black text-sm uppercase tracking-widest">The Narrative Beacon</h3>
-                    </div>
-                    <Badge className="bg-teal-500 text-black font-black text-[9px] tracking-widest px-2 uppercase">Hearth Synthesis Active</Badge>
+            <Card className="p-8 border-dashed border-teal-500/30 bg-teal-500/[0.03] backdrop-blur-xl">
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2 text-teal-500">
+                    <Sparkles size={18} />
+                    <h3 className="text-white font-black text-sm uppercase tracking-widest">The Narrative Beacon</h3>
                   </div>
-                  <h2 className="text-2xl text-gray-100 italic font-medium leading-relaxed italic">
-                    "{userAnalysis.identityStatement}"
-                  </h2>
+                  <Badge className="bg-teal-500 text-black font-black text-[9px] tracking-widest px-2 uppercase">Hearth Synthesis Active</Badge>
                 </div>
-              ) : (
-                <div className="py-6 text-center text-gray-500 italic text-xs">Anchor your history in The Hearth to light your Narrative Beacon.</div>
-              )}
+                <h2 className="text-2xl text-gray-100 italic font-medium leading-relaxed">
+                  "{userAnalysis?.identityStatement || "Anchor your history in The Hearth to light your Narrative Beacon."}"
+                </h2>
+              </div>
             </Card>
 
-            {userAnalysis && (
-              <Button onClick={() => setActiveStep(2)} className="w-full h-16 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl gap-3 shadow-[0_10px_40px_rgba(20,184,166,0.2)]">
-                ESTABLISH A BEARING <ArrowRight size={20} />
-              </Button>
-            )}
+            <Button onClick={() => setActiveStep(2)} className="w-full h-16 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl gap-3 uppercase shadow-lg shadow-teal-900/20 transition-transform hover:scale-[1.01]">
+              ESTABLISH A BEARING <ArrowRight size={20} />
+            </Button>
           </div>
         )}
 
-        {/* STAGE 02: THE COMPASS (The Fix) */}
         {activeStep === 2 && (
           <div className="space-y-8 animate-in slide-in-from-right-4 duration-500 text-center">
              <header className="space-y-2">
-              <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">The Compass</h1>
-              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2 tracking-[0.3em]">Narrative Alignment</p>
+              <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">THE COMPASS</h1>
+              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Market Topography</p>
             </header>
+            
             <Card className="p-8 bg-[#1C1622]/80 border-white/10 space-y-8 shadow-2xl">
-              <div className="p-10 bg-black/40 rounded-2xl border border-white/5 space-y-6">
+              <div className="p-10 bg-black/40 rounded-2xl border border-white/5 space-y-8">
                 <div className="flex justify-between items-center border-b border-white/5 pb-4">
-                  <span className="text-[10px] font-black text-teal-400 uppercase tracking-widest">Market Topography</span>
-                  <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 font-black tracking-widest italic uppercase tracking-widest">$100,290 Avg. Target</Badge>
+                  <span className="text-[10px] font-black text-teal-400 uppercase tracking-widest">The Alignment</span>
+                  <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 font-black tracking-widest italic uppercase">$100,290 Avg. Target</Badge>
                 </div>
-                <p className="text-gray-300 italic text-xl leading-relaxed max-w-2xl mx-auto italic">
-                  "Mapping your expertise in **{userAnalysis?.legacyDomain}** against the high-value terrain of **{userAnalysis?.corporateEquivalent}**. This is your most viable path through the wild."
+
+                <div className="grid grid-cols-3 items-center gap-4 text-center px-4">
+                    <div className="space-y-1">
+                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Legacy Domain</p>
+                        <p className="text-white font-bold italic tracking-wide">{userAnalysis?.legacyDomain || "Education"}</p>
+                    </div>
+                    <div className="flex justify-center">
+                      <ArrowRight className="text-teal-500 opacity-50" size={24} />
+                    </div>
+                    <div className="space-y-1">
+                        <p className="text-[9px] font-black text-teal-500 uppercase tracking-widest">Corporate Equivalent</p>
+                        <p className="text-white font-bold italic tracking-wide">{userAnalysis?.corporateEquivalent || "Human Capital Strategy"}</p>
+                    </div>
+                </div>
+
+                <p className="text-gray-400 italic text-sm leading-relaxed max-w-lg mx-auto border-t border-white/5 pt-6">
+                  "The Compass confirms that your crossing is viable. In the Canadian market, your expertise carries a premium in this specific sector."
                 </p>
               </div>
-              <Button onClick={handleAlign} disabled={isAligning} className="w-full h-20 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl text-lg tracking-widest shadow-xl uppercase tracking-widest">
+
+              <Button onClick={handleAlign} disabled={isAligning} className="w-full h-20 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl text-lg uppercase tracking-widest transition-all shadow-xl">
                 {isAligning ? <Loader2 className="animate-spin mr-3" size={24} /> : <><Zap size={22} className="mr-3" /> ALIGN NARRATIVE</>}
               </Button>
             </Card>
           </div>
         )}
 
-        {/* STAGE 03: THE WILDS */}
         {activeStep === 3 && (
           <div className="animate-in zoom-in-95 duration-700 text-center space-y-8">
             <header className="space-y-2">
-              <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">The Wilds</h1>
-              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2 tracking-[0.3em]">Surveying Opportunities</p>
+              <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">THE WILDS</h1>
+              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Crossing Complete</p>
             </header>
             <Card className="p-16 bg-[#1C1622]/90 border-teal-500/20 shadow-2xl space-y-10 border-double border-4">
-              <div className="w-24 h-24 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto border border-teal-500/20">
+              <div className="w-24 h-24 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto border border-teal-500/20 shadow-[0_0_50px_rgba(20,184,166,0.1)]">
                 <Mountain className="w-12 h-12 text-teal-400" />
               </div>
               <div className="space-y-4">
                 <h2 className="text-3xl font-bold text-white italic underline underline-offset-[12px] decoration-teal-500">Your Bearing is Fixed.</h2>
-                <p className="text-gray-500 italic max-w-sm mx-auto text-sm pt-4 leading-relaxed italic">Your professional crossing is complete. The new world is open to you.</p>
+                <p className="text-gray-500 italic max-w-sm mx-auto text-sm pt-4 leading-relaxed">
+                  You have successfully traversed the Horizon. Your narrative is ready for the Canadian market.
+                </p>
               </div>
-              <Button onClick={() => window.location.href='/canopy'} className="bg-teal-600 hover:bg-teal-500 text-white px-16 h-20 rounded-2xl font-black gap-3 shadow-2xl text-lg uppercase tracking-widest">
-                <Binoculars size={24} /> SURVEY THE LANDSCAPE
+              <Button onClick={() => window.location.href='/canopy'} className="bg-teal-600 hover:bg-teal-500 text-white px-16 h-20 rounded-2xl font-black gap-3 shadow-2xl text-lg uppercase tracking-widest transition-transform hover:scale-105">
+                <Binoculars size={24} /> ENTER THE CANOPY
               </Button>
             </Card>
           </div>
