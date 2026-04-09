@@ -1,68 +1,85 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Library, Anchor, Shuffle, Layers, MessageSquare, Trees, Settings, LogOut, Menu, X } from 'lucide-react';
+import React from 'react';
+import { 
+  Compass, 
+  Flame, 
+  Wind, 
+  BookOpen, 
+  Zap, 
+  MessagesSquare, 
+  Layers,
+  Lock
+} from 'lucide-react';
 
-const Sidebar = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const navItems = [
-    { name: 'THE LIBRARY', path: '/library', icon: Library },
-    { name: 'THE ROOTWORK', path: '/audit', icon: Anchor },
-    { name: 'LINGUISTIC BRIDGE', path: '/translator', icon: Shuffle },
-    { name: 'THE GROVE', path: '/grove', icon: Trees },
-    { name: 'ECOSYSTEM ALIGNMENT', path: '/cultural-fit', icon: Layers },
-    { name: 'THE EMBERS', path: '/embers', icon: MessageSquare },
+const Sidebar = ({ currentTier = "Seedling", activePage = "The Grove" }) => {
+  
+  const menuItems = [
+    { name: "The Grove", icon: <Compass size={18} />, path: "/grove", minTier: "Seedling" },
+    { name: "Your Hearth", icon: <Flame size={18} />, path: "/hearth", minTier: "Seedling" },
+    { name: "The Bridge", icon: <Wind size={18} />, path: "/bridge", minTier: "Hearthkeeper" },
+    { name: "The Library", icon: <BookOpen size={18} />, path: "/library", minTier: "Seedling" },
+    { name: "Alignment", icon: <Zap size={18} />, path: "/alignment", minTier: "Steward" },
+    { name: "Embers Chat", icon: <MessagesSquare size={18} />, path: "/embers", minTier: "Seedling" },
+    { name: "The Canopy", icon: <Layers size={18} />, path: "/canopy", minTier: "Seedling" }
   ];
 
+  const isLocked = (itemTier) => {
+    const tierWeight = { "Seedling": 1, "Hearthkeeper": 2, "Steward": 3 };
+    return tierWeight[itemTier] > tierWeight[currentTier];
+  };
+
   return (
-    <>
-      <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden fixed top-4 right-4 z-[70] p-3 bg-[#0D9488] text-white rounded-full shadow-lg">
-        {isOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
+    <div className="w-64 h-screen bg-[#0F0A15] border-r border-white/5 flex flex-col p-6 sticky top-0 font-sans">
+      
+      {/* BRANDING */}
+      <div className="mb-12 px-2">
+        <h2 className="text-white font-serif italic text-xl tracking-tight">Hearth & Horizon</h2>
+        <p className="text-[9px] font-black uppercase tracking-[0.4em] text-teal-500/60 mt-2">The Migration</p>
+      </div>
 
-      <div className={`fixed left-0 top-0 h-screen w-64 bg-[#1E1926] border-r border-white/5 flex flex-col p-6 z-50 transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="mb-10 px-4">
-          <div className="w-10 h-10 bg-[#0D9488]/20 rounded-xl flex items-center justify-center border border-[#0D9488]/30">
-            <Trees className="text-[#0D9488] w-6 h-6" />
+      {/* NAVIGATION */}
+      <nav className="flex-1 space-y-2">
+        {menuItems.map((item) => {
+          const locked = isLocked(item.minTier);
+          const isActive = activePage === item.name;
+
+          return (
+            <div 
+              key={item.name}
+              className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 group cursor-pointer ${
+                isActive 
+                ? 'bg-teal-500/10 text-teal-400 border border-teal-500/20' 
+                : 'text-slate-500 hover:bg-white/[0.02] hover:text-slate-300'
+              } ${locked ? 'opacity-40 grayscale' : ''}`}
+            >
+              <div className="flex items-center gap-3">
+                <span className={`${isActive ? 'text-teal-400' : 'text-slate-600 group-hover:text-slate-400'}`}>
+                  {item.icon}
+                </span>
+                <span className="text-xs font-medium tracking-wide">
+                  {item.name}
+                </span>
+              </div>
+              
+              {locked && <Lock size={12} className="text-slate-700" />}
+            </div>
+          );
+        })}
+      </nav>
+
+      {/* USER CONTEXT FOOTER */}
+      <div className="mt-auto pt-6 border-t border-white/5">
+        <div className="flex items-center gap-3 px-2">
+          <div className="w-8 h-8 rounded-full bg-teal-500/20 border border-teal-500/30 flex items-center justify-center text-[10px] font-bold text-teal-400">
+            M
           </div>
-        </div>
-
-        <nav className="flex-1 space-y-2 overflow-y-auto">
-          <h3 className="text-[10px] font-bold uppercase tracking-[0.25em] text-gray-500 px-4 mb-4">NAVIGATION</h3>
-          <div className="space-y-1">
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <button
-                  key={item.name}
-                  onClick={() => { navigate(item.path); setIsOpen(false); }}
-                  className={`w-full flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-200 group ${
-                    isActive ? 'bg-white/5 text-[#0D9488]' : 'text-gray-400 hover:text-gray-200 hover:bg-white/[0.02]'
-                  }`}
-                >
-                  <item.icon size={18} className={isActive ? 'text-[#0D9488]' : 'text-gray-500 group-hover:text-gray-400'} />
-                  <span className="text-[11px] font-bold uppercase tracking-widest">{item.name}</span>
-                </button>
-              );
-            })}
+          <div className="flex flex-col">
+            <span className="text-[10px] text-white font-bold">Margaret</span>
+            <span className="text-[8px] font-black uppercase tracking-widest text-teal-500/60">{currentTier} Tier</span>
           </div>
-        </nav>
-
-        <div className="pt-6 border-t border-white/5 space-y-1">
-          <button className="w-full flex items-center gap-4 px-4 py-3 text-gray-500 hover:text-gray-300 transition-colors">
-            <Settings size={18} />
-            <span className="text-[11px] font-bold uppercase tracking-widest">Settings</span>
-          </button>
-          <button className="w-full flex items-center gap-4 px-4 py-3 text-red-400/60 hover:text-red-400 transition-colors">
-            <LogOut size={18} />
-            <span className="text-[11px] font-bold uppercase tracking-widest">Log Out</span>
-          </button>
         </div>
       </div>
-      {isOpen && <div onClick={() => setIsOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" />}
-    </>
+
+    </div>
   );
 };
 
