@@ -36,7 +36,7 @@ export default function EcosystemAlignment() {
     try {
       const activeValues = ethicsOptions.filter(o => selectedEthics.includes(o.id)).map(o => o.label).join(', ');
       const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `Client Context: ${profile.bio}. Values: [${activeValues}]. Analyze this specific Narrative/Job Description: "${jobText}". Provide a Resilience Score (0-100), identify Cultural Resonance (strengths), and pinpoint Friction Points (conflicts).`,
+        prompt: `Client Context: ${profile.bio}. Values: [${activeValues}]. Analyze this Narrative/Job Description: "${jobText}". Provide a Resonance Score (0-100), identify Cultural Resonance (strengths), and pinpoint Friction Points (conflicts).`,
       });
       setAnalysis(result);
     } finally {
@@ -50,7 +50,7 @@ export default function EcosystemAlignment() {
     try {
       const activeValues = ethicsOptions.filter(o => selectedEthics.includes(o.id)).map(o => o.label).join(', ');
       const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `Based on a transition from ${profile.bio} and non-negotiable values [${activeValues}], identify 3 market sectors or specific ecosystem roles for exploration. Include a brief rationale for why they fit.`,
+        prompt: `Based on background ${profile.bio} and values [${activeValues}], identify 3 market sectors. Format as "Territory 01: [Title] - [Rationale]".`,
       });
       setDynamicSectors(result);
     } finally {
@@ -98,9 +98,9 @@ export default function EcosystemAlignment() {
       <div className="max-w-5xl mx-auto">
         {/* 01. THE CLEARING */}
         {activeTab === 'clearing' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 animate-in fade-in slide-in-from-bottom-4">
             <div className="lg:col-span-7 space-y-3">
-              <h3 className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-6 px-2">Define Your Clearing</h3>
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-6 px-2">Identify Non-Negotiables</h3>
               {ethicsOptions.map(option => {
                 const isSelected = selectedEthics.includes(option.id);
                 return (
@@ -122,7 +122,7 @@ export default function EcosystemAlignment() {
                <p className="italic text-slate-500 text-xs font-light leading-relaxed mb-12">"Before the crossing, we define the non-negotiables that protect your energy."</p>
                <button 
                  onClick={() => setActiveTab('compass')} 
-                 className="h-16 bg-teal-600 text-white text-[9px] font-black uppercase tracking-[0.3em] rounded-2xl hover:bg-teal-500 transition-all flex items-center justify-center gap-3 active:scale-95 shadow-lg shadow-teal-900/20"
+                 className="h-16 bg-teal-600 text-white text-[9px] font-black uppercase tracking-[0.3em] rounded-2xl hover:bg-teal-500 transition-all flex items-center justify-center gap-3 shadow-lg shadow-teal-900/20"
                >
                  Calibrate The Compass <ArrowRight className="w-4 h-4" />
                </button>
@@ -140,13 +140,13 @@ export default function EcosystemAlignment() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white">The Compass</h3>
-                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">Testing a specific direction</p>
+                  <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">Testing a specific bearing</p>
                 </div>
               </div>
               <textarea 
                 value={jobText}
                 onChange={(e) => setJobText(e.target.value)}
-                placeholder="Paste the job description or mission statement here..."
+                placeholder="Paste the job description or mission statement to test your alignment..."
                 className="w-full h-56 bg-black/40 border border-white/5 rounded-3xl p-8 text-xs text-slate-300 focus:outline-none focus:border-teal-500/20 transition-all mb-8 font-light leading-relaxed resize-none"
               />
               <button 
@@ -160,7 +160,7 @@ export default function EcosystemAlignment() {
             </div>
             {analysis && (
               <div className="mt-8 bg-[#251D2F] border border-teal-500/20 p-10 rounded-[3rem] animate-in slide-in-from-top-4 shadow-2xl">
-                <div className="text-[10px] font-black uppercase tracking-widest text-teal-400 mb-6">Alignment Matrix Results</div>
+                <div className="text-[10px] font-black uppercase tracking-widest text-teal-400 mb-6 font-serif">Calibration Results</div>
                 <div className="text-xs leading-relaxed text-slate-300 whitespace-pre-wrap font-light italic mb-10">{analysis}</div>
                 <button 
                   onClick={() => setActiveTab('wilds')} 
@@ -175,28 +175,47 @@ export default function EcosystemAlignment() {
 
         {/* 03. THE WILDS */}
         {activeTab === 'wilds' && (
-          <div className="animate-in fade-in duration-700 max-w-3xl mx-auto">
-            <div className="bg-[#1A1423] border border-white/5 p-12 rounded-[3rem] text-center shadow-2xl">
-              <div className="w-16 h-16 bg-teal-400/10 rounded-full flex items-center justify-center mx-auto mb-6 text-teal-400">
+          <div className="animate-in fade-in duration-700 max-w-5xl mx-auto">
+            <div className="bg-[#1A1423] border border-white/5 p-12 rounded-[3rem] text-center shadow-2xl relative overflow-hidden">
+              <div className="absolute -top-24 -right-24 w-64 h-64 bg-teal-500/5 blur-[100px] rounded-full" />
+              <div className="w-16 h-16 bg-teal-400/10 rounded-full flex items-center justify-center mx-auto mb-6 text-teal-400 border border-teal-500/20">
                 <Mountain className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Market Topography</h3>
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest mb-10 italic font-light">Identifying landscapes that match your bearing</p>
+              <p className="text-[10px] text-slate-500 uppercase tracking-widest mb-12 italic font-light">Identifying landscapes that match your bearing</p>
+
               {!dynamicSectors ? (
-                <button 
-                  onClick={handleMarketScout} 
-                  disabled={isScouting || !profile} 
-                  className="px-12 h-16 bg-teal-600 rounded-2xl text-[9px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 mx-auto transition-all hover:bg-teal-500 disabled:opacity-30 shadow-lg shadow-teal-900/20"
-                >
-                  {isScouting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Binoculars className="w-4 h-4" />}
-                  Survey The Landscape
-                </button>
+                <div className="py-12">
+                  <button 
+                    onClick={handleMarketScout} 
+                    disabled={isScouting || !profile} 
+                    className="px-12 h-16 bg-teal-600 rounded-2xl text-[9px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3 mx-auto transition-all hover:bg-teal-500 shadow-lg shadow-teal-900/20"
+                  >
+                    {isScouting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Binoculars className="w-4 h-4" />}
+                    Survey The Landscape
+                  </button>
+                </div>
               ) : (
-                <div className="text-left text-xs leading-relaxed text-slate-400 font-light italic bg-black/40 p-10 rounded-3xl border border-white/5 shadow-inner whitespace-pre-wrap">
-                  {dynamicSectors}
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-6 text-left">
+                  <div className="bg-black/40 border border-white/5 p-10 rounded-[3rem] hover:border-teal-500/30 transition-all shadow-inner">
+                    <div className="text-teal-400 text-[8px] font-black uppercase tracking-widest mb-6">Landscape Analysis</div>
+                    <div className="text-xs leading-relaxed text-slate-300 font-light italic whitespace-pre-wrap">
+                      {dynamicSectors}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
+            {dynamicSectors && (
+              <div className="mt-12 flex justify-center">
+                <button 
+                  onClick={() => setActiveTab('clearing')}
+                  className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-600 hover:text-teal-400 transition-colors"
+                >
+                  Return to The Clearing
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
