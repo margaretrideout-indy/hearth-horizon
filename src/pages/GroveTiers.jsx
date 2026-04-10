@@ -10,7 +10,23 @@ const LINK_STEWARD = 'https://buy.stripe.com/aFafZhfG8aebdqI4hIdAk04';
 const LINK_DONATION = 'https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02';
 
 const GroveTiers = ({ vault, onSync }) => {
-  const isLoggedIn = vault?.isAligned || !!localStorage.getItem('base44_auth_session');
+  const hasSession = vault?.isAligned || !!localStorage.getItem('base44_auth_session');
+
+  const handleSeedling = () => {
+    if (hasSession) {
+      window.location.href = '/hearth';
+    } else {
+      base44.auth.redirectToLogin('/hearth');
+    }
+  };
+
+  const handlePaid = (stripeUrl) => {
+    if (hasSession) {
+      window.location.href = '/hearth';
+    } else {
+      window.location.href = stripeUrl;
+    }
+  };
 
   const navigationItems = [
     { title: "The Grove", status: "unlocked", icon: <Compass className="w-5 h-5" /> },
@@ -21,22 +37,6 @@ const GroveTiers = ({ vault, onSync }) => {
     { title: "Embers Chat", status: "unlocked", icon: <MessagesSquare className="w-5 h-5" /> },
     { title: "The Canopy", status: "unlocked", icon: <Compass className="w-5 h-5" /> }
   ];
-
-  const handleSeedling = () => {
-    if (isLoggedIn) {
-      window.location.href = '/hearth';
-    } else {
-      base44.auth.redirectToLogin('/hearth');
-    }
-  };
-
-  const handlePaid = (stripeUrl) => {
-    if (isLoggedIn) {
-      window.location.href = '/hearth';
-    } else {
-      window.location.href = stripeUrl;
-    }
-  };
 
   const tiers = [
     {
