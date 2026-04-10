@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
-  Flame, Compass, MessageSquare, Library, Layers, Lock, Sparkles, MoveRight
+  Flame, Compass, MessageSquare, Library, Layers, Lock 
 } from 'lucide-react';
 
 const AppLayout = ({ children, currentTier = "Seedling" }) => {
@@ -10,13 +10,11 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
   
   const isGrove = location.pathname === '/' || location.pathname === '/grove';
 
-  // Group 1: Your Journey
   const journeyItems = [
     { name: "Your Hearth", path: "/hearth", icon: <Flame size={16} />, tier: "Seedling" },
     { name: "Ecosystem Alignment", path: "/alignment", icon: <Compass size={16} />, tier: "Seedling" },
   ];
 
-  // Group 2: Community
   const communityItems = [
     { name: "Embers Chat", path: "/embers", icon: <MessageSquare size={16} />, tier: "Seedling" },
     { name: "The Canopy", path: "/canopy", icon: <Layers size={16} />, tier: "Seedling" },
@@ -36,9 +34,9 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
       <button
         onClick={() => !locked && navigate(item.path)}
         disabled={locked}
-        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-500 group whitespace-nowrap ${
-          locked ? 'opacity-20 cursor-not-allowed' : 'opacity-100 hover:bg-white/5'
-        } ${isActive ? 'bg-teal-500/10 border border-teal-500/20 text-teal-400' : 'text-slate-400'}`}
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-500 group whitespace-nowrap border ${
+          locked ? 'opacity-20 cursor-not-allowed border-transparent' : 'opacity-100 hover:bg-white/5 border-transparent'
+        } ${isActive ? 'bg-teal-500/10 border-teal-500/20 text-teal-400 shadow-[0_0_15px_rgba(20,184,166,0.1)]' : 'text-slate-400'}`}
       >
         <span className={`${isActive ? 'text-teal-400' : 'text-slate-500 group-hover:text-teal-500'}`}>
           {item.icon}
@@ -58,7 +56,6 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
         <nav className="fixed top-4 md:top-6 left-0 right-0 z-50 flex justify-center px-4">
           <div className="flex items-center gap-2 md:gap-4 p-1.5 md:p-2 bg-[#1C1622]/90 backdrop-blur-2xl border border-white/10 rounded-2xl md:rounded-full shadow-2xl max-w-full overflow-x-auto no-scrollbar">
             
-            {/* JOURNEY GROUP */}
             <div className="flex items-center gap-1 pl-1 md:pl-2">
               <div className="hidden lg:block pr-3 mr-2 border-r border-white/5">
                 <p className="text-[7px] font-black text-slate-600 uppercase tracking-[0.3em]">Your Journey</p>
@@ -66,10 +63,8 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
               {journeyItems.map(item => <NavItem key={item.path} item={item} />)}
             </div>
 
-            {/* MYCELIUM NODE */}
             <div className="w-1 h-1 rounded-full bg-teal-500/30 shrink-0 mx-1 animate-pulse" />
 
-            {/* COMMUNITY GROUP */}
             <div className="flex items-center gap-1 pr-1 md:pr-2">
               <div className="hidden lg:block pr-3 mr-2 border-r border-white/5">
                 <p className="text-[7px] font-black text-slate-600 uppercase tracking-[0.3em]">Community</p>
@@ -80,7 +75,6 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
         </nav>
       )}
 
-      {/* PAGE CONTENT */}
       <main className={`w-full ${!isGrove ? "pt-24 md:pt-32" : ""}`}>
         {children}
       </main>
