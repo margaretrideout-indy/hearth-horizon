@@ -83,43 +83,45 @@ const GroveTiers = ({ vault, onSync }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-8 md:p-12 lg:p-16 font-sans selection:bg-teal-500/30">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#0F0A15] text-slate-300 font-sans selection:bg-teal-500/30">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-12 lg:px-16 py-10 md:py-16">
         
-        {/* FOUNDER HEADER (THE WHY) */}
-        <header className="mb-32 text-center animate-in fade-in duration-1000">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/5 border border-teal-500/10 mb-8">
+        {/* FOUNDER HEADER */}
+        <header className="mb-16 md:mb-28 text-center animate-in fade-in duration-1000">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/5 border border-teal-500/10 mb-6 md:mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-400">Welcome to the Grove</span>
+            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] text-teal-400">Welcome to the Grove</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-serif italic text-white mb-10 tracking-tight">A migration of the self.</h1>
-          <p className="max-w-3xl mx-auto text-lg md:text-xl text-slate-400 font-light leading-relaxed mb-12 italic text-center">
-            "After thirteen years in the classroom and a Master's spent studying the deep roots of community and identity, I realized that a career pivot is more than a strategy—it's a migration of the self. Hearth & Horizon is the sanctuary I wish I had when I stepped away from the chalkboard. We bring editorial rigor and psychological depth to the space between your past expertise and your future horizon."
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif italic text-white mb-6 md:mb-10 tracking-tight leading-tight">
+            A migration of the self.
+          </h1>
+          <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-slate-400 font-light leading-relaxed mb-8 md:mb-12 italic px-2">
+            "After thirteen years in the classroom and a Master's spent studying the deep roots of community and identity, I realized that a career pivot is more than a strategy—it's a migration of the self. Hearth & Horizon is the sanctuary I wish I had."
           </p>
           <div className="flex flex-col items-center gap-1">
-            <span className="text-white font-serif italic text-2xl">— Margaret</span>
+            <span className="text-white font-serif italic text-xl sm:text-2xl">— Margaret</span>
             <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-600">Founder</span>
           </div>
         </header>
 
-        {/* PRICING TIERS SECTION */}
-        <section className="mb-40">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* PRICING TIERS */}
+        <section className="mb-20 md:mb-40">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {tiers.map((tier, idx) => (
-              <div key={idx} className={`relative flex flex-col p-8 rounded-[2.5rem] border transition-all duration-500 bg-[#1A1423]/40 ${
+              <div key={idx} className={`relative flex flex-col p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border transition-all duration-500 bg-[#1A1423]/40 ${
                 tier.highlight ? 'border-teal-500/30 shadow-[0_20px_50px_rgba(0,0,0,0.3)]' : 'border-white/5'
               }`}>
-                <div className="mb-6">{tier.icon}</div>
-                <h4 className="text-white font-bold text-xl mb-1 tracking-tight">{tier.name}</h4>
+                <div className="mb-4 sm:mb-6">{tier.icon}</div>
+                <h4 className="text-white font-bold text-lg sm:text-xl mb-1 tracking-tight">{tier.name}</h4>
                 <div className="mb-2">
-                  <span className="text-3xl font-bold text-white tracking-tighter">{tier.price}</span>
+                  <span className="text-2xl sm:text-3xl font-bold text-white tracking-tighter">{tier.price}</span>
                 </div>
-                <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-6">{tier.period}</p>
-                <p className="text-[11px] text-slate-400 mb-8 leading-relaxed italic min-h-[40px]">{tier.desc}</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-4 sm:mb-6">{tier.period}</p>
+                <p className="text-[11px] text-slate-400 mb-6 sm:mb-8 leading-relaxed italic min-h-[36px]">{tier.desc}</p>
                 
-                <div className="h-[1px] w-full bg-white/5 mb-8" />
+                <div className="h-[1px] w-full bg-white/5 mb-6 sm:mb-8" />
                 
-                <ul className="space-y-4 mb-12 flex-1">
+                <ul className="space-y-3 sm:space-y-4 mb-8 sm:mb-12 flex-1">
                   {tier.features.map((feat, fIdx) => (
                     <li key={fIdx} className="flex items-center gap-3 text-[10px] text-slate-400">
                       <Check className={`w-3.5 h-3.5 shrink-0 ${tier.isDonation ? 'text-rose-500' : 'text-teal-500'}`} /> {feat}
@@ -129,7 +131,7 @@ const GroveTiers = ({ vault, onSync }) => {
 
                 <button 
                   onClick={tier.onClick}
-                  className={`w-full py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${
+                  className={`w-full py-3.5 sm:py-4 rounded-xl sm:rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all active:scale-95 ${
                     tier.isDonation 
                       ? 'bg-[#FF4D6D] text-white hover:bg-[#FF758F] shadow-[0_0_20px_rgba(255,77,109,0.2)]'
                       : 'bg-[#39D7B8] text-[#0F0A15] hover:bg-[#4df7d5]'
@@ -143,20 +145,20 @@ const GroveTiers = ({ vault, onSync }) => {
         </section>
 
         {/* COMPACT NAV GRID */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 border-t border-white/5 pt-20">
+        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4 border-t border-white/5 pt-12 md:pt-20">
           {navigationItems.map((item, idx) => (
-            <div key={idx} className={`p-6 rounded-[2rem] border flex flex-col items-center text-center group transition-all ${
+            <div key={idx} className={`p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border flex flex-col items-center text-center group transition-all ${
               item.status === 'unlocked' 
               ? 'bg-white/[0.02] border-white/5 hover:border-teal-500/30' 
               : 'bg-black/40 border-white/[0.01] opacity-20'
             }`}>
-              <div className={`mb-4 ${item.status === 'unlocked' ? 'text-slate-400 group-hover:text-teal-400' : 'text-slate-800'}`}>
+              <div className={`mb-3 sm:mb-4 ${item.status === 'unlocked' ? 'text-slate-400 group-hover:text-teal-400' : 'text-slate-800'}`}>
                 {item.icon}
               </div>
-              <span className={`text-[8px] font-black uppercase tracking-widest ${item.status === 'unlocked' ? 'text-white' : 'text-slate-800'}`}>
+              <span className={`text-[7px] sm:text-[8px] font-black uppercase tracking-widest ${item.status === 'unlocked' ? 'text-white' : 'text-slate-800'}`}>
                 {item.title}
               </span>
-              {item.status === 'locked' && <Lock className="w-2.5 h-2.5 mt-3 text-slate-800" />}
+              {item.status === 'locked' && <Lock className="w-2.5 h-2.5 mt-2 sm:mt-3 text-slate-800" />}
             </div>
           ))}
         </div>
