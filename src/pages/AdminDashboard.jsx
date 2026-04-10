@@ -8,18 +8,24 @@ const ForestAdmin = () => {
 
   const { data: dwellers, isLoading: dwellersLoading } = useQuery({
     queryKey: ['dwellers'],
-    queryFn: () => window.base44.entities.User.list()
+    queryFn: async () => {
+      const res = await window.base44.entities.User.list();
+      return Array.isArray(res) ? res : [];
+    }
   });
 
   const { data: requests, isLoading: requestsLoading } = useQuery({
     queryKey: ['seat-requests'],
-    queryFn: () => window.base44.entities.VoucherPool.list()
+    queryFn: async () => {
+      const res = await window.base44.entities.VoucherPool.list();
+      return Array.isArray(res) ? res : [];
+    }
   });
 
-  // Logic for the "Grant Seat" button in the Request List
   const approveRequest = useMutation({
     mutationFn: async ({ requestId, email }) => {
-      const user = dwellers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
+      const dwellerList = dwellers || [];
+      const user = dwellerList.find(u => u.email?.toLowerCase() === email?.toLowerCase());
       if (!user) throw new Error("User record not found. Ask them to sign up as a Seedling first!");
 
       await window.base44.entities.User.update(user.id, { subscription_tier: 'Hearthkeeper' });
@@ -37,10 +43,10 @@ const ForestAdmin = () => {
     onError: (err) => alert(err.message)
   });
 
-  // Logic for the Manual Email Input (Top Right)
   const manualGrant = useMutation({
     mutationFn: async (email) => {
-      const user = dwellers.find(u => u.email?.toLowerCase() === email.toLowerCase().trim());
+      const dwellerList = dwellers || [];
+      const user = dwellerList.find(u => u.email?.toLowerCase() === email.toLowerCase().trim());
       if (!user) throw new Error("Dweller not found. They must sign up for a free account first.");
       
       return await window.base44.entities.User.update(user.id, { subscription_tier: 'Hearthkeeper' });
@@ -48,7 +54,7 @@ const ForestAdmin = () => {
     onSuccess: () => {
       setGrantEmail('');
       queryClient.invalidateQueries(['dwellers']);
-      alert("Manual access granted. Your tester is ready!");
+      alert("Manual access granted.");
     },
     onError: (err) => alert(err.message)
   });
@@ -63,7 +69,8 @@ const ForestAdmin = () => {
     );
   }
 
-  const pendingRequests = requests?.filter(r => r.status === 'available') || [];
+  const safeDwellers = Array.isArray(dwellers) ? dwellers : [];
+  const pendingRequests = (Array.isArray(requests) ? requests : []).filter(r => r.status === 'available');
 
   return (
     <div className="min-h-screen bg-[#1A1423] p-8 font-sans text-slate-200">
@@ -74,7 +81,6 @@ const ForestAdmin = () => {
           <h1 className="text-5xl font-serif text-white tracking-tight">Forest Admin</h1>
         </div>
 
-        {/* MANUAL GRANT TOOL: Type your husband's email here! */}
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
           <div className="relative">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -97,7 +103,7 @@ const ForestAdmin = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <StatCard title="Total Dwellers" value={dwellers?.length || 0} icon={<Users />} />
+        <StatCard title="Total Dwellers" value={safeDwellers.length} icon={<Users />} />
         <StatCard title="Seat Requests" value={pendingRequests.length} icon={<Mail />} />
         <StatCard title="Active Tiers" value="3 Levels" icon={<Activity />} />
       </div>
@@ -118,7 +124,7 @@ const ForestAdmin = () => {
                 </tr>
               </thead>
               <tbody className="text-sm font-medium">
-                {[...dwellers].reverse().slice(0, 10).map(dweller => (
+                {[...safeDwellers].reverse().slice(0, 10).map(dweller => (
                   <tr key={dweller.id} className="border-b border-white/[0.02] hover:bg-white/[0.01] transition-colors group">
                     <td className="py-6 px-2 text-slate-300">{dweller.email}</td>
                     <td className="py-6 px-2">
