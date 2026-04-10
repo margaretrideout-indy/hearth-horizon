@@ -77,35 +77,35 @@ const Library = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-8 md:p-12 font-sans selection:bg-teal-500/30">
+    <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-6 md:p-12 font-sans selection:bg-teal-500/30">
       <div className="max-w-6xl mx-auto">
         
         {/* HEADER */}
-        <header className="mb-24">
+        <header className="mb-16 md:mb-24">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20">
               <LibraryIcon className="w-5 h-5" />
             </div>
-            <h1 className="text-2xl font-serif italic text-white tracking-tight">The Library & Provisions</h1>
+            <h1 className="text-xl md:text-2xl font-serif italic text-white tracking-tight">The Library & Provisions</h1>
           </div>
-          <p className="max-w-xl text-xs leading-relaxed text-slate-500 font-light">
+          <p className="max-w-xl text-[10px] md:text-xs leading-relaxed text-slate-500 font-light">
             Curated tools and blueprints to support your transition. Transparently vetted and 
             selected to support the whole person through the journey.
           </p>
         </header>
 
         {/* THE STUDY */}
-        <section className="mb-24">
+        <section className="mb-16 md:mb-24">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500/60 whitespace-nowrap">The Study</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {provisions.study.map((item, idx) => (
-              <div key={idx} className="bg-white/[0.01] border border-white/5 p-10 rounded-[3rem] hover:bg-white/[0.03] transition-all group">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-slate-500 mb-8 border border-white/5">{item.icon}</div>
+              <div key={idx} className="bg-white/[0.01] border border-white/5 p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] hover:bg-white/[0.03] transition-all group">
+                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-slate-500 mb-6 md:mb-8 border border-white/5">{item.icon}</div>
                 <h4 className="text-white font-bold text-lg mb-3 font-serif italic">{item.title}</h4>
-                <p className="text-xs text-slate-500 font-light leading-relaxed mb-8">{item.desc}</p>
+                <p className="text-xs text-slate-500 font-light leading-relaxed mb-6 md:mb-8">{item.desc}</p>
                 <a href={item.links[0].url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 bg-teal-600/10 border border-teal-500/20 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] text-teal-400 hover:bg-teal-600 hover:text-white transition-all mb-6">
                   {item.links[0].label} <ExternalLink className="ml-2 w-3 h-3" />
                 </a>
@@ -116,15 +116,15 @@ const Library = () => {
         </section>
 
         {/* THE DIGITAL WORKSHOP */}
-        <section className="mb-24">
+        <section className="mb-16 md:mb-24">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500/60 whitespace-nowrap">The Digital Workshop</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {provisions.workshop.map((item, idx) => (
-              <div key={idx} className="bg-white/[0.02] border border-white/5 p-8 rounded-[2.5rem] hover:bg-white/[0.04] transition-all flex gap-8 items-center group">
-                <div className="w-16 h-16 rounded-3xl bg-white/5 flex items-center justify-center text-slate-400 shrink-0 border border-white/5">{item.icon}</div>
+              <div key={idx} className="bg-white/[0.02] border border-white/5 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] hover:bg-white/[0.04] transition-all flex flex-col sm:flex-row gap-6 md:gap-8 items-start sm:items-center group">
+                <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-white/5 flex items-center justify-center text-slate-400 shrink-0 border border-white/5">{item.icon}</div>
                 <div className="flex-1">
                   <div className="flex justify-between items-start mb-1">
                     <h4 className="text-white font-bold text-sm">{item.title}</h4>
@@ -141,16 +141,16 @@ const Library = () => {
         </section>
 
         {/* THE SANCTUARY */}
-        <section className="mb-24">
+        <section className="mb-16 md:mb-24">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Sanctuary</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {provisions.sanctuary.map((item, idx) => (
-              <div key={idx} className="bg-[#1A1423] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col h-full shadow-2xl relative group">
+              <div key={idx} className="bg-[#1A1423] border border-white/5 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col h-full shadow-2xl relative group">
                 {item.badge && (
-                  <div className="absolute -top-3 -right-3 px-3 py-1 bg-teal-500/20 rounded-full border border-teal-400/30 backdrop-blur-md z-10">
+                  <div className="absolute -top-2 -right-2 md:-top-3 md:-right-3 px-3 py-1 bg-teal-500/20 rounded-full border border-teal-400/30 backdrop-blur-md z-10">
                     <span className="text-[7px] font-black uppercase tracking-widest text-teal-300">{item.badge}</span>
                   </div>
                 )}
@@ -185,7 +185,7 @@ const Library = () => {
         </section>
 
         {/* FOOTER */}
-        <footer className="mt-32 pt-12 border-t border-white/5 text-center">
+        <footer className="mt-20 md:mt-32 pt-12 border-t border-white/5 text-center">
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.02] border border-white/5">
             <ShoppingBag className="w-3 h-3 text-slate-500" />
             <span className="text-[8px] font-medium uppercase tracking-[0.2em] text-slate-500">Note on Reciprocity: We only recommend provisions we have personally verified.</span>
