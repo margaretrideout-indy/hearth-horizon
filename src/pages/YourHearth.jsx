@@ -7,6 +7,7 @@ import { Flame, Compass, ArrowRight, Heart, Sun, Smile, MessageSquare, Lock, Inf
 export default function Hearth({ vault, onSync }) {
   const [selectedEmoji, setSelectedEmoji] = useState(null);
   const [reflection, setReflection] = useState("");
+  const [isLogging, setIsLogging] = useState(false);
 
   const emojis = [
     { icon: "🌱", label: "Growing" },
@@ -18,9 +19,30 @@ export default function Hearth({ vault, onSync }) {
   ];
 
   const logEntries = [
-    { date: "Apr 9, 2026", status: "Ignited", text: "Reframed my previous tenure into operational excellence. The shift is starting to feel natural." },
-    { date: "Apr 8, 2026", status: "Grounded", text: "Successfully navigated the first Bridge Crossing." },
+    { date: "Apr 10, 2026", status: "Ignited", text: "Reframed my previous tenure into operational excellence. The shift is starting to feel natural." },
+    { date: "Apr 9, 2026", status: "Grounded", text: "Successfully navigated the first Bridge Crossing." },
   ];
+
+  const handleLogPulse = async () => {
+    if (!selectedEmoji && !reflection) return;
+    setIsLogging(true);
+
+    try {
+      if (window.base44?.entities?.RootwerkLog) {
+        await window.base44.entities.RootwerkLog.create({
+          emoji: selectedEmoji,
+          reflection: reflection,
+          timestamp: new Date().toISOString()
+        });
+      }
+      setSelectedEmoji(null);
+      setReflection("");
+    } catch (error) {
+      console.error("Error logging pulse:", error);
+    } finally {
+      setIsLogging(false);
+    }
+  };
 
   const isSeedling = vault?.tier === "Seedling" || vault?.tier === "Free" || !vault?.tier;
 
@@ -57,7 +79,6 @@ export default function Hearth({ vault, onSync }) {
                 </div>
               </div>
             ))}
-            {/* Desktop Connector Line */}
             <div className="hidden md:block absolute top-8 left-0 w-full h-[1px] bg-gradient-to-r from-teal-500/50 via-white/5 to-white/5 -z-0" />
           </div>
         </Card>
@@ -107,8 +128,12 @@ export default function Hearth({ vault, onSync }) {
                       onChange={(e) => setReflection(e.target.value)}
                     />
                   </div>
-                  <Button className="w-full bg-teal-500 hover:bg-teal-400 text-black text-[11px] font-black uppercase tracking-[0.2em] h-16 rounded-2xl shadow-xl shadow-teal-500/10 transition-all">
-                    <Sparkles size={16} className="mr-2" /> Log the Pulse
+                  <Button 
+                    onClick={handleLogPulse}
+                    disabled={isLogging}
+                    className="w-full bg-teal-500 hover:bg-teal-400 text-black text-[11px] font-black uppercase tracking-[0.2em] h-16 rounded-2xl shadow-xl shadow-teal-500/10 transition-all"
+                  >
+                    {isLogging ? "Logging..." : <><Sparkles size={16} className="mr-2" /> Log the Pulse</>}
                   </Button>
                 </div>
               </Card>
@@ -135,7 +160,6 @@ export default function Hearth({ vault, onSync }) {
 
           {/* RIGHT SIDEBAR: CREDITS & RECOGNITION */}
           <div className="col-span-12 lg:col-span-4 space-y-8">
-            
             {isSeedling ? (
               <Card className="bg-gradient-to-br from-[#1C1622] to-[#120D16] border-white/10 p-10 space-y-8 rounded-[2rem]">
                 <p className="text-[10px] font-black text-orange-400 uppercase tracking-[0.4em]">SEEDLING CREDITS</p>
