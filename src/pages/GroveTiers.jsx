@@ -43,8 +43,8 @@ const GroveTiers = ({ vault, onSync }) => {
       name: "Seedling",
       price: "FREE",
       period: "ALWAYS OPEN",
-      desc: '"Foundational access for those starting their journey."',
-      features: ["Foundational Badge", "2 Free PDFs/mo", "Access to Library", "Embers Chat"],
+      desc: '"A quiet space for those beginning to look toward a new horizon."',
+      features: ["Foundational Badge", "Community Resources", "Access to Library", "Embers Chat"],
       button: "GET STARTED",
       onClick: handleSeedling,
       icon: <Leaf className="w-5 h-5 text-teal-400" />
@@ -53,8 +53,8 @@ const GroveTiers = ({ vault, onSync }) => {
       name: "Hearthkeeper",
       price: "$3",
       period: "$5/MO AFTER FIRST MONTH",
-      desc: '"Removing limits to keep the fires burning bright."',
-      features: ["Everything in Seedling", "Unlimited PDF uploads", "Hearthkeeper Badge"],
+      desc: '"Removing the noise to keep your creative fires burning bright."',
+      features: ["Everything in Seedling", "Unlimited Digital Tools", "Hearthkeeper Badge"],
       button: "SELECT PLAN",
       onClick: () => handlePaid(LINK_HEARTHKEEPER),
       highlight: true,
@@ -64,7 +64,7 @@ const GroveTiers = ({ vault, onSync }) => {
       name: "Steward",
       price: "$5",
       period: "$8/MO AFTER FIRST MONTH",
-      desc: '"Full oversight and total access to the entire Grove."',
+      desc: '"Full oversight and total access to the entire landscape."',
       features: ["Everything in Hearthkeeper", "Ecosystem Alignment", "The Canopy Hub"],
       button: "SELECT PLAN",
       onClick: () => handlePaid(LINK_STEWARD),
@@ -74,8 +74,8 @@ const GroveTiers = ({ vault, onSync }) => {
       name: "Plant A Seed",
       price: "DONATE",
       period: "SUPPORT THE GROVE",
-      desc: '"Pay it forward to keep the Hearth accessible."',
-      features: ["Sponsor Badge", "Supports Open Access", "Warm Fuzzies"],
+      desc: '"Pay it forward to keep the Sanctuary accessible for all."',
+      features: ["Sponsor Badge", "Supports Open Access", "Community Vitality"],
       button: "GIVE A SEED",
       onClick: () => window.open(LINK_DONATION, '_blank'),
       isDonation: true,
@@ -85,55 +85,55 @@ const GroveTiers = ({ vault, onSync }) => {
 
   return (
     <div className="min-h-screen bg-[#0F0A15] text-slate-300 font-sans selection:bg-teal-500/30">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-12 lg:px-16 py-10 md:py-16">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-12 lg:px-20 py-12 md:py-24">
         
-        <header className="mb-16 md:mb-28 text-center animate-in fade-in duration-1000">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/5 border border-teal-500/10 mb-6 md:mb-8">
+        <header className="mb-20 md:mb-32 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-500/5 border border-teal-500/10 mb-8 md:mb-12">
             <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
-            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] text-teal-400">Welcome to the Grove</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">Welcome to the Sanctuary</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif italic text-white mb-6 md:mb-10 tracking-tight leading-tight">
-            A migration of the self.
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif italic text-white mb-8 md:mb-12 tracking-tight leading-tight">
+            Transition with Intention.
           </h1>
-          <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-slate-400 font-light leading-relaxed mb-8 md:mb-12 italic px-2">
-            "After thirteen years in the classroom and a Master's spent studying the deep roots of community and identity, I realized that a career pivot is more than a strategy—it's a migration of the self. Hearth & Horizon is the sanctuary I wish I had."
+          <p className="max-w-3xl mx-auto text-base md:text-xl text-slate-400 font-light leading-relaxed mb-10 md:mb-16 italic px-4">
+            "After a long tenure in my field and a Master's spent studying the deep roots of community and identity, I realized that a professional shift is more than a move—it's a migration of the self. Hearth & Horizon is the sanctuary for those ready to redesign their story."
           </p>
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-white font-serif italic text-xl sm:text-2xl">— Margaret</span>
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-white font-serif italic text-2xl">— Margaret</span>
             <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-600">Founder</span>
           </div>
         </header>
 
-        <section className="mb-20 md:mb-40">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <section className="mb-24 md:mb-48">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {tiers.map((tier, idx) => (
-              <div key={idx} className={`relative flex flex-col p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border transition-all duration-500 bg-[#1A1423]/40 ${
-                tier.highlight ? 'border-teal-500/30 shadow-[0_20px_50px_rgba(0,0,0,0.3)]' : 'border-white/5'
+              <div key={idx} className={`relative flex flex-col p-8 sm:p-10 rounded-[2.5rem] border transition-all duration-500 bg-[#1A1423]/40 ${
+                tier.highlight ? 'border-teal-500/30 shadow-[0_20px_60px_rgba(0,0,0,0.4)]' : 'border-white/5 hover:border-white/10'
               }`}>
-                <div className="mb-4 sm:mb-6">{tier.icon}</div>
-                <h4 className="text-white font-bold text-lg sm:text-xl mb-1 tracking-tight">{tier.name}</h4>
+                <div className="mb-6 sm:mb-8">{tier.icon}</div>
+                <h4 className="text-white font-bold text-xl sm:text-2xl mb-1 tracking-tight">{tier.name}</h4>
                 <div className="mb-2">
-                  <span className="text-2xl sm:text-3xl font-bold text-white tracking-tighter">{tier.price}</span>
+                  <span className="text-3xl sm:text-4xl font-bold text-white tracking-tighter">{tier.price}</span>
                 </div>
-                <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-4 sm:mb-6">{tier.period}</p>
-                <p className="text-[11px] text-slate-400 mb-6 sm:mb-8 leading-relaxed italic min-h-[36px]">{tier.desc}</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-6 sm:mb-8">{tier.period}</p>
+                <p className="text-[12px] text-slate-400 mb-8 sm:mb-10 leading-relaxed italic min-h-[48px]">{tier.desc}</p>
                 
-                <div className="h-[1px] w-full bg-white/5 mb-6 sm:mb-8" />
+                <div className="h-[1px] w-full bg-white/5 mb-8 sm:mb-10" />
                 
-                <ul className="space-y-3 sm:space-y-4 mb-8 sm:mb-12 flex-1">
+                <ul className="space-y-4 mb-10 sm:mb-16 flex-1">
                   {tier.features.map((feat, fIdx) => (
-                    <li key={fIdx} className="flex items-center gap-3 text-[10px] text-slate-400">
-                      <Check className={`w-3.5 h-3.5 shrink-0 ${tier.isDonation ? 'text-rose-500' : 'text-teal-500'}`} /> {feat}
+                    <li key={fIdx} className="flex items-center gap-3 text-[11px] text-slate-400 font-medium">
+                      <Check className={`w-4 h-4 shrink-0 ${tier.isDonation ? 'text-rose-500' : 'text-teal-500'}`} /> {feat}
                     </li>
                   ))}
                 </ul>
 
                 <button 
                   onClick={tier.onClick}
-                  className={`w-full py-3.5 sm:py-4 rounded-xl sm:rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all active:scale-95 ${
+                  className={`w-full py-4 sm:py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all active:scale-95 ${
                     tier.isDonation 
                       ? 'bg-[#FF4D6D] text-white hover:bg-[#FF758F] shadow-[0_0_20px_rgba(255,77,109,0.2)]'
-                      : 'bg-[#39D7B8] text-[#0F0A15] hover:bg-[#4df7d5]'
+                      : 'bg-[#39D7B8] text-[#0F0A15] hover:bg-[#4df7d5] hover:shadow-[0_0_30px_rgba(57,215,184,0.15)]'
                   }`}
                 >
                   {tier.button}
@@ -143,20 +143,20 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4 border-t border-white/5 pt-12 md:pt-20">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 border-t border-white/5 pt-16 md:pt-24">
           {navigationItems.map((item, idx) => (
-            <div key={idx} className={`p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border flex flex-col items-center text-center group transition-all ${
+            <div key={idx} className={`p-6 rounded-[2rem] border flex flex-col items-center text-center group transition-all ${
               item.status === 'unlocked' 
               ? 'bg-white/[0.02] border-white/5 hover:border-teal-500/30' 
               : 'bg-black/40 border-white/[0.01] opacity-20'
             }`}>
-              <div className={`mb-3 sm:mb-4 ${item.status === 'unlocked' ? 'text-slate-400 group-hover:text-teal-400' : 'text-slate-800'}`}>
+              <div className={`mb-4 ${item.status === 'unlocked' ? 'text-slate-400 group-hover:text-teal-400' : 'text-slate-800'}`}>
                 {item.icon}
               </div>
-              <span className={`text-[7px] sm:text-[8px] font-black uppercase tracking-widest ${item.status === 'unlocked' ? 'text-white' : 'text-slate-800'}`}>
+              <span className={`text-[8px] font-black uppercase tracking-widest ${item.status === 'unlocked' ? 'text-white' : 'text-slate-800'}`}>
                 {item.title}
               </span>
-              {item.status === 'locked' && <Lock className="w-2.5 h-2.5 mt-2 sm:mt-3 text-slate-800" />}
+              {item.status === 'locked' && <Lock className="w-3 h-3 mt-3 text-slate-800" />}
             </div>
           ))}
         </div>
