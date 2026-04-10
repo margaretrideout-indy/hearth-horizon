@@ -74,6 +74,7 @@ function AppRoutes() {
   return (
     <div className="min-h-screen bg-[#0F0A15] text-white selection:bg-teal-500/30 font-sans">
       <Routes>
+        <Route path="/admin" element={<AdminDashboard vault={sanctuaryState} onSync={forceSync} />} />
         <Route path="/" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} />} />
         <Route path="/grove" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} />} />
         <Route path="/hearth" element={<ProtectedRoute><YourHearth vault={sanctuaryState} onSync={forceSync} /></ProtectedRoute>} />
