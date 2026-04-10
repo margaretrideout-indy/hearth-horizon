@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Flame, Compass, ArrowRight, Heart, Sun, Smile, MessageSquare, Lock, Infinity, Sparkles } from 'lucide-react';
+import { Flame, Compass, ArrowRight, Heart, Sun, MessageSquare, Lock, Infinity, Sparkles } from 'lucide-react';
 
 export default function Hearth({ vault, onSync }) {
   const [selectedEmoji, setSelectedEmoji] = useState(null);
   const [reflection, setReflection] = useState("");
   const [isLogging, setIsLogging] = useState(false);
+  const [pulses, setPulses] = useState([]);
+
+  useEffect(() => {
+    loadPulses();
+  }, [vault]);
+
+  const loadPulses = async () => {
+    if (window.base44?.entities?.RootwerkLog) {
+      const history = await window.base44.entities.RootwerkLog.list();
+      setPulses(history.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
+    }
+  };
 
   const emojis = [
     { icon: "🌱", label: "Growing" },
@@ -16,11 +28,6 @@ export default function Hearth({ vault, onSync }) {
     { icon: "🏔️", label: "Grounded" },
     { icon: "🌪️", label: "Shifting" },
     { icon: "✨", label: "Inspired" }
-  ];
-
-  const logEntries = [
-    { date: "Apr 10, 2026", status: "Ignited", text: "Reframed my previous tenure into operational excellence. The shift is starting to feel natural." },
-    { date: "Apr 9, 2026", status: "Grounded", text: "Successfully navigated the first Bridge Crossing." },
   ];
 
   const handleLogPulse = async () => {
@@ -37,11 +44,11 @@ export default function Hearth({ vault, onSync }) {
         
         setSelectedEmoji(null);
         setReflection("");
+        await loadPulses();
         if (onSync) onSync();
-        alert("Pulse logged to the Rootwork.");
       }
     } catch (error) {
-      console.error("Logging failed:", error);
+      console.error(error);
     } finally {
       setIsLogging(false);
     }
@@ -101,10 +108,7 @@ export default function Hearth({ vault, onSync }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
               <Card className="bg-[#251D2D] border-white/10 p-8 space-y-10 shadow-xl rounded-[2rem] relative">
                 <div className="space-y-6">
-                  <div className="flex justify-between items-center">
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">1. THE EMOJI PULSE</p>
-                    <span className="text-[9px] text-slate-600 italic uppercase tracking-tighter">(Optional)</span>
-                  </div>
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">1. THE EMOJI PULSE</p>
                   <div className="grid grid-cols-6 gap-3">
                     {emojis.map((e) => (
                       <button 
@@ -119,13 +123,10 @@ export default function Hearth({ vault, onSync }) {
                 </div>
 
                 <div className="space-y-6">
-                  <div className="flex justify-between items-center">
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">2. DAILY REFLECTION</p>
-                    <span className="text-[9px] text-slate-600 italic uppercase tracking-tighter">(Optional)</span>
-                  </div>
-                  <div className="bg-black/20 rounded-[1.5rem] p-6 min-h-[120px] border border-white/5 group focus-within:border-teal-500/30 transition-all">
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">2. DAILY REFLECTION</p>
+                  <div className="bg-black/20 rounded-[1.5rem] p-6 min-h-[120px] border border-white/5 focus-within:border-teal-500/30 transition-all">
                     <Textarea 
-                      placeholder="What felt resonant in your transition today?"
+                      placeholder="What felt resonant today?"
                       className="bg-transparent border-none p-0 focus-visible:ring-0 text-sm text-white italic resize-none leading-relaxed placeholder:text-slate-700"
                       value={reflection}
                       onChange={(e) => setReflection(e.target.value)}
@@ -134,7 +135,7 @@ export default function Hearth({ vault, onSync }) {
                   <Button 
                     onClick={handleLogPulse}
                     disabled={isLogging || (!selectedEmoji && !reflection)}
-                    className="w-full bg-teal-500 hover:bg-teal-400 text-black text-[11px] font-black uppercase tracking-[0.2em] h-16 rounded-2xl shadow-xl shadow-teal-500/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-teal-500 hover:bg-teal-400 text-black text-[11px] font-black uppercase tracking-[0.2em] h-16 rounded-2xl shadow-xl shadow-teal-500/10 transition-all disabled:opacity-30"
                   >
                     {isLogging ? "Logging..." : <><Sparkles size={16} className="mr-2" /> Log the Pulse</>}
                   </Button>
@@ -144,79 +145,43 @@ export default function Hearth({ vault, onSync }) {
               <div className="space-y-6">
                 <div className="flex items-center gap-3 px-2 text-slate-600">
                   <MessageSquare size={16} />
-                  <p className="text-[10px] font-black uppercase tracking-[0.3em]">Previous Pulses</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em]">Logbook</p>
                 </div>
-                <div className="space-y-5">
-                  {logEntries.map((entry, i) => (
-                    <Card key={i} className="p-6 bg-[#1C1622]/60 border border-white/5 rounded-2xl hover:border-white/10 transition-all">
+                <div className="space-y-5 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                  {pulses.length > 0 ? pulses.map((entry, i) => (
+                    <Card key={i} className="p-6 bg-[#1C1622]/60 border border-white/5 rounded-2xl">
                       <div className="flex justify-between items-center mb-4">
-                        <span className="text-[10px] font-bold text-slate-600 uppercase">{entry.date}</span>
-                        <span className="px-3 py-1 rounded-full bg-teal-500/10 text-teal-400 text-[9px] font-black uppercase italic tracking-widest border border-teal-500/20">{entry.status}</span>
+                        <span className="text-[10px] font-bold text-slate-600 uppercase">
+                          {new Date(entry.timestamp).toLocaleDateString()}
+                        </span>
+                        <span className="px-3 py-1 rounded-full bg-teal-500/10 text-teal-400 text-[9px] font-black uppercase italic border border-teal-500/20">
+                          {entry.emoji || "Pulse"}
+                        </span>
                       </div>
-                      <p className="text-xs text-slate-400 leading-relaxed italic">"{entry.text}"</p>
+                      <p className="text-xs text-slate-400 leading-relaxed italic">"{entry.reflection}"</p>
                     </Card>
-                  ))}
+                  )) : (
+                    <p className="text-[10px] text-slate-700 uppercase tracking-widest text-center py-10 italic">No entries yet.</p>
+                  )}
                 </div>
               </div>
             </div>
           </div>
 
           <div className="col-span-12 lg:col-span-4 space-y-8">
-            {isSeedling ? (
-              <Card className="bg-gradient-to-br from-[#1C1622] to-[#120D16] border-white/10 p-10 space-y-8 rounded-[2rem]">
-                <p className="text-[10px] font-black text-orange-400 uppercase tracking-[0.4em]">SEEDLING CREDITS</p>
-                <div className="bg-black/40 border border-white/5 rounded-3xl p-6 flex justify-between items-center">
-                  <div className="flex gap-5 items-center">
-                    <div className="p-3 bg-orange-500/10 rounded-2xl text-orange-400 border border-orange-500/20">
-                      <ArrowRight size={20} />
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-black uppercase text-white tracking-widest">BRIDGE ACCESS</p>
-                      <p className="text-[9px] text-slate-500 font-bold uppercase mt-1">2 USES REMAINING</p>
-                    </div>
-                  </div>
-                  <span className="text-3xl font-bold text-white tracking-tighter">2/2</span>
-                </div>
-                <Button className="w-full bg-white/5 hover:bg-white/10 text-white text-[10px] font-black uppercase tracking-[0.2em] h-16 rounded-2xl border border-white/10 transition-all">
-                  OPEN THE BRIDGE <ArrowRight size={14} className="ml-2" />
-                </Button>
-              </Card>
-            ) : (
-              <Card className="bg-gradient-to-br from-[#1C1622] to-[#120D16] border-teal-500/20 p-10 space-y-8 rounded-[2rem] shadow-xl shadow-teal-500/5">
-                <p className="text-[10px] font-black text-teal-400 uppercase tracking-[0.4em]">{vault?.tier} ACCESS</p>
-                <div className="bg-black/40 border border-white/5 rounded-3xl p-6 flex justify-between items-center">
-                  <div className="flex gap-5 items-center">
-                    <div className="p-4 bg-teal-500/10 rounded-2xl text-teal-400 border border-teal-500/20">
-                      <Infinity size={24} />
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-black uppercase text-white tracking-widest">BRIDGE ACCESS</p>
-                      <p className="text-[9px] text-teal-500/60 font-bold uppercase mt-1">UNLIMITED INTENTION</p>
-                    </div>
-                  </div>
-                </div>
-                <Button className="w-full bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 text-[10px] font-black uppercase tracking-[0.2em] h-16 rounded-2xl border border-teal-500/30 transition-all">
-                  OPEN THE BRIDGE <ArrowRight size={14} className="ml-2" />
-                </Button>
-              </Card>
-            )}
-
             <Card className="bg-[#1C1622]/40 border-white/5 p-10 space-y-8 rounded-[2rem]">
               <div className="flex items-center gap-3 text-slate-600">
                 <Lock size={14} />
-                <p className="text-[10px] font-black uppercase tracking-[0.3em]">Transition Maturity</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em]">Maturity</p>
               </div>
               <p className="text-xs text-slate-500 leading-relaxed italic">
-                Feed the hearth <span className="text-white font-bold underline decoration-teal-500/50">14 more times</span> to visualize your transition's hidden network.
+                Feed the hearth <span className="text-white font-bold underline decoration-teal-500/50">{Math.max(0, 14 - pulses.length)} more times</span>.
               </p>
-              <div className="space-y-4">
-                <div className="flex justify-between text-[10px] font-black text-slate-700 uppercase tracking-widest">
-                  <span>0 / 14 PULSES</span>
-                  <span>0%</span>
-                </div>
-                <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                  <div className="h-full w-0 bg-teal-500 shadow-[0_0_20px_rgba(20,184,166,0.3)] transition-all duration-1000" />
-                </div>
+              <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                <div 
+                  className="h-full bg-teal-500 transition-all duration-1000" 
+                  style={{ width: `${Math.min(100, (pulses.length / 14) * 100)}%` }}
+                />
               </div>
             </Card>
 
@@ -226,7 +191,7 @@ export default function Hearth({ vault, onSync }) {
                 <p className="text-[10px] font-black uppercase tracking-[0.4em]">RECIPROCITY</p>
               </div>
               <p className="text-[11px] text-slate-600 leading-relaxed italic">
-                One seat purchased sponsors a peer in professional transition. No one walks alone.
+                One seat purchased sponsors a peer in professional transition.
               </p>
             </Card>
           </div>
