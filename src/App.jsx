@@ -75,33 +75,12 @@ function AppRoutes() {
     <div className="min-h-screen bg-[#0F0A15] text-white selection:bg-teal-500/30 font-sans">
       <Routes>
         <Route path="/" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} />} />
-
-        {/* Public landing */
         <Route path="/grove" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} />} />
-
-        {/* Protected routes */}
-        <Route path="/hearth" element={
-          <ProtectedRoute>
-            <YourHearth vault={sanctuaryState} onSync={forceSync} />
-          </ProtectedRoute>
-        } />
-        <Route path="/alignment" element={
-          <ProtectedRoute>
-            <CulturalFit vault={sanctuaryState} onSync={forceSync} />
-          </ProtectedRoute>
-        } />
-        <Route path="/canopy" element={
-          <ProtectedRoute>
-            <Canopy vault={sanctuaryState} onSync={forceSync} />
-          </ProtectedRoute>
-        } />
-        <Route path="/library" element={
-          <ProtectedRoute>
-            <Library vault={sanctuaryState} />
-          </ProtectedRoute>
-        } />
-
-        <Route path="*" element={<Navigate to="/grove" replace />} />
+        <Route path="/hearth" element={<ProtectedRoute><YourHearth vault={sanctuaryState} onSync={forceSync} /></ProtectedRoute>} />
+        <Route path="/alignment" element={<ProtectedRoute><CulturalFit vault={sanctuaryState} onSync={forceSync} /></ProtectedRoute>} />
+        <Route path="/canopy" element={<ProtectedRoute><Canopy vault={sanctuaryState} onSync={forceSync} /></ProtectedRoute>} />
+        <Route path="/library" element={<ProtectedRoute><Library vault={sanctuaryState} /></ProtectedRoute>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );
