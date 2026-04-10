@@ -2,13 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Flame, Compass, Heart, MessageSquare, Lock, Sparkles, Zap, BarChart, Clock } from 'lucide-react';
+import { 
+  Flame, Compass, Heart, MessageSquare, Lock, Sparkles, 
+  Zap, BarChart, Clock, Upload, Loader2, CheckCircle2, RefreshCw 
+} from 'lucide-react';
 
-export default function Hearth({ vault, onSync }) {
+export default function Hearth({ vault, onSync, onResumeSync }) {
   const [selectedEmoji, setSelectedEmoji] = useState(null);
   const [reflection, setReflection] = useState("");
   const [isLogging, setIsLogging] = useState(false);
   const [pulses, setPulses] = useState([]);
+  
+  // Resume Upload State
+  const [uploadStatus, setUploadStatus] = useState('idle'); // idle, uploading, success
+  const [fileName, setFileName] = useState('');
 
   const emojis = [
     { icon: "🌱", label: "Growing" },
@@ -33,6 +40,20 @@ export default function Hearth({ vault, onSync }) {
   };
 
   useEffect(() => { loadPulses(); }, []);
+
+  const handleResumeUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFileName(file.name);
+      setUploadStatus('uploading');
+      
+      // Simulate Mycelium Analysis for Ecosystem Alignment
+      setTimeout(() => {
+        setUploadStatus('success');
+        if (onResumeSync) onResumeSync(file);
+      }, 2500);
+    }
+  };
 
   const calculateStreak = () => {
     if (pulses.length === 0) return 0;
@@ -116,7 +137,6 @@ export default function Hearth({ vault, onSync }) {
             </div>
           </div>
 
-          {/* Stepper Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 relative">
             {['Discovery', 'Translation', 'Bridging', 'Launching'].map((step, i) => (
               <div key={step} className="flex flex-col items-center gap-3 md:gap-5 relative z-10">
@@ -135,6 +155,57 @@ export default function Hearth({ vault, onSync }) {
           
           {/* Left/Middle: Rootwork & Logbook */}
           <div className="col-span-12 lg:col-span-8 space-y-8 md:space-y-12">
+            
+            {/* NEW: Resume Upload Section (Alignment Engine) */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-4">
+                <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
+                <h3 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] flex items-center gap-3 italic text-teal-500 shrink-0">
+                  <Zap size={16} className="fill-teal-500/20" /> ALIGNMENT ENGINE
+                </h3>
+                <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
+              </div>
+
+              <Card className={`relative group overflow-hidden rounded-[2rem] border-2 border-dashed transition-all duration-500 ${uploadStatus === 'success' ? 'border-teal-500/50 bg-teal-500/5' : 'border-white/10 bg-[#251D2D] hover:border-teal-500/30'}`}>
+                <input 
+                  type="file" 
+                  onChange={handleResumeUpload}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  accept=".pdf,.doc,.docx"
+                />
+                <div className="p-8 md:p-12 flex flex-col items-center text-center">
+                  {uploadStatus === 'idle' && (
+                    <>
+                      <div className="w-16 h-16 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-400 mb-6 group-hover:scale-110 transition-transform">
+                        <Upload size={24} />
+                      </div>
+                      <h3 className="text-white font-serif italic text-lg mb-2">Upload Your Resume</h3>
+                      <p className="text-[10px] text-slate-500 uppercase tracking-widest leading-relaxed max-w-sm">
+                        Connect your professional history to the Mycelium Network for Ecosystem Mapping
+                      </p>
+                    </>
+                  )}
+                  {uploadStatus === 'uploading' && (
+                    <>
+                      <Loader2 className="w-12 h-12 text-teal-500 animate-spin mb-6" />
+                      <h3 className="text-white font-serif italic text-lg mb-2">Analyzing Mycelium...</h3>
+                      <p className="text-[10px] text-teal-500 animate-pulse uppercase tracking-widest">Scanning professional foundations</p>
+                    </>
+                  )}
+                  {uploadStatus === 'success' && (
+                    <>
+                      <CheckCircle2 className="w-12 h-12 text-teal-400 mb-6" />
+                      <h3 className="text-white font-serif italic text-lg mb-1">Ecosystem Synced</h3>
+                      <p className="text-[10px] text-teal-500 font-black mb-4 uppercase tracking-tighter">{fileName}</p>
+                      <button onClick={() => setUploadStatus('idle')} className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors relative z-20">
+                        <RefreshCw size={12} /> Re-Sync Document
+                      </button>
+                    </>
+                  )}
+                </div>
+              </Card>
+            </div>
+
             <div className="flex items-center gap-4">
                <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
                <h3 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] flex items-center gap-3 italic text-teal-500 shrink-0">
@@ -185,11 +256,6 @@ export default function Hearth({ vault, onSync }) {
                     >
                       {isLogging ? "Logging..." : hasLoggedToday ? "Hearth is Resting" : "Log the Pulse"}
                     </Button>
-                    {hasLoggedToday && (
-                      <p className="text-[9px] text-center text-slate-600 italic animate-pulse">
-                        Your pulse is recorded. Return tomorrow.
-                      </p>
-                    )}
                   </div>
                 </div>
               </Card>
@@ -229,10 +295,8 @@ export default function Hearth({ vault, onSync }) {
             </div>
           </div>
 
-          {/* Right Sidebar: Stats & Info (Stacks below on mobile) */}
+          {/* Right Sidebar */}
           <div className="col-span-12 lg:col-span-4 space-y-6 md:space-y-8">
-            
-            {/* Maturity Card */}
             <Card className="bg-[#1C1622]/40 border-white/5 p-8 md:p-10 space-y-6 md:space-y-8 rounded-[2rem]">
               <div className="flex items-center justify-between text-slate-600">
                 <div className="flex items-center gap-3">
@@ -245,10 +309,7 @@ export default function Hearth({ vault, onSync }) {
                 Feed the hearth <span className="text-white font-bold underline decoration-teal-500/50">{Math.max(0, 14 - pulseCount)} more times</span> to unlock the Nexus Reveal.
               </p>
               <div className="h-2.5 md:h-3 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                <div 
-                  className="h-full bg-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.4)] transition-all duration-1000" 
-                  style={{ width: `${Math.min(100, (pulseCount / 14) * 100)}%` }}
-                />
+                <div className="h-full bg-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.4)] transition-all duration-1000" style={{ width: `${Math.min(100, (pulseCount / 14) * 100)}%` }} />
               </div>
             </Card>
 
@@ -272,7 +333,7 @@ export default function Hearth({ vault, onSync }) {
               </Card>
             )}
 
-            {/* Nexus Unlock Button/Placeholder */}
+            {/* Nexus Button */}
             {isUnlocked ? (
               <Card className="bg-teal-500 p-1 rounded-[2rem] shadow-[0_0_40px_rgba(20,184,166,0.3)]">
                 <Button className="w-full bg-[#1C1622] hover:bg-black text-white h-20 md:h-24 rounded-[1.8rem] flex flex-col items-center justify-center gap-1 border-none">
@@ -292,7 +353,6 @@ export default function Hearth({ vault, onSync }) {
               </Card>
             )}
 
-            {/* Reciprocity Footer */}
             <Card className="bg-transparent border-2 border-dashed border-white/5 p-8 md:p-10 space-y-4 md:space-y-6 rounded-[2rem] opacity-50 text-center">
               <div className="flex items-center justify-center gap-3 text-white">
                 <Heart size={14} className="text-teal-500 fill-teal-500" />
