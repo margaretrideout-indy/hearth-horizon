@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Flame, Compass, ArrowRight, Heart, Sun, MessageSquare, Lock, Infinity, Sparkles } from 'lucide-react';
+import { Flame, Compass, ArrowRight, Heart, MessageSquare, Lock, Sparkles, Zap, barChart as ChartIcon } from 'lucide-react';
 
 export default function Hearth({ vault, onSync }) {
   const [selectedEmoji, setSelectedEmoji] = useState(null);
@@ -23,49 +23,42 @@ export default function Hearth({ vault, onSync }) {
     try {
       if (window.base44?.entities?.RootwerkLog) {
         const history = await window.base44.entities.RootwerkLog.list();
-        if (history && history.length > 0) {
-          const sorted = [...history].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-          setPulses(sorted);
+        if (history) {
+          setPulses([...history].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
         }
       }
     } catch (err) {
-      console.error("Fetch error:", err);
+      console.error(err);
     }
   };
 
-  useEffect(() => {
-    loadPulses();
-  }, []);
+  useEffect(() => { loadPulses(); }, []);
 
   const handleLogPulse = async () => {
     if (!selectedEmoji && !reflection) return;
     setIsLogging(true);
-
-    const newPulse = {
-      emoji: selectedEmoji || "Pulse",
-      reflection: reflection,
-      timestamp: new Date().toISOString()
-    };
-
+    const newPulse = { emoji: selectedEmoji || "Pulse", reflection, timestamp: new Date().toISOString() };
     setPulses(prev => [newPulse, ...prev]);
-
     try {
       if (window.base44?.entities?.RootwerkLog) {
         await window.base44.entities.RootwerkLog.create(newPulse);
       }
-      
       setSelectedEmoji(null);
       setReflection("");
       if (onSync) onSync();
     } catch (error) {
-      console.error("Save error:", error);
+      console.error(error);
     } finally {
       setIsLogging(false);
     }
   };
 
+  const pulseCount = pulses.length;
+  const showPreview = pulseCount >= 3;
+  const isUnlocked = pulseCount >= 14;
+
   return (
-    <div className="min-h-screen bg-[#0F0A15] text-white font-sans selection:bg-teal-500/30">
+    <div className="min-h-screen bg-[#0F0A15] text-white font-sans selection:bg-teal-500/30 pb-20">
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-20">
         
         <Card className="bg-[#1C1622]/40 border-white/10 p-6 md:p-10 mb-12 rounded-[2.5rem] shadow-2xl relative">
@@ -76,9 +69,7 @@ export default function Hearth({ vault, onSync }) {
               </div>
               <div>
                 <p className="text-[10px] font-black uppercase text-teal-500/50 tracking-[0.4em] mb-1">INTENTIONAL PATH</p>
-                <h2 className="text-3xl font-serif italic tracking-tight">
-                  Professional Transition
-                </h2>
+                <h2 className="text-3xl font-serif italic tracking-tight">Professional Transition</h2>
               </div>
             </div>
             <div className="px-5 py-2.5 bg-white/5 border border-white/10 rounded-full flex items-center gap-3 text-slate-400 text-[10px] font-black uppercase tracking-widest">
@@ -92,9 +83,7 @@ export default function Hearth({ vault, onSync }) {
                 <div className={`w-16 h-16 rounded-full border-2 flex items-center justify-center transition-all duration-700 ${i === 0 ? 'border-teal-500 bg-teal-500/20 text-teal-400 shadow-[0_0_30px_rgba(20,184,166,0.2)]' : 'border-white/5 bg-white/5 text-slate-800'}`}>
                   {i === 0 ? <Compass size={28} /> : <Lock size={22} />}
                 </div>
-                <div className="text-center">
-                  <p className={`text-[11px] font-black uppercase tracking-[0.2em] ${i === 0 ? 'text-white' : 'text-slate-800'}`}>{step}</p>
-                </div>
+                <p className={`text-[11px] font-black uppercase tracking-[0.2em] ${i === 0 ? 'text-white' : 'text-slate-800'}`}>{step}</p>
               </div>
             ))}
             <div className="hidden md:block absolute top-8 left-0 w-full h-[1px] bg-gradient-to-r from-teal-500/50 via-white/5 to-white/5 -z-0" />
@@ -176,20 +165,61 @@ export default function Hearth({ vault, onSync }) {
 
           <div className="col-span-12 lg:col-span-4 space-y-8">
             <Card className="bg-[#1C1622]/40 border-white/5 p-10 space-y-8 rounded-[2rem]">
-              <div className="flex items-center gap-3 text-slate-600">
-                <Lock size={14} />
-                <p className="text-[10px] font-black uppercase tracking-[0.3em]">MATURITY</p>
+              <div className="flex items-center justify-between text-slate-600">
+                <div className="flex items-center gap-3">
+                  <Lock size={14} />
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em]">MATURITY</p>
+                </div>
+                <span className="text-[10px] font-black text-teal-500">{Math.min(100, Math.round((pulseCount / 14) * 100))}%</span>
               </div>
               <p className="text-xs text-slate-500 leading-relaxed italic">
-                Feed the hearth <span className="text-white font-bold underline decoration-teal-500/50">{Math.max(0, 14 - pulses.length)} more times</span>.
+                Feed the hearth <span className="text-white font-bold underline decoration-teal-500/50">{Math.max(0, 14 - pulseCount)} more times</span> to unlock the Nexus Reveal.
               </p>
               <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
                 <div 
-                  className="h-full bg-teal-500 transition-all duration-1000" 
-                  style={{ width: `${Math.min(100, (pulses.length / 14) * 100)}%` }}
+                  className="h-full bg-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.4)] transition-all duration-1000" 
+                  style={{ width: `${Math.min(100, (pulseCount / 14) * 100)}%` }}
                 />
               </div>
             </Card>
+
+            {showPreview && !isUnlocked && (
+              <Card className="bg-gradient-to-br from-teal-500/10 to-transparent border-teal-500/20 p-8 rounded-[2rem] animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                <div className="flex items-center gap-3 mb-6">
+                  <Zap size={16} className="text-teal-400 fill-teal-400" />
+                  <p className="text-[10px] font-black uppercase text-teal-400 tracking-[0.3em]">Translation Preview</p>
+                </div>
+                <div className="space-y-4">
+                  <div className="p-4 bg-black/20 rounded-xl border border-white/5">
+                    <p className="text-[9px] text-slate-500 uppercase mb-2 font-bold tracking-tighter">Classroom Management</p>
+                    <p className="text-xs text-white italic">→ Operations & Logistics</p>
+                  </div>
+                  <div className="p-4 bg-black/20 rounded-xl border border-white/5">
+                    <p className="text-[9px] text-slate-500 uppercase mb-2 font-bold tracking-tighter">Curriculum Design</p>
+                    <p className="text-xs text-white italic">→ Program Architecture</p>
+                  </div>
+                </div>
+              </Card>
+            )}
+
+            {isUnlocked ? (
+              <Card className="bg-teal-500 p-1 rounded-[2rem] shadow-[0_0_40px_rgba(20,184,166,0.3)]">
+                <Button className="w-full bg-[#1C1622] hover:bg-black text-white h-24 rounded-[1.8rem] flex flex-col items-center justify-center gap-1 border-none">
+                  <Sparkles size={20} className="text-teal-400 mb-1" />
+                  <span className="text-[11px] font-black uppercase tracking-[0.2em]">REVEAL THE NEXUS</span>
+                </Button>
+              </Card>
+            ) : (
+              <Card className="bg-[#1C1622]/20 border border-white/5 p-10 space-y-6 rounded-[2rem] text-center grayscale opacity-40">
+                <div className="flex items-center justify-center gap-3 text-slate-500">
+                  <ChartIcon size={18} />
+                  <p className="text-[10px] font-black uppercase tracking-[0.4em]">NEXUS MAP</p>
+                </div>
+                <p className="text-[10px] text-slate-600 italic leading-relaxed">
+                  A high-fidelity visualization of your professional sentiment and keyword translation.
+                </p>
+              </Card>
+            )}
 
             <Card className="bg-transparent border-2 border-dashed border-white/5 p-10 space-y-6 rounded-[2rem] opacity-50 text-center">
               <div className="flex items-center justify-center gap-3 text-white">
