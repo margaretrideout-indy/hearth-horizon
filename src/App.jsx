@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
+// Components & Layout
+import AppLayout from './components/layout/AppLayout';
 import YourHearth from './pages/YourHearth';
 import CulturalFit from './pages/CulturalFit';
 import Canopy from './pages/Canopy';
@@ -107,20 +109,44 @@ function AppRoutes() {
     <div className="min-h-screen bg-[#0F0A15] text-white selection:bg-teal-500/30 font-sans">
       <Routes>
         <Route path="/admin" element={<AdminDashboard vault={sanctuaryState} onSync={forceSync} />} />
+        
+        {/* GROVE/LANDING: No Layout wrapping here, so no Nav appears */}
         <Route path="/" element={<GroveRoute><GroveTiers vault={sanctuaryState} onSync={forceSync} /></GroveRoute>} />
         <Route path="/grove" element={<GroveRoute><GroveTiers vault={sanctuaryState} onSync={forceSync} /></GroveRoute>} />
+        
+        {/* APP JOURNEY: Everything inside AppLayout will show the new Nav */}
         <Route path="/hearth" element={
           <ProtectedRoute>
-            <YourHearth 
-              vault={sanctuaryState} 
-              onSync={forceSync} 
-              onResumeSync={handleResumeSync} 
-            />
+            <AppLayout currentTier={sanctuaryState.tier}>
+              <YourHearth vault={sanctuaryState} onSync={forceSync} onResumeSync={handleResumeSync} />
+            </AppLayout>
           </ProtectedRoute>
         } />
-        <Route path="/alignment" element={<ProtectedRoute><CulturalFit vault={sanctuaryState} onSync={forceSync} /></ProtectedRoute>} />
-        <Route path="/canopy" element={<ProtectedRoute><Canopy vault={sanctuaryState} onSync={forceSync} /></ProtectedRoute>} />
-        <Route path="/library" element={<ProtectedRoute><Library vault={sanctuaryState} /></ProtectedRoute>} />
+        
+        <Route path="/alignment" element={
+          <ProtectedRoute>
+            <AppLayout currentTier={sanctuaryState.tier}>
+              <CulturalFit vault={sanctuaryState} onSync={forceSync} />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/canopy" element={
+          <ProtectedRoute>
+            <AppLayout currentTier={sanctuaryState.tier}>
+              <Canopy vault={sanctuaryState} onSync={forceSync} />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/library" element={
+          <ProtectedRoute>
+            <AppLayout currentTier={sanctuaryState.tier}>
+              <Library vault={sanctuaryState} />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
