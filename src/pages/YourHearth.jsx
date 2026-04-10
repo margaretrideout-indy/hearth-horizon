@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Flame, Compass, ArrowRight, Heart, MessageSquare, Lock, Sparkles, Zap, BarChart, Clock } from 'lucide-react';
+import { Flame, Compass, Heart, MessageSquare, Lock, Sparkles, Zap, BarChart, Clock } from 'lucide-react';
 
 export default function Hearth({ vault, onSync }) {
   const [selectedEmoji, setSelectedEmoji] = useState(null);
@@ -61,7 +61,9 @@ export default function Hearth({ vault, onSync }) {
       reflection, 
       timestamp: new Date().toISOString() 
     };
+    
     setPulses(prev => [newPulse, ...prev]);
+
     try {
       if (window.base44?.entities?.RootwerkLog) {
         await window.base44.entities.RootwerkLog.create(newPulse);
@@ -80,6 +82,9 @@ export default function Hearth({ vault, onSync }) {
   const pulseCount = pulses.length;
   const showPreview = pulseCount >= 3;
   const isUnlocked = pulseCount >= 14;
+  const hasLoggedToday = pulses.some(p => 
+    new Date(p.timestamp).toDateString() === new Date().toDateString()
+  );
 
   return (
     <div className="min-h-screen bg-[#0F0A15] text-white font-sans selection:bg-teal-500/30 pb-20">
@@ -140,8 +145,9 @@ export default function Hearth({ vault, onSync }) {
                     {emojis.map((e) => (
                       <button 
                         key={e.label}
+                        disabled={hasLoggedToday}
                         onClick={() => setSelectedEmoji(e.label === selectedEmoji ? null : e.label)}
-                        className={`aspect-square flex flex-col items-center justify-center rounded-2xl border transition-all duration-300 ${selectedEmoji === e.label ? 'bg-teal-500/20 border-teal-500 text-2xl scale-110' : 'bg-white/5 border-white/5 grayscale hover:grayscale-0 hover:bg-white/10'}`}
+                        className={`aspect-square flex flex-col items-center justify-center rounded-2xl border transition-all duration-300 ${selectedEmoji === e.label ? 'bg-teal-500/20 border-teal-500 text-2xl scale-110' : 'bg-white/5 border-white/5 grayscale hover:grayscale-0 hover:bg-white/10'} ${hasLoggedToday ? 'opacity-20 cursor-not-allowed' : ''}`}
                       >
                         <span>{e.icon}</span>
                       </button>
@@ -151,9 +157,10 @@ export default function Hearth({ vault, onSync }) {
 
                 <div className="space-y-6">
                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">2. DAILY REFLECTION</p>
-                  <div className="bg-black/20 rounded-[1.5rem] p-6 min-h-[120px] border border-white/5 focus-within:border-teal-500/30 transition-all">
+                  <div className={`bg-black/20 rounded-[1.5rem] p-6 min-h-[120px] border border-white/5 transition-all ${hasLoggedToday ? 'opacity-50' : 'focus-within:border-teal-500/30'}`}>
                     <Textarea 
-                      placeholder="What felt resonant today?"
+                      placeholder={hasLoggedToday ? "Resting..." : "What felt resonant today?"}
+                      disabled={hasLoggedToday}
                       className="bg-transparent border-none p-0 focus-visible:ring-0 text-sm text-white italic resize-none leading-relaxed placeholder:text-slate-700"
                       value={reflection}
                       onChange={(e) => setReflection(e.target.value)}
@@ -161,11 +168,20 @@ export default function Hearth({ vault, onSync }) {
                   </div>
                   <Button 
                     onClick={handleLogPulse}
-                    disabled={isLogging || (!selectedEmoji && !reflection)}
-                    className="w-full bg-teal-500 hover:bg-teal-400 text-black text-[11px] font-black uppercase tracking-[0.2em] h-16 rounded-2xl transition-all disabled:opacity-30"
+                    disabled={isLogging || hasLoggedToday || (!selectedEmoji && !reflection)}
+                    className={`w-full text-[11px] font-black uppercase tracking-[0.2em] h-16 rounded-2xl transition-all ${
+                      hasLoggedToday 
+                        ? "bg-white/5 text-slate-600 border border-white/10 cursor-not-allowed" 
+                        : "bg-teal-500 hover:bg-teal-400 text-black shadow-lg shadow-teal-500/20"
+                    }`}
                   >
-                    {isLogging ? "Logging..." : "Log the Pulse"}
+                    {isLogging ? "Logging..." : hasLoggedToday ? "Hearth is Resting" : "Log the Pulse"}
                   </Button>
+                  {hasLoggedToday && (
+                    <p className="text-[9px] text-center text-slate-600 italic animate-pulse">
+                      Your pulse is recorded. Return tomorrow to continue the journey.
+                    </p>
+                  )}
                 </div>
               </Card>
 
