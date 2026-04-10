@@ -72,7 +72,6 @@ function GroveRoute({ children }) {
     );
   }
 
-  if (user) return <Navigate to="/hearth" replace />;
   return children;
 }
 
@@ -82,7 +81,7 @@ function AppRoutes() {
     return saved ? JSON.parse(saved) : {
       name: "Traveler",
       tier: "Free",
-      journey: "Classroom to New Horizon",
+      journey: "Professional Transition",
       isAligned: false,
       pulses: [],
     };
