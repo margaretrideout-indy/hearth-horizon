@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Flame, Wind, Zap, Lock, 
   TrendingUp, MessagesSquare, Compass, Check, Leaf, Mountain, Heart 
@@ -10,11 +11,21 @@ const LINK_STEWARD = 'https://buy.stripe.com/aFafZhfG8aebdqI4hIdAk04';
 const LINK_DONATION = 'https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02';
 
 const GroveTiers = ({ vault, onSync }) => {
+  const navigate = useNavigate();
   const hasSession = vault?.isAligned || !!localStorage.getItem('base44_auth_session');
+
+  const handleMemberLogin = async () => {
+    try {
+      await base44.auth.login();
+      navigate('/hearth');
+    } catch (error) {
+      console.error("Login flow interrupted", error);
+    }
+  };
 
   const handleSeedling = () => {
     if (hasSession) {
-      window.location.href = '/hearth';
+      navigate('/hearth');
     } else {
       base44.auth.redirectToLogin('/hearth');
     }
@@ -22,7 +33,7 @@ const GroveTiers = ({ vault, onSync }) => {
 
   const handlePaid = (stripeUrl) => {
     if (hasSession) {
-      window.location.href = '/hearth';
+      navigate('/hearth');
     } else {
       window.location.href = stripeUrl;
     }
@@ -84,7 +95,21 @@ const GroveTiers = ({ vault, onSync }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0F0A15] text-slate-300 font-sans selection:bg-teal-500/30">
+    <div className="relative min-h-screen bg-[#0F0A15] text-slate-300 font-sans selection:bg-teal-500/30">
+      
+      {/* MEMBER LOGIN LINK */}
+      <div className="absolute top-8 right-8 z-10">
+        <button 
+          onClick={handleMemberLogin}
+          className="group flex items-center gap-2 text-slate-500 hover:text-teal-400 transition-all duration-300"
+        >
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] hidden sm:inline">Already a member?</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] px-4 py-1.5 border border-white/10 rounded-full group-hover:border-teal-500/50 group-hover:bg-teal-500/5 transition-all">
+            Log In
+          </span>
+        </button>
+      </div>
+
       <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-12 lg:px-20 py-12 md:py-24">
         
         <header className="mb-20 md:mb-32 text-center">
