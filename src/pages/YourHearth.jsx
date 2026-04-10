@@ -23,11 +23,13 @@ export default function Hearth({ vault, onSync }) {
     try {
       if (window.base44?.entities?.RootwerkLog) {
         const history = await window.base44.entities.RootwerkLog.list();
-        const sorted = (history || []).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        setPulses(sorted);
+        if (history && history.length > 0) {
+          const sorted = [...history].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+          setPulses(sorted);
+        }
       }
     } catch (err) {
-      console.error("Failed to load pulses:", err);
+      console.error("Fetch error:", err);
     }
   };
 
@@ -39,35 +41,34 @@ export default function Hearth({ vault, onSync }) {
     if (!selectedEmoji && !reflection) return;
     setIsLogging(true);
 
+    const newPulse = {
+      emoji: selectedEmoji || "Pulse",
+      reflection: reflection,
+      timestamp: new Date().toISOString()
+    };
+
+    setPulses(prev => [newPulse, ...prev]);
+
     try {
       if (window.base44?.entities?.RootwerkLog) {
-        await window.base44.entities.RootwerkLog.create({
-          emoji: selectedEmoji || "Pulse",
-          reflection: reflection,
-          timestamp: new Date().toISOString()
-        });
-        
-        setSelectedEmoji(null);
-        setReflection("");
-        await loadPulses();
-        if (onSync) onSync();
-      } else {
-        console.warn("RootwerkLog entity not found in base44");
+        await window.base44.entities.RootwerkLog.create(newPulse);
       }
+      
+      setSelectedEmoji(null);
+      setReflection("");
+      if (onSync) onSync();
     } catch (error) {
-      console.error("Logging error:", error);
+      console.error("Save error:", error);
     } finally {
       setIsLogging(false);
     }
   };
 
-  const isSeedling = vault?.tier === "Seedling" || vault?.tier === "Free" || !vault?.tier;
-
   return (
     <div className="min-h-screen bg-[#0F0A15] text-white font-sans selection:bg-teal-500/30">
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-20">
         
-        <Card className="bg-[#1C1622]/40 border-white/10 p-6 md:p-10 mb-12 rounded-[2.5rem] shadow-2xl overflow-hidden relative">
+        <Card className="bg-[#1C1622]/40 border-white/10 p-6 md:p-10 mb-12 rounded-[2.5rem] shadow-2xl relative">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 relative z-10">
             <div className="flex gap-6 items-center">
               <div className="p-4 bg-teal-500/10 rounded-2xl border border-teal-500/20">
@@ -76,7 +77,7 @@ export default function Hearth({ vault, onSync }) {
               <div>
                 <p className="text-[10px] font-black uppercase text-teal-500/50 tracking-[0.4em] mb-1">INTENTIONAL PATH</p>
                 <h2 className="text-3xl font-serif italic tracking-tight">
-                  {(!vault?.journey || vault?.journey === "Classroom to New Horizon") ? "Professional Transition" : vault.journey}
+                  Professional Transition
                 </h2>
               </div>
             </div>
@@ -93,7 +94,6 @@ export default function Hearth({ vault, onSync }) {
                 </div>
                 <div className="text-center">
                   <p className={`text-[11px] font-black uppercase tracking-[0.2em] ${i === 0 ? 'text-white' : 'text-slate-800'}`}>{step}</p>
-                  <p className="text-[9px] text-slate-600 italic mt-1.5">{i === 0 ? "Mapping Ecosystem" : "Awaiting"}</p>
                 </div>
               </div>
             ))}
@@ -102,26 +102,25 @@ export default function Hearth({ vault, onSync }) {
         </Card>
 
         <div className="grid grid-cols-12 gap-8 lg:gap-12">
-          
           <div className="col-span-12 lg:col-span-8 space-y-12">
             <div className="flex items-center gap-4">
                <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
                <h3 className="text-[11px] font-black uppercase tracking-[0.5em] flex items-center gap-3 italic text-teal-500">
-                <Flame size={18} className="fill-teal-500/20" /> The Rootwork
+                <Flame size={18} className="fill-teal-500/20" /> THE ROOTWORK
               </h3>
               <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-              <Card className="bg-[#251D2D] border-white/10 p-8 space-y-10 shadow-xl rounded-[2rem] relative">
+              <Card className="bg-[#251D2D] border-white/10 p-8 space-y-10 shadow-xl rounded-[2rem]">
                 <div className="space-y-6">
                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">1. THE EMOJI PULSE</p>
                   <div className="grid grid-cols-6 gap-3">
                     {emojis.map((e) => (
                       <button 
                         key={e.label}
-                        onClick={() => setSelectedEmoji(e.label)}
-                        className={`aspect-square flex flex-col items-center justify-center rounded-2xl border transition-all duration-300 ${selectedEmoji === e.label ? 'bg-teal-500/20 border-teal-500 text-2xl scale-110 shadow-xl shadow-teal-500/20' : 'bg-white/5 border-white/5 grayscale hover:grayscale-0 hover:bg-white/10'}`}
+                        onClick={() => setSelectedEmoji(e.label === selectedEmoji ? null : e.label)}
+                        className={`aspect-square flex flex-col items-center justify-center rounded-2xl border transition-all duration-300 ${selectedEmoji === e.label ? 'bg-teal-500/20 border-teal-500 text-2xl scale-110' : 'bg-white/5 border-white/5 grayscale hover:grayscale-0 hover:bg-white/10'}`}
                       >
                         <span>{e.icon}</span>
                       </button>
@@ -142,9 +141,9 @@ export default function Hearth({ vault, onSync }) {
                   <Button 
                     onClick={handleLogPulse}
                     disabled={isLogging || (!selectedEmoji && !reflection)}
-                    className="w-full bg-teal-500 hover:bg-teal-400 text-black text-[11px] font-black uppercase tracking-[0.2em] h-16 rounded-2xl shadow-xl shadow-teal-500/10 transition-all disabled:opacity-30"
+                    className="w-full bg-teal-500 hover:bg-teal-400 text-black text-[11px] font-black uppercase tracking-[0.2em] h-16 rounded-2xl transition-all disabled:opacity-30"
                   >
-                    {isLogging ? "Logging..." : <><Sparkles size={16} className="mr-2" /> Log the Pulse</>}
+                    {isLogging ? "Logging..." : "Log the Pulse"}
                   </Button>
                 </div>
               </Card>
@@ -152,17 +151,17 @@ export default function Hearth({ vault, onSync }) {
               <div className="space-y-6">
                 <div className="flex items-center gap-3 px-2 text-slate-600">
                   <MessageSquare size={16} />
-                  <p className="text-[10px] font-black uppercase tracking-[0.3em]">Logbook</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em]">LOGBOOK</p>
                 </div>
                 <div className="space-y-5 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
-                  {pulses && pulses.length > 0 ? pulses.map((entry, i) => (
+                  {pulses.length > 0 ? pulses.map((entry, i) => (
                     <Card key={i} className="p-6 bg-[#1C1622]/60 border border-white/5 rounded-2xl">
                       <div className="flex justify-between items-center mb-4">
                         <span className="text-[10px] font-bold text-slate-600 uppercase">
-                          {entry.timestamp ? new Date(entry.timestamp).toLocaleDateString() : 'Recent'}
+                          {new Date(entry.timestamp).toLocaleDateString()}
                         </span>
                         <span className="px-3 py-1 rounded-full bg-teal-500/10 text-teal-400 text-[9px] font-black uppercase italic border border-teal-500/20">
-                          {entry.emoji || "Pulse"}
+                          {entry.emoji}
                         </span>
                       </div>
                       <p className="text-xs text-slate-400 leading-relaxed italic">"{entry.reflection}"</p>
@@ -179,7 +178,7 @@ export default function Hearth({ vault, onSync }) {
             <Card className="bg-[#1C1622]/40 border-white/5 p-10 space-y-8 rounded-[2rem]">
               <div className="flex items-center gap-3 text-slate-600">
                 <Lock size={14} />
-                <p className="text-[10px] font-black uppercase tracking-[0.3em]">Maturity</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em]">MATURITY</p>
               </div>
               <p className="text-xs text-slate-500 leading-relaxed italic">
                 Feed the hearth <span className="text-white font-bold underline decoration-teal-500/50">{Math.max(0, 14 - pulses.length)} more times</span>.
