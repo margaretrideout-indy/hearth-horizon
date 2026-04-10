@@ -12,9 +12,7 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
   const [reflection, setReflection] = useState("");
   const [isLogging, setIsLogging] = useState(false);
   const [pulses, setPulses] = useState([]);
-  
-  // Resume Upload State
-  const [uploadStatus, setUploadStatus] = useState('idle'); // idle, uploading, success
+  const [uploadStatus, setUploadStatus] = useState('idle');
   const [fileName, setFileName] = useState('');
 
   const emojis = [
@@ -46,8 +44,6 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
     if (file) {
       setFileName(file.name);
       setUploadStatus('uploading');
-      
-      // Simulate Mycelium Analysis for Ecosystem Alignment
       setTimeout(() => {
         setUploadStatus('success');
         if (onResumeSync) onResumeSync(file);
@@ -61,7 +57,6 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
     const uniqueDates = [...new Set(dates)];
     let streak = 0;
     let today = new Date();
-    
     for (let i = 0; i < uniqueDates.length; i++) {
       const checkDate = new Date();
       checkDate.setDate(today.getDate() - i);
@@ -82,9 +77,7 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
       reflection, 
       timestamp: new Date().toISOString() 
     };
-    
     setPulses(prev => [newPulse, ...prev]);
-
     try {
       if (window.base44?.entities?.RootwerkLog) {
         await window.base44.entities.RootwerkLog.create(newPulse);
@@ -111,7 +104,6 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
     <div className="min-h-screen bg-[#0F0A15] text-white font-sans selection:bg-teal-500/30 pb-12 md:pb-20">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-20">
         
-        {/* Header Section */}
         <Card className="bg-[#1C1622]/40 border-white/10 p-6 md:p-10 mb-8 md:mb-12 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl relative overflow-hidden">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 md:mb-12 gap-6 relative z-10">
             <div className="flex gap-4 md:gap-6 items-center">
@@ -123,7 +115,6 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
                 <h2 className="text-2xl md:text-3xl font-serif italic tracking-tight">Professional Transition</h2>
               </div>
             </div>
-            
             <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
                {streakCount > 0 && (
                 <div className="flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full">
@@ -132,31 +123,30 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
                 </div>
                )}
                <div className="px-4 py-2 bg-white/5 border border-white/10 rounded-full flex items-center gap-3 text-slate-400 text-[9px] md:text-[10px] font-black uppercase tracking-widest">
-                <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" /> Stage 1 of 4
+                <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" /> Stage 1 of 3
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 relative">
-            {['Discovery', 'Translation', 'Bridging', 'Launching'].map((step, i) => (
-              <div key={step} className="flex flex-col items-center gap-3 md:gap-5 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 relative">
+            {[
+              { label: 'Discovery', icon: <Compass size={20} className="md:w-7 md:h-7" /> },
+              { label: 'Translation', icon: <Lock size={18} /> },
+              { label: 'Launch', icon: <Lock size={18} /> }
+            ].map((step, i) => (
+              <div key={step.label} className="flex flex-col items-center gap-3 md:gap-5 relative z-10">
                 <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full border-2 flex items-center justify-center transition-all duration-700 ${i === 0 ? 'border-teal-500 bg-teal-500/20 text-teal-400 shadow-[0_0_30px_rgba(20,184,166,0.2)]' : 'border-white/5 bg-white/5 text-slate-800'}`}>
-                  {i === 0 ? <Compass size={20} className="md:w-7 md:h-7" /> : <Lock size={18} />}
+                  {step.icon}
                 </div>
-                <p className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] ${i === 0 ? 'text-white' : 'text-slate-800'}`}>{step}</p>
+                <p className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] ${i === 0 ? 'text-white' : 'text-slate-800'}`}>{step.label}</p>
               </div>
             ))}
             <div className="hidden md:block absolute top-8 left-0 w-full h-[1px] bg-gradient-to-r from-teal-500/50 via-white/5 to-white/5 -z-0" />
           </div>
         </Card>
 
-        {/* Main Content Grid */}
         <div className="grid grid-cols-12 gap-6 md:gap-8 lg:gap-12">
-          
-          {/* Left/Middle: Rootwork & Logbook */}
           <div className="col-span-12 lg:col-span-8 space-y-8 md:space-y-12">
-            
-            {/* NEW: Resume Upload Section (Alignment Engine) */}
             <div className="space-y-6">
               <div className="flex items-center gap-4">
                 <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
@@ -165,14 +155,8 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
                 </h3>
                 <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
               </div>
-
               <Card className={`relative group overflow-hidden rounded-[2rem] border-2 border-dashed transition-all duration-500 ${uploadStatus === 'success' ? 'border-teal-500/50 bg-teal-500/5' : 'border-white/10 bg-[#251D2D] hover:border-teal-500/30'}`}>
-                <input 
-                  type="file" 
-                  onChange={handleResumeUpload}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                  accept=".pdf,.doc,.docx"
-                />
+                <input type="file" onChange={handleResumeUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".pdf,.doc,.docx" />
                 <div className="p-8 md:p-12 flex flex-col items-center text-center">
                   {uploadStatus === 'idle' && (
                     <>
@@ -180,9 +164,7 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
                         <Upload size={24} />
                       </div>
                       <h3 className="text-white font-serif italic text-lg mb-2">Upload Your Resume</h3>
-                      <p className="text-[10px] text-slate-500 uppercase tracking-widest leading-relaxed max-w-sm">
-                        Connect your professional history to the Mycelium Network for Ecosystem Mapping
-                      </p>
+                      <p className="text-[10px] text-slate-500 uppercase tracking-widest leading-relaxed max-w-sm">Connect your professional history to the Mycelium Network for Ecosystem Mapping</p>
                     </>
                   )}
                   {uploadStatus === 'uploading' && (
@@ -215,7 +197,6 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-              {/* Logging Section */}
               <Card className="bg-[#251D2D] border-white/10 p-6 md:p-8 space-y-8 md:space-y-10 shadow-xl rounded-[2rem]">
                 <div className="space-y-4 md:space-y-6">
                   <p className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest">1. THE EMOJI PULSE</p>
@@ -232,7 +213,6 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
                     ))}
                   </div>
                 </div>
-
                 <div className="space-y-4 md:space-y-6">
                   <p className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest">2. DAILY REFLECTION</p>
                   <div className={`bg-black/20 rounded-[1.2rem] md:rounded-[1.5rem] p-5 md:p-6 min-h-[120px] border border-white/5 transition-all ${hasLoggedToday ? 'opacity-50' : 'focus-within:border-teal-500/30'}`}>
@@ -244,23 +224,16 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
                       onChange={(e) => setReflection(e.target.value)}
                     />
                   </div>
-                  <div className="space-y-3">
-                    <Button 
-                      onClick={handleLogPulse}
-                      disabled={isLogging || hasLoggedToday || (!selectedEmoji && !reflection)}
-                      className={`w-full text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] h-14 md:h-16 rounded-2xl transition-all ${
-                        hasLoggedToday 
-                          ? "bg-white/5 text-slate-600 border border-white/10 cursor-not-allowed" 
-                          : "bg-teal-500 hover:bg-teal-400 text-black shadow-lg shadow-teal-500/20"
-                      }`}
-                    >
-                      {isLogging ? "Logging..." : hasLoggedToday ? "Hearth is Resting" : "Log the Pulse"}
-                    </Button>
-                  </div>
+                  <Button 
+                    onClick={handleLogPulse}
+                    disabled={isLogging || hasLoggedToday || (!selectedEmoji && !reflection)}
+                    className={`w-full text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] h-14 md:h-16 rounded-2xl transition-all ${hasLoggedToday ? "bg-white/5 text-slate-600 border border-white/10" : "bg-teal-500 hover:bg-teal-400 text-black shadow-lg shadow-teal-500/20"}`}
+                  >
+                    {isLogging ? "Logging..." : hasLoggedToday ? "Hearth is Resting" : "Log the Pulse"}
+                  </Button>
                 </div>
               </Card>
 
-              {/* Logbook Section */}
               <div className="space-y-6">
                 <div className="flex items-center gap-3 px-2 text-slate-600">
                   <MessageSquare size={16} />
@@ -271,19 +244,13 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
                     <Card key={i} className="p-5 md:p-6 bg-[#1C1622]/60 border border-white/5 rounded-2xl">
                       <div className="flex justify-between items-start mb-4">
                         <div className="space-y-1">
-                          <span className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase block">
-                            {new Date(entry.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-                          </span>
+                          <span className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase block">{new Date(entry.timestamp).toLocaleDateString()}</span>
                           <div className="flex items-center gap-1.5 text-slate-600">
                              <Clock size={10} />
-                             <span className="text-[8px] md:text-[9px] font-medium uppercase tracking-tighter">
-                                {new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                             </span>
+                             <span className="text-[8px] md:text-[9px] font-medium uppercase">{new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                           </div>
                         </div>
-                        <span className="px-3 py-1 rounded-full bg-teal-500/10 text-teal-400 text-[8px] md:text-[9px] font-black uppercase italic border border-teal-500/20">
-                          {entry.emoji}
-                        </span>
+                        <span className="px-3 py-1 rounded-full bg-teal-500/10 text-teal-400 text-[8px] md:text-[9px] font-black uppercase italic border border-teal-500/20">{entry.emoji}</span>
                       </div>
                       <p className="text-xs text-slate-400 leading-relaxed italic">"{entry.reflection}"</p>
                     </Card>
@@ -295,72 +262,51 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
             </div>
           </div>
 
-          {/* Right Sidebar */}
           <div className="col-span-12 lg:col-span-4 space-y-6 md:space-y-8">
             <Card className="bg-[#1C1622]/40 border-white/5 p-8 md:p-10 space-y-6 md:space-y-8 rounded-[2rem]">
               <div className="flex items-center justify-between text-slate-600">
-                <div className="flex items-center gap-3">
-                  <Lock size={14} />
-                  <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em]">MATURITY</p>
-                </div>
+                <div className="flex items-center gap-3"><Lock size={14} /><p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em]">MATURITY</p></div>
                 <span className="text-[9px] md:text-[10px] font-black text-teal-500">{Math.min(100, Math.round((pulseCount / 14) * 100))}%</span>
               </div>
-              <p className="text-xs text-slate-500 leading-relaxed italic">
-                Feed the hearth <span className="text-white font-bold underline decoration-teal-500/50">{Math.max(0, 14 - pulseCount)} more times</span> to unlock the Nexus Reveal.
-              </p>
+              <p className="text-xs text-slate-500 leading-relaxed italic">Feed the hearth <span className="text-white font-bold underline decoration-teal-500/50">{Math.max(0, 14 - pulseCount)} more times</span> to unlock the Nexus Reveal.</p>
               <div className="h-2.5 md:h-3 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
                 <div className="h-full bg-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.4)] transition-all duration-1000" style={{ width: `${Math.min(100, (pulseCount / 14) * 100)}%` }} />
               </div>
             </Card>
 
-            {/* Translation Preview (Conditional) */}
             {showPreview && !isUnlocked && (
               <Card className="bg-gradient-to-br from-teal-500/10 to-transparent border-teal-500/20 p-6 md:p-8 rounded-[2rem] animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                <div className="flex items-center gap-3 mb-6">
-                  <Zap size={16} className="text-teal-400 fill-teal-400" />
-                  <p className="text-[9px] md:text-[10px] font-black uppercase text-teal-400 tracking-[0.3em]">Translation Preview</p>
-                </div>
+                <div className="flex items-center gap-3 mb-6"><Zap size={16} className="text-teal-400 fill-teal-400" /><p className="text-[9px] md:text-[10px] font-black uppercase text-teal-400 tracking-[0.3em]">Translation Preview</p></div>
                 <div className="space-y-3 md:space-y-4">
                   <div className="p-4 bg-black/20 rounded-xl border border-white/5">
-                    <p className="text-[8px] md:text-[9px] text-slate-500 uppercase mb-1 font-bold tracking-tighter">Classroom Management</p>
+                    <p className="text-[8px] md:text-[9px] text-slate-500 uppercase mb-1 font-bold">Classroom Management</p>
                     <p className="text-xs text-white italic">→ Operations & Logistics</p>
                   </div>
                   <div className="p-4 bg-black/20 rounded-xl border border-white/5">
-                    <p className="text-[8px] md:text-[9px] text-slate-500 uppercase mb-1 font-bold tracking-tighter">Curriculum Design</p>
+                    <p className="text-[8px] md:text-[9px] text-slate-500 uppercase mb-1 font-bold">Curriculum Design</p>
                     <p className="text-xs text-white italic">→ Program Architecture</p>
                   </div>
                 </div>
               </Card>
             )}
 
-            {/* Nexus Button */}
             {isUnlocked ? (
               <Card className="bg-teal-500 p-1 rounded-[2rem] shadow-[0_0_40px_rgba(20,184,166,0.3)]">
-                <Button className="w-full bg-[#1C1622] hover:bg-black text-white h-20 md:h-24 rounded-[1.8rem] flex flex-col items-center justify-center gap-1 border-none">
+                <Button className="w-full bg-[#1C1622] hover:bg-black text-white h-20 md:h-24 rounded-[1.8rem] flex flex-col items-center justify-center gap-1">
                   <Sparkles size={18} className="text-teal-400 mb-1" />
                   <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em]">REVEAL THE NEXUS</span>
                 </Button>
               </Card>
             ) : (
               <Card className="bg-[#1C1622]/20 border border-white/5 p-8 md:p-10 space-y-5 md:space-y-6 rounded-[2rem] text-center grayscale opacity-40">
-                <div className="flex items-center justify-center gap-3 text-slate-500">
-                  <BarChart size={18} />
-                  <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em]">NEXUS MAP</p>
-                </div>
-                <p className="text-[9px] md:text-[10px] text-slate-600 italic leading-relaxed">
-                  A high-fidelity visualization of your professional sentiment and keyword translation.
-                </p>
+                <div className="flex items-center justify-center gap-3 text-slate-500"><BarChart size={18} /><p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em]">NEXUS MAP</p></div>
+                <p className="text-[9px] md:text-[10px] text-slate-600 italic leading-relaxed">A high-fidelity visualization of your professional sentiment and keyword translation.</p>
               </Card>
             )}
 
             <Card className="bg-transparent border-2 border-dashed border-white/5 p-8 md:p-10 space-y-4 md:space-y-6 rounded-[2rem] opacity-50 text-center">
-              <div className="flex items-center justify-center gap-3 text-white">
-                <Heart size={14} className="text-teal-500 fill-teal-500" />
-                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em]">RECIPROCITY</p>
-              </div>
-              <p className="text-[10px] md:text-[11px] text-slate-600 leading-relaxed italic">
-                One seat purchased sponsors a peer in professional transition.
-              </p>
+              <div className="flex items-center justify-center gap-3 text-white"><Heart size={14} className="text-teal-500 fill-teal-500" /><p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em]">RECIPROCITY</p></div>
+              <p className="text-[10px] md:text-[11px] text-slate-600 leading-relaxed italic">One seat purchased sponsors a peer in professional transition.</p>
             </Card>
           </div>
         </div>
