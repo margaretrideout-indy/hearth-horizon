@@ -38,7 +38,7 @@ export default function Hearth({ vault, onSync }) {
       setSelectedEmoji(null);
       setReflection("");
     } catch (error) {
-      console.error("Error logging pulse:", error);
+      console.error(error);
     } finally {
       setIsLogging(false);
     }
@@ -50,7 +50,6 @@ export default function Hearth({ vault, onSync }) {
     <div className="min-h-screen bg-[#0F0A15] text-white font-sans selection:bg-teal-500/30">
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-20">
         
-        {/* 1. TOP JOURNEY TRACKER */}
         <Card className="bg-[#1C1622]/40 border-white/10 p-6 md:p-10 mb-12 rounded-[2.5rem] shadow-2xl overflow-hidden relative">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 relative z-10">
             <div className="flex gap-6 items-center">
@@ -59,11 +58,13 @@ export default function Hearth({ vault, onSync }) {
               </div>
               <div>
                 <p className="text-[10px] font-black uppercase text-teal-500/50 tracking-[0.4em] mb-1">INTENTIONAL PATH</p>
-                <h2 className="text-3xl font-serif italic tracking-tight">{vault?.journey || "Professional Transition"}</h2>
+                <h2 className="text-3xl font-serif italic tracking-tight">
+                  {(!vault?.journey || vault?.journey === "Classroom to New Horizon") ? "Professional Transition" : vault.journey}
+                </h2>
               </div>
             </div>
             <div className="px-5 py-2.5 bg-white/5 border border-white/10 rounded-full flex items-center gap-3 text-slate-400 text-[10px] font-black uppercase tracking-widest">
-              <Sun size={14} className="text-orange-400" /> Stage 1 of 4
+              <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" /> Stage 1 of 4
             </div>
           </div>
 
@@ -85,7 +86,6 @@ export default function Hearth({ vault, onSync }) {
 
         <div className="grid grid-cols-12 gap-8 lg:gap-12">
           
-          {/* LEFT: THE ROOTWORK */}
           <div className="col-span-12 lg:col-span-8 space-y-12">
             <div className="flex items-center gap-4">
                <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
@@ -158,7 +158,6 @@ export default function Hearth({ vault, onSync }) {
             </div>
           </div>
 
-          {/* RIGHT SIDEBAR: CREDITS & RECOGNITION */}
           <div className="col-span-12 lg:col-span-4 space-y-8">
             {isSeedling ? (
               <Card className="bg-gradient-to-br from-[#1C1622] to-[#120D16] border-white/10 p-10 space-y-8 rounded-[2rem]">
