@@ -34,11 +34,14 @@ export default function Hearth({ vault, onSync }) {
           reflection: reflection,
           timestamp: new Date().toISOString()
         });
+        
+        setSelectedEmoji(null);
+        setReflection("");
+        if (onSync) onSync();
+        alert("Pulse logged to the Rootwork.");
       }
-      setSelectedEmoji(null);
-      setReflection("");
     } catch (error) {
-      console.error(error);
+      console.error("Logging failed:", error);
     } finally {
       setIsLogging(false);
     }
@@ -123,15 +126,15 @@ export default function Hearth({ vault, onSync }) {
                   <div className="bg-black/20 rounded-[1.5rem] p-6 min-h-[120px] border border-white/5 group focus-within:border-teal-500/30 transition-all">
                     <Textarea 
                       placeholder="What felt resonant in your transition today?"
-                      className="bg-transparent border-none p-0 focus-visible:ring-0 text-sm text-slate-300 italic resize-none leading-relaxed placeholder:text-slate-700"
+                      className="bg-transparent border-none p-0 focus-visible:ring-0 text-sm text-white italic resize-none leading-relaxed placeholder:text-slate-700"
                       value={reflection}
                       onChange={(e) => setReflection(e.target.value)}
                     />
                   </div>
                   <Button 
                     onClick={handleLogPulse}
-                    disabled={isLogging}
-                    className="w-full bg-teal-500 hover:bg-teal-400 text-black text-[11px] font-black uppercase tracking-[0.2em] h-16 rounded-2xl shadow-xl shadow-teal-500/10 transition-all"
+                    disabled={isLogging || (!selectedEmoji && !reflection)}
+                    className="w-full bg-teal-500 hover:bg-teal-400 text-black text-[11px] font-black uppercase tracking-[0.2em] h-16 rounded-2xl shadow-xl shadow-teal-500/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isLogging ? "Logging..." : <><Sparkles size={16} className="mr-2" /> Log the Pulse</>}
                   </Button>
