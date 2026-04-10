@@ -12,25 +12,37 @@ const ForestAdmin = () => {
     queryFn: () => window.base44.entities.User.list()
   });
 
-  // Pulling in the seat requests
+  // Pulling in the seat requests from the VoucherPool
   const { data: requests, isLoading: requestsLoading } = useQuery({
     queryKey: ['seat-requests'],
-    queryFn: () => window.base44.entities.SeatRequest.list()
+    queryFn: () => window.base44.entities.VoucherPool.list()
   });
 
-  // The "Grant Seat" magic logic (for pending requests)
+  // Functional Approval Logic
   const approveRequest = useMutation({
-    mutationFn: async ({ requestId, userId }) => {
-      await window.base44.entities.SeatRequest.update(requestId, { status: 'approved' });
-      return await window.base44.entities.User.update(userId, { subscription_tier: 'Hearthkeeper' });
+    mutationFn: async ({ requestId, email }) => {
+      // 1. Find the user by email
+      const user = dwellers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
+      if (!user) throw new Error("User record not found in database.");
+
+      // 2. Upgrade the user's tier
+      await window.base44.entities.User.update(user.id, { subscription_tier: 'Hearthkeeper' });
+      
+      // 3. Mark the request as claimed so it leaves the pending list
+      return await window.base44.entities.VoucherPool.update(requestId, { 
+        status: 'claimed',
+        claimed_date: new Date().toISOString()
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['seat-requests']);
       queryClient.invalidateQueries(['dwellers']);
-    }
+      alert("Seat granted and dweller upgraded.");
+    },
+    onError: (err) => alert(err.message)
   });
 
-  // NEW: Manual Email Grant Logic
+  // Manual Email Grant Logic
   const manualGrant = useMutation({
     mutationFn: async (email) => {
       const user = dwellers.find(u => u.email.toLowerCase() === email.toLowerCase());
@@ -55,18 +67,18 @@ const ForestAdmin = () => {
     );
   }
 
-  const pendingRequests = requests?.filter(r => r.status === 'pending') || [];
+  // Filter for requests that are still "available" (not yet claimed)
+  const pendingRequests = requests?.filter(r => r.status === 'available') || [];
 
   return (
     <div className="min-h-screen bg-[#1A1423] p-8 font-sans text-slate-200">
-      {/* Top Navigation Bar */}
+      
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
         <div>
           <div className="text-[10px] font-black text-teal-500 uppercase tracking-[0.3em] mb-2">System Oversight</div>
           <h1 className="text-5xl font-serif text-white tracking-tight">Forest Admin</h1>
         </div>
 
-        {/* Manual Grant Tool */}
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
           <div className="relative">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -88,7 +100,6 @@ const ForestAdmin = () => {
         </div>
       </div>
 
-      {/* Quick Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <StatCard title="Total Dwellers" value={dwellers?.length || 0} icon={<Users />} />
         <StatCard title="Seat Requests" value={pendingRequests.length} icon={<Mail />} />
@@ -96,16 +107,10 @@ const ForestAdmin = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Members Table */}
+        
         <div className="lg:col-span-2 bg-[#241B2E] border border-white/5 rounded-[2.5rem] p-10 shadow-xl">
           <div className="flex justify-between items-center mb-10">
             <h3 className="font-bold text-xl text-white">Recent Members</h3>
-            <div className="flex items-center gap-4">
-               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-600" />
-                <input type="text" placeholder="Search..." className="bg-black/20 border border-white/5 rounded-xl py-2 pl-9 pr-4 text-[10px] outline-none" />
-               </div>
-            </div>
           </div>
           
           <div className="overflow-x-auto">
@@ -118,7 +123,7 @@ const ForestAdmin = () => {
                 </tr>
               </thead>
               <tbody className="text-sm font-medium">
-                {dwellers?.slice(0, 8).map(dweller => (
+                {dwellers?.slice(0, 10).map(dweller => (
                   <tr key={dweller.id} className="border-b border-white/[0.02] hover:bg-white/[0.01] transition-colors group">
                     <td className="py-6 px-2 text-slate-300">{dweller.email}</td>
                     <td className="py-6 px-2">
@@ -142,11 +147,10 @@ const ForestAdmin = () => {
           </div>
         </div>
 
-        {/* Seat Requests Detail View */}
         <div className="bg-[#241B2E] border border-white/5 rounded-[2.5rem] p-10 shadow-xl flex flex-col">
           <div className="flex items-center gap-3 mb-10">
             <Clock className="w-4 h-4 text-purple-400" />
-            <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-white">Pending Intentions</h3>
+            <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-white">Pending Requests</h3>
             <span className="ml-auto bg-purple-500/20 text-purple-400 text-[10px] font-black px-2 py-0.5 rounded-full">
               {pendingRequests.length}
             </span>
@@ -155,18 +159,21 @@ const ForestAdmin = () => {
           <div className="space-y-6 overflow-y-auto max-h-[600px] pr-2 custom-scrollbar">
             {pendingRequests.map(request => (
               <div key={request.id} className="group p-6 bg-black/20 rounded-3xl border border-white/5 hover:border-teal-500/20 transition-all">
-                <div className="text-[10px] font-bold text-teal-500/60 mb-2 truncate">{request.userEmail}</div>
+                <div className="text-[10px] font-bold text-teal-500/60 mb-2 truncate">{request.claimed_by}</div>
                 <p className="text-xs italic font-light text-slate-400 leading-relaxed mb-6">
-                  "{request.intention}"
+                  {request.notes || "Requested a seat in the Sanctuary."}
                 </p>
                 <div className="flex gap-2">
                   <button 
-                    onClick={() => approveRequest.mutate({ requestId: request.id, userId: request.userId })}
+                    onClick={() => approveRequest.mutate({ requestId: request.id, email: request.claimed_by })}
                     className="flex-grow py-3 bg-teal-500/10 text-teal-400 rounded-xl hover:bg-teal-500 hover:text-[#1A1423] transition-all text-[10px] font-black uppercase tracking-widest"
                   >
                     Grant Seat
                   </button>
-                  <button className="px-4 py-3 bg-white/5 text-slate-500 rounded-xl hover:text-rose-500 transition-all">
+                  <button 
+                    onClick={() => window.base44.entities.VoucherPool.delete(request.id).then(() => queryClient.invalidateQueries(['seat-requests']))}
+                    className="px-4 py-3 bg-white/5 text-slate-500 rounded-xl hover:text-rose-500 transition-all"
+                  >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
@@ -174,7 +181,7 @@ const ForestAdmin = () => {
             ))}
             {pendingRequests.length === 0 && (
               <div className="text-center py-20 text-slate-600 italic text-sm font-light">
-                The clearing is quiet. <br/> No new intentions yet.
+                The clearing is quiet. <br/> No new requests yet.
               </div>
             )}
           </div>
