@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { 
   Flame, Compass, Heart, MessageSquare, Lock, Sparkles, 
-  Zap, BarChart, Clock, Upload, Loader2, CheckCircle2, RefreshCw 
+  Zap, BarChart, Clock, Upload, Loader2, CheckCircle2, RefreshCw, ArrowRight
 } from 'lucide-react';
 
-export default function Hearth({ vault, onSync, onResumeSync }) {
+export default function Hearth({ vault, onSync, onResumeSync, setActivePage }) {
   const [selectedEmoji, setSelectedEmoji] = useState(null);
   const [reflection, setReflection] = useState("");
   const [isLogging, setIsLogging] = useState(false);
@@ -130,15 +130,15 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 relative">
             {[
-              { label: 'Discovery', icon: <Compass size={20} className="md:w-7 md:h-7" /> },
-              { label: 'Translation', icon: <Lock size={18} /> },
-              { label: 'Launch', icon: <Lock size={18} /> }
+              { label: 'Discovery', icon: <Compass size={20} className="md:w-7 md:h-7" />, active: true },
+              { label: 'Alignment', icon: <Lock size={18} />, active: false },
+              { label: 'Launch', icon: <Lock size={18} />, active: false }
             ].map((step, i) => (
               <div key={step.label} className="flex flex-col items-center gap-3 md:gap-5 relative z-10">
-                <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full border-2 flex items-center justify-center transition-all duration-700 ${i === 0 ? 'border-teal-500 bg-teal-500/20 text-teal-400 shadow-[0_0_30px_rgba(20,184,166,0.2)]' : 'border-white/5 bg-white/5 text-slate-800'}`}>
+                <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full border-2 flex items-center justify-center transition-all duration-700 ${step.active ? 'border-teal-500 bg-teal-500/20 text-teal-400 shadow-[0_0_30px_rgba(20,184,166,0.2)]' : 'border-white/5 bg-white/5 text-slate-800'}`}>
                   {step.icon}
                 </div>
-                <p className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] ${i === 0 ? 'text-white' : 'text-slate-800'}`}>{step.label}</p>
+                <p className={`text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] ${step.active ? 'text-white' : 'text-slate-800'}`}>{step.label}</p>
               </div>
             ))}
             <div className="hidden md:block absolute top-8 left-0 w-full h-[1px] bg-gradient-to-r from-teal-500/50 via-white/5 to-white/5 -z-0" />
@@ -147,6 +147,7 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
 
         <div className="grid grid-cols-12 gap-6 md:gap-8 lg:gap-12">
           <div className="col-span-12 lg:col-span-8 space-y-8 md:space-y-12">
+            
             <div className="space-y-6">
               <div className="flex items-center gap-4">
                 <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
@@ -155,8 +156,11 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
                 </h3>
                 <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
               </div>
+              
               <Card className={`relative group overflow-hidden rounded-[2rem] border-2 border-dashed transition-all duration-500 ${uploadStatus === 'success' ? 'border-teal-500/50 bg-teal-500/5' : 'border-white/10 bg-[#251D2D] hover:border-teal-500/30'}`}>
-                <input type="file" onChange={handleResumeUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".pdf,.doc,.docx" />
+                {uploadStatus !== 'uploading' && uploadStatus !== 'success' && (
+                  <input type="file" onChange={handleResumeUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".pdf,.doc,.docx" />
+                )}
                 <div className="p-8 md:p-12 flex flex-col items-center text-center">
                   {uploadStatus === 'idle' && (
                     <>
@@ -167,6 +171,7 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
                       <p className="text-[10px] text-slate-500 uppercase tracking-widest leading-relaxed max-w-sm">Connect your professional history to the Mycelium Network for Ecosystem Mapping</p>
                     </>
                   )}
+                  
                   {uploadStatus === 'uploading' && (
                     <>
                       <Loader2 className="w-12 h-12 text-teal-500 animate-spin mb-6" />
@@ -174,21 +179,32 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
                       <p className="text-[10px] text-teal-500 animate-pulse uppercase tracking-widest">Scanning professional foundations</p>
                     </>
                   )}
+                  
                   {uploadStatus === 'success' && (
-                    <>
-                      <CheckCircle2 className="w-12 h-12 text-teal-400 mb-6" />
+                    <div className="animate-in fade-in zoom-in duration-500">
+                      <CheckCircle2 className="w-12 h-12 text-teal-400 mx-auto mb-6" />
                       <h3 className="text-white font-serif italic text-lg mb-1">Ecosystem Synced</h3>
-                      <p className="text-[10px] text-teal-500 font-black mb-4 uppercase tracking-tighter">{fileName}</p>
-                      <button onClick={() => setUploadStatus('idle')} className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors relative z-20">
-                        <RefreshCw size={12} /> Re-Sync Document
-                      </button>
-                    </>
+                      <p className="text-[10px] text-teal-500 font-black mb-8 uppercase tracking-tighter">{fileName}</p>
+                      
+                      <div className="flex flex-col items-center gap-4">
+                        <Button 
+                          onClick={() => setActivePage('alignment')}
+                          className="bg-teal-500 hover:bg-teal-400 text-black font-black uppercase tracking-[0.2em] text-[10px] h-14 px-10 rounded-2xl shadow-lg shadow-teal-500/20 group"
+                        >
+                          Begin Alignment <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                        
+                        <button onClick={() => setUploadStatus('idle')} className="flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-slate-600 hover:text-white transition-colors relative z-20">
+                          <RefreshCw size={12} /> Re-Sync Document
+                        </button>
+                      </div>
+                    </div>
                   )}
                 </div>
               </Card>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 mt-12">
                <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
                <h3 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] flex items-center gap-3 italic text-teal-500 shrink-0">
                 <Flame size={16} className="fill-teal-500/20" /> THE ROOTWORK
