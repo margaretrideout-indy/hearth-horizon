@@ -1,29 +1,26 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { 
-  Compass, Activity, Repeat, Zap, Binoculars, MessageSquare, Library, Layers, Lock 
+  Flame, Compass, MessageSquare, Library, Layers, Lock, Sparkles, MoveRight
 } from 'lucide-react';
 
 const AppLayout = ({ children, currentTier = "Seedling" }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   
-  // 1. Logic to hide the nav on the Grove/Landing page
   const isGrove = location.pathname === '/' || location.pathname === '/grove';
 
-  // 2. The Path Data (The 5)
-  const pathItems = [
-    { name: "The Grove", icon: <Compass size={14} />, tier: "Seedling" },
-    { name: "Your Hearth", icon: <Activity size={14} />, tier: "Seedling" },
-    { name: "The Bridge", icon: <Repeat size={14} />, tier: "Hearthkeeper" },
-    { name: "Ecosystem Alignment", icon: <Zap size={14} />, tier: "Steward" },
-    { name: "Horizon Scan", icon: <Binoculars size={14} />, tier: "Steward" },
+  // Group 1: Your Journey
+  const journeyItems = [
+    { name: "Your Hearth", path: "/hearth", icon: <Flame size={16} />, tier: "Seedling" },
+    { name: "Ecosystem Alignment", path: "/alignment", icon: <Compass size={16} />, tier: "Seedling" },
   ];
 
-  // 3. The Collective Data (The 3)
-  const collectiveItems = [
-    { name: "Embers Chat", icon: <MessageSquare size={14} />, tier: "Seedling" },
-    { name: "The Library", icon: <Library size={14} />, tier: "Seedling" },
-    { name: "The Canopy", icon: <Layers size={14} />, tier: "Seedling" },
+  // Group 2: Community
+  const communityItems = [
+    { name: "Embers Chat", path: "/embers", icon: <MessageSquare size={16} />, tier: "Seedling" },
+    { name: "The Canopy", path: "/canopy", icon: <Layers size={16} />, tier: "Seedling" },
+    { name: "The Library", path: "/library", icon: <Library size={16} />, tier: "Seedling" },
   ];
 
   const isLocked = (itemTier) => {
@@ -31,54 +28,60 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
     return weights[itemTier] > weights[currentTier];
   };
 
+  const NavItem = ({ item }) => {
+    const locked = isLocked(item.tier);
+    const isActive = location.pathname === item.path;
+
+    return (
+      <button
+        onClick={() => !locked && navigate(item.path)}
+        disabled={locked}
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-500 group whitespace-nowrap ${
+          locked ? 'opacity-20 cursor-not-allowed' : 'opacity-100 hover:bg-white/5'
+        } ${isActive ? 'bg-teal-500/10 border border-teal-500/20 text-teal-400' : 'text-slate-400'}`}
+      >
+        <span className={`${isActive ? 'text-teal-400' : 'text-slate-500 group-hover:text-teal-500'}`}>
+          {item.icon}
+        </span>
+        <span className="hidden sm:inline text-[9px] font-black uppercase tracking-[0.2em]">
+          {item.name}
+        </span>
+        {locked && <Lock size={10} className="text-slate-700 ml-1" />}
+      </button>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-[#0F0A15]">
+    <div className="min-h-screen bg-[#0F0A15] text-white selection:bg-teal-500/30 font-sans">
       
-      {/* THE TOP NAV - Only shows if NOT on The Grove */}
       {!isGrove && (
-        <nav className="flex items-center justify-center py-4 bg-[#0F0A15]/95 backdrop-blur-md border-b border-white/5 sticky top-0 z-50 px-6">
-          
-          {/* THE PATH GROUP */}
-          <div className="flex items-center gap-6">
-            <span className="text-[8px] font-black tracking-[0.3em] text-slate-600 uppercase mr-1">The Path</span>
-            {pathItems.map(item => {
-              const locked = isLocked(item.tier);
-              return (
-                <div key={item.name} className={`flex items-center gap-2 group cursor-pointer ${locked ? 'opacity-25' : 'opacity-100'}`}>
-                  <span className="text-slate-500 group-hover:text-[#39D7B8]">{item.icon}</span>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-white">
-                    {item.name}
-                  </span>
-                  {locked && <Lock size={10} className="text-slate-700" />}
-                </div>
-              );
-            })}
-          </div>
+        <nav className="fixed top-4 md:top-6 left-0 right-0 z-50 flex justify-center px-4">
+          <div className="flex items-center gap-2 md:gap-4 p-1.5 md:p-2 bg-[#1C1622]/90 backdrop-blur-2xl border border-white/10 rounded-2xl md:rounded-full shadow-2xl max-w-full overflow-x-auto no-scrollbar">
+            
+            {/* JOURNEY GROUP */}
+            <div className="flex items-center gap-1 pl-1 md:pl-2">
+              <div className="hidden lg:block pr-3 mr-2 border-r border-white/5">
+                <p className="text-[7px] font-black text-slate-600 uppercase tracking-[0.3em]">Your Journey</p>
+              </div>
+              {journeyItems.map(item => <NavItem key={item.path} item={item} />)}
+            </div>
 
-          {/* THE DIVIDER */}
-          <div className="h-4 w-[1px] bg-white/10 mx-10" />
+            {/* MYCELIUM NODE */}
+            <div className="w-1 h-1 rounded-full bg-teal-500/30 shrink-0 mx-1 animate-pulse" />
 
-          {/* THE COLLECTIVE GROUP */}
-          <div className="flex items-center gap-6">
-            <span className="text-[8px] font-black tracking-[0.3em] text-slate-600 uppercase mr-1">The Collective</span>
-            {collectiveItems.map(item => {
-              const locked = isLocked(item.tier);
-              return (
-                <div key={item.name} className={`flex items-center gap-2 group cursor-pointer ${locked ? 'opacity-25' : 'opacity-100'}`}>
-                  <span className="text-slate-500 group-hover:text-[#39D7B8]">{item.icon}</span>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-white">
-                    {item.name}
-                  </span>
-                  {locked && <Lock size={10} className="text-slate-700" />}
-                </div>
-              );
-            })}
+            {/* COMMUNITY GROUP */}
+            <div className="flex items-center gap-1 pr-1 md:pr-2">
+              <div className="hidden lg:block pr-3 mr-2 border-r border-white/5">
+                <p className="text-[7px] font-black text-slate-600 uppercase tracking-[0.3em]">Community</p>
+              </div>
+              {communityItems.map(item => <NavItem key={item.path} item={item} />)}
+            </div>
           </div>
         </nav>
       )}
 
       {/* PAGE CONTENT */}
-      <main className="w-full">
+      <main className={`w-full ${!isGrove ? "pt-24 md:pt-32" : ""}`}>
         {children}
       </main>
 
