@@ -14,13 +14,8 @@ const GroveTiers = ({ vault, onSync }) => {
   const navigate = useNavigate();
   const hasSession = vault?.isAligned || !!localStorage.getItem('base44_auth_session');
 
-  const handleMemberLogin = async () => {
-    try {
-      await base44.auth.login();
-      navigate('/hearth');
-    } catch (error) {
-      console.error("Login flow interrupted", error);
-    }
+  const handleMemberLogin = () => {
+    base44.auth.redirectToLogin('/hearth');
   };
 
   const handleSeedling = () => {
@@ -97,7 +92,6 @@ const GroveTiers = ({ vault, onSync }) => {
   return (
     <div className="relative min-h-screen bg-[#0F0A15] text-slate-300 font-sans selection:bg-teal-500/30">
       
-      {/* MEMBER LOGIN LINK */}
       <div className="absolute top-8 right-8 z-10">
         <button 
           onClick={handleMemberLogin}
