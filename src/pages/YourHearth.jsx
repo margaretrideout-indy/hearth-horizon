@@ -10,17 +10,6 @@ export default function Hearth({ vault, onSync }) {
   const [isLogging, setIsLogging] = useState(false);
   const [pulses, setPulses] = useState([]);
 
-  useEffect(() => {
-    loadPulses();
-  }, [vault]);
-
-  const loadPulses = async () => {
-    if (window.base44?.entities?.RootwerkLog) {
-      const history = await window.base44.entities.RootwerkLog.list();
-      setPulses(history.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
-    }
-  };
-
   const emojis = [
     { icon: "🌱", label: "Growing" },
     { icon: "🔥", label: "Ignited" },
@@ -30,6 +19,22 @@ export default function Hearth({ vault, onSync }) {
     { icon: "✨", label: "Inspired" }
   ];
 
+  const loadPulses = async () => {
+    try {
+      if (window.base44?.entities?.RootwerkLog) {
+        const history = await window.base44.entities.RootwerkLog.list();
+        const sorted = (history || []).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        setPulses(sorted);
+      }
+    } catch (err) {
+      console.error("Failed to load pulses:", err);
+    }
+  };
+
+  useEffect(() => {
+    loadPulses();
+  }, []);
+
   const handleLogPulse = async () => {
     if (!selectedEmoji && !reflection) return;
     setIsLogging(true);
@@ -37,7 +42,7 @@ export default function Hearth({ vault, onSync }) {
     try {
       if (window.base44?.entities?.RootwerkLog) {
         await window.base44.entities.RootwerkLog.create({
-          emoji: selectedEmoji,
+          emoji: selectedEmoji || "Pulse",
           reflection: reflection,
           timestamp: new Date().toISOString()
         });
@@ -46,9 +51,11 @@ export default function Hearth({ vault, onSync }) {
         setReflection("");
         await loadPulses();
         if (onSync) onSync();
+      } else {
+        console.warn("RootwerkLog entity not found in base44");
       }
     } catch (error) {
-      console.error(error);
+      console.error("Logging error:", error);
     } finally {
       setIsLogging(false);
     }
@@ -148,11 +155,11 @@ export default function Hearth({ vault, onSync }) {
                   <p className="text-[10px] font-black uppercase tracking-[0.3em]">Logbook</p>
                 </div>
                 <div className="space-y-5 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
-                  {pulses.length > 0 ? pulses.map((entry, i) => (
+                  {pulses && pulses.length > 0 ? pulses.map((entry, i) => (
                     <Card key={i} className="p-6 bg-[#1C1622]/60 border border-white/5 rounded-2xl">
                       <div className="flex justify-between items-center mb-4">
                         <span className="text-[10px] font-bold text-slate-600 uppercase">
-                          {new Date(entry.timestamp).toLocaleDateString()}
+                          {entry.timestamp ? new Date(entry.timestamp).toLocaleDateString() : 'Recent'}
                         </span>
                         <span className="px-3 py-1 rounded-full bg-teal-500/10 text-teal-400 text-[9px] font-black uppercase italic border border-teal-500/20">
                           {entry.emoji || "Pulse"}
