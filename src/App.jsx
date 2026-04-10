@@ -1,8 +1,7 @@
 import AdminDashboard from './pages/AdminDashboard';
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
 import YourHearth from './pages/YourHearth';
@@ -84,12 +83,23 @@ function AppRoutes() {
       journey: "Professional Transition",
       isAligned: false,
       pulses: [],
+      resume: null,
     };
   });
 
   useEffect(() => {
     localStorage.setItem('vault_reset_final', JSON.stringify(sanctuaryState));
   }, [sanctuaryState]);
+
+  const handleResumeSync = (file) => {
+    setSanctuaryState(prev => ({
+      ...prev,
+      resume: {
+        name: file.name,
+        lastSynced: new Date().toISOString()
+      }
+    }));
+  };
 
   const forceSync = (updates) => setSanctuaryState(prev => ({ ...prev, ...updates }));
 
@@ -99,7 +109,15 @@ function AppRoutes() {
         <Route path="/admin" element={<AdminDashboard vault={sanctuaryState} onSync={forceSync} />} />
         <Route path="/" element={<GroveRoute><GroveTiers vault={sanctuaryState} onSync={forceSync} /></GroveRoute>} />
         <Route path="/grove" element={<GroveRoute><GroveTiers vault={sanctuaryState} onSync={forceSync} /></GroveRoute>} />
-        <Route path="/hearth" element={<ProtectedRoute><YourHearth vault={sanctuaryState} onSync={forceSync} /></ProtectedRoute>} />
+        <Route path="/hearth" element={
+          <ProtectedRoute>
+            <YourHearth 
+              vault={sanctuaryState} 
+              onSync={forceSync} 
+              onResumeSync={handleResumeSync} 
+            />
+          </ProtectedRoute>
+        } />
         <Route path="/alignment" element={<ProtectedRoute><CulturalFit vault={sanctuaryState} onSync={forceSync} /></ProtectedRoute>} />
         <Route path="/canopy" element={<ProtectedRoute><Canopy vault={sanctuaryState} onSync={forceSync} /></ProtectedRoute>} />
         <Route path="/library" element={<ProtectedRoute><Library vault={sanctuaryState} /></ProtectedRoute>} />
