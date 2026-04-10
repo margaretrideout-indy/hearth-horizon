@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Flame, Compass, ArrowRight, Heart, MessageSquare, Lock, Sparkles, Zap, BarChart } from 'lucide-react';
+import { Flame, Compass, ArrowRight, Heart, MessageSquare, Lock, Sparkles, Zap, BarChart, Clock } from 'lucide-react';
 
 export default function Hearth({ vault, onSync }) {
   const [selectedEmoji, setSelectedEmoji] = useState(null);
@@ -34,10 +34,33 @@ export default function Hearth({ vault, onSync }) {
 
   useEffect(() => { loadPulses(); }, []);
 
+  const calculateStreak = () => {
+    if (pulses.length === 0) return 0;
+    const dates = pulses.map(p => new Date(p.timestamp).toDateString());
+    const uniqueDates = [...new Set(dates)];
+    let streak = 0;
+    let today = new Date();
+    
+    for (let i = 0; i < uniqueDates.length; i++) {
+      const checkDate = new Date();
+      checkDate.setDate(today.getDate() - i);
+      if (uniqueDates.includes(checkDate.toDateString())) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+    return streak;
+  };
+
   const handleLogPulse = async () => {
     if (!selectedEmoji && !reflection) return;
     setIsLogging(true);
-    const newPulse = { emoji: selectedEmoji || "Pulse", reflection, timestamp: new Date().toISOString() };
+    const newPulse = { 
+      emoji: selectedEmoji || "Pulse", 
+      reflection, 
+      timestamp: new Date().toISOString() 
+    };
     setPulses(prev => [newPulse, ...prev]);
     try {
       if (window.base44?.entities?.RootwerkLog) {
@@ -53,6 +76,7 @@ export default function Hearth({ vault, onSync }) {
     }
   };
 
+  const streakCount = calculateStreak();
   const pulseCount = pulses.length;
   const showPreview = pulseCount >= 3;
   const isUnlocked = pulseCount >= 14;
@@ -72,8 +96,16 @@ export default function Hearth({ vault, onSync }) {
                 <h2 className="text-3xl font-serif italic tracking-tight">Professional Transition</h2>
               </div>
             </div>
-            <div className="px-5 py-2.5 bg-white/5 border border-white/10 rounded-full flex items-center gap-3 text-slate-400 text-[10px] font-black uppercase tracking-widest">
-              <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" /> Stage 1 of 4
+            <div className="flex items-center gap-4">
+               {streakCount > 0 && (
+                <div className="flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full">
+                  <Flame size={14} className="text-orange-500 fill-orange-500" />
+                  <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest">{streakCount} DAY STREAK</span>
+                </div>
+               )}
+               <div className="px-5 py-2.5 bg-white/5 border border-white/10 rounded-full flex items-center gap-3 text-slate-400 text-[10px] font-black uppercase tracking-widest">
+                <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" /> Stage 1 of 4
+              </div>
             </div>
           </div>
 
@@ -145,10 +177,18 @@ export default function Hearth({ vault, onSync }) {
                 <div className="space-y-5 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
                   {pulses.length > 0 ? pulses.map((entry, i) => (
                     <Card key={i} className="p-6 bg-[#1C1622]/60 border border-white/5 rounded-2xl">
-                      <div className="flex justify-between items-center mb-4">
-                        <span className="text-[10px] font-bold text-slate-600 uppercase">
-                          {new Date(entry.timestamp).toLocaleDateString()}
-                        </span>
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-bold text-slate-500 uppercase block">
+                            {new Date(entry.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                          </span>
+                          <div className="flex items-center gap-1.5 text-slate-600">
+                             <Clock size={10} />
+                             <span className="text-[9px] font-medium uppercase tracking-tighter">
+                                {new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                             </span>
+                          </div>
+                        </div>
                         <span className="px-3 py-1 rounded-full bg-teal-500/10 text-teal-400 text-[9px] font-black uppercase italic border border-teal-500/20">
                           {entry.emoji}
                         </span>
