@@ -1,3 +1,4 @@
+import AdminDashboard from './pages/AdminDashboard';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -74,7 +75,7 @@ function AppRoutes() {
   return (
     <div className="min-h-screen bg-[#0F0A15] text-white selection:bg-teal-500/30 font-sans">
       <Routes>
-        <Route path="/admin" element={<AdminDashboard vault={sanctuaryState} onSync={forceSync} />} />
+      <Route path="/admin" element={<AdminDashboard vault={sanctuaryState} onSync={forceSync} />} />
         <Route path="/" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} />} />
         <Route path="/grove" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} />} />
         <Route path="/hearth" element={<ProtectedRoute><YourHearth vault={sanctuaryState} onSync={forceSync} /></ProtectedRoute>} />
