@@ -18,11 +18,11 @@ const Library = () => {
   const provisions = {
     study: [
       {
-        title: "Bookshop.org List",
-        desc: "Support local bookstores while building your professional library with top-rated career transition reads.",
-        links: [{ label: "View List", url: "https://bookshop.org" }],
+        title: "The Indigo Library",
+        desc: "A curated collection of literature and professional tools selected to support your transition and personal sanctuary.",
+        links: [{ label: "View Library", url: "https://www.indigo.ca" }],
         icon: <Book className="w-5 h-5" />,
-        footer: "Supports independent bookstores."
+        footer: "Verified Indigo Partner Resource."
       },
       {
         title: "Amazon Starter Kit",
