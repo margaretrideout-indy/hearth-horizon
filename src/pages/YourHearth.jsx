@@ -24,26 +24,38 @@ export default function Hearth({ vault, onSync, onResumeSync, setActivePage }) {
     { icon: "✨", label: "Inspired" }
   ];
 
-  const loadPulses = async () => {
-    try {
-      if (window.base44?.entities?.RootwerkLog) {
-        const history = await window.base44.entities.RootwerkLog.list();
-        if (history) {
-          setPulses([...history].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
+  // Load existing pulses and check for an existing resume in the vault
+  useEffect(() => {
+    const initializeHearth = async () => {
+      // 1. Load Pulse History
+      try {
+        if (window.base44?.entities?.RootwerkLog) {
+          const history = await window.base44.entities.RootwerkLog.list();
+          if (history) {
+            setPulses([...history].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
+          }
         }
+      } catch (err) {
+        console.error("Error loading pulses:", err);
       }
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
-  useEffect(() => { loadPulses(); }, []);
+      // 2. Check Vault for existing Resume to keep it "persistent"
+      if (vault?.resume) {
+        setFileName(vault.resume.name || 'Synced Resume');
+        setUploadStatus('success');
+      }
+    };
+
+    initializeHearth();
+  }, [vault]);
 
   const handleResumeUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       setFileName(file.name);
       setUploadStatus('uploading');
+      
+      // Simulate the "Analysis" feel before syncing to parent state
       setTimeout(() => {
         setUploadStatus('success');
         if (onResumeSync) onResumeSync(file);
@@ -104,6 +116,7 @@ export default function Hearth({ vault, onSync, onResumeSync, setActivePage }) {
     <div className="min-h-screen bg-[#0F0A15] text-white font-sans selection:bg-teal-500/30 pb-12 md:pb-20">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-20">
         
+        {/* Journey Header */}
         <Card className="bg-[#1C1622]/40 border-white/10 p-6 md:p-10 mb-8 md:mb-12 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl relative overflow-hidden">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 md:mb-12 gap-6 relative z-10">
             <div className="flex gap-4 md:gap-6 items-center">
@@ -187,6 +200,7 @@ export default function Hearth({ vault, onSync, onResumeSync, setActivePage }) {
                       <p className="text-[10px] text-teal-500 font-black mb-8 uppercase tracking-tighter">{fileName}</p>
                       
                       <div className="flex flex-col items-center gap-4">
+                        {/* Navigates to Ecosystem Alignment Page */}
                         <Button 
                           onClick={() => setActivePage('alignment')}
                           className="bg-teal-500 hover:bg-teal-400 text-black font-black uppercase tracking-[0.2em] text-[10px] h-14 px-10 rounded-2xl shadow-lg shadow-teal-500/20 group"
