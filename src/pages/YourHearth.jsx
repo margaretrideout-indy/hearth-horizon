@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Flame, Compass, ArrowRight, Heart, MessageSquare, Lock, Sparkles, Zap, barChart as ChartIcon } from 'lucide-react';
+import { Flame, Compass, ArrowRight, Heart, MessageSquare, Lock, Sparkles, Zap, BarChart } from 'lucide-react';
 
 export default function Hearth({ vault, onSync }) {
   const [selectedEmoji, setSelectedEmoji] = useState(null);
@@ -212,7 +212,7 @@ export default function Hearth({ vault, onSync }) {
             ) : (
               <Card className="bg-[#1C1622]/20 border border-white/5 p-10 space-y-6 rounded-[2rem] text-center grayscale opacity-40">
                 <div className="flex items-center justify-center gap-3 text-slate-500">
-                  <ChartIcon size={18} />
+                  <BarChart size={18} />
                   <p className="text-[10px] font-black uppercase tracking-[0.4em]">NEXUS MAP</p>
                 </div>
                 <p className="text-[10px] text-slate-600 italic leading-relaxed">
