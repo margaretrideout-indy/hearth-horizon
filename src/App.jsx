@@ -30,7 +30,7 @@ export default function App() {
     <Router>
       <div className="min-h-screen bg-[#0F0A15] text-white selection:bg-teal-500/30 font-sans">
         <Routes>
-          <Route path="/" element={<Navigate to="/hearth" replace />} />
+          <Route path="/" element={<Navigate to="/grove" replace />} />
           
           <Route 
             path="/hearth" 
@@ -42,7 +42,7 @@ export default function App() {
           <Route path="/library" element={<Library vault={sanctuaryState} />} />
           <Route path="/grove" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} />} />
           
-          <Route path="*" element={<Navigate to="/hearth" replace />} />
+          <Route path="*" element={<Navigate to="/grove" replace />} />
         </Routes>
       </div>
     </Router>
