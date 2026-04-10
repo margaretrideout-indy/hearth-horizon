@@ -6,29 +6,24 @@ const ForestAdmin = () => {
   const queryClient = useQueryClient();
   const [grantEmail, setGrantEmail] = useState('');
 
-  // Pulling in our dwellers (users)
   const { data: dwellers, isLoading: dwellersLoading } = useQuery({
     queryKey: ['dwellers'],
     queryFn: () => window.base44.entities.User.list()
   });
 
-  // Pulling in the seat requests from the VoucherPool
   const { data: requests, isLoading: requestsLoading } = useQuery({
     queryKey: ['seat-requests'],
     queryFn: () => window.base44.entities.VoucherPool.list()
   });
 
-  // Functional Approval Logic
+  // Logic for the "Grant Seat" button in the Request List
   const approveRequest = useMutation({
     mutationFn: async ({ requestId, email }) => {
-      // 1. Find the user by email
       const user = dwellers.find(u => u.email?.toLowerCase() === email?.toLowerCase());
-      if (!user) throw new Error("User record not found in database.");
+      if (!user) throw new Error("User record not found. Ask them to sign up as a Seedling first!");
 
-      // 2. Upgrade the user's tier
       await window.base44.entities.User.update(user.id, { subscription_tier: 'Hearthkeeper' });
       
-      // 3. Mark the request as claimed so it leaves the pending list
       return await window.base44.entities.VoucherPool.update(requestId, { 
         status: 'claimed',
         claimed_date: new Date().toISOString()
@@ -37,22 +32,23 @@ const ForestAdmin = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(['seat-requests']);
       queryClient.invalidateQueries(['dwellers']);
-      alert("Seat granted and dweller upgraded.");
+      alert("Seat granted successfully.");
     },
     onError: (err) => alert(err.message)
   });
 
-  // Manual Email Grant Logic
+  // Logic for the Manual Email Input (Top Right)
   const manualGrant = useMutation({
     mutationFn: async (email) => {
-      const user = dwellers.find(u => u.email.toLowerCase() === email.toLowerCase());
-      if (!user) throw new Error("Dweller not found. They must sign up as a Seedling first.");
+      const user = dwellers.find(u => u.email?.toLowerCase() === email.toLowerCase().trim());
+      if (!user) throw new Error("Dweller not found. They must sign up for a free account first.");
+      
       return await window.base44.entities.User.update(user.id, { subscription_tier: 'Hearthkeeper' });
     },
     onSuccess: () => {
       setGrantEmail('');
       queryClient.invalidateQueries(['dwellers']);
-      alert("Access granted to the sanctuary.");
+      alert("Manual access granted. Your tester is ready!");
     },
     onError: (err) => alert(err.message)
   });
@@ -67,7 +63,6 @@ const ForestAdmin = () => {
     );
   }
 
-  // Filter for requests that are still "available" (not yet claimed)
   const pendingRequests = requests?.filter(r => r.status === 'available') || [];
 
   return (
@@ -79,6 +74,7 @@ const ForestAdmin = () => {
           <h1 className="text-5xl font-serif text-white tracking-tight">Forest Admin</h1>
         </div>
 
+        {/* MANUAL GRANT TOOL: Type your husband's email here! */}
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
           <div className="relative">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -86,16 +82,16 @@ const ForestAdmin = () => {
               type="email" 
               value={grantEmail}
               onChange={(e) => setGrantEmail(e.target.value)}
-              placeholder="Grant access via email..." 
+              placeholder="Tester or Guest Email..." 
               className="bg-[#241B2E] border border-white/5 rounded-2xl py-3 pl-12 pr-6 text-sm outline-none focus:border-purple-500/30 transition-all w-full md:w-64 placeholder:text-slate-600"
             />
           </div>
           <button 
             onClick={() => manualGrant.mutate(grantEmail)}
-            disabled={!grantEmail}
+            disabled={!grantEmail || manualGrant.isPending}
             className="px-6 py-3 bg-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-500 transition-all flex items-center gap-2 disabled:opacity-50"
           >
-            <Send className="w-3 h-3" /> Grant
+            <Send className="w-3 h-3" /> {manualGrant.isPending ? 'Granting...' : 'Grant'}
           </button>
         </div>
       </div>
@@ -119,11 +115,10 @@ const ForestAdmin = () => {
                 <tr className="text-[10px] font-black text-slate-600 uppercase tracking-widest border-b border-white/5">
                   <th className="pb-4 px-2">Dweller Email</th>
                   <th className="pb-4 px-2">Current Tier</th>
-                  <th className="pb-4 px-2 text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="text-sm font-medium">
-                {dwellers?.slice(0, 10).map(dweller => (
+                {[...dwellers].reverse().slice(0, 10).map(dweller => (
                   <tr key={dweller.id} className="border-b border-white/[0.02] hover:bg-white/[0.01] transition-colors group">
                     <td className="py-6 px-2 text-slate-300">{dweller.email}</td>
                     <td className="py-6 px-2">
@@ -134,11 +129,6 @@ const ForestAdmin = () => {
                       }`}>
                         {dweller.subscription_tier || 'Seedling'}
                       </span>
-                    </td>
-                    <td className="py-6 px-2 text-right">
-                      <button className="text-slate-600 hover:text-white transition-all text-[10px] font-black uppercase tracking-widest">
-                        Manage
-                      </button>
                     </td>
                   </tr>
                 ))}
@@ -171,7 +161,11 @@ const ForestAdmin = () => {
                     Grant Seat
                   </button>
                   <button 
-                    onClick={() => window.base44.entities.VoucherPool.delete(request.id).then(() => queryClient.invalidateQueries(['seat-requests']))}
+                    onClick={() => {
+                      if(confirm("Clear this request?")) {
+                        window.base44.entities.VoucherPool.delete(request.id).then(() => queryClient.invalidateQueries(['seat-requests']))
+                      }
+                    }}
                     className="px-4 py-3 bg-white/5 text-slate-500 rounded-xl hover:text-rose-500 transition-all"
                   >
                     <X className="w-4 h-4" />
@@ -181,7 +175,7 @@ const ForestAdmin = () => {
             ))}
             {pendingRequests.length === 0 && (
               <div className="text-center py-20 text-slate-600 italic text-sm font-light">
-                The clearing is quiet. <br/> No new requests yet.
+                The clearing is quiet.
               </div>
             )}
           </div>
