@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Users, Mail, Activity, Search, Check, X, Clock } from 'lucide-react';
+import { Users, Mail, Activity, Search, Check, X, Clock, Send } from 'lucide-react';
 
 const ForestAdmin = () => {
   const queryClient = useQueryClient();
+  const [grantEmail, setGrantEmail] = useState('');
 
   // Pulling in our dwellers (users)
   const { data: dwellers, isLoading: dwellersLoading } = useQuery({
@@ -17,7 +18,7 @@ const ForestAdmin = () => {
     queryFn: () => window.base44.entities.SeatRequest.list()
   });
 
-  // The "Grant Seat" magic logic
+  // The "Grant Seat" magic logic (for pending requests)
   const approveRequest = useMutation({
     mutationFn: async ({ requestId, userId }) => {
       await window.base44.entities.SeatRequest.update(requestId, { status: 'approved' });
@@ -27,6 +28,21 @@ const ForestAdmin = () => {
       queryClient.invalidateQueries(['seat-requests']);
       queryClient.invalidateQueries(['dwellers']);
     }
+  });
+
+  // NEW: Manual Email Grant Logic
+  const manualGrant = useMutation({
+    mutationFn: async (email) => {
+      const user = dwellers.find(u => u.email.toLowerCase() === email.toLowerCase());
+      if (!user) throw new Error("Dweller not found. They must sign up as a Seedling first.");
+      return await window.base44.entities.User.update(user.id, { subscription_tier: 'Hearthkeeper' });
+    },
+    onSuccess: () => {
+      setGrantEmail('');
+      queryClient.invalidateQueries(['dwellers']);
+      alert("Access granted to the sanctuary.");
+    },
+    onError: (err) => alert(err.message)
   });
 
   if (dwellersLoading || requestsLoading) {
@@ -49,13 +65,26 @@ const ForestAdmin = () => {
           <div className="text-[10px] font-black text-teal-500 uppercase tracking-[0.3em] mb-2">System Oversight</div>
           <h1 className="text-5xl font-serif text-white tracking-tight">Forest Admin</h1>
         </div>
-        <div className="relative w-full md:w-auto">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-          <input 
-            type="text" 
-            placeholder="Search dwellers..." 
-            className="bg-[#241B2E] border border-white/5 rounded-2xl py-3 pl-12 pr-6 text-sm outline-none focus:border-teal-500/30 transition-all w-full md:w-64 placeholder:text-slate-600"
-          />
+
+        {/* Manual Grant Tool */}
+        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+          <div className="relative">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+            <input 
+              type="email" 
+              value={grantEmail}
+              onChange={(e) => setGrantEmail(e.target.value)}
+              placeholder="Grant access via email..." 
+              className="bg-[#241B2E] border border-white/5 rounded-2xl py-3 pl-12 pr-6 text-sm outline-none focus:border-purple-500/30 transition-all w-full md:w-64 placeholder:text-slate-600"
+            />
+          </div>
+          <button 
+            onClick={() => manualGrant.mutate(grantEmail)}
+            disabled={!grantEmail}
+            className="px-6 py-3 bg-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-500 transition-all flex items-center gap-2 disabled:opacity-50"
+          >
+            <Send className="w-3 h-3" /> Grant
+          </button>
         </div>
       </div>
 
@@ -71,7 +100,12 @@ const ForestAdmin = () => {
         <div className="lg:col-span-2 bg-[#241B2E] border border-white/5 rounded-[2.5rem] p-10 shadow-xl">
           <div className="flex justify-between items-center mb-10">
             <h3 className="font-bold text-xl text-white">Recent Members</h3>
-            <button className="text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-teal-400 transition-all">View All</button>
+            <div className="flex items-center gap-4">
+               <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-600" />
+                <input type="text" placeholder="Search..." className="bg-black/20 border border-white/5 rounded-xl py-2 pl-9 pr-4 text-[10px] outline-none" />
+               </div>
+            </div>
           </div>
           
           <div className="overflow-x-auto">
@@ -150,7 +184,6 @@ const ForestAdmin = () => {
   );
 };
 
-// Reusable Stat Card Component
 const StatCard = ({ title, value, icon }) => (
   <div className="bg-[#241B2E] border border-white/5 rounded-[2.5rem] p-10 flex items-center justify-between group hover:border-teal-500/10 transition-all shadow-lg">
     <div>
