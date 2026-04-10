@@ -5,11 +5,13 @@ import {
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
-const LINK_HEARTHKEEPER = 'https://buy.stripe.com/eVq14n2Tm4TR4UcaG6dAk01';
-const LINK_STEWARD = 'https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02';
+const LINK_HEARTHKEEPER = 'https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03';
+const LINK_STEWARD = 'https://buy.stripe.com/aFafZhfG8aebdqI4hIdAk04';
 const LINK_DONATION = 'https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02';
 
 const GroveTiers = ({ vault, onSync }) => {
+  const isLoggedIn = vault?.isAligned || !!localStorage.getItem('base44_auth_session');
+
   const navigationItems = [
     { title: "The Grove", status: "unlocked", icon: <Compass className="w-5 h-5" /> },
     { title: "Your Hearth", status: "unlocked", icon: <Flame className="w-5 h-5" /> },
@@ -21,18 +23,17 @@ const GroveTiers = ({ vault, onSync }) => {
   ];
 
   const handleSeedling = () => {
-    base44.auth.redirectToLogin('/hearth');
+    if (isLoggedIn) {
+      window.location.href = '/hearth';
+    } else {
+      base44.auth.redirectToLogin('/hearth');
+    }
   };
 
-  const handlePaid = async (stripeUrl) => {
-    try {
-      const user = await base44.auth.me();
-      if (user) {
-        window.location.href = '/hearth';
-      } else {
-        window.location.href = stripeUrl;
-      }
-    } catch {
+  const handlePaid = (stripeUrl) => {
+    if (isLoggedIn) {
+      window.location.href = '/hearth';
+    } else {
       window.location.href = stripeUrl;
     }
   };
@@ -86,7 +87,6 @@ const GroveTiers = ({ vault, onSync }) => {
     <div className="min-h-screen bg-[#0F0A15] text-slate-300 font-sans selection:bg-teal-500/30">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 md:px-12 lg:px-16 py-10 md:py-16">
         
-        {/* FOUNDER HEADER */}
         <header className="mb-16 md:mb-28 text-center animate-in fade-in duration-1000">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/5 border border-teal-500/10 mb-6 md:mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
@@ -104,7 +104,6 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </header>
 
-        {/* PRICING TIERS */}
         <section className="mb-20 md:mb-40">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {tiers.map((tier, idx) => (
@@ -144,7 +143,6 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        {/* COMPACT NAV GRID */}
         <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4 border-t border-white/5 pt-12 md:pt-20">
           {navigationItems.map((item, idx) => (
             <div key={idx} className={`p-4 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] border flex flex-col items-center text-center group transition-all ${
