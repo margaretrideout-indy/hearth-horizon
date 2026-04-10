@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
-// Components & Layout
 import AppLayout from './components/layout/AppLayout';
 import YourHearth from './pages/YourHearth';
 import CulturalFit from './pages/CulturalFit';
@@ -13,6 +12,31 @@ import Library from './pages/Library';
 import GroveTiers from './pages/GroveTiers';
 
 const queryClient = new QueryClient();
+const ADMIN_EMAIL = "margaretpardy@gmail.com"; 
+
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen bg-[#0F0A15] flex items-center justify-center">
+      <div className="w-6 h-6 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
+
+function AdminRoute({ children }) {
+  const { data: user, isLoading } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me(),
+    retry: false,
+  });
+
+  if (isLoading) return <LoadingScreen />;
+  
+  if (!user || user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+}
 
 function ProtectedRoute({ children }) {
   const queryClient = useQueryClient();
@@ -46,33 +70,9 @@ function ProtectedRoute({ children }) {
     if (user) checkVipStatus();
   }, [user, queryClient]);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#0F0A15] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
+  if (isLoading) return <LoadingScreen />;
   if (!user) return <Navigate to="/grove" replace />;
-  return children;
-}
-
-function GroveRoute({ children }) {
-  const { data: user, isLoading } = useQuery({
-    queryKey: ['me'],
-    queryFn: () => base44.auth.me(),
-    retry: false,
-  });
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#0F0A15] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
+  
   return children;
 }
 
@@ -96,6 +96,7 @@ function AppRoutes() {
   const handleResumeSync = (file) => {
     setSanctuaryState(prev => ({
       ...prev,
+      isAligned: true,
       resume: {
         name: file.name,
         lastSynced: new Date().toISOString()
@@ -108,13 +109,15 @@ function AppRoutes() {
   return (
     <div className="min-h-screen bg-[#0F0A15] text-white selection:bg-teal-500/30 font-sans">
       <Routes>
-        <Route path="/admin" element={<AdminDashboard vault={sanctuaryState} onSync={forceSync} />} />
+        <Route path="/admin" element={
+          <AdminRoute>
+            <AdminDashboard vault={sanctuaryState} onSync={forceSync} />
+          </AdminRoute>
+        } />
         
-        {/* GROVE/LANDING: No Layout wrapping here, so no Nav appears */}
-        <Route path="/" element={<GroveRoute><GroveTiers vault={sanctuaryState} onSync={forceSync} /></GroveRoute>} />
-        <Route path="/grove" element={<GroveRoute><GroveTiers vault={sanctuaryState} onSync={forceSync} /></GroveRoute>} />
+        <Route path="/" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} />} />
+        <Route path="/grove" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} />} />
         
-        {/* APP JOURNEY: Everything inside AppLayout will show the new Nav */}
         <Route path="/hearth" element={
           <ProtectedRoute>
             <AppLayout currentTier={sanctuaryState.tier}>
@@ -125,9 +128,13 @@ function AppRoutes() {
         
         <Route path="/alignment" element={
           <ProtectedRoute>
-            <AppLayout currentTier={sanctuaryState.tier}>
-              <CulturalFit vault={sanctuaryState} onSync={forceSync} />
-            </AppLayout>
+            {sanctuaryState.isAligned ? (
+              <AppLayout currentTier={sanctuaryState.tier}>
+                <CulturalFit vault={sanctuaryState} onSync={forceSync} />
+              </AppLayout>
+            ) : (
+              <Navigate to="/hearth" replace />
+            )}
           </ProtectedRoute>
         } />
         
