@@ -74,7 +74,11 @@ function AppRoutes() {
   return (
     <div className="min-h-screen bg-[#0F0A15] text-white selection:bg-teal-500/30 font-sans">
       <Routes>
-        <Route path="/" element={<Navigate to="/grove" replace />} />
+        <Route path="/" element={
+          <GroveRoute>
+            <GroveTiers vault={sanctuaryState} onSync={forceSync} />
+          </GroveRoute>
+        } />
 
         {/* Public landing - redirects logged-in users to /hearth */}
         <Route path="/grove" element={
