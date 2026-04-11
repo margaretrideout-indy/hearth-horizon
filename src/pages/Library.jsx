@@ -59,12 +59,12 @@ const Library = () => {
               <div className="w-12 h-12 rounded-2xl bg-orange-500/5 flex items-center justify-center text-orange-400 mb-8 border border-orange-500/10 shadow-[0_0_15px_rgba(249,115,22,0.05)]">
                 <Book className="w-5 h-5" />
               </div>
-              <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Bookshop.org List</h4>
+              <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Indigo.ca Curated List</h4>
               <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">
-                Support local bookstores while building your professional library with top-rated career transition reads.
+                A selection of literature focusing on professional pivots, psychological resilience, and Canadian educational leadership.
               </p>
-              <a href="#" className="inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all mb-6 bg-orange-600/10 text-orange-400 border border-orange-500/20 hover:bg-orange-600 hover:text-white">
-                VIEW LIST <ExternalLink className="ml-2 w-3 h-3" />
+              <a href="https://www.indigo.ca" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all mb-6 bg-orange-600/10 text-orange-400 border border-orange-500/20 hover:bg-orange-600 hover:text-white">
+                SHOP INDIGO <ExternalLink className="ml-2 w-3 h-3" />
               </a>
             </div>
 
@@ -196,13 +196,13 @@ const Library = () => {
               </div>
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Pivot Resilience Toolkit</h4>
               <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Free, 24/7 counseling and mental health support for Canadians navigating major life shifts.</p>
-              <div className="mt-auto space-y-3">
+              <div className="mt-auto space-y-4">
                 <a href="https://www.wellnesstogether.ca" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   WELLNESS TOGETHER CANADA <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
                 </a>
-                <a href="sms:686868" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
-                  CONNECT WITH CRISIS LINE (TEXT 686868) <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
-                </a>
+                <div className="pt-2 border-t border-white/5">
+                  <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white">Crisis Line: 686868</span>
+                </div>
               </div>
             </div>
 
@@ -213,9 +213,9 @@ const Library = () => {
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Burnout to Balance</h4>
               <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Vetted, free PDF workbooks designed to help regulate your nervous system after a career pivot.</p>
               <div className="mt-auto">
-                <button className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                <a href="https://www.coursecorrectioncoaching.com/lawyer-career-coaching/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   DOWNLOAD PDF GUIDES <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
-                </button>
+                </a>
               </div>
             </div>
 
@@ -226,9 +226,9 @@ const Library = () => {
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">The Inner Advocate</h4>
               <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Guided audio sessions to help you quiet the inner critic during high-stakes transitions.</p>
               <div className="mt-auto">
-                <button className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                <a href="https://www.theinneradvocate.com/method" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   LISTEN TO SESSIONS <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
-                </button>
+                </a>
               </div>
             </div>
           </div>
