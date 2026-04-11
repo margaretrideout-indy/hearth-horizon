@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Users, Mail, Activity, Search, Check, X, Clock, Send } from 'lucide-react';
+import { Users, Mail, Activity, Check, X, Clock, Send, Zap } from 'lucide-react';
 
 const ForestAdmin = () => {
   const queryClient = useQueryClient();
@@ -44,17 +44,17 @@ const ForestAdmin = () => {
   });
 
   const manualGrant = useMutation({
-    mutationFn: async (email) => {
+    mutationFn: async ({ email, tier = 'Hearthkeeper' }) => {
       const dwellerList = dwellers || [];
       const user = dwellerList.find(u => u.email?.toLowerCase() === email.toLowerCase().trim());
       if (!user) throw new Error("Dweller not found. They must sign up for a free account first.");
       
-      return await window.base44.entities.User.update(user.id, { subscription_tier: 'Hearthkeeper' });
+      return await window.base44.entities.User.update(user.id, { subscription_tier: tier });
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       setGrantEmail('');
       queryClient.invalidateQueries(['dwellers']);
-      alert("Manual access granted.");
+      alert(`Access granted: ${variables.email} is now a ${variables.tier}.`);
     },
     onError: (err) => alert(err.message)
   });
@@ -93,11 +93,18 @@ const ForestAdmin = () => {
             />
           </div>
           <button 
-            onClick={() => manualGrant.mutate(grantEmail)}
+            onClick={() => manualGrant.mutate({ email: grantEmail, tier: 'Hearthkeeper' })}
+            disabled={!grantEmail || manualGrant.isPending}
+            className="px-6 py-3 bg-teal-600/10 text-teal-400 border border-teal-500/20 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-teal-500 hover:text-[#1A1423] transition-all flex items-center gap-2 disabled:opacity-50"
+          >
+            + Hearthkeeper
+          </button>
+          <button 
+            onClick={() => manualGrant.mutate({ email: grantEmail, tier: 'Steward' })}
             disabled={!grantEmail || manualGrant.isPending}
             className="px-6 py-3 bg-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-500 transition-all flex items-center gap-2 disabled:opacity-50"
           >
-            <Send className="w-3 h-3" /> {manualGrant.isPending ? 'Granting...' : 'Grant'}
+            <Zap className="w-3 h-3" /> + Steward
           </button>
         </div>
       </div>
@@ -109,7 +116,6 @@ const ForestAdmin = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
         <div className="lg:col-span-2 bg-[#241B2E] border border-white/5 rounded-[2.5rem] p-10 shadow-xl">
           <div className="flex justify-between items-center mb-10">
             <h3 className="font-bold text-xl text-white">Recent Members</h3>
