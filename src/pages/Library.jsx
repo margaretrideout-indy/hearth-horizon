@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Library as LibraryIcon, Book, Package, Zap, BookOpen, ExternalLink, 
   ShieldCheck, FileText, Wind, ArrowRight, ShoppingBag, MessageSquare,
-  Loader2, ClipboardCheck, Layout, Search, Languages, Map
+  Loader2, ClipboardCheck, Layout, Search, Languages, Map, Sparkles,
+  Trophy, Clock
 } from 'lucide-react';
 
-const Library = () => {
+const Library = ({ vault, onUpdateVault }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDictionary, setShowDictionary] = useState(false);
+  const [activeTab, setActiveTab] = useState('all');
 
-  // The dictionary now serves as a "Proof of Concept" for how any industry can be translated
+  // These would ideally come from your global state/vault
+  const [harvestedItems, setHarvestedItems] = useState([
+    {
+      title: "Agile/Scrum Certification",
+      desc: "Currently bridging the gap from education timelines to sprint cycles.",
+      status: "In-Transit",
+      icon: <Clock className="w-5 h-5" />,
+      badge: "Priority 1",
+      eta: "2 Weeks"
+    }
+  ]);
+
   const translations = [
     { edu: "Front-line Delivery", ops: "Personalized User Experience (UX) & Scalable Execution" },
     { edu: "Project Individualization", ops: "Custom Stakeholder Requirements & Targeted KPI Development" },
@@ -19,7 +32,7 @@ const Library = () => {
     { edu: "Continuous Assessment", ops: "Iterative Feedback Loops & Real-time Data Analysis" }
   ];
 
-  const provisions = {
+  const categories = {
     study: [
       {
         title: "The Indigo Library",
@@ -68,21 +81,6 @@ const Library = () => {
         badge: "System"
       }
     ],
-    workshop: [
-      {
-        title: "Teal HQ",
-        desc: "An all-in-one platform to manage your job search, track applications, and optimize your professional materials.",
-        links: [{ label: "Access Tool", url: "https://www.tealhq.com/" }],
-        icon: <Zap className="w-5 h-5" />,
-        badge: "Next Step"
-      },
-      {
-        title: "Jobscan ATS",
-        desc: "Analyze how well your experience matches specific job descriptions to bypass automated filtering systems.",
-        links: [{ label: "Access Tool", url: "https://www.jobscan.co/" }],
-        icon: <BookOpen className="w-5 h-5" />
-      }
-    ],
     sanctuary: [
       {
         title: "Pivot Resilience Toolkit",
@@ -99,19 +97,12 @@ const Library = () => {
         links: [{ label: "Download PDF Guides", url: "https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself" }],
         icon: <FileText className="w-5 h-5" />,
         color: "slate"
-      },
-      {
-        title: "The Inner Advocate",
-        desc: "Guided audio sessions to help you maintain self-compassion during professional transitions and high-stakes interviews.",
-        links: [{ label: "Listen to Sessions", url: "https://self-compassion.org/guided-self-compassion-meditations-mp3-2/" }],
-        icon: <Wind className="w-5 h-5" />,
-        color: "slate"
       }
     ]
   };
 
   return (
-    <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-6 md:p-12 font-sans selection:bg-teal-500/30">
+    <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-6 md:p-12 font-sans selection:bg-teal-500/30 selection:text-white">
       <div className="max-w-6xl mx-auto">
         
         {/* HEADER */}
@@ -133,21 +124,58 @@ const Library = () => {
             <input 
               type="text"
               placeholder="SEARCH ARCHIVES..."
-              className="w-full bg-white/[0.02] border border-white/5 rounded-full py-3 pl-10 pr-4 text-[9px] font-black tracking-widest text-white focus:outline-none focus:border-teal-500/50 transition-all"
+              className="w-full bg-white/[0.02] border border-white/5 rounded-full py-3 pl-10 pr-4 text-[9px] font-black tracking-widest text-white focus:outline-none focus:border-teal-500/50 transition-all placeholder:text-slate-700"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </header>
 
-        {/* 1. THE STUDY (Affiliate Priority) */}
+        {/* 0. IN-TRANSIT (The Harvested Gaps) */}
+        {harvestedItems.length > 0 && (
+          <section className="mb-16 md:mb-24 animate-in fade-in slide-in-from-left-4 duration-1000">
+            <div className="flex items-center gap-4 mb-10">
+              <div className="flex items-center gap-2">
+                <Sparkles size={14} className="text-orange-400" />
+                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-orange-400 whitespace-nowrap">In-Transit Provisions</h3>
+              </div>
+              <div className="h-[1px] flex-1 bg-gradient-to-r from-orange-400/20 to-transparent" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {harvestedItems.map((item, idx) => (
+                <div key={idx} className="bg-orange-400/[0.02] border border-orange-400/10 p-8 rounded-[2.5rem] relative group hover:bg-orange-400/[0.04] transition-all">
+                  <div className="flex gap-6 items-start">
+                    <div className="w-12 h-12 rounded-2xl bg-orange-400/10 flex items-center justify-center text-orange-400 border border-orange-400/20">
+                      {item.icon}
+                    </div>
+                    <div className="space-y-2 flex-1">
+                      <div className="flex justify-between items-start">
+                        <h4 className="text-white font-bold text-lg font-serif italic">{item.title}</h4>
+                        <Badge variant="outline" className="border-orange-400/30 text-orange-400 text-[8px] px-2 uppercase">{item.eta} ETA</Badge>
+                      </div>
+                      <p className="text-xs text-slate-500 font-light leading-relaxed italic">{item.desc}</p>
+                      <div className="pt-4 flex items-center gap-4">
+                         <div className="h-1 flex-1 bg-white/5 rounded-full overflow-hidden">
+                            <div className="h-full bg-orange-400 w-1/3 animate-pulse" />
+                         </div>
+                         <span className="text-[9px] font-black text-orange-400 uppercase tracking-widest">Harvesting...</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* 1. THE STUDY */}
         <section className="mb-16 md:mb-24">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500/60 whitespace-nowrap">The Study</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {provisions.study.map((item, idx) => (
+            {categories.study.map((item, idx) => (
               <div key={idx} className="bg-white/[0.01] border border-white/5 p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] hover:bg-white/[0.03] transition-all group">
                 <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-6 md:mb-8 border border-white/5 shadow-[0_0_15px_rgba(20,184,166,0.1)]">
                   {item.icon}
@@ -170,7 +198,7 @@ const Library = () => {
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            {provisions.dialects.map((item, idx) => (
+            {categories.dialects.map((item, idx) => (
               <div key={idx} className="bg-white/[0.01] border border-white/5 p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] hover:bg-white/[0.03] transition-all group">
                 <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-6 md:mb-8 border border-white/5">
                   {item.icon}
@@ -194,8 +222,9 @@ const Library = () => {
           {showDictionary && (
             <div className="mt-8 animate-in fade-in slide-in-from-top-4 duration-500">
               <div className="bg-[#1A1423] border border-teal-500/20 rounded-[2rem] overflow-hidden shadow-2xl">
-                <div className="p-6 bg-teal-500/5 border-b border-white/5">
-                  <p className="text-[9px] font-black text-teal-400 uppercase tracking-widest">Universal Translation Guide (Preview)</p>
+                <div className="p-6 bg-teal-500/5 border-b border-white/5 flex justify-between items-center">
+                  <p className="text-[9px] font-black text-teal-400 uppercase tracking-widest">Universal Translation Guide</p>
+                  <Trophy size={14} className="text-teal-500/40" />
                 </div>
                 <div className="divide-y divide-white/5">
                   {translations.map((t, i) => (
@@ -216,80 +245,30 @@ const Library = () => {
           )}
         </section>
 
-        {/* 3. THE TEMPLATE ARCHIVE */}
-        <section className="mb-16 md:mb-24">
-          <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Template Archive</h3>
-            <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {provisions.templates.map((item, idx) => (
-              <div key={idx} className="bg-white/[0.01] border border-white/5 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] flex flex-col sm:flex-row gap-6 md:gap-8 items-start sm:items-center group">
-                <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-teal-500/5 flex items-center justify-center text-teal-400 shrink-0 border border-teal-500/10">{item.icon}</div>
-                <div className="flex-1">
-                  <div className="flex justify-between items-start mb-1">
-                    <h4 className="text-white font-bold text-sm tracking-wide">{item.title}</h4>
-                    <span className="text-[7px] font-black text-teal-500/40 uppercase tracking-tighter bg-teal-500/5 px-2 py-0.5 rounded-full border border-teal-500/10">{item.badge}</span>
-                  </div>
-                  <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-4 italic">{item.desc}</p>
-                  <div className="inline-flex items-center gap-2 text-[8px] font-black uppercase tracking-widest text-slate-600 italic">
-                    <Loader2 className="w-3 h-3 animate-spin" /> {item.status}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 4. THE DIGITAL WORKSHOP */}
-        <section className="mb-16 md:mb-24">
-          <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500/60 whitespace-nowrap">The Digital Workshop</h3>
-            <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {provisions.workshop.map((item, idx) => (
-              <div key={idx} className="bg-white/[0.01] border border-white/5 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] flex flex-col sm:flex-row gap-6 md:gap-8 items-start sm:items-center group">
-                <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-white/5 flex items-center justify-center text-slate-400 shrink-0 border border-white/5">{item.icon}</div>
-                <div className="flex-1">
-                  <div className="flex justify-between items-start mb-1">
-                    <h4 className="text-white font-bold text-sm">{item.title}</h4>
-                    {item.badge && <span className="text-[7px] font-black text-teal-500 uppercase tracking-tighter bg-teal-500/10 px-2 py-0.5 rounded-full border border-teal-500/20">{item.badge}</span>}
-                  </div>
-                  <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-4 italic">{item.desc}</p>
-                  <a href={item.links[0].url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors">
-                    {item.links[0].label} <ExternalLink className="w-3 h-3" />
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 5. THE SANCTUARY */}
+        {/* 3. THE SANCTUARY */}
         <section className="mb-16 md:mb-24">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Sanctuary</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {provisions.sanctuary.map((item, idx) => (
-              <div key={idx} className="bg-[#1A1423] border border-white/5 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col h-full shadow-2xl relative group">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {categories.sanctuary.map((item, idx) => (
+              <div key={idx} className="bg-[#1A1423] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col h-full shadow-2xl group">
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border ${
                   item.color === 'teal' ? 'bg-teal-400/5 text-teal-400 border-teal-400/10' : 'bg-white/5 text-slate-400 border-white/5'
                 }`}>{item.icon}</div>
-                <h4 className="text-white font-bold text-sm mb-2">{item.title}</h4>
+                <h4 className="text-white font-bold text-lg font-serif italic mb-2">{item.title}</h4>
                 <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-6 italic">{item.desc}</p>
                 <div className="mt-auto space-y-4">
                   <div className="flex flex-col gap-3">
                     {item.links.map((link, lIdx) => (
-                      <a key={lIdx} href={link.url} target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2">
-                        {link.label} <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
+                      <a key={lIdx} href={link.url} target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                        {link.label} <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
                       </a>
                     ))}
                   </div>
                   {item.emergencyInfo && (
-                    <div className="p-4 rounded-2xl bg-teal-500/10 border-2 border-teal-500/30 flex items-start gap-3 mt-4">
+                    <div className="p-4 rounded-2xl bg-teal-500/10 border-2 border-teal-500/30 flex items-start gap-3 mt-4 animate-pulse">
                       <MessageSquare className="w-4 h-4 text-teal-300 mt-0.5 shrink-0" />
                       <div>
                         <p className="text-[8px] font-black uppercase tracking-[0.2em] text-teal-300 mb-1">Immediate Crisis Support</p>
@@ -307,7 +286,7 @@ const Library = () => {
         <footer className="mt-20 md:mt-32 pt-12 border-t border-white/5 text-center">
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.02] border border-white/5">
             <ShoppingBag className="w-3 h-3 text-slate-600" />
-            <span className="text-[8px] font-medium uppercase tracking-[0.2em] text-slate-600">Note on Reciprocity: We only recommend provisions we have personally verified.</span>
+            <span className="text-[8px] font-medium uppercase tracking-[0.2em] text-slate-600 italic">Note on Reciprocity: We only recommend provisions verified for high-impact professional pivots.</span>
           </div>
         </footer>
       </div>
