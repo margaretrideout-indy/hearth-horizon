@@ -45,10 +45,10 @@ const GroveTiers = ({ vault, onSync }) => {
     setRequestStatus('sending');
     try {
       const user = await base44.auth.me();
+      // Removed 'notes' to prevent Base44 validation errors
       await window.base44.entities.VoucherPool.create({
         claimed_by: user.email,
-        status: 'available',
-        notes: "Scholarship/Seat Request from Grove Tiers"
+        status: 'available'
       });
       setRequestStatus('success');
     } catch (error) {
@@ -56,16 +56,6 @@ const GroveTiers = ({ vault, onSync }) => {
       setRequestStatus('error');
     }
   };
-
-  const navigationItems = [
-    { title: "The Grove", status: "unlocked", icon: <Compass className="w-5 h-5" /> },
-    { title: "Your Hearth", status: "unlocked", icon: <Flame className="w-5 h-5" /> },
-    { title: "The Bridge", status: "locked", icon: <Wind className="w-5 h-5" /> },
-    { title: "Alignment", status: "locked", icon: <Zap className="w-5 h-5" /> },
-    { title: "Horizon Scan", status: "locked", icon: <TrendingUp className="w-5 h-5" /> },
-    { title: "Embers Chat", status: "unlocked", icon: <MessagesSquare className="w-5 h-5" /> },
-    { title: "The Canopy", status: "unlocked", icon: <Compass className="w-5 h-5" /> }
-  ];
 
   const tiers = [
     {
@@ -201,26 +191,8 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 border-t border-white/5 pt-16 md:pt-24 mb-16 md:mb-24">
-          {navigationItems.map((item, idx) => (
-            <div key={idx} className={`p-6 rounded-[2rem] border flex flex-col items-center text-center group transition-all ${
-              item.status === 'unlocked' 
-              ? 'bg-white/[0.02] border-white/5 hover:border-teal-500/30' 
-              : 'bg-black/40 border-white/[0.01] opacity-20'
-            }`}>
-              <div className={`mb-4 ${item.status === 'unlocked' ? 'text-slate-400 group-hover:text-teal-400' : 'text-slate-800'}`}>
-                {item.icon}
-              </div>
-              <span className={`text-[8px] font-black uppercase tracking-widest ${item.status === 'unlocked' ? 'text-white' : 'text-slate-800'}`}>
-                {item.title}
-              </span>
-              {item.status === 'locked' && <Lock className="w-3 h-3 mt-3 text-slate-800" />}
-            </div>
-          ))}
-        </div>
-
         {/* Mobile App Instruction Card */}
-        <section className="max-w-4xl mx-auto">
+        <section className="max-w-4xl mx-auto border-t border-white/5 pt-16">
           <div className="p-8 sm:p-12 rounded-[3rem] bg-gradient-to-br from-[#1A1423] to-[#0F0A15] border border-white/5 relative overflow-hidden group">
             <div className="absolute -right-8 -bottom-8 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity duration-1000">
               <Smartphone size={240} />
