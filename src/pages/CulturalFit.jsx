@@ -12,7 +12,6 @@ import {
   Layers, Target, CheckCircle2
 } from 'lucide-react';
 
-// Keeping the name as CulturalFit per system requirements
 export default function CulturalFit({ vault, onSync }) {
   const [activeStep, setActiveStep] = useState(1);
   const [isAligning, setIsAligning] = useState(false);
@@ -22,6 +21,7 @@ export default function CulturalFit({ vault, onSync }) {
   const [copied, setCopied] = useState(false);
   const [beacon, setBeacon] = useState("");
   const [trajectories, setTrajectories] = useState([]);
+  const [selectedPath, setSelectedPath] = useState(null);
 
   const gapData = [
     { skill: "Agile/Scrum Certification", status: "missing", impact: "high", effort: "2 weeks", category: "Operations" },
@@ -62,9 +62,8 @@ export default function CulturalFit({ vault, onSync }) {
   };
 
   return (
-    <div className="max-w-6xl mx-auto py-12 px-6 space-y-12 animate-in fade-in duration-700">
+    <div className="max-w-6xl mx-auto py-12 px-6 space-y-12 animate-in fade-in duration-700 selection:bg-teal-500/30">
       
-      {/* NAVIGATION HUD */}
       <nav className="flex justify-between items-center bg-[#1C1622]/40 border border-white/5 rounded-full px-8 py-4 backdrop-blur-md sticky top-4 z-50">
         {[
           { id: 1, label: "THE CLEARING", icon: TreePine },
@@ -86,7 +85,6 @@ export default function CulturalFit({ vault, onSync }) {
       </nav>
 
       <main className="min-h-[600px]">
-        {/* STEP 1: LINGUISTIC BRIDGE */}
         {activeStep === 1 && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 animate-in slide-in-from-bottom-8 duration-700">
             <div className="lg:col-span-4 space-y-6">
@@ -108,8 +106,8 @@ export default function CulturalFit({ vault, onSync }) {
                     <label className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500">Source Achievement</label>
                     <div className="flex gap-4">
                       <Input 
-                        placeholder="e.g., Managed a team of 15 staff members across 3 departments..."
-                        className="bg-black/40 border-white/10 text-white h-16 rounded-xl italic px-6"
+                        placeholder="e.g., Managed a team of 15 staff members..."
+                        className="bg-black/40 border-white/10 text-white h-16 rounded-xl italic px-6 focus:ring-1 focus:ring-teal-500/50 outline-none"
                         value={manualInput}
                         onChange={(e) => setManualInput(e.target.value)}
                       />
@@ -153,47 +151,72 @@ export default function CulturalFit({ vault, onSync }) {
           </div>
         )}
 
-        {/* STEP 2: THE COMPASS */}
         {activeStep === 2 && (
           <div className="space-y-12 animate-in fade-in duration-1000">
             <header className="text-center max-w-2xl mx-auto space-y-4">
               <h2 className="text-4xl font-serif italic text-white uppercase tracking-tight">Market Topography</h2>
-              <p className="text-slate-400 text-sm">Identifying trajectories based on your 13-year foundation.</p>
+              <p className="text-slate-400 text-sm italic">"Select a trajectory to begin the deep-scan for alignment gaps."</p>
             </header>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {trajectories.map((path, idx) => (
-                <Card key={idx} className={`group p-8 bg-[#1C1622]/80 border-white/10 hover:border-teal-500/40 transition-all rounded-[2.5rem] ${idx === 0 ? 'ring-1 ring-teal-500/30 shadow-[0_0_30px_rgba(20,184,166,0.05)]' : ''}`}>
-                  <div className="space-y-6">
-                    <div className="flex justify-between items-start">
-                       <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 text-[10px] font-black px-3 py-1">{path.fit}% FIT</Badge>
-                       <TrendingUp size={18} className={path.velocity === 'High' ? 'text-orange-500' : 'text-teal-500/20'} />
-                    </div>
-                    <div className="space-y-2">
-                      <h4 className="text-white font-bold text-xl leading-tight group-hover:text-teal-400 transition-colors">{path.domain}</h4>
-                      <p className="text-xs text-slate-500 italic leading-relaxed">{path.desc}</p>
-                    </div>
-                    <div className="pt-6 border-t border-white/5 flex justify-between items-end">
-                      <div className="space-y-1">
-                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Comp. Floor</p>
-                        <p className="text-2xl text-white font-black italic">{path.salary}</p>
+              {trajectories.map((path, idx) => {
+                const isSelected = selectedPath?.domain === path.domain;
+                return (
+                  <Card 
+                    key={idx} 
+                    onClick={() => setSelectedPath(path)}
+                    className={`group cursor-pointer p-8 bg-[#1C1622]/80 border-white/10 transition-all duration-300 rounded-[2.5rem] relative overflow-hidden
+                      ${isSelected ? 'ring-2 ring-teal-500 shadow-[0_0_40px_rgba(20,184,166,0.15)] border-teal-500/50' : 'hover:border-white/20 hover:bg-[#251d2d]'}`}
+                  >
+                    {isSelected && (
+                      <div className="absolute top-4 right-4 animate-in zoom-in duration-300">
+                        <CheckCircle2 size={20} className="text-teal-400" />
                       </div>
-                      <div className="text-[9px] font-black text-teal-500 uppercase bg-teal-500/5 px-2 py-1 rounded">
-                        {path.velocity} Demand
+                    )}
+                    <div className="space-y-6">
+                      <div className="flex justify-between items-start">
+                         <Badge className={`${isSelected ? 'bg-teal-500 text-black' : 'bg-teal-500/10 text-teal-400'} border-teal-500/20 text-[10px] font-black px-3 py-1`}>
+                           {path.fit}% FIT
+                         </Badge>
+                         <TrendingUp size={18} className={path.velocity === 'High' ? 'text-orange-500' : 'text-teal-500/20'} />
+                      </div>
+                      <div className="space-y-2">
+                        <h4 className={`font-bold text-xl leading-tight transition-colors ${isSelected ? 'text-teal-400' : 'text-white'}`}>
+                          {path.domain}
+                        </h4>
+                        <p className="text-xs text-slate-500 italic leading-relaxed">{path.desc}</p>
+                      </div>
+                      <div className="pt-6 border-t border-white/5 flex justify-between items-end">
+                        <div className="space-y-1">
+                          <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Comp. Floor</p>
+                          <p className={`text-2xl font-black italic transition-colors ${isSelected ? 'text-white' : 'text-slate-300'}`}>
+                            {path.salary}
+                          </p>
+                        </div>
+                        <div className={`text-[9px] font-black uppercase px-2 py-1 rounded ${isSelected ? 'bg-teal-500/20 text-teal-400' : 'bg-white/5 text-slate-500'}`}>
+                          {path.velocity} Demand
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Card>
-              ))}
+                  </Card>
+                );
+              })}
             </div>
             
-            <Button onClick={() => setActiveStep(3)} className="w-full h-20 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-[2rem] gap-4 uppercase tracking-[0.2em] shadow-2xl shadow-teal-500/10">
-              Run Gap Analysis <Pickaxe size={20} />
+            <Button 
+              onClick={() => setActiveStep(3)} 
+              disabled={!selectedPath}
+              className={`w-full h-20 font-black rounded-[2rem] gap-4 uppercase tracking-[0.2em] shadow-2xl transition-all duration-500
+                ${selectedPath 
+                  ? 'bg-teal-500 hover:bg-teal-400 text-black shadow-teal-500/10 scale-[1.01]' 
+                  : 'bg-white/5 text-slate-600 border border-white/5 cursor-not-allowed opacity-50'}`}
+            >
+              {selectedPath ? `Scan Gaps for ${selectedPath.domain}` : "Select a Trajectory to Continue"}
+              <Pickaxe size={20} className={selectedPath ? 'animate-pulse' : ''} />
             </Button>
           </div>
         )}
 
-        {/* STEP 3: THE GAP ANALYZER */}
         {activeStep === 3 && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 animate-in slide-in-from-right-8 duration-700">
             <div className="lg:col-span-4 space-y-8">
@@ -202,11 +225,11 @@ export default function CulturalFit({ vault, onSync }) {
                     <Target size={24} />
                   </div>
                   <h2 className="text-4xl font-serif italic text-white uppercase tracking-tight">The Harvest</h2>
-                  <p className="text-slate-400 text-sm leading-relaxed">Identifying the missing provisions needed for your professional transition.</p>
+                  <p className="text-slate-400 text-sm leading-relaxed">Analyzing alignment for: <span className="text-teal-400 font-bold">{selectedPath?.domain}</span></p>
                </div>
 
                <Card className="p-6 bg-teal-500/5 border-teal-500/20">
-                  <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest mb-4">Overall Readiness</p>
+                  <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest mb-4">Readiness Level</p>
                   <div className="flex items-end gap-3 mb-2">
                      <span className="text-5xl font-black italic text-white">82%</span>
                   </div>
@@ -256,7 +279,6 @@ export default function CulturalFit({ vault, onSync }) {
           </div>
         )}
 
-        {/* STEP 4: THE SUMMIT */}
         {activeStep === 4 && (
           <div className="max-w-3xl mx-auto text-center space-y-10 animate-in zoom-in-95 duration-1000">
             <div className="space-y-4">
@@ -270,12 +292,12 @@ export default function CulturalFit({ vault, onSync }) {
             <Card className="p-12 bg-gradient-to-b from-[#1C1622] to-black border border-white/10 rounded-[3rem] relative">
                <div className="space-y-8">
                   <p className="text-slate-300 italic text-xl leading-relaxed">
-                    "The transition from educator to <span className="text-white font-bold underline decoration-teal-500">Program Operations Lead</span> is now conceptually complete. Your beacon is established."
+                    "The transition to <span className="text-white font-bold underline decoration-teal-500">{selectedPath?.domain || "your new career"}</span> is now conceptually complete. Your beacon is established."
                   </p>
                   
                   <div className="flex flex-col md:flex-row gap-4 justify-center pt-6">
-                    <Button onClick={() => window.location.href='/canopy'} className="h-16 px-12 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-2xl uppercase tracking-widest flex items-center gap-3">
-                      Go to Canopy <Binoculars size={18} />
+                    <Button onClick={() => window.location.href='/canopy'} className="h-16 px-12 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-2xl uppercase tracking-widest flex items-center gap-3 transition-transform hover:scale-105">
+                      Enter The Canopy <Binoculars size={18} />
                     </Button>
                   </div>
                </div>
