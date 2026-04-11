@@ -9,10 +9,11 @@ import {
   Binoculars, TreePine, ArrowRight, 
   Zap, ArrowRightLeft, Sparkles, TrendingUp,
   Copy, Check, ClipboardCheck, AlertCircle, Pickaxe,
-  Layers, Target, CheckCircle2, History, Microscope
+  Layers, Target, CheckCircle2, History, Microscope,
+  ShoppingBag
 } from 'lucide-react';
 
-export default function GapAnalyzer({ vault, onSync }) {
+export default function CulturalFit({ vault, onSync }) {
   const [activeStep, setActiveStep] = useState(1);
   const [isAligning, setIsAligning] = useState(false);
   const [manualInput, setManualInput] = useState("");
@@ -21,7 +22,6 @@ export default function GapAnalyzer({ vault, onSync }) {
   const [copied, setCopied] = useState(false);
   const [selectedPath, setSelectedPath] = useState(null);
 
-  // Example data representing the "Archeology" of your career gaps
   const gapData = [
     { skill: "Agile/Scrum Certification", status: "missing", impact: "high", effort: "2 weeks", category: "Operations" },
     { skill: "Stakeholder Management", status: "aligned", impact: "critical", effort: "sync'd", category: "Leadership" },
@@ -57,7 +57,6 @@ export default function GapAnalyzer({ vault, onSync }) {
   return (
     <div className="max-w-6xl mx-auto py-12 px-6 space-y-12 animate-in fade-in duration-700 selection:bg-teal-500/30">
       
-      {/* STEPS NAVIGATION */}
       <nav className="flex justify-between items-center bg-[#1A1423]/60 border border-white/5 rounded-full px-8 py-4 backdrop-blur-xl sticky top-4 z-50">
         {[
           { id: 1, label: "THE DECODING", icon: ArrowRightLeft },
@@ -79,7 +78,6 @@ export default function GapAnalyzer({ vault, onSync }) {
       </nav>
 
       <main className="min-h-[600px]">
-        {/* STEP 1: LINGUISTIC TRANSCODING */}
         {activeStep === 1 && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 animate-in slide-in-from-bottom-8 duration-700">
             <div className="lg:col-span-4 space-y-6">
@@ -148,7 +146,6 @@ export default function GapAnalyzer({ vault, onSync }) {
           </div>
         )}
 
-        {/* STEP 2: TOPOGRAPHY (TRAJECTORIES) */}
         {activeStep === 2 && (
           <div className="space-y-12 animate-in fade-in duration-1000">
             <header className="text-center max-w-2xl mx-auto space-y-4">
@@ -207,7 +204,6 @@ export default function GapAnalyzer({ vault, onSync }) {
           </div>
         )}
 
-        {/* STEP 3: THE HARVEST (GAP ANALYSIS) */}
         {activeStep === 3 && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 animate-in slide-in-from-right-8 duration-700">
             <div className="lg:col-span-4 space-y-8">
@@ -271,7 +267,6 @@ export default function GapAnalyzer({ vault, onSync }) {
           </div>
         )}
 
-        {/* STEP 4: THE SUMMIT */}
         {activeStep === 4 && (
           <div className="max-w-3xl mx-auto text-center space-y-10 animate-in zoom-in-95 duration-1000 py-20">
             <div className="space-y-4">
