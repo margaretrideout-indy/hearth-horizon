@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,13 +10,29 @@ import {
   Copy, Check, ClipboardCheck
 } from 'lucide-react';
 
-export default function CulturalFit({ userAnalysis }) {
+export default function CulturalFit({ vault, onSync }) {
   const [activeStep, setActiveStep] = useState(1);
   const [isAligning, setIsAligning] = useState(false);
   const [manualInput, setManualInput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [bridgeData, setBridgeData] = useState(null);
   const [copied, setCopied] = useState(false);
+
+  const [beacon, setBeacon] = useState("");
+  const [trajectories, setTrajectories] = useState([]);
+
+  useEffect(() => {
+    if (vault) {
+      setBeacon(vault.resume?.summary || "A strategic professional bridging expertise across high-impact sectors.");
+      
+      const paths = vault.marketPaths || [
+        { domain: "Strategic Operations", salary: "$95,000+", fit: "94%", desc: "Focus on cross-functional alignment and organizational scaling." },
+        { domain: "Project Leadership", salary: "$102,000+", fit: "91%", desc: "Focus on lifecycle management and delivery optimization." },
+        { domain: "Implementation Strategy", salary: "$98,000+", fit: "88%", desc: "Focus on translating complex goals into executable frameworks." }
+      ];
+      setTrajectories(paths);
+    }
+  }, [vault]);
 
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text);
@@ -29,9 +45,9 @@ export default function CulturalFit({ userAnalysis }) {
     setIsGenerating(true);
     setTimeout(() => {
       setBridgeData({
-        pm: `Lead strategic delivery for "${manualInput}", aligning resources with provincial standards.`,
-        data: `Derived success metrics from "${manualInput}" to optimize curriculum performance.`,
-        ops: `Managed operational logistics for "${manualInput}" across multi-faceted environments.`
+        pm: `Orchestrated ${manualInput} by streamlining workflows and managing cross-functional delivery timelines.`,
+        data: `Transformed ${manualInput} into actionable metrics to drive measurable performance improvements.`,
+        ops: `Standardized the operational framework for ${manualInput} to maximize organizational efficiency.`
       });
       setIsGenerating(false);
     }, 1200);
@@ -40,23 +56,15 @@ export default function CulturalFit({ userAnalysis }) {
   const handleAlign = () => {
     setIsAligning(true);
     setTimeout(() => {
+      onSync({ isAligned: true });
       setIsAligning(false);
       setActiveStep(3);
     }, 2000);
   };
 
-  const marketTrajectories = [
-    { domain: "L&D Strategy", salary: "$100,290", fit: "98%", desc: "Focus on curriculum scaling and educational operations." },
-    { domain: "Project Management", salary: "$95,500", fit: "92%", desc: "Focus on lifecycle deliverables and cross-functional alignment." },
-    { domain: "Data Operations", salary: "$108,000", fit: "85%", desc: "Focus on measurable performance indicators and success metrics." }
-  ];
-
-  const beaconText = "A strategic architect of human capital with 13 years of expertise in curriculum scaling and educational operations.";
-
   return (
     <div className="max-w-4xl mx-auto py-12 px-6 space-y-10 animate-in fade-in duration-700">
       
-      {/* TREK PROGRESS NAVIGATION */}
       <nav className="flex justify-center items-center gap-8 md:gap-16 border-b border-white/5 pb-10">
         {[
           { id: 1, label: "01. THE CLEARING", icon: TreePine },
@@ -66,7 +74,6 @@ export default function CulturalFit({ userAnalysis }) {
           <button 
             key={step.id}
             onClick={() => setActiveStep(step.id)}
-            disabled={!userAnalysis && step.id > 1}
             className={`flex items-center gap-3 transition-all ${activeStep === step.id ? 'opacity-100 scale-105 text-teal-400' : 'opacity-30 text-white hover:opacity-50'}`}
           >
             <step.icon size={18} />
@@ -77,7 +84,6 @@ export default function CulturalFit({ userAnalysis }) {
 
       <main className="min-h-[600px] space-y-8">
         
-        {/* STAGE 01: THE CLEARING */}
         {activeStep === 1 && (
           <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
             <header className="text-center">
@@ -97,11 +103,11 @@ export default function CulturalFit({ userAnalysis }) {
               <div className="space-y-3">
                 <div className="flex justify-between items-end px-1 text-[10px] font-black uppercase tracking-[0.2em]">
                   <label className="text-teal-500">Your Local Dialect</label>
-                  <span className="text-gray-600 italic">(Your raw experience)</span>
+                  <span className="text-gray-600 italic">(The raw achievement)</span>
                 </div>
                 <div className="flex gap-3">
                   <Input 
-                    placeholder="e.g., 'I managed the classroom budget'..."
+                    placeholder="Describe a project or responsibility..."
                     className="bg-black/40 border-white/10 text-gray-200 h-14 italic"
                     value={manualInput}
                     onChange={(e) => setManualInput(e.target.value)}
@@ -109,7 +115,7 @@ export default function CulturalFit({ userAnalysis }) {
                   <Button 
                     onClick={handleDecode}
                     disabled={isGenerating || !manualInput}
-                    className="h-14 bg-teal-600 hover:bg-teal-500 px-10 font-black tracking-widest text-xs uppercase"
+                    className="h-14 bg-teal-600 hover:bg-teal-500 px-10 font-black tracking-widest text-xs uppercase transition-all"
                   >
                     {isGenerating ? <Loader2 className="animate-spin" /> : "CROSS THE BRIDGE"}
                   </Button>
@@ -123,14 +129,14 @@ export default function CulturalFit({ userAnalysis }) {
                   { title: 'Operations Dialect', text: bridgeData?.ops }
                 ].map((v, i) => (
                   <div key={i} className={`group p-6 bg-white/[0.02] rounded-2xl border border-white/5 flex justify-between items-center transition-all ${!v.text && 'opacity-20'}`}>
-                    <div className="space-y-1">
+                    <div className="space-y-1 pr-4">
                       <p className="text-[9px] font-black text-teal-500 uppercase tracking-tighter mb-1">{v.title}</p>
                       <p className="text-sm text-gray-400 italic leading-relaxed">
                         {v.text ? `"${v.text}"` : "Waiting for input..."}
                       </p>
                     </div>
                     {v.text && (
-                      <Button variant="ghost" size="icon" onClick={() => handleCopy(v.text)} className="text-gray-500 hover:text-teal-400">
+                      <Button variant="ghost" size="icon" onClick={() => handleCopy(v.text)} className="text-gray-500 hover:text-teal-400 shrink-0">
                         <Copy size={16} />
                       </Button>
                     )}
@@ -146,10 +152,10 @@ export default function CulturalFit({ userAnalysis }) {
                     <Sparkles size={18} />
                     <h3 className="text-white font-black text-sm uppercase tracking-widest">The Narrative Beacon</h3>
                   </div>
-                  <Badge className="bg-teal-500 text-black font-black text-[9px] tracking-widest px-2 uppercase">Hearth Synthesis Active</Badge>
+                  <Badge className="bg-teal-500 text-black font-black text-[9px] tracking-widest px-2 uppercase">Synthesis Active</Badge>
                 </div>
                 <h2 className="text-2xl text-gray-100 italic font-medium leading-relaxed">
-                  "A strategic architect of human capital with <span className="text-teal-400 font-bold">13 years</span> of expertise in <span className="text-teal-400 font-bold">curriculum scaling</span> and <span className="text-teal-400 font-bold">educational operations</span>."
+                  "{beacon}"
                 </h2>
               </div>
             </Card>
@@ -160,7 +166,6 @@ export default function CulturalFit({ userAnalysis }) {
           </div>
         )}
 
-        {/* STAGE 02: THE COMPASS */}
         {activeStep === 2 && (
           <div className="space-y-8 animate-in slide-in-from-right-4 duration-500 text-center">
              <header className="space-y-2">
@@ -169,7 +174,7 @@ export default function CulturalFit({ userAnalysis }) {
             </header>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {marketTrajectories.map((path, idx) => (
+              {trajectories.map((path, idx) => (
                 <Card key={idx} className={`p-6 bg-[#1C1622]/80 border-white/10 hover:border-teal-500/40 transition-all group ${idx === 0 ? 'ring-2 ring-teal-500/50' : ''}`}>
                   <div className="space-y-4 text-left">
                     <div className="flex justify-between items-start">
@@ -181,7 +186,7 @@ export default function CulturalFit({ userAnalysis }) {
                       <h4 className="text-white font-bold text-lg leading-tight">{path.domain}</h4>
                     </div>
                     <div className="py-3 border-y border-white/5">
-                      <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest">Avg. Target</p>
+                      <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest">Target Compensation</p>
                       <p className="text-xl text-white font-black italic">{path.salary}</p>
                     </div>
                     <p className="text-[11px] text-gray-400 italic leading-relaxed">{path.desc}</p>
@@ -192,7 +197,7 @@ export default function CulturalFit({ userAnalysis }) {
 
             <Card className="p-8 bg-black/40 border border-white/5">
                 <p className="text-gray-400 italic text-sm leading-relaxed max-w-lg mx-auto">
-                  "The Compass reveals multiple viable paths. While <span className="text-teal-400 font-bold">L&D Strategy</span> is your strongest bearing, <span className="text-teal-400 font-bold">Project Management</span> remains highly valuable."
+                  "The Compass reveals multiple viable paths based on your unique skill translation. Select the bearing that aligns with your intended impact."
                 </p>
             </Card>
 
@@ -202,7 +207,6 @@ export default function CulturalFit({ userAnalysis }) {
           </div>
         )}
 
-        {/* STAGE 03: TREK REPORT */}
         {activeStep === 3 && (
           <div className="animate-in zoom-in-95 duration-700 text-center space-y-8">
             <header className="space-y-2">
@@ -220,33 +224,33 @@ export default function CulturalFit({ userAnalysis }) {
                 
                 <div className="space-y-2">
                   <h2 className="text-3xl font-bold text-white italic">Your Bearing is Fixed.</h2>
-                  <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.4em]">Professional Synthesis Finalized</p>
+                  <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.4em]">Strategic Synthesis Finalized</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto pt-4">
                   <div className="p-6 bg-black/40 rounded-xl border border-white/5 space-y-2">
                     <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Primary Trajectory</p>
-                    <p className="text-white font-bold italic">L&D Strategy & Human Capital</p>
+                    <p className="text-white font-bold italic">{trajectories[0]?.domain}</p>
                   </div>
                   <div className="p-6 bg-black/40 rounded-xl border border-white/5 space-y-2">
                     <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Market Value</p>
-                    <p className="text-white font-bold italic">$100,290 Avg. Target</p>
+                    <p className="text-white font-bold italic">{trajectories[0]?.salary}</p>
                   </div>
                   
                   <div className="p-6 bg-black/40 rounded-xl border border-teal-500/20 space-y-4 md:col-span-2 relative">
                     <div className="flex justify-between items-center border-b border-white/5 pb-2">
-                       <p className="text-[9px] font-black text-teal-500 uppercase tracking-widest">Narrative Beacon</p>
+                       <p className="text-[9px] font-black text-teal-500 uppercase tracking-widest">Your Narrative Beacon</p>
                        <Button 
                          variant="ghost" 
                          size="sm" 
-                         onClick={() => handleCopy(beaconText)} 
+                         onClick={() => handleCopy(beacon)} 
                          className="h-7 text-[9px] font-black uppercase tracking-tighter text-teal-400/60 hover:text-teal-400"
                        >
                          {copied ? <><Check size={12} className="mr-1" /> COPIED</> : <><Copy size={12} className="mr-1" /> COPY TO CLIPBOARD</>}
                        </Button>
                     </div>
                     <p className="text-sm text-gray-300 italic leading-relaxed pt-2">
-                      "{beaconText}"
+                      "{beacon}"
                     </p>
                   </div>
                 </div>
