@@ -9,7 +9,7 @@ const ForestAdmin = () => {
   const { data: dwellers, isLoading: dwellersLoading } = useQuery({
     queryKey: ['dwellers'],
     queryFn: async () => {
-      const res = await window.base44.entities.User.list();
+      const res = await window.base44?.entities?.User?.list();
       return Array.isArray(res) ? res : [];
     }
   });
@@ -17,21 +17,49 @@ const ForestAdmin = () => {
   const { data: requests, isLoading: requestsLoading } = useQuery({
     queryKey: ['seat-requests'],
     queryFn: async () => {
-      const res = await window.base44.entities.VoucherPool.list();
+      const res = await window.base44?.entities?.VoucherPool?.list();
       return Array.isArray(res) ? res : [];
     }
   });
 
+  const manualGrant = useMutation({
+    mutationFn: async ({ email, tier = 'Hearthkeeper' }) => {
+      if (!window.base44?.entities?.User) {
+        throw new Error("Database connection not ready. Please refresh and try again.");
+      }
+
+      const cleanEmail = email.toLowerCase().trim();
+      const dwellerList = dwellers || [];
+      const user = dwellerList.find(u => u.email?.toLowerCase() === cleanEmail);
+      
+      if (user) {
+        return await window.base44.entities.User.update(user.id, { subscription_tier: tier });
+      } else {
+        return await window.base44.entities.User.create({ 
+          email: cleanEmail, 
+          subscription_tier: tier 
+        });
+      }
+    },
+    onSuccess: (data, variables) => {
+      setGrantEmail('');
+      queryClient.invalidateQueries(['dwellers']);
+      alert(`Success: ${variables.email} is now a ${variables.tier}.`);
+    },
+    onError: (err) => alert(err.message)
+  });
+
   const approveRequest = useMutation({
     mutationFn: async ({ requestId, email }) => {
+      const cleanEmail = email.toLowerCase().trim();
       const dwellerList = dwellers || [];
-      const user = dwellerList.find(u => u.email?.toLowerCase() === email?.toLowerCase());
+      const user = dwellerList.find(u => u.email?.toLowerCase() === cleanEmail);
       
       if (user) {
         await window.base44.entities.User.update(user.id, { subscription_tier: 'Hearthkeeper' });
       } else {
         await window.base44.entities.User.create({ 
-          email: email.toLowerCase().trim(), 
+          email: cleanEmail, 
           subscription_tier: 'Hearthkeeper' 
         });
       }
@@ -45,31 +73,6 @@ const ForestAdmin = () => {
       queryClient.invalidateQueries(['seat-requests']);
       queryClient.invalidateQueries(['dwellers']);
       alert("Seat granted successfully.");
-    },
-    onError: (err) => alert(err.message)
-  });
-
-  const manualGrant = useMutation({
-    mutationFn: async ({ email, tier = 'Hearthkeeper' }) => {
-      const cleanEmail = email.toLowerCase().trim();
-      const dwellerList = dwellers || [];
-      const user = dwellerList.find(u => u.email?.toLowerCase() === cleanEmail);
-      
-      if (user) {
-        // User exists, just update their tier
-        return await window.base44.entities.User.update(user.id, { subscription_tier: tier });
-      } else {
-        // User does not exist, create the record with this tier
-        return await window.base44.entities.User.create({ 
-          email: cleanEmail, 
-          subscription_tier: tier 
-        });
-      }
-    },
-    onSuccess: (data, variables) => {
-      setGrantEmail('');
-      queryClient.invalidateQueries(['dwellers']);
-      alert(`Success: ${variables.email} is now set as ${variables.tier}.`);
     },
     onError: (err) => alert(err.message)
   });
