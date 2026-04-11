@@ -127,12 +127,12 @@ function AppRoutes() {
         } />
         
         <Route path="/alignment" element={
-  <ProtectedRoute>
-    <AppLayout currentTier={sanctuaryState.tier}>
-      <CulturalFit vault={sanctuaryState} onSync={forceSync} />
-    </AppLayout>
-  </ProtectedRoute>
-} />
+          <ProtectedRoute>
+            <AppLayout currentTier={sanctuaryState.tier}>
+              <CulturalFit vault={sanctuaryState} onSync={forceSync} />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
         
         <Route path="/canopy" element={
           <ProtectedRoute>
