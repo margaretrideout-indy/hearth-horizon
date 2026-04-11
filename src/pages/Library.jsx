@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Library as LibraryIcon, Book, Package, Zap, BookOpen, ExternalLink, 
-  ShieldCheck, FileText, Wind, ArrowRight, ShoppingBag, MessageSquare,
-  Loader2, ClipboardCheck, Layout, Search, Languages, Map, Sparkles,
-  Trophy, Clock, Download, Gift, Cpu
+  Library as LibraryIcon, Book, Package, Zap, ExternalLink, 
+  ShieldCheck, FileText, ArrowRight, ShoppingBag, MessageSquare,
+  Search, Languages, Download, Gift, Cpu, Wind, Phone
 } from 'lucide-react';
 
-const Library = ({ vault, onUpdateVault }) => {
+const Library = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDictionary, setShowDictionary] = useState(false);
 
@@ -19,80 +18,6 @@ const Library = ({ vault, onUpdateVault }) => {
     { edu: "Client/Peer Relations", ops: "Cross-Functional Relationship Management (CRM)" },
     { edu: "Continuous Assessment", ops: "Iterative Feedback Loops & Real-time Data Analysis" }
   ];
-
-  const categories = {
-    study: [
-      {
-        title: "The Indigo Library",
-        desc: "A curated collection of literature and professional tools selected to support your career transition and personal sanctuary.",
-        links: [{ label: "View Library", url: "https://www.indigo.ca" }],
-        icon: <Book className="w-5 h-5" />,
-        footer: "Verified Indigo Partner Resource.",
-        color: "border-orange-500/20",
-        btnColor: "bg-orange-600/10 text-orange-400 border-orange-500/20 hover:bg-orange-600"
-      },
-      {
-        title: "Amazon Essentials",
-        desc: "Hand-picked workspace essentials, from ergonomic tech to the journals that kept me grounded during my 13-year tenure.",
-        links: [{ label: "Explore Shop", url: "https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?ref_=wl_share" }],
-        icon: <Package className="w-5 h-5" />,
-        footer: "As an Amazon Associate I earn from qualifying purchases.",
-        color: "border-orange-500/20",
-        btnColor: "bg-orange-600/10 text-orange-400 border-orange-500/20 hover:bg-orange-600"
-      }
-    ],
-    workshop: [
-      {
-        title: "Teal Career Tracker",
-        desc: "An AI-powered resume builder and job tracker that keeps your pivot organized.",
-        links: [{ label: "Explore Teal", url: "https://www.tealhq.com" }],
-        icon: <Zap className="w-5 h-5" />,
-        badge: "Essential"
-      },
-      {
-        title: "Jobscan ATS Match",
-        desc: "Compare your results against real job descriptions to ensure you pass the automated filters.",
-        links: [{ label: "Explore Jobscan", url: "https://www.jobscan.co" }],
-        icon: <Cpu className="w-5 h-5" />,
-        badge: "Optimization"
-      }
-    ],
-    common: [
-      {
-        title: "The Pivot Resume Template",
-        desc: "A clean, ATS-optimized layout designed to highlight transferable skills over industry-specific titles.",
-        type: "PDF / DOCX",
-        icon: <FileText className="w-5 h-5" />,
-        badge: "Free"
-      },
-      {
-        title: "Interview De-Coder",
-        desc: "A 1-page cheat sheet for translating corporate 'vibe' questions into evidence-based achievement answers.",
-        type: "PDF",
-        icon: <MessageSquare className="w-5 h-5" />,
-        badge: "Free"
-      }
-    ],
-    dialects: [
-      {
-        title: "The Universal Pivot Dictionary",
-        desc: "A framework for translating industry-specific language into high-impact corporate operations and management dialects.",
-        links: [{ label: "Harvest Resource", url: "#" }],
-        icon: <Languages className="w-5 h-5" />,
-        badge: "Core Tool"
-      }
-    ],
-    sanctuary: [
-      {
-        title: "Pivot Resilience Toolkit",
-        desc: "Access a national mental health portal for 24/7 support and specialized counseling services for those in transition.",
-        links: [{ label: "Canada Mental Health Hub", url: "https://www.canada.ca/en/public-health/services/mental-health-services.html" }],
-        emergencyInfo: "Text HOME to 686868",
-        icon: <ShieldCheck className="w-5 h-5" />,
-        badge: "24/7 Support"
-      }
-    ]
-  };
 
   return (
     <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-6 md:p-12 font-sans selection:bg-teal-500/30">
@@ -123,154 +48,197 @@ const Library = ({ vault, onUpdateVault }) => {
           </div>
         </header>
 
-        {/* 1. THE STUDY (Affiliate Links - High Visibility) */}
+        {/* 1. THE STUDY (Affiliate Links) */}
         <section className="mb-20">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-orange-500/60 whitespace-nowrap">The Study</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-orange-500/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {categories.study.map((item, idx) => (
-              <div key={idx} className={`bg-white/[0.01] border ${item.color} p-8 md:p-10 rounded-[2.5rem] hover:bg-white/[0.03] transition-all group relative`}>
-                <div className="w-12 h-12 rounded-2xl bg-orange-500/5 flex items-center justify-center text-orange-400 mb-8 border border-orange-500/10">
-                  {item.icon}
-                </div>
-                <h4 className="text-white font-bold text-lg mb-3 font-serif italic">{item.title}</h4>
-                <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">{item.desc}</p>
-                <a href={item.links[0].url} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all mb-6 ${item.btnColor} hover:text-white`}>
-                  {item.links[0].label} <ExternalLink className="ml-2 w-3 h-3" />
-                </a>
-                <p className="text-[8px] text-slate-600 uppercase tracking-tighter text-center italic font-black">{item.footer}</p>
+            <div className="bg-white/[0.01] border border-orange-500/20 p-8 md:p-10 rounded-[2.5rem] hover:bg-white/[0.03] transition-all group relative">
+              <div className="w-12 h-12 rounded-2xl bg-orange-500/5 flex items-center justify-center text-orange-400 mb-8 border border-orange-500/10 shadow-[0_0_15px_rgba(249,115,22,0.05)]">
+                <Book className="w-5 h-5" />
               </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 2. THE DIGITAL WORKSHOP (Teal / Jobscan) */}
-        <section className="mb-20">
-          <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Digital Workshop</h3>
-            <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {categories.workshop.map((item, idx) => (
-              <div key={idx} className="bg-white/[0.02] border border-white/5 p-8 md:p-10 rounded-[2.5rem] hover:bg-white/[0.04] transition-all group">
-                <div className="w-12 h-12 rounded-2xl bg-teal-500/5 flex items-center justify-center text-teal-400 mb-8 border border-teal-500/10">
-                  {item.icon}
-                </div>
-                <h4 className="text-white font-bold text-lg mb-3 font-serif italic">{item.title}</h4>
-                <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">{item.desc}</p>
-                <a href={item.links[0].url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 bg-teal-600/10 border border-teal-500/20 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] text-teal-400 hover:bg-teal-600 hover:text-white transition-all">
-                  {item.links[0].label} <ExternalLink className="ml-2 w-3 h-3" />
-                </a>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 3. COMMON GROUNDS (Universal Free) */}
-        <section className="mb-20">
-          <div className="flex items-center gap-4 mb-10">
-            <div className="flex items-center gap-2">
-              <Gift size={14} className="text-teal-400" />
-              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400 whitespace-nowrap">Common Grounds</h3>
+              <h4 className="text-white font-bold text-lg mb-3 font-serif italic">The Indigo Library</h4>
+              <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">
+                A curated collection of literature and professional tools selected to support your career transition and personal sanctuary.
+              </p>
+              <a href="https://www.indigo.ca" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all mb-6 bg-orange-600/10 text-orange-400 border border-orange-500/20 hover:bg-orange-600 hover:text-white">
+                VIEW LIBRARY <ExternalLink className="ml-2 w-3 h-3" />
+              </a>
+              <p className="text-[8px] text-slate-600 uppercase tracking-tighter text-center italic font-black">Verified Indigo Partner Resource.</p>
             </div>
+
+            <div className="bg-white/[0.01] border border-orange-500/20 p-8 md:p-10 rounded-[2.5rem] hover:bg-white/[0.03] transition-all group relative">
+              <div className="w-12 h-12 rounded-2xl bg-orange-500/5 flex items-center justify-center text-orange-400 mb-8 border border-orange-500/10 shadow-[0_0_15px_rgba(249,115,22,0.05)]">
+                <Package className="w-5 h-5" />
+              </div>
+              <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Amazon Essentials</h4>
+              <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">
+                Hand-picked workspace essentials, from ergonomic tech to the journals that kept me grounded during my 13-year tenure.
+              </p>
+              <a href="https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?ref_=wl_share" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all mb-6 bg-orange-600/10 text-orange-400 border border-orange-500/20 hover:bg-orange-600 hover:text-white">
+                EXPLORE SHOP <ExternalLink className="ml-2 w-3 h-3" />
+              </a>
+              <p className="text-[8px] text-slate-600 uppercase tracking-tighter text-center italic font-black">As an Amazon Associate I earn from qualifying purchases.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* 2. THE DIGITAL WORKSHOP */}
+        <section className="mb-20">
+          <div className="flex items-center gap-4 mb-10">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Digital Workshop</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-400/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {categories.common.map((item, idx) => (
-              <div key={idx} className="bg-white/[0.02] border border-white/10 p-8 rounded-[2.5rem] flex flex-col sm:flex-row gap-6 items-start sm:items-center group hover:bg-white/[0.04] transition-all">
-                <div className="w-14 h-14 rounded-2xl bg-teal-500/5 flex items-center justify-center text-teal-400 shrink-0 border border-teal-500/10">
-                  {item.icon}
-                </div>
-                <div className="flex-1 space-y-2">
-                  <div className="flex justify-between items-center">
-                    <h4 className="text-white font-bold text-sm font-serif italic">{item.title}</h4>
-                    <span className="text-[7px] font-black text-teal-500 uppercase tracking-widest bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">{item.type}</span>
-                  </div>
-                  <p className="text-[10px] text-slate-500 italic leading-relaxed">{item.desc}</p>
-                  <button className="flex items-center gap-2 text-[9px] font-black text-white uppercase tracking-[0.2em] mt-2 group-hover:text-teal-400 transition-colors">
-                    Download <Download size={12} className="group-hover:translate-y-0.5 transition-transform"/>
-                  </button>
-                </div>
+            <div className="bg-white/[0.02] border border-white/5 p-8 md:p-10 rounded-[2.5rem] hover:bg-white/[0.04] transition-all group relative">
+              <Badge className="absolute top-8 right-8 bg-teal-500/10 text-teal-500 border-teal-500/20 text-[7px] font-black px-2 uppercase tracking-widest">Next Step</Badge>
+              <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-8 border border-white/5 shadow-[0_0_15px_rgba(20,184,166,0.1)]">
+                <Zap className="w-5 h-5" />
               </div>
-            ))}
+              <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Teal HQ</h4>
+              <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">An all-in-one platform to manage your job search, track applications, and optimize your resume.</p>
+              <a href="https://www.tealhq.com" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-[0.2em] text-teal-400 hover:text-white flex items-center gap-2 transition-colors">
+                ACCESS TOOL <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+
+            <div className="bg-white/[0.02] border border-white/5 p-8 md:p-10 rounded-[2.5rem] hover:bg-white/[0.04] transition-all group">
+              <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-8 border border-white/5">
+                <Cpu className="w-5 h-5" />
+              </div>
+              <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Jobscan ATS</h4>
+              <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">Check how well your resume matches specific job descriptions to bypass automated filters.</p>
+              <a href="https://www.jobscan.co" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-[0.2em] text-teal-400 hover:text-white flex items-center gap-2 transition-colors">
+                ACCESS TOOL <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
           </div>
         </section>
 
-        {/* 4. DIALECTS */}
+        {/* 3. THE SANCTUARY */}
         <section className="mb-20">
           <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Dialect & Navigation</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Sanctuary</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            {categories.dialects.map((item, idx) => (
-              <div key={idx} className="bg-white/[0.02] border border-white/5 p-8 md:p-10 rounded-[2.5rem] hover:bg-white/[0.04] transition-all group">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-8 border border-white/5">
-                  {item.icon}
-                </div>
-                <div className="flex justify-between items-start mb-3">
-                  <h4 className="text-white font-bold text-lg font-serif italic tracking-tight">{item.title}</h4>
-                  <Badge className="bg-teal-500/10 text-teal-500 border-teal-500/20 text-[7px] font-black px-2 uppercase tracking-widest">{item.badge}</Badge>
-                </div>
-                <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">{item.desc}</p>
-                <button 
-                  onClick={() => idx === 0 && setShowDictionary(!showDictionary)}
-                  className="inline-flex items-center text-[9px] font-black uppercase tracking-[0.2em] text-teal-400 hover:text-white transition-all group/btn"
-                >
-                  {showDictionary && idx === 0 ? "Close Dictionary" : item.links[0].label} 
-                  <ArrowRight className={`ml-2 w-3 h-3 transition-transform ${showDictionary && idx === 0 ? 'rotate-90' : 'group-hover/btn:translate-x-1'}`} />
-                </button>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div className="bg-[#1A1423] border-2 border-red-500/20 p-8 rounded-[2.5rem] flex flex-col relative group shadow-[0_0_30px_rgba(239,68,68,0.05)]">
+              <div className="flex flex-col gap-2 absolute top-6 right-6 items-end">
+                 <Badge className="bg-red-500/10 text-red-400 border-red-500/20 text-[9px] font-black px-3 py-1 uppercase tracking-widest flex items-center gap-2 animate-pulse">
+                   <Phone size={10} /> TEXT 686868
+                 </Badge>
               </div>
-            ))}
-          </div>
-
-          {showDictionary && (
-            <div className="mt-8 animate-in fade-in slide-in-from-top-4 duration-500">
-              <div className="bg-[#1A1423] border border-teal-500/20 rounded-[2.5rem] overflow-hidden shadow-2xl">
-                <div className="divide-y divide-white/5">
-                  {translations.map((t, i) => (
-                    <div key={i} className="grid grid-cols-1 md:grid-cols-2 p-6 hover:bg-white/[0.02] transition-colors gap-4">
-                      <div>
-                        <span className="text-[8px] font-black text-slate-600 uppercase tracking-tighter block mb-1">Industry-Specific Experience</span>
-                        <p className="text-sm text-slate-300 font-medium">{t.edu}</p>
-                      </div>
-                      <div>
-                        <span className="text-[8px] font-black text-teal-600 uppercase tracking-tighter block mb-1">Cross-Functional Market Value</span>
-                        <p className="text-sm text-white font-serif italic">{t.ops}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div className="w-10 h-10 rounded-xl bg-red-400/5 text-red-400 flex items-center justify-center mb-6 border border-red-400/10">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Pivot Resilience Toolkit</h4>
+              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Immediate 24/7 support. If the transition feels heavy, reach out to verified Canadian support networks instantly.</p>
+              <div className="mt-auto space-y-3">
+                <a href="https://www.wellnesstogether.ca" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                  WELLNESS TOGETHER CANADA <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
+                </a>
+                <a href="sms:686868" className="text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-300 transition-colors flex items-center gap-2 group/link">
+                  CONNECT WITH CRISIS LINE <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
+                </a>
               </div>
             </div>
-          )}
+
+            <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col group">
+              <div className="w-10 h-10 rounded-xl bg-teal-400/5 text-teal-400 flex items-center justify-center mb-6 border border-teal-400/10">
+                <FileText className="w-5 h-5" />
+              </div>
+              <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Burnout to Balance</h4>
+              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Vetted workbooks designed to regulate your nervous system and help you exit "survival mode" during your pivot.</p>
+              <div className="mt-auto">
+                <a href="https://www.coursecorrectioncoaching.com/lawyer-career-coaching/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                  VIEW COACHING FRAMEWORK <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
+                </a>
+              </div>
+            </div>
+
+            <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col group">
+              <div className="w-10 h-10 rounded-xl bg-teal-400/5 text-teal-400 flex items-center justify-center mb-6 border border-teal-400/10">
+                <Wind className="w-5 h-5" />
+              </div>
+              <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">The Inner Advocate</h4>
+              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Audio sessions and coaching methodologies to help you separate your professional identity from your personal value.</p>
+              <div className="mt-auto">
+                <a href="https://www.theinneradvocate.com/method" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                  EXPLORE AUDIO & SESSIONS <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
+                </a>
+              </div>
+            </div>
+          </div>
         </section>
 
-        {/* 5. THE SANCTUARY */}
-        <section className="mb-20">
-          <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Sanctuary</h3>
-            <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {categories.sanctuary.map((item, idx) => (
-              <div key={idx} className="bg-[#1A1423] border border-white/5 p-8 rounded-[3rem] hover:border-teal-500/20 transition-all flex flex-col h-full shadow-2xl group">
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-8 border bg-teal-400/5 text-teal-400 border-teal-400/10">
-                  {item.icon}
-                </div>
-                <h4 className="text-white font-bold text-lg font-serif italic mb-2 tracking-tight">{item.title}</h4>
-                <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">{item.desc}</p>
-                <div className="mt-auto">
-                  <a href={item.links[0].url} target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
-                    {item.links[0].label} <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
-                  </a>
-                </div>
+        {/* 4. DIALECTS & PROVISIONS */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
+           <section>
+              <div className="flex items-center gap-4 mb-8">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Dialect</h3>
+                <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
               </div>
-            ))}
+              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[2.5rem] hover:bg-white/[0.04] transition-all group">
+                <div className="flex justify-between items-start mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-teal-400 border border-white/5">
+                    <Languages className="w-5 h-5" />
+                  </div>
+                  <Badge className="bg-teal-500/10 text-teal-500 border-teal-500/20 text-[7px] font-black px-2 uppercase tracking-widest">Core Tool</Badge>
+                </div>
+                <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">The Universal Pivot Dictionary</h4>
+                <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-6 italic">A framework for translating industry-specific language into high-impact corporate dialects.</p>
+                <button 
+                  onClick={() => setShowDictionary(!showDictionary)}
+                  className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white flex items-center gap-2 transition-colors"
+                >
+                  {showDictionary ? "CLOSE DICTIONARY" : "HARVEST RESOURCE"} <ArrowRight className={`w-3 h-3 transition-transform ${showDictionary ? 'rotate-90' : ''}`} />
+                </button>
+              </div>
+           </section>
+
+           <section>
+              <div className="flex items-center gap-4 mb-8">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">Provisions</h3>
+                <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
+              </div>
+              <div className="space-y-4">
+                {[
+                  { title: "Pivot Resume Template", type: "PDF", icon: <FileText size={14}/> },
+                  { title: "Interview De-Coder", type: "PDF", icon: <MessageSquare size={14}/> }
+                ].map((item, i) => (
+                  <div key={i} className="bg-white/[0.02] border border-white/10 p-4 rounded-2xl flex items-center justify-between group hover:bg-white/[0.04] transition-all cursor-pointer">
+                    <div className="flex items-center gap-3">
+                      <div className="text-teal-400 opacity-40">{item.icon}</div>
+                      <span className="text-xs font-serif italic text-white">{item.title}</span>
+                    </div>
+                    <Download size={12} className="text-slate-600 group-hover:text-teal-400 transition-colors" />
+                  </div>
+                ))}
+              </div>
+           </section>
+        </div>
+
+        {showDictionary && (
+          <div className="mb-20 animate-in fade-in slide-in-from-top-4 duration-500">
+            <div className="bg-[#1A1423] border border-teal-500/20 rounded-[2.5rem] overflow-hidden shadow-2xl divide-y divide-white/5">
+              {translations.map((t, i) => (
+                <div key={i} className="grid grid-cols-1 md:grid-cols-2 p-6 hover:bg-white/[0.02] transition-colors gap-4">
+                  <div>
+                    <span className="text-[8px] font-black text-slate-600 uppercase tracking-tighter block mb-1">Legacy Sector</span>
+                    <p className="text-sm text-slate-300 font-medium">{t.edu}</p>
+                  </div>
+                  <div>
+                    <span className="text-[8px] font-black text-teal-600 uppercase tracking-tighter block mb-1">Corporate Ops Value</span>
+                    <p className="text-sm text-white font-serif italic">{t.ops}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </section>
+        )}
 
         <footer className="mt-20 md:mt-32 pt-12 border-t border-white/5 text-center">
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.02] border border-white/5">
