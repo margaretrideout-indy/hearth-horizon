@@ -8,9 +8,11 @@ import {
   Compass, Mountain, Loader2, 
   Binoculars, TreePine, ArrowRight, 
   Zap, ArrowRightLeft, Sparkles, TrendingUp,
-  Copy, Check, ClipboardCheck, AlertCircle, Pickaxe
+  Copy, Check, ClipboardCheck, AlertCircle, Pickaxe,
+  Layers, Target, CheckCircle2
 } from 'lucide-react';
 
+// Keeping the name as CulturalFit per system requirements
 export default function CulturalFit({ vault, onSync }) {
   const [activeStep, setActiveStep] = useState(1);
   const [isAligning, setIsAligning] = useState(false);
@@ -18,24 +20,23 @@ export default function CulturalFit({ vault, onSync }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [bridgeData, setBridgeData] = useState(null);
   const [copied, setCopied] = useState(false);
-
   const [beacon, setBeacon] = useState("");
   const [trajectories, setTrajectories] = useState([]);
 
   const gapData = [
-    { skill: "Agile/Scrum Certification", status: "missing", impact: "high", effort: "2 weeks" },
-    { skill: "Stakeholder Management", status: "aligned", impact: "critical", effort: "sync'd" },
-    { skill: "SaaS Product Lifecycle", status: "missing", impact: "medium", effort: "1 month" },
-    { skill: "Strategic Communication", status: "aligned", impact: "high", effort: "sync'd" },
+    { skill: "Agile/Scrum Certification", status: "missing", impact: "high", effort: "2 weeks", category: "Operations" },
+    { skill: "Stakeholder Management", status: "aligned", impact: "critical", effort: "sync'd", category: "Leadership" },
+    { skill: "SaaS Product Lifecycle", status: "missing", impact: "medium", effort: "1 month", category: "Product" },
+    { skill: "Strategic Communication", status: "aligned", impact: "high", effort: "sync'd", category: "Soft Skills" },
   ];
 
   useEffect(() => {
     if (vault) {
       setBeacon(vault.resume?.summary || "A strategic professional bridging expertise across high-impact sectors.");
       const paths = vault.marketPaths || [
-        { domain: "Strategic Operations", salary: "$95,000+", fit: 94, desc: "Focus on cross-functional alignment and organizational scaling." },
-        { domain: "Project Leadership", salary: "$102,000+", fit: 91, desc: "Focus on lifecycle management and delivery optimization." },
-        { domain: "Implementation Strategy", salary: "$98,000+", fit: 88, desc: "Focus on translating complex goals into executable frameworks." }
+        { domain: "Strategic Operations", salary: "$95,000+", fit: 94, velocity: "High", desc: "Focus on cross-functional alignment and organizational scaling." },
+        { domain: "Project Leadership", salary: "$102,000+", fit: 91, velocity: "Stable", desc: "Focus on lifecycle management and delivery optimization." },
+        { domain: "Implementation Strategy", salary: "$98,000+", fit: 88, velocity: "Emerging", desc: "Focus on translating complex goals into executable frameworks." }
       ];
       setTrajectories(paths);
     }
@@ -60,196 +61,224 @@ export default function CulturalFit({ vault, onSync }) {
     }, 1200);
   };
 
-  const handleFinalAlign = () => {
-    setIsAligning(true);
-    setTimeout(() => {
-      onSync({ isAligned: true });
-      setIsAligning(false);
-      setActiveStep(4);
-    }, 2000);
-  };
-
   return (
-    <div className="max-w-4xl mx-auto py-12 px-6 space-y-10 animate-in fade-in duration-700">
+    <div className="max-w-6xl mx-auto py-12 px-6 space-y-12 animate-in fade-in duration-700">
       
-      <nav className="flex justify-center items-center gap-6 md:gap-12 border-b border-white/5 pb-10 overflow-x-auto">
+      {/* NAVIGATION HUD */}
+      <nav className="flex justify-between items-center bg-[#1C1622]/40 border border-white/5 rounded-full px-8 py-4 backdrop-blur-md sticky top-4 z-50">
         {[
-          { id: 1, label: "01. CLEARING", icon: TreePine },
-          { id: 2, label: "02. COMPASS", icon: Compass },
-          { id: 3, label: "03. GAP ANALYZER", icon: Pickaxe },
-          { id: 4, label: "04. SUMMIT", icon: ClipboardCheck }
+          { id: 1, label: "THE CLEARING", icon: TreePine },
+          { id: 2, label: "THE COMPASS", icon: Compass },
+          { id: 3, label: "GAP ANALYZER", icon: Pickaxe },
+          { id: 4, label: "THE SUMMIT", icon: ClipboardCheck }
         ].map((step) => (
           <button 
             key={step.id}
             onClick={() => setActiveStep(step.id)}
-            className={`flex items-center gap-2 transition-all shrink-0 ${activeStep === step.id ? 'opacity-100 scale-105 text-teal-400' : 'opacity-30 text-white hover:opacity-50'}`}
+            className={`flex items-center gap-3 transition-all ${activeStep === step.id ? 'text-teal-400' : 'text-slate-500 hover:text-slate-300'}`}
           >
-            <step.icon size={16} />
-            <span className="text-[9px] font-black tracking-[0.2em]">{step.label}</span>
+            <div className={`p-2 rounded-lg ${activeStep === step.id ? 'bg-teal-500/20' : 'bg-transparent'}`}>
+              <step.icon size={18} />
+            </div>
+            <span className="text-[10px] font-black tracking-[0.2em] hidden lg:block">{step.label}</span>
           </button>
         ))}
       </nav>
 
-      <main className="min-h-[600px] space-y-8">
-        
+      <main className="min-h-[600px]">
+        {/* STEP 1: LINGUISTIC BRIDGE */}
         {activeStep === 1 && (
-          <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
-            <header className="text-center">
-              <h1 className="text-4xl font-bold text-white italic tracking-tight uppercase">THE CLEARING</h1>
-              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Linguistic Bridge</p>
-            </header>
-
-            <Card className="p-8 bg-[#1C1622]/60 border-white/10 shadow-2xl space-y-8">
-              <div className="space-y-3">
-                <div className="flex justify-between items-end px-1 text-[10px] font-black uppercase tracking-[0.2em]">
-                  <label className="text-teal-500">Your Local Dialect</label>
-                  <span className="text-gray-600 italic">(Achievement to translate)</span>
-                </div>
-                <div className="flex gap-3">
-                  <Input 
-                    placeholder="Describe a project..."
-                    className="bg-black/40 border-white/10 text-gray-200 h-14 italic"
-                    value={manualInput}
-                    onChange={(e) => setManualInput(e.target.value)}
-                  />
-                  <Button 
-                    onClick={handleDecode}
-                    disabled={isGenerating || !manualInput}
-                    className="h-14 bg-teal-600 hover:bg-teal-500 px-10 font-black tracking-widest text-xs uppercase"
-                  >
-                    {isGenerating ? <Loader2 className="animate-spin" /> : "TRANSLATE"}
-                  </Button>
-                </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 animate-in slide-in-from-bottom-8 duration-700">
+            <div className="lg:col-span-4 space-y-6">
+              <div className="p-4 bg-teal-500/10 w-fit rounded-2xl border border-teal-500/20">
+                <ArrowRightLeft className="text-teal-400" size={24} />
               </div>
+              <h1 className="text-4xl font-serif italic text-white leading-tight">Linguistic<br/>Transcoding</h1>
+              <p className="text-slate-400 text-sm leading-relaxed italic">"Translate your experience from the local dialect of education into the universal language of operations."</p>
+            </div>
 
-              <div className="grid grid-cols-1 gap-4">
-                {['Project Management', 'Data Strategy', 'Operations'].map((dialect, i) => {
-                  const key = dialect === 'Project Management' ? 'pm' : dialect === 'Data Strategy' ? 'data' : 'ops';
-                  const text = bridgeData?.[key];
-                  return (
-                    <div key={i} className={`p-5 bg-white/[0.02] rounded-2xl border border-white/5 flex justify-between items-center transition-all ${!text && 'opacity-20'}`}>
-                      <div className="space-y-1">
-                        <p className="text-[9px] font-black text-teal-500 uppercase tracking-tighter">{dialect} Dialect</p>
-                        <p className="text-sm text-gray-400 italic">{text || "Waiting for input..."}</p>
-                      </div>
-                      {text && <Button variant="ghost" size="icon" onClick={() => handleCopy(text)} className="hover:text-teal-400"><Copy size={16} /></Button>}
+            <div className="lg:col-span-8 space-y-6">
+              <Card className="p-8 bg-[#1C1622]/60 border-white/10 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
+                   <Layers size={140} />
+                </div>
+                
+                <div className="relative z-10 space-y-8">
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500">Source Achievement</label>
+                    <div className="flex gap-4">
+                      <Input 
+                        placeholder="e.g., Managed a team of 15 staff members across 3 departments..."
+                        className="bg-black/40 border-white/10 text-white h-16 rounded-xl italic px-6"
+                        value={manualInput}
+                        onChange={(e) => setManualInput(e.target.value)}
+                      />
+                      <Button 
+                        onClick={handleDecode}
+                        disabled={isGenerating || !manualInput}
+                        className="h-16 bg-teal-500 hover:bg-teal-400 text-black px-8 font-black rounded-xl transition-all"
+                      >
+                        {isGenerating ? <Loader2 className="animate-spin" /> : "DECODE"}
+                      </Button>
                     </div>
-                  );
-                })}
-              </div>
-            </Card>
-            <Button onClick={() => setActiveStep(2)} className="w-full h-16 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl gap-3 uppercase shadow-lg">
-              ESTABLISH A BEARING <ArrowRight size={20} />
-            </Button>
+                  </div>
+
+                  <div className="grid gap-4">
+                    {['Project Management', 'Data Strategy', 'Operations'].map((dialect, i) => {
+                      const key = dialect === 'Project Management' ? 'pm' : dialect === 'Data Strategy' ? 'data' : 'ops';
+                      const text = bridgeData?.[key];
+                      return (
+                        <div key={i} className={`p-6 rounded-2xl border transition-all duration-500 ${text ? 'bg-teal-500/5 border-teal-500/20' : 'bg-white/[0.02] border-white/5 opacity-40'}`}>
+                          <div className="flex justify-between items-start gap-4">
+                            <div className="space-y-2">
+                              <span className="text-[9px] font-black text-teal-500 uppercase tracking-widest">{dialect} Dialect</span>
+                              <p className="text-sm text-slate-300 italic">{text || "Establish source experience to generate..."}</p>
+                            </div>
+                            {text && (
+                              <Button variant="ghost" size="icon" onClick={() => handleCopy(text)} className="text-slate-500 hover:text-teal-400">
+                                {copied ? <Check size={16} /> : <Copy size={16} />}
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </Card>
+              <Button onClick={() => setActiveStep(2)} className="w-full h-16 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-black rounded-2xl gap-3 uppercase tracking-widest">
+                View Market Compass <ArrowRight size={18} />
+              </Button>
+            </div>
           </div>
         )}
 
+        {/* STEP 2: THE COMPASS */}
         {activeStep === 2 && (
-          <div className="space-y-8 animate-in slide-in-from-right-4 duration-500 text-center">
-            <header className="space-y-2">
-              <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">THE COMPASS</h1>
-              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Market Topography</p>
+          <div className="space-y-12 animate-in fade-in duration-1000">
+            <header className="text-center max-w-2xl mx-auto space-y-4">
+              <h2 className="text-4xl font-serif italic text-white uppercase tracking-tight">Market Topography</h2>
+              <p className="text-slate-400 text-sm">Identifying trajectories based on your 13-year foundation.</p>
             </header>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {trajectories.map((path, idx) => (
-                <Card key={idx} className={`p-6 bg-[#1C1622]/80 border-white/10 hover:border-teal-500/40 transition-all ${idx === 0 ? 'ring-2 ring-teal-500/50' : ''}`}>
-                  <div className="space-y-4 text-left">
-                    <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 text-[9px] font-black uppercase">{path.fit}% Match</Badge>
-                    <h4 className="text-white font-bold text-lg leading-tight">{path.domain}</h4>
-                    <div className="py-3 border-y border-white/5">
-                      <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest">Market Value</p>
-                      <p className="text-xl text-white font-black italic">{path.salary}</p>
+                <Card key={idx} className={`group p-8 bg-[#1C1622]/80 border-white/10 hover:border-teal-500/40 transition-all rounded-[2.5rem] ${idx === 0 ? 'ring-1 ring-teal-500/30 shadow-[0_0_30px_rgba(20,184,166,0.05)]' : ''}`}>
+                  <div className="space-y-6">
+                    <div className="flex justify-between items-start">
+                       <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 text-[10px] font-black px-3 py-1">{path.fit}% FIT</Badge>
+                       <TrendingUp size={18} className={path.velocity === 'High' ? 'text-orange-500' : 'text-teal-500/20'} />
                     </div>
-                    <p className="text-[11px] text-gray-400 italic">{path.desc}</p>
+                    <div className="space-y-2">
+                      <h4 className="text-white font-bold text-xl leading-tight group-hover:text-teal-400 transition-colors">{path.domain}</h4>
+                      <p className="text-xs text-slate-500 italic leading-relaxed">{path.desc}</p>
+                    </div>
+                    <div className="pt-6 border-t border-white/5 flex justify-between items-end">
+                      <div className="space-y-1">
+                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Comp. Floor</p>
+                        <p className="text-2xl text-white font-black italic">{path.salary}</p>
+                      </div>
+                      <div className="text-[9px] font-black text-teal-500 uppercase bg-teal-500/5 px-2 py-1 rounded">
+                        {path.velocity} Demand
+                      </div>
+                    </div>
                   </div>
                 </Card>
               ))}
             </div>
-            <Button onClick={() => setActiveStep(3)} className="w-full h-16 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl gap-3 uppercase">
-              SCAN FOR GAPS <Pickaxe size={20} />
+            
+            <Button onClick={() => setActiveStep(3)} className="w-full h-20 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-[2rem] gap-4 uppercase tracking-[0.2em] shadow-2xl shadow-teal-500/10">
+              Run Gap Analysis <Pickaxe size={20} />
             </Button>
           </div>
         )}
 
+        {/* STEP 3: THE GAP ANALYZER */}
         {activeStep === 3 && (
-          <div className="space-y-8 animate-in slide-in-from-right-4 duration-500">
-            <header className="text-center">
-              <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">THE GAP ANALYZER</h1>
-              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">The Harvest List</p>
-            </header>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 animate-in slide-in-from-right-8 duration-700">
+            <div className="lg:col-span-4 space-y-8">
+               <div className="space-y-4">
+                  <div className="p-4 bg-orange-500/10 w-fit rounded-2xl border border-orange-500/20 text-orange-400">
+                    <Target size={24} />
+                  </div>
+                  <h2 className="text-4xl font-serif italic text-white uppercase tracking-tight">The Harvest</h2>
+                  <p className="text-slate-400 text-sm leading-relaxed">Identifying the missing provisions needed for your professional transition.</p>
+               </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                <Card className="p-4 bg-teal-500/5 border-teal-500/20 text-center col-span-2">
-                    <p className="text-[9px] font-black text-teal-500 uppercase tracking-[0.2em] mb-1">Overall Market Readiness</p>
-                    <p className="text-3xl font-black text-white italic">82%</p>
-                    <Progress value={82} className="h-1 mt-3 bg-white/5" indicatorClassName="bg-teal-500" />
-                </Card>
-                <Card className="p-4 bg-white/[0.02] border-white/5 text-center">
-                    <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] mb-1">Critical Gaps</p>
-                    <p className="text-3xl font-black text-white italic">2</p>
-                </Card>
-                <Card className="p-4 bg-white/[0.02] border-white/5 text-center">
-                    <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] mb-1">Time to Ready</p>
-                    <p className="text-3xl font-black text-white italic">~6wk</p>
-                </Card>
+               <Card className="p-6 bg-teal-500/5 border-teal-500/20">
+                  <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest mb-4">Overall Readiness</p>
+                  <div className="flex items-end gap-3 mb-2">
+                     <span className="text-5xl font-black italic text-white">82%</span>
+                  </div>
+                  <Progress value={82} className="h-2 bg-white/5" />
+               </Card>
             </div>
 
-            <div className="space-y-3">
-                {gapData.map((item, i) => (
-                    <div key={i} className="flex items-center justify-between p-5 bg-[#1C1622]/60 border border-white/5 rounded-2xl group hover:border-teal-500/30 transition-all">
-                        <div className="flex items-center gap-4">
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${item.status === 'aligned' ? 'bg-teal-500/10 text-teal-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
-                                {item.status === 'aligned' ? <Check size={20} /> : <AlertCircle size={20} />}
-                            </div>
-                            <div className="space-y-1">
-                                <h4 className="text-white font-bold text-sm tracking-wide">{item.skill}</h4>
-                                <div className="flex gap-2">
-                                    <Badge variant="outline" className="text-[8px] uppercase border-white/10 text-gray-500">{item.impact} Impact</Badge>
-                                    <Badge variant="outline" className="text-[8px] uppercase border-white/10 text-gray-400 italic">{item.effort}</Badge>
-                                </div>
-                            </div>
+            <div className="lg:col-span-8 space-y-4">
+               {gapData.map((item, i) => (
+                  <Card key={i} className="p-6 bg-[#1C1622]/60 border-white/5 rounded-2xl hover:border-teal-500/20 transition-all group">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-6">
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${item.status === 'aligned' ? 'bg-teal-500/10 text-teal-400' : 'bg-orange-500/10 text-orange-400'}`}>
+                           {item.status === 'aligned' ? <CheckCircle2 size={24} /> : <AlertCircle size={24} />}
                         </div>
-                        {item.status === 'missing' && (
-                            <Button variant="outline" size="sm" className="border-teal-500/30 text-teal-400 text-[9px] font-black uppercase hover:bg-teal-500/10">
-                                Harvest from Library
-                            </Button>
-                        )}
+                        <div className="space-y-1">
+                          <h4 className="text-white font-bold group-hover:text-teal-400 transition-colors">{item.skill}</h4>
+                          <div className="flex gap-3 items-center">
+                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{item.category}</span>
+                            <div className="w-1 h-1 rounded-full bg-slate-700" />
+                            <span className="text-[9px] font-bold text-teal-500/60 italic uppercase">{item.effort}</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {item.status === 'missing' ? (
+                        <Button variant="outline" className="border-white/10 text-white text-[10px] font-black uppercase hover:bg-teal-500 hover:text-black transition-all">
+                          Harvest Item
+                        </Button>
+                      ) : (
+                        <Badge variant="outline" className="border-teal-500/30 text-teal-500 uppercase text-[9px]">Aligned</Badge>
+                      )}
                     </div>
-                ))}
+                  </Card>
+               ))}
+               
+               <Button onClick={() => {
+                 setIsAligning(true);
+                 setTimeout(() => {
+                   setActiveStep(4);
+                   setIsAligning(false);
+                 }, 1500);
+               }} className="w-full h-20 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-[2rem] gap-4 uppercase mt-8 text-lg">
+                  {isAligning ? <Loader2 className="animate-spin" size={24} /> : <><Sparkles size={24} /> Finalize Narrative</>}
+               </Button>
             </div>
-
-            <Button onClick={handleFinalAlign} className="w-full h-20 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl text-lg uppercase shadow-xl">
-               {isAligning ? <Loader2 className="animate-spin mr-3" size={24} /> : <><Zap size={22} className="mr-3" /> ALIGN NARRATIVE</>}
-            </Button>
           </div>
         )}
 
+        {/* STEP 4: THE SUMMIT */}
         {activeStep === 4 && (
-          <div className="animate-in zoom-in-95 duration-700 text-center space-y-8">
-            <header className="space-y-2">
-              <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">THE SUMMIT</h1>
-              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Crossing Complete</p>
-            </header>
-
-            <Card className="p-12 bg-[#1C1622]/90 border-double border-4 border-teal-500/20 shadow-2xl space-y-10 relative overflow-hidden">
-              <Mountain className="absolute -right-8 -bottom-8 w-48 h-48 text-teal-500/5 rotate-12" />
-              <div className="space-y-6 relative z-10">
-                <div className="w-20 h-20 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto border border-teal-500/20 shadow-lg">
-                  <ClipboardCheck className="w-10 h-10 text-teal-400" />
-                </div>
-                <h2 className="text-3xl font-bold text-white italic">Your Bearing is Fixed.</h2>
-                <div className="p-6 bg-black/40 rounded-xl border border-teal-500/20 text-left max-w-lg mx-auto">
-                    <p className="text-[9px] font-black text-teal-500 uppercase tracking-widest mb-2">Narrative Beacon</p>
-                    <p className="text-sm text-gray-300 italic">"{beacon}"</p>
-                </div>
+          <div className="max-w-3xl mx-auto text-center space-y-10 animate-in zoom-in-95 duration-1000">
+            <div className="space-y-4">
+              <div className="w-24 h-24 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto border border-teal-500/20 shadow-[0_0_50px_rgba(20,184,166,0.2)]">
+                <CheckCircle2 size={40} className="text-teal-400" />
               </div>
+              <h1 className="text-5xl font-serif italic text-white uppercase tracking-tight">The Summit</h1>
+              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.5em]">Narrative Fixed</p>
+            </div>
 
-              <div className="pt-4 relative z-10">
-                <Button onClick={() => window.location.href='/canopy'} className="bg-teal-600 hover:bg-teal-500 text-white px-16 h-20 rounded-2xl font-black gap-3 shadow-2xl text-lg uppercase tracking-widest transition-transform hover:scale-105">
-                  <Binoculars size={24} /> ENTER THE CANOPY
-                </Button>
-              </div>
+            <Card className="p-12 bg-gradient-to-b from-[#1C1622] to-black border border-white/10 rounded-[3rem] relative">
+               <div className="space-y-8">
+                  <p className="text-slate-300 italic text-xl leading-relaxed">
+                    "The transition from educator to <span className="text-white font-bold underline decoration-teal-500">Program Operations Lead</span> is now conceptually complete. Your beacon is established."
+                  </p>
+                  
+                  <div className="flex flex-col md:flex-row gap-4 justify-center pt-6">
+                    <Button onClick={() => window.location.href='/canopy'} className="h-16 px-12 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-2xl uppercase tracking-widest flex items-center gap-3">
+                      Go to Canopy <Binoculars size={18} />
+                    </Button>
+                  </div>
+               </div>
             </Card>
           </div>
         )}
