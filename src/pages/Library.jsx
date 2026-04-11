@@ -11,23 +11,6 @@ const Library = ({ vault, onUpdateVault }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDictionary, setShowDictionary] = useState(false);
 
-  const commonGrounds = [
-    {
-      title: "The Pivot Resume Template",
-      desc: "A clean, ATS-optimized layout designed to highlight transferable skills over industry-specific titles.",
-      type: "PDF / DOCX",
-      icon: <FileText className="w-5 h-5" />,
-      badge: "Free"
-    },
-    {
-      title: "Interview De-Coder",
-      desc: "A 1-page cheat sheet for translating corporate 'vibe' questions into evidence-based achievement answers.",
-      type: "PDF",
-      icon: <MessageSquare className="w-5 h-5" />,
-      badge: "Free"
-    }
-  ];
-
   const translations = [
     { edu: "Front-line Delivery", ops: "Personalized User Experience (UX) & Scalable Execution" },
     { edu: "Project Individualization", ops: "Custom Stakeholder Requirements & Targeted KPI Development" },
@@ -44,14 +27,32 @@ const Library = ({ vault, onUpdateVault }) => {
         desc: "A curated collection of literature and professional tools selected to support your career transition and personal sanctuary.",
         links: [{ label: "View Library", url: "https://www.indigo.ca" }],
         icon: <Book className="w-5 h-5" />,
-        footer: "Verified Indigo Partner Resource."
+        footer: "Verified Indigo Partner Resource.",
+        highlight: true
       },
       {
         title: "Amazon Starter Kit",
         desc: "A curated toolkit for the professional pivot: from essential connectivity hubs to focus-driven office tools.",
         links: [{ label: "Explore Kit", url: "https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?ref_=wl_share" }],
         icon: <Package className="w-5 h-5" />,
-        footer: "As an Amazon Associate I earn from qualifying purchases."
+        footer: "As an Amazon Associate I earn from qualifying purchases.",
+        highlight: true
+      }
+    ],
+    common: [
+      {
+        title: "The Pivot Resume Template",
+        desc: "A clean, ATS-optimized layout designed to highlight transferable skills over industry-specific titles.",
+        type: "PDF / DOCX",
+        icon: <FileText className="w-5 h-5" />,
+        badge: "Free"
+      },
+      {
+        title: "Interview De-Coder",
+        desc: "A 1-page cheat sheet for translating corporate 'vibe' questions into evidence-based achievement answers.",
+        type: "PDF",
+        icon: <MessageSquare className="w-5 h-5" />,
+        badge: "Free"
       }
     ],
     dialects: [
@@ -105,6 +106,36 @@ const Library = ({ vault, onUpdateVault }) => {
           </div>
         </header>
 
+        {/* PRIMARY STUDY (Affiliate Links Front & Center) */}
+        <section className="mb-20">
+          <div className="flex items-center gap-4 mb-10">
+            <div className="flex items-center gap-2">
+              <ShoppingBag size={14} className="text-white/40" />
+              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500/60 whitespace-nowrap font-sans">The Study</h3>
+            </div>
+            <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {categories.study.map((item, idx) => (
+              <div key={idx} className="bg-white/[0.01] border border-white/5 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] hover:bg-white/[0.03] transition-all group relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                   <Sparkles className="text-teal-400 w-12 h-12" />
+                </div>
+                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-8 border border-white/5 shadow-[0_0_15px_rgba(20,184,166,0.1)]">
+                  {item.icon}
+                </div>
+                <h4 className="text-white font-bold text-lg mb-3 font-serif italic tracking-tight">{item.title}</h4>
+                <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">{item.desc}</p>
+                <a href={item.links[0].url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 bg-teal-600/10 border border-teal-500/20 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] text-teal-400 hover:bg-teal-600 hover:text-white transition-all mb-6">
+                  {item.links[0].label} <ExternalLink className="ml-2 w-3 h-3" />
+                </a>
+                <p className="text-[8px] text-slate-600 uppercase tracking-tighter text-center italic font-black">{item.footer}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* COMMON GROUNDS (Universal Free Tier) */}
         <section className="mb-20 animate-in slide-in-from-bottom-4 duration-700">
           <div className="flex items-center gap-4 mb-10">
             <div className="flex items-center gap-2">
@@ -114,7 +145,7 @@ const Library = ({ vault, onUpdateVault }) => {
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-400/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {commonGrounds.map((item, idx) => (
+            {categories.common.map((item, idx) => (
               <div key={idx} className="bg-white/[0.02] border border-white/10 p-8 rounded-[2.5rem] flex flex-col sm:flex-row gap-6 items-start sm:items-center group hover:bg-white/[0.04] transition-all">
                 <div className="w-14 h-14 rounded-2xl bg-teal-500/5 flex items-center justify-center text-teal-400 shrink-0 border border-teal-500/10">
                   {item.icon}
@@ -134,28 +165,7 @@ const Library = ({ vault, onUpdateVault }) => {
           </div>
         </section>
 
-        <section className="mb-20">
-          <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500/60 whitespace-nowrap font-sans">The Study</h3>
-            <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {categories.study.map((item, idx) => (
-              <div key={idx} className="bg-white/[0.01] border border-white/5 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] hover:bg-white/[0.03] transition-all group">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-8 border border-white/5 shadow-[0_0_15px_rgba(20,184,166,0.1)]">
-                  {item.icon}
-                </div>
-                <h4 className="text-white font-bold text-lg mb-3 font-serif italic tracking-tight">{item.title}</h4>
-                <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">{item.desc}</p>
-                <a href={item.links[0].url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 bg-teal-600/10 border border-teal-500/20 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] text-teal-400 hover:bg-teal-600 hover:text-white transition-all mb-6">
-                  {item.links[0].label} <ExternalLink className="ml-2 w-3 h-3" />
-                </a>
-                <p className="text-[8px] text-slate-600 uppercase tracking-tighter text-center italic font-black">{item.footer}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
+        {/* DIALECTS */}
         <section className="mb-20">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Dialect & Navigation</h3>
@@ -209,6 +219,7 @@ const Library = ({ vault, onUpdateVault }) => {
           )}
         </section>
 
+        {/* SANCTUARY */}
         <section className="mb-20">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Sanctuary</h3>
