@@ -38,12 +38,6 @@ export default function CulturalFit({ vault, onSync }) {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    if (vault?.resume && !manualInput) {
-      setManualInput(`Analysis of ${vault.resume.name} foundations...`);
-    }
-  }, [vault?.resume]);
-
   const gapData = [
     { skill: "Industry-Standard Frameworks", status: "missing", impact: "high", effort: "2 weeks", category: "Knowledge" },
     { skill: "Stakeholder Management", status: "aligned", impact: "critical", effort: "sync'd", category: "Leadership" },
@@ -66,12 +60,17 @@ export default function CulturalFit({ vault, onSync }) {
   const handleDecode = () => {
     if (!manualInput) return;
     setIsGenerating(true);
+    
     setTimeout(() => {
-      const cleanInput = manualInput.trim().replace(/^\w/, (c) => c.toLowerCase());
+      const verbBuffer = manualInput
+        .trim()
+        .replace(/^(managed|developed|designed|coordinated|led|created|organized|overlooked|ran|built)\s+/i, "")
+        .replace(/^\w/, (c) => c.toLowerCase());
+
       setBridgeData({
-        pm: `Synthesized key deliverables for ${cleanInput} while ensuring alignment with broader organizational milestones.`,
-        data: `Derived quantitative insights from ${cleanInput} to facilitate evidence-based decision making.`,
-        ops: `Architected a repeatable protocol for ${cleanInput} to minimize friction and maximize output.`
+        pm: `Synthesized key deliverables for ${verbBuffer} while ensuring alignment with broader organizational milestones.`,
+        data: `Derived quantitative insights from ${verbBuffer} to facilitate evidence-based decision making.`,
+        ops: `Architected a repeatable protocol for ${verbBuffer} to minimize friction and maximize output.`
       });
       setIsGenerating(false);
     }, 1200);
@@ -109,7 +108,7 @@ export default function CulturalFit({ vault, onSync }) {
               </div>
               <h1 className="text-4xl font-serif italic text-white leading-tight">Linguistic<br/>Transcoding</h1>
               <p className="text-slate-500 text-[11px] leading-relaxed italic font-light">
-                "Regardless of your origin, extract the raw value from your history and translate it into the operational dialect of your next domain."
+                "Extract the raw value from your history and translate it into the operational dialect of your next domain."
               </p>
             </div>
 
@@ -173,7 +172,7 @@ export default function CulturalFit({ vault, onSync }) {
           <div className="space-y-12 animate-in fade-in duration-1000">
             <header className="text-center max-w-2xl mx-auto space-y-4">
               <h2 className="text-4xl font-serif italic text-white tracking-tight">Market Topography</h2>
-              <p className="text-slate-500 text-[11px] font-light italic uppercase tracking-widest">Mapping paths for any professional background</p>
+              <p className="text-slate-500 text-[11px] font-light italic uppercase tracking-widest">Select a trajectory to begin the deep-scan</p>
             </header>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -236,7 +235,7 @@ export default function CulturalFit({ vault, onSync }) {
                   </div>
                   <h2 className="text-4xl font-serif italic text-white tracking-tight">The Harvest</h2>
                   <p className="text-slate-500 text-xs italic">
-                    Universal gap analysis for <span className="text-teal-400 font-bold">{selectedPath?.domain}</span>.
+                    Mapping the distance between current state and <span className="text-teal-400 font-bold">{selectedPath?.domain}</span>.
                   </p>
                </div>
 
@@ -269,10 +268,7 @@ export default function CulturalFit({ vault, onSync }) {
                       </div>
                       
                       {item.status === 'missing' && (
-                        <button 
-                          onClick={() => navigate('/library', { state: { searchTerm: item.skill } })} 
-                          className="text-[9px] font-black uppercase text-slate-500 hover:text-teal-400 transition-colors tracking-widest border-b border-transparent hover:border-teal-400/50 pb-1"
-                        >
+                        <button onClick={() => navigate('/library')} className="text-[9px] font-black uppercase text-slate-500 hover:text-teal-400 transition-colors tracking-widest border-b border-transparent hover:border-teal-400/50 pb-1">
                           Link Provision
                         </button>
                       )}
