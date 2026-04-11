@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Flame, Wind, Zap, Lock, 
-  TrendingUp, MessagesSquare, Compass, Check, Leaf, Mountain, Heart, UserPlus 
+  TrendingUp, MessagesSquare, Compass, Check, Leaf, Mountain, Heart, UserPlus,
+  Smartphone, Share2, PlusSquare 
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -195,7 +196,7 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 border-t border-white/5 pt-16 md:pt-24">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 border-t border-white/5 pt-16 md:pt-24 mb-16 md:mb-24">
           {navigationItems.map((item, idx) => (
             <div key={idx} className={`p-6 rounded-[2rem] border flex flex-col items-center text-center group transition-all ${
               item.status === 'unlocked' 
@@ -212,6 +213,43 @@ const GroveTiers = ({ vault, onSync }) => {
             </div>
           ))}
         </div>
+
+        {/* Mobile App Instruction Card */}
+        <section className="max-w-4xl mx-auto">
+          <div className="p-8 sm:p-12 rounded-[3rem] bg-gradient-to-br from-[#1A1423] to-[#0F0A15] border border-white/5 relative overflow-hidden group">
+            <div className="absolute -right-8 -bottom-8 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity duration-1000">
+              <Smartphone size={240} />
+            </div>
+            
+            <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left">
+              <div className="p-4 rounded-3xl bg-teal-500/10 text-teal-400">
+                <Smartphone className="w-8 h-8" />
+              </div>
+              
+              <div className="flex-1 space-y-4">
+                <h3 className="text-white font-serif italic text-2xl">Keep the Sanctuary Close</h3>
+                <p className="text-slate-400 text-sm font-light leading-relaxed max-w-xl">
+                  For the best experience during your transition, add Hearth & Horizon to your mobile or tablet home screen. It functions just like a native app.
+                </p>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-white text-[10px] font-black uppercase tracking-widest">
+                      <Share2 className="w-3 h-3 text-teal-500" /> iOS / Safari
+                    </div>
+                    <p className="text-[11px] text-slate-500">Tap the 'Share' icon in your browser toolbar and select 'Add to Home Screen'.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-white text-[10px] font-black uppercase tracking-widest">
+                      <PlusSquare className="w-3 h-3 text-teal-500" /> Android / Chrome
+                    </div>
+                    <p className="text-[11px] text-slate-500">Tap the 'three-dot menu' in the top right and select 'Install app' or 'Add to Home screen'.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
       </div>
     </div>
