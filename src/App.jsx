@@ -10,6 +10,8 @@ import CulturalFit from './pages/CulturalFit';
 import Canopy from './pages/Canopy';
 import Library from './pages/Library';
 import GroveTiers from './pages/GroveTiers';
+// 1. Import the EmbersChat component
+import EmbersChat from './pages/EmbersChat'; 
 
 const queryClient = new QueryClient();
 const ADMIN_EMAIL = "margaretpardy@gmail.com"; 
@@ -122,6 +124,15 @@ function AppRoutes() {
           <ProtectedRoute>
             <AppLayout currentTier={sanctuaryState.tier}>
               <YourHearth vault={sanctuaryState} onSync={forceSync} onResumeSync={handleResumeSync} />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+
+        {/* 2. Added the Embers Chat Route */}
+        <Route path="/embers" element={
+          <ProtectedRoute>
+            <AppLayout currentTier={sanctuaryState.tier}>
+              <EmbersChat />
             </AppLayout>
           </ProtectedRoute>
         } />
