@@ -61,7 +61,7 @@ const Library = () => {
               </div>
               <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Indigo.ca Curated List</h4>
               <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">
-                A selection of literature focusing on professional pivots, psychological resilience, and Canadian educational leadership.
+                A selection of literature focusing on professional pivots, psychological resilience, and Canadian leadership.
               </p>
               <a href="https://www.indigo.ca" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all mb-6 bg-orange-600/10 text-orange-400 border border-orange-500/20 hover:bg-orange-600 hover:text-white">
                 SHOP INDIGO <ExternalLink className="ml-2 w-3 h-3" />
@@ -181,7 +181,7 @@ const Library = () => {
           </div>
         )}
 
-        {/* 4. THE SANCTUARY (REPOSITIONED TO BOTTOM) */}
+        {/* 4. THE SANCTUARY */}
         <section className="mt-20 border-t border-white/5 pt-20 pb-32">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Sanctuary</h3>
@@ -194,14 +194,14 @@ const Library = () => {
               <div className="w-10 h-10 rounded-xl bg-teal-400/5 text-teal-400 flex items-center justify-center mb-6 border border-teal-400/10">
                 <ShieldCheck className="w-5 h-5" />
               </div>
-              <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Pivot Resilience Toolkit</h4>
-              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Free, 24/7 counseling and mental health support for Canadians navigating major life shifts.</p>
+              <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Canadian Resource Portal</h4>
+              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">The CMHA provides comprehensive toolkits and nationwide support for managing mental health at work and home.</p>
               <div className="mt-auto space-y-4">
-                <a href="https://www.wellnesstogether.ca" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
-                  WELLNESS TOGETHER CANADA <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
+                <a href="https://cmha.ca/find-help/finding-help/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                  ACCESS CMHA RESOURCES <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
                 </a>
-                <div className="pt-2 border-t border-white/5">
-                  <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white">Crisis Line: 686868</span>
+                <div className="pt-3 border-t border-white/5">
+                  <span className="text-xs font-black uppercase tracking-widest text-white">Crisis Line: 686868</span>
                 </div>
               </div>
             </div>
@@ -211,10 +211,10 @@ const Library = () => {
                 <FileText className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Burnout to Balance</h4>
-              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Vetted, free PDF workbooks designed to help regulate your nervous system after a career pivot.</p>
+              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Scientific frameworks and somatic tools for down-regulating the nervous system during high-stress transitions.</p>
               <div className="mt-auto">
-                <a href="https://www.coursecorrectioncoaching.com/lawyer-career-coaching/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
-                  DOWNLOAD PDF GUIDES <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
+                <a href="https://www.mentalhealth.org.uk/explore-mental-health/publications/how-manage-and-reduce-stress" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                  DOWNLOAD RESOURCE <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
                 </a>
               </div>
             </div>
@@ -224,9 +224,9 @@ const Library = () => {
                 <Wind className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">The Inner Advocate</h4>
-              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Guided audio sessions to help you quiet the inner critic during high-stakes transitions.</p>
+              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Mindfulness practices tailored for professional identity shifts and overcoming imposter syndrome.</p>
               <div className="mt-auto">
-                <a href="https://www.theinneradvocate.com/method" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                <a href="https://self-compassion.org/guided-self-compassion-meditations-mp3-2/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   LISTEN TO SESSIONS <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
                 </a>
               </div>
