@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { 
   Flame, Compass, Heart, MessageSquare, Lock, Sparkles, 
-  Zap, BarChart, Clock, Upload, Loader2, CheckCircle2, RefreshCw, ArrowRight
+  Zap, BarChart, Clock, Upload, Loader2, CheckCircle2, RefreshCw, ArrowRight 
 } from 'lucide-react';
 
 export default function Hearth({ vault, onSync, onResumeSync }) {
@@ -86,11 +86,12 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
       reflection, 
       timestamp: new Date().toISOString() 
     };
-    setPulses(prev => [newPulse, ...prev]);
+    
     try {
       if (window.base44?.entities?.RootwerkLog) {
         await window.base44.entities.RootwerkLog.create(newPulse);
       }
+      setPulses(prev => [newPulse, ...prev]);
       setSelectedEmoji(null);
       setReflection("");
       if (onSync) onSync();
@@ -113,6 +114,7 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
     <div className="min-h-screen bg-[#0F0A15] text-white font-sans selection:bg-teal-500/30 pb-12 md:pb-20">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-20">
         
+        {/* PROGRESS HEADER */}
         <Card className="bg-[#1C1622]/40 border-white/10 p-6 md:p-10 mb-8 md:mb-12 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl relative overflow-hidden">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 md:mb-12 gap-6 relative z-10">
             <div className="flex gap-4 md:gap-6 items-center">
@@ -155,8 +157,10 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
         </Card>
 
         <div className="grid grid-cols-12 gap-6 md:gap-8 lg:gap-12">
+          {/* MAIN CONTENT COLUMN */}
           <div className="col-span-12 lg:col-span-8 space-y-8 md:space-y-12">
             
+            {/* ALIGNMENT ENGINE (RESUME) */}
             <div className="space-y-6">
               <div className="flex items-center gap-4">
                 <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
@@ -213,6 +217,7 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
               </Card>
             </div>
 
+            {/* ROOTWORK SECTION */}
             <div className="flex items-center gap-4 mt-12">
                <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
                <h3 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] flex items-center gap-3 italic text-teal-500 shrink-0">
@@ -222,6 +227,7 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+              {/* LOGGING INTERFACE */}
               <Card className="bg-[#251D2D] border-white/10 p-6 md:p-8 space-y-8 md:space-y-10 shadow-xl rounded-[2rem]">
                 <div className="space-y-4 md:space-y-6">
                   <p className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest">1. THE EMOJI PULSE</p>
@@ -259,6 +265,7 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
                 </div>
               </Card>
 
+              {/* LOGBOOK (ENTRIES) */}
               <div className="space-y-6">
                 <div className="flex items-center gap-3 px-2 text-slate-600">
                   <MessageSquare size={16} />
@@ -266,7 +273,7 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
                 </div>
                 <div className="space-y-4 max-h-[400px] md:max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
                   {pulses.length > 0 ? pulses.map((entry, i) => (
-                    <Card key={i} className="p-5 md:p-6 bg-[#1C1622]/60 border border-white/5 rounded-2xl">
+                    <Card key={i} className={`p-5 md:p-6 border border-white/5 rounded-2xl ${entry.reflection.includes('SYNTACTIC ALIGNMENT') ? 'bg-teal-500/5 border-teal-500/20' : 'bg-[#1C1622]/60'}`}>
                       <div className="flex justify-between items-start mb-4">
                         <div className="space-y-1">
                           <span className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase block">{new Date(entry.timestamp).toLocaleDateString()}</span>
@@ -275,9 +282,13 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
                              <span className="text-[8px] md:text-[9px] font-medium uppercase">{new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                           </div>
                         </div>
-                        <span className="px-3 py-1 rounded-full bg-teal-500/10 text-teal-400 text-[8px] md:text-[9px] font-black uppercase italic border border-teal-500/20">{entry.emoji}</span>
+                        <span className={`px-3 py-1 rounded-full text-[8px] md:text-[9px] font-black uppercase italic border ${entry.reflection.includes('SYNTACTIC ALIGNMENT') ? 'bg-teal-500/20 text-teal-400 border-teal-500/40' : 'bg-white/5 text-slate-400 border-white/10'}`}>
+                          {entry.emoji}
+                        </span>
                       </div>
-                      <p className="text-xs text-slate-400 leading-relaxed italic">"{entry.reflection}"</p>
+                      <p className={`text-xs leading-relaxed italic ${entry.reflection.includes('SYNTACTIC ALIGNMENT') ? 'text-slate-200 font-sans whitespace-pre-line not-italic' : 'text-slate-400'}`}>
+                        {entry.reflection.includes('SYNTACTIC ALIGNMENT') ? entry.reflection : `"${entry.reflection}"`}
+                      </p>
                     </Card>
                   )) : (
                     <p className="text-[10px] text-slate-700 uppercase tracking-widest text-center py-10 italic">No entries yet.</p>
@@ -287,7 +298,9 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
             </div>
           </div>
 
+          {/* SIDEBAR COLUMN */}
           <div className="col-span-12 lg:col-span-4 space-y-6 md:space-y-8">
+            {/* MATURITY / UNLOCK PROGRESS */}
             <Card className="bg-[#1C1622]/40 border-white/5 p-8 md:p-10 space-y-6 md:space-y-8 rounded-[2rem]">
               <div className="flex items-center justify-between text-slate-600">
                 <div className="flex items-center gap-3"><Lock size={14} /><p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em]">MATURITY</p></div>
@@ -299,6 +312,7 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
               </div>
             </Card>
 
+            {/* DYNAMIC SIDEBAR CONTENT */}
             {showPreview && !isUnlocked && (
               <Card className="bg-gradient-to-br from-teal-500/10 to-transparent border-teal-500/20 p-6 md:p-8 rounded-[2rem] animate-in fade-in slide-in-from-bottom-4 duration-1000">
                 <div className="flex items-center gap-3 mb-6"><Zap size={16} className="text-teal-400 fill-teal-400" /><p className="text-[9px] md:text-[10px] font-black uppercase text-teal-400 tracking-[0.3em]">Translation Preview</p></div>
