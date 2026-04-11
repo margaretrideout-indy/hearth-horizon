@@ -26,9 +26,15 @@ const ForestAdmin = () => {
     mutationFn: async ({ requestId, email }) => {
       const dwellerList = dwellers || [];
       const user = dwellerList.find(u => u.email?.toLowerCase() === email?.toLowerCase());
-      if (!user) throw new Error("User record not found. Ask them to sign up as a Seedling first!");
-
-      await window.base44.entities.User.update(user.id, { subscription_tier: 'Hearthkeeper' });
+      
+      if (user) {
+        await window.base44.entities.User.update(user.id, { subscription_tier: 'Hearthkeeper' });
+      } else {
+        await window.base44.entities.User.create({ 
+          email: email.toLowerCase().trim(), 
+          subscription_tier: 'Hearthkeeper' 
+        });
+      }
       
       return await window.base44.entities.VoucherPool.update(requestId, { 
         status: 'claimed',
@@ -45,16 +51,25 @@ const ForestAdmin = () => {
 
   const manualGrant = useMutation({
     mutationFn: async ({ email, tier = 'Hearthkeeper' }) => {
+      const cleanEmail = email.toLowerCase().trim();
       const dwellerList = dwellers || [];
-      const user = dwellerList.find(u => u.email?.toLowerCase() === email.toLowerCase().trim());
-      if (!user) throw new Error("Dweller not found. They must sign up for a free account first.");
+      const user = dwellerList.find(u => u.email?.toLowerCase() === cleanEmail);
       
-      return await window.base44.entities.User.update(user.id, { subscription_tier: tier });
+      if (user) {
+        // User exists, just update their tier
+        return await window.base44.entities.User.update(user.id, { subscription_tier: tier });
+      } else {
+        // User does not exist, create the record with this tier
+        return await window.base44.entities.User.create({ 
+          email: cleanEmail, 
+          subscription_tier: tier 
+        });
+      }
     },
     onSuccess: (data, variables) => {
       setGrantEmail('');
       queryClient.invalidateQueries(['dwellers']);
-      alert(`Access granted: ${variables.email} is now a ${variables.tier}.`);
+      alert(`Success: ${variables.email} is now set as ${variables.tier}.`);
     },
     onError: (err) => alert(err.message)
   });
@@ -88,7 +103,7 @@ const ForestAdmin = () => {
               type="email" 
               value={grantEmail}
               onChange={(e) => setGrantEmail(e.target.value)}
-              placeholder="Tester or Guest Email..." 
+              placeholder="Enter ANY email address..." 
               className="bg-[#241B2E] border border-white/5 rounded-2xl py-3 pl-12 pr-6 text-sm outline-none focus:border-purple-500/30 transition-all w-full md:w-64 placeholder:text-slate-600"
             />
           </div>
