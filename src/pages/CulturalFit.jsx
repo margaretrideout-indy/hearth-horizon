@@ -10,7 +10,7 @@ import {
   Zap, ArrowRightLeft, Sparkles, TrendingUp,
   Copy, Check, ClipboardCheck, AlertCircle, Pickaxe,
   Layers, Target, CheckCircle2, History, Microscope,
-  ShoppingBag
+  Briefcase
 } from 'lucide-react';
 
 export default function CulturalFit({ vault, onSync }) {
@@ -246,7 +246,7 @@ export default function CulturalFit({ vault, onSync }) {
                       </div>
                       
                       {item.status === 'missing' && (
-                        <button className="text-[9px] font-black uppercase text-slate-500 hover:text-teal-400 transition-colors tracking-widest border-b border-transparent hover:border-teal-400/50 pb-1">
+                        <button onClick={() => window.location.href='/library'} className="text-[9px] font-black uppercase text-slate-500 hover:text-teal-400 transition-colors tracking-widest border-b border-transparent hover:border-teal-400/50 pb-1">
                           Link Provision
                         </button>
                       )}
@@ -284,8 +284,8 @@ export default function CulturalFit({ vault, onSync }) {
                   </p>
                   
                   <div className="flex flex-col md:flex-row gap-6 justify-center pt-8">
-                    <Button onClick={() => window.location.href='/library'} className="h-16 px-12 bg-white text-black font-black rounded-2xl uppercase tracking-widest flex items-center gap-3 transition-transform hover:scale-105">
-                      View Provisions <ShoppingBag size={18} />
+                    <Button onClick={() => window.location.href='/canopy'} className="h-16 px-12 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-2xl uppercase tracking-widest flex items-center gap-3 transition-transform hover:scale-105">
+                      Enter The Canopy <Binoculars size={18} />
                     </Button>
                   </div>
                </div>
