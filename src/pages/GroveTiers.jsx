@@ -94,7 +94,12 @@ const GroveTiers = ({ vault, onSync }) => {
       price: "$5",
       period: "$8/MO AFTER FIRST MONTH",
       desc: '"Full oversight and total access to the entire landscape."',
-      features: ["Everything in Hearthkeeper", "Ecosystem Alignment", "The Canopy Hub"],
+      features: [
+        "Everything in Hearthkeeper", 
+        "Ecosystem Alignment", 
+        "The Canopy Hub",
+        "Sponsors 1 Hearthkeeper Seat"
+      ],
       button: "SELECT PLAN",
       onClick: () => handlePaid(LINK_STEWARD),
       icon: <Mountain className="w-5 h-5 text-teal-400" />
