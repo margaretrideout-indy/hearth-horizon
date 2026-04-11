@@ -3,11 +3,12 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Progress } from "@/components/ui/progress";
 import { 
   Compass, Mountain, Loader2, 
   Binoculars, TreePine, ArrowRight, 
   Zap, ArrowRightLeft, Sparkles, TrendingUp,
-  Copy, Check, ClipboardCheck
+  Copy, Check, ClipboardCheck, AlertCircle, Pickaxe
 } from 'lucide-react';
 
 export default function CulturalFit({ vault, onSync }) {
@@ -21,14 +22,20 @@ export default function CulturalFit({ vault, onSync }) {
   const [beacon, setBeacon] = useState("");
   const [trajectories, setTrajectories] = useState([]);
 
+  const gapData = [
+    { skill: "Agile/Scrum Certification", status: "missing", impact: "high", effort: "2 weeks" },
+    { skill: "Stakeholder Management", status: "aligned", impact: "critical", effort: "sync'd" },
+    { skill: "SaaS Product Lifecycle", status: "missing", impact: "medium", effort: "1 month" },
+    { skill: "Strategic Communication", status: "aligned", impact: "high", effort: "sync'd" },
+  ];
+
   useEffect(() => {
     if (vault) {
       setBeacon(vault.resume?.summary || "A strategic professional bridging expertise across high-impact sectors.");
-      
       const paths = vault.marketPaths || [
-        { domain: "Strategic Operations", salary: "$95,000+", fit: "94%", desc: "Focus on cross-functional alignment and organizational scaling." },
-        { domain: "Project Leadership", salary: "$102,000+", fit: "91%", desc: "Focus on lifecycle management and delivery optimization." },
-        { domain: "Implementation Strategy", salary: "$98,000+", fit: "88%", desc: "Focus on translating complex goals into executable frameworks." }
+        { domain: "Strategic Operations", salary: "$95,000+", fit: 94, desc: "Focus on cross-functional alignment and organizational scaling." },
+        { domain: "Project Leadership", salary: "$102,000+", fit: 91, desc: "Focus on lifecycle management and delivery optimization." },
+        { domain: "Implementation Strategy", salary: "$98,000+", fit: 88, desc: "Focus on translating complex goals into executable frameworks." }
       ];
       setTrajectories(paths);
     }
@@ -53,31 +60,32 @@ export default function CulturalFit({ vault, onSync }) {
     }, 1200);
   };
 
-  const handleAlign = () => {
+  const handleFinalAlign = () => {
     setIsAligning(true);
     setTimeout(() => {
       onSync({ isAligned: true });
       setIsAligning(false);
-      setActiveStep(3);
+      setActiveStep(4);
     }, 2000);
   };
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-6 space-y-10 animate-in fade-in duration-700">
       
-      <nav className="flex justify-center items-center gap-8 md:gap-16 border-b border-white/5 pb-10">
+      <nav className="flex justify-center items-center gap-6 md:gap-12 border-b border-white/5 pb-10 overflow-x-auto">
         {[
-          { id: 1, label: "01. THE CLEARING", icon: TreePine },
-          { id: 2, label: "02. THE COMPASS", icon: Compass },
-          { id: 3, label: "03. TREK REPORT", icon: ClipboardCheck }
+          { id: 1, label: "01. CLEARING", icon: TreePine },
+          { id: 2, label: "02. COMPASS", icon: Compass },
+          { id: 3, label: "03. GAP ANALYZER", icon: Pickaxe },
+          { id: 4, label: "04. SUMMIT", icon: ClipboardCheck }
         ].map((step) => (
           <button 
             key={step.id}
             onClick={() => setActiveStep(step.id)}
-            className={`flex items-center gap-3 transition-all ${activeStep === step.id ? 'opacity-100 scale-105 text-teal-400' : 'opacity-30 text-white hover:opacity-50'}`}
+            className={`flex items-center gap-2 transition-all shrink-0 ${activeStep === step.id ? 'opacity-100 scale-105 text-teal-400' : 'opacity-30 text-white hover:opacity-50'}`}
           >
-            <step.icon size={18} />
-            <span className="text-[10px] font-black tracking-[0.2em]">{step.label}</span>
+            <step.icon size={16} />
+            <span className="text-[9px] font-black tracking-[0.2em]">{step.label}</span>
           </button>
         ))}
       </nav>
@@ -88,26 +96,18 @@ export default function CulturalFit({ vault, onSync }) {
           <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
             <header className="text-center">
               <h1 className="text-4xl font-bold text-white italic tracking-tight uppercase">THE CLEARING</h1>
-              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Equipping the Traveler</p>
+              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Linguistic Bridge</p>
             </header>
 
             <Card className="p-8 bg-[#1C1622]/60 border-white/10 shadow-2xl space-y-8">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 text-teal-500">
-                  <ArrowRightLeft size={18} />
-                  <h3 className="text-white font-black text-sm uppercase tracking-widest text-teal-400">The Linguistic Bridge</h3>
-                </div>
-                <p className="text-[10px] text-gray-500 uppercase font-bold tracking-tight italic">Translate your achievements into professional dialects</p>
-              </div>
-
               <div className="space-y-3">
                 <div className="flex justify-between items-end px-1 text-[10px] font-black uppercase tracking-[0.2em]">
                   <label className="text-teal-500">Your Local Dialect</label>
-                  <span className="text-gray-600 italic">(The raw achievement)</span>
+                  <span className="text-gray-600 italic">(Achievement to translate)</span>
                 </div>
                 <div className="flex gap-3">
                   <Input 
-                    placeholder="Describe a project or responsibility..."
+                    placeholder="Describe a project..."
                     className="bg-black/40 border-white/10 text-gray-200 h-14 italic"
                     value={manualInput}
                     onChange={(e) => setManualInput(e.target.value)}
@@ -115,52 +115,30 @@ export default function CulturalFit({ vault, onSync }) {
                   <Button 
                     onClick={handleDecode}
                     disabled={isGenerating || !manualInput}
-                    className="h-14 bg-teal-600 hover:bg-teal-500 px-10 font-black tracking-widest text-xs uppercase transition-all"
+                    className="h-14 bg-teal-600 hover:bg-teal-500 px-10 font-black tracking-widest text-xs uppercase"
                   >
-                    {isGenerating ? <Loader2 className="animate-spin" /> : "CROSS THE BRIDGE"}
+                    {isGenerating ? <Loader2 className="animate-spin" /> : "TRANSLATE"}
                   </Button>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 gap-4">
-                {[
-                  { title: 'Project Management Dialect', text: bridgeData?.pm },
-                  { title: 'Data Strategy Dialect', text: bridgeData?.data },
-                  { title: 'Operations Dialect', text: bridgeData?.ops }
-                ].map((v, i) => (
-                  <div key={i} className={`group p-6 bg-white/[0.02] rounded-2xl border border-white/5 flex justify-between items-center transition-all ${!v.text && 'opacity-20'}`}>
-                    <div className="space-y-1 pr-4">
-                      <p className="text-[9px] font-black text-teal-500 uppercase tracking-tighter mb-1">{v.title}</p>
-                      <p className="text-sm text-gray-400 italic leading-relaxed">
-                        {v.text ? `"${v.text}"` : "Waiting for input..."}
-                      </p>
+                {['Project Management', 'Data Strategy', 'Operations'].map((dialect, i) => {
+                  const key = dialect === 'Project Management' ? 'pm' : dialect === 'Data Strategy' ? 'data' : 'ops';
+                  const text = bridgeData?.[key];
+                  return (
+                    <div key={i} className={`p-5 bg-white/[0.02] rounded-2xl border border-white/5 flex justify-between items-center transition-all ${!text && 'opacity-20'}`}>
+                      <div className="space-y-1">
+                        <p className="text-[9px] font-black text-teal-500 uppercase tracking-tighter">{dialect} Dialect</p>
+                        <p className="text-sm text-gray-400 italic">{text || "Waiting for input..."}</p>
+                      </div>
+                      {text && <Button variant="ghost" size="icon" onClick={() => handleCopy(text)} className="hover:text-teal-400"><Copy size={16} /></Button>}
                     </div>
-                    {v.text && (
-                      <Button variant="ghost" size="icon" onClick={() => handleCopy(v.text)} className="text-gray-500 hover:text-teal-400 shrink-0">
-                        <Copy size={16} />
-                      </Button>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </Card>
-
-            <Card className="p-8 border-dashed border-teal-500/30 bg-teal-500/[0.03] backdrop-blur-xl">
-              <div className="space-y-6">
-                <div className="flex justify-between items-center text-teal-500">
-                  <div className="flex items-center gap-2">
-                    <Sparkles size={18} />
-                    <h3 className="text-white font-black text-sm uppercase tracking-widest">The Narrative Beacon</h3>
-                  </div>
-                  <Badge className="bg-teal-500 text-black font-black text-[9px] tracking-widest px-2 uppercase">Synthesis Active</Badge>
-                </div>
-                <h2 className="text-2xl text-gray-100 italic font-medium leading-relaxed">
-                  "{beacon}"
-                </h2>
-              </div>
-            </Card>
-
-            <Button onClick={() => setActiveStep(2)} className="w-full h-16 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl gap-3 uppercase shadow-lg shadow-teal-900/20">
+            <Button onClick={() => setActiveStep(2)} className="w-full h-16 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl gap-3 uppercase shadow-lg">
               ESTABLISH A BEARING <ArrowRight size={20} />
             </Button>
           </div>
@@ -168,91 +146,102 @@ export default function CulturalFit({ vault, onSync }) {
 
         {activeStep === 2 && (
           <div className="space-y-8 animate-in slide-in-from-right-4 duration-500 text-center">
-             <header className="space-y-2">
+            <header className="space-y-2">
               <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">THE COMPASS</h1>
               <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Market Topography</p>
             </header>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {trajectories.map((path, idx) => (
-                <Card key={idx} className={`p-6 bg-[#1C1622]/80 border-white/10 hover:border-teal-500/40 transition-all group ${idx === 0 ? 'ring-2 ring-teal-500/50' : ''}`}>
+                <Card key={idx} className={`p-6 bg-[#1C1622]/80 border-white/10 hover:border-teal-500/40 transition-all ${idx === 0 ? 'ring-2 ring-teal-500/50' : ''}`}>
                   <div className="space-y-4 text-left">
-                    <div className="flex justify-between items-start">
-                      <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 text-[9px] font-black uppercase">{path.fit} Match</Badge>
-                      <TrendingUp size={16} className="text-teal-500 opacity-50" />
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest italic">Trajectory</p>
-                      <h4 className="text-white font-bold text-lg leading-tight">{path.domain}</h4>
-                    </div>
+                    <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 text-[9px] font-black uppercase">{path.fit}% Match</Badge>
+                    <h4 className="text-white font-bold text-lg leading-tight">{path.domain}</h4>
                     <div className="py-3 border-y border-white/5">
-                      <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest">Target Compensation</p>
+                      <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest">Market Value</p>
                       <p className="text-xl text-white font-black italic">{path.salary}</p>
                     </div>
-                    <p className="text-[11px] text-gray-400 italic leading-relaxed">{path.desc}</p>
+                    <p className="text-[11px] text-gray-400 italic">{path.desc}</p>
                   </div>
                 </Card>
               ))}
             </div>
-
-            <Card className="p-8 bg-black/40 border border-white/5">
-                <p className="text-gray-400 italic text-sm leading-relaxed max-w-lg mx-auto">
-                  "The Compass reveals multiple viable paths based on your unique skill translation. Select the bearing that aligns with your intended impact."
-                </p>
-            </Card>
-
-            <Button onClick={handleAlign} disabled={isAligning} className="w-full h-20 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl text-lg uppercase tracking-widest shadow-xl">
-              {isAligning ? <Loader2 className="animate-spin mr-3" size={24} /> : <><Zap size={22} className="mr-3" /> ALIGN NARRATIVE</>}
+            <Button onClick={() => setActiveStep(3)} className="w-full h-16 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl gap-3 uppercase">
+              SCAN FOR GAPS <Pickaxe size={20} />
             </Button>
           </div>
         )}
 
         {activeStep === 3 && (
+          <div className="space-y-8 animate-in slide-in-from-right-4 duration-500">
+            <header className="text-center">
+              <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">THE GAP ANALYZER</h1>
+              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">The Harvest List</p>
+            </header>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <Card className="p-4 bg-teal-500/5 border-teal-500/20 text-center col-span-2">
+                    <p className="text-[9px] font-black text-teal-500 uppercase tracking-[0.2em] mb-1">Overall Market Readiness</p>
+                    <p className="text-3xl font-black text-white italic">82%</p>
+                    <Progress value={82} className="h-1 mt-3 bg-white/5" indicatorClassName="bg-teal-500" />
+                </Card>
+                <Card className="p-4 bg-white/[0.02] border-white/5 text-center">
+                    <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] mb-1">Critical Gaps</p>
+                    <p className="text-3xl font-black text-white italic">2</p>
+                </Card>
+                <Card className="p-4 bg-white/[0.02] border-white/5 text-center">
+                    <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] mb-1">Time to Ready</p>
+                    <p className="text-3xl font-black text-white italic">~6wk</p>
+                </Card>
+            </div>
+
+            <div className="space-y-3">
+                {gapData.map((item, i) => (
+                    <div key={i} className="flex items-center justify-between p-5 bg-[#1C1622]/60 border border-white/5 rounded-2xl group hover:border-teal-500/30 transition-all">
+                        <div className="flex items-center gap-4">
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${item.status === 'aligned' ? 'bg-teal-500/10 text-teal-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
+                                {item.status === 'aligned' ? <Check size={20} /> : <AlertCircle size={20} />}
+                            </div>
+                            <div className="space-y-1">
+                                <h4 className="text-white font-bold text-sm tracking-wide">{item.skill}</h4>
+                                <div className="flex gap-2">
+                                    <Badge variant="outline" className="text-[8px] uppercase border-white/10 text-gray-500">{item.impact} Impact</Badge>
+                                    <Badge variant="outline" className="text-[8px] uppercase border-white/10 text-gray-400 italic">{item.effort}</Badge>
+                                </div>
+                            </div>
+                        </div>
+                        {item.status === 'missing' && (
+                            <Button variant="outline" size="sm" className="border-teal-500/30 text-teal-400 text-[9px] font-black uppercase hover:bg-teal-500/10">
+                                Harvest from Library
+                            </Button>
+                        )}
+                    </div>
+                ))}
+            </div>
+
+            <Button onClick={handleFinalAlign} className="w-full h-20 bg-teal-600 hover:bg-teal-500 text-white font-black rounded-2xl text-lg uppercase shadow-xl">
+               {isAligning ? <Loader2 className="animate-spin mr-3" size={24} /> : <><Zap size={22} className="mr-3" /> ALIGN NARRATIVE</>}
+            </Button>
+          </div>
+        )}
+
+        {activeStep === 4 && (
           <div className="animate-in zoom-in-95 duration-700 text-center space-y-8">
             <header className="space-y-2">
-              <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">TREK REPORT</h1>
+              <h1 className="text-4xl font-bold text-white italic uppercase tracking-tight">THE SUMMIT</h1>
               <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Crossing Complete</p>
             </header>
 
-            <Card className="p-12 bg-[#1C1622]/90 border-teal-500/20 shadow-2xl space-y-10 border-double border-4 relative overflow-hidden text-center">
+            <Card className="p-12 bg-[#1C1622]/90 border-double border-4 border-teal-500/20 shadow-2xl space-y-10 relative overflow-hidden">
               <Mountain className="absolute -right-8 -bottom-8 w-48 h-48 text-teal-500/5 rotate-12" />
-              
               <div className="space-y-6 relative z-10">
-                <div className="w-20 h-20 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto border border-teal-500/20 shadow-[0_0_30px_rgba(20,184,166,0.05)]">
+                <div className="w-20 h-20 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto border border-teal-500/20 shadow-lg">
                   <ClipboardCheck className="w-10 h-10 text-teal-400" />
                 </div>
-                
-                <div className="space-y-2">
-                  <h2 className="text-3xl font-bold text-white italic">Your Bearing is Fixed.</h2>
-                  <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.4em]">Strategic Synthesis Finalized</p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto pt-4">
-                  <div className="p-6 bg-black/40 rounded-xl border border-white/5 space-y-2">
-                    <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Primary Trajectory</p>
-                    <p className="text-white font-bold italic">{trajectories[0]?.domain}</p>
-                  </div>
-                  <div className="p-6 bg-black/40 rounded-xl border border-white/5 space-y-2">
-                    <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Market Value</p>
-                    <p className="text-white font-bold italic">{trajectories[0]?.salary}</p>
-                  </div>
-                  
-                  <div className="p-6 bg-black/40 rounded-xl border border-teal-500/20 space-y-4 md:col-span-2 relative">
-                    <div className="flex justify-between items-center border-b border-white/5 pb-2">
-                       <p className="text-[9px] font-black text-teal-500 uppercase tracking-widest">Your Narrative Beacon</p>
-                       <Button 
-                         variant="ghost" 
-                         size="sm" 
-                         onClick={() => handleCopy(beacon)} 
-                         className="h-7 text-[9px] font-black uppercase tracking-tighter text-teal-400/60 hover:text-teal-400"
-                       >
-                         {copied ? <><Check size={12} className="mr-1" /> COPIED</> : <><Copy size={12} className="mr-1" /> COPY TO CLIPBOARD</>}
-                       </Button>
-                    </div>
-                    <p className="text-sm text-gray-300 italic leading-relaxed pt-2">
-                      "{beacon}"
-                    </p>
-                  </div>
+                <h2 className="text-3xl font-bold text-white italic">Your Bearing is Fixed.</h2>
+                <div className="p-6 bg-black/40 rounded-xl border border-teal-500/20 text-left max-w-lg mx-auto">
+                    <p className="text-[9px] font-black text-teal-500 uppercase tracking-widest mb-2">Narrative Beacon</p>
+                    <p className="text-sm text-gray-300 italic">"{beacon}"</p>
                 </div>
               </div>
 
