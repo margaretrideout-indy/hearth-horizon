@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
 import { 
-  Trees, Search, MapPin, Zap, ArrowUpRight, Anchor, Filter 
+  Trees, Search, MapPin, Zap, ArrowUpRight, Anchor 
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,13 +21,12 @@ const CANADIAN_HUBS = [
   "Vancouver, BC"
 ];
 
-export default function Canopy() {
+export default function Canopy({ vault }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedHub, setSelectedHub] = useState('All Canada');
   
-  // Checking for user data and a hypothetical flag for resume upload
-  const { data: user } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
-  const hasUploadedResume = user?.resumeParsed || false; 
+  // Now correctly checking the vault state for either a resume upload or completed alignment
+  const hasUploadedResume = vault?.isAligned || !!vault?.resume; 
 
   const allJobs = [
     { 
