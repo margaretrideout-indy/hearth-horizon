@@ -4,24 +4,29 @@ import {
   Library as LibraryIcon, Book, Package, Zap, BookOpen, ExternalLink, 
   ShieldCheck, FileText, Wind, ArrowRight, ShoppingBag, MessageSquare,
   Loader2, ClipboardCheck, Layout, Search, Languages, Map, Sparkles,
-  Trophy, Clock
+  Trophy, Clock, Download, Gift
 } from 'lucide-react';
 
 const Library = ({ vault, onUpdateVault }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDictionary, setShowDictionary] = useState(false);
 
-  // In a production setup, this would be pulled from vault.provisions
-  const [harvestedItems] = useState([
+  const commonGrounds = [
     {
-      title: "Agile/Scrum Certification",
-      desc: "Currently bridging the gap from education timelines to sprint cycles.",
-      status: "In-Transit",
-      icon: <Clock className="w-5 h-5" />,
-      badge: "Priority 1",
-      eta: "2 Weeks"
+      title: "The Pivot Resume Template",
+      desc: "A clean, ATS-optimized layout designed to highlight transferable skills over industry-specific titles.",
+      type: "PDF / DOCX",
+      icon: <FileText className="w-5 h-5" />,
+      badge: "Free"
+    },
+    {
+      title: "Interview De-Coder",
+      desc: "A 1-page cheat sheet for translating corporate 'vibe' questions into evidence-based achievement answers.",
+      type: "PDF",
+      icon: <MessageSquare className="w-5 h-5" />,
+      badge: "Free"
     }
-  ]);
+  ];
 
   const translations = [
     { edu: "Front-line Delivery", ops: "Personalized User Experience (UX) & Scalable Execution" },
@@ -56,29 +61,6 @@ const Library = ({ vault, onUpdateVault }) => {
         links: [{ label: "Harvest Resource", url: "#" }],
         icon: <Languages className="w-5 h-5" />,
         badge: "Core Tool"
-      },
-      {
-        title: "The Agile Navigator",
-        desc: "A primer on Scrum and Kanban for professionals moving from traditional timelines to rapid sprint cycles.",
-        links: [{ label: "Harvest Resource", url: "#" }],
-        icon: <Map className="w-5 h-5" />,
-        badge: "Market Gap"
-      }
-    ],
-    templates: [
-      {
-        title: "The Beacon-Ready Blueprint",
-        desc: "A structural resume layout designed to showcase your legacy expertise and your future market trajectory.",
-        status: "In Development",
-        icon: <Layout className="w-5 h-5" />,
-        badge: "Blueprint"
-      },
-      {
-        title: "Launch Mission Control",
-        desc: "A strategic tracking system to manage cross-industry applications and align your professional narrative.",
-        status: "Finalizing",
-        icon: <ClipboardCheck className="w-5 h-5" />,
-        badge: "System"
       }
     ],
     sanctuary: [
@@ -90,19 +72,12 @@ const Library = ({ vault, onUpdateVault }) => {
         icon: <ShieldCheck className="w-5 h-5" />,
         badge: "24/7 Support",
         color: "teal"
-      },
-      {
-        title: "Burnout to Balance",
-        desc: "Vetted, free PDF workbooks designed to help regulate your nervous system during high-stakes career changes.",
-        links: [{ label: "Download PDF Guides", url: "https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself" }],
-        icon: <FileText className="w-5 h-5" />,
-        color: "slate"
       }
     ]
   };
 
   return (
-    <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-6 md:p-12 font-sans selection:bg-teal-500/30 selection:text-white animate-in fade-in duration-700">
+    <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-6 md:p-12 font-sans selection:bg-teal-500/30 animate-in fade-in duration-700">
       <div className="max-w-6xl mx-auto">
         
         <header className="mb-16 md:mb-24 flex flex-col md:flex-row justify-between items-start md:items-end gap-8 border-b border-white/5 pb-12">
@@ -114,7 +89,7 @@ const Library = ({ vault, onUpdateVault }) => {
               <h1 className="text-xl md:text-2xl font-serif italic text-white tracking-tight">The Library & Provisions</h1>
             </div>
             <p className="max-w-xl text-[10px] md:text-xs leading-relaxed text-slate-500 font-light italic">
-              A curated ecosystem of tools, blueprints, and resilience resources designed to support the modern professional pivot.
+              A curated ecosystem of tools, blueprints, and resilience resources. Open to all; optimized for the pivot.
             </p>
           </div>
 
@@ -122,7 +97,7 @@ const Library = ({ vault, onUpdateVault }) => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-600 group-hover:text-teal-500" />
             <input 
               type="text"
-              placeholder="SEARCH ARCHIVES..."
+              placeholder="SEARCH PROVISIONS..."
               className="w-full bg-white/[0.02] border border-white/5 rounded-full py-3 pl-10 pr-4 text-[9px] font-black tracking-widest text-white focus:outline-none focus:border-teal-500/50 transition-all placeholder:text-slate-700 uppercase"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -130,45 +105,36 @@ const Library = ({ vault, onUpdateVault }) => {
           </div>
         </header>
 
-        {/* IN-TRANSIT SECTION */}
-        {harvestedItems.length > 0 && (
-          <section className="mb-16 md:mb-24 animate-in slide-in-from-left-4 duration-1000">
-            <div className="flex items-center gap-4 mb-10">
-              <div className="flex items-center gap-2">
-                <Sparkles size={14} className="text-orange-400" />
-                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-orange-400 whitespace-nowrap font-sans">In-Transit Provisions</h3>
-              </div>
-              <div className="h-[1px] flex-1 bg-gradient-to-r from-orange-400/20 to-transparent" />
+        <section className="mb-20 animate-in slide-in-from-bottom-4 duration-700">
+          <div className="flex items-center gap-4 mb-10">
+            <div className="flex items-center gap-2">
+              <Gift size={14} className="text-teal-400" />
+              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400 whitespace-nowrap font-sans">Common Grounds</h3>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {harvestedItems.map((item, idx) => (
-                <div key={idx} className="bg-orange-400/[0.02] border border-orange-400/10 p-8 rounded-[2.5rem] relative group hover:bg-orange-400/[0.04] transition-all">
-                  <div className="flex gap-6 items-start">
-                    <div className="w-12 h-12 rounded-2xl bg-orange-400/10 flex items-center justify-center text-orange-400 border border-orange-400/20">
-                      {item.icon}
-                    </div>
-                    <div className="space-y-2 flex-1">
-                      <div className="flex justify-between items-start">
-                        <h4 className="text-white font-bold text-lg font-serif italic tracking-tight">{item.title}</h4>
-                        <Badge variant="outline" className="border-orange-400/30 text-orange-400 text-[8px] px-2 uppercase font-black">{item.eta} ETA</Badge>
-                      </div>
-                      <p className="text-xs text-slate-500 font-light leading-relaxed italic">{item.desc}</p>
-                      <div className="pt-4 flex items-center gap-4">
-                         <div className="h-1 flex-1 bg-white/5 rounded-full overflow-hidden">
-                            <div className="h-full bg-orange-400 w-1/3 animate-pulse" />
-                         </div>
-                         <span className="text-[9px] font-black text-orange-400 uppercase tracking-widest">Harvesting...</span>
-                      </div>
-                    </div>
-                  </div>
+            <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-400/20 to-transparent" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {commonGrounds.map((item, idx) => (
+              <div key={idx} className="bg-white/[0.02] border border-white/10 p-8 rounded-[2.5rem] flex flex-col sm:flex-row gap-6 items-start sm:items-center group hover:bg-white/[0.04] transition-all">
+                <div className="w-14 h-14 rounded-2xl bg-teal-500/5 flex items-center justify-center text-teal-400 shrink-0 border border-teal-500/10">
+                  {item.icon}
                 </div>
-              ))}
-            </div>
-          </section>
-        )}
+                <div className="flex-1 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <h4 className="text-white font-bold text-sm tracking-wide font-serif italic tracking-tight">{item.title}</h4>
+                    <span className="text-[7px] font-black text-teal-500 uppercase tracking-widest bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">{item.type}</span>
+                  </div>
+                  <p className="text-[10px] text-slate-500 italic leading-relaxed">{item.desc}</p>
+                  <button className="flex items-center gap-2 text-[9px] font-black text-white uppercase tracking-[0.2em] mt-2 group-hover:text-teal-400 transition-colors">
+                    Download <Download size={12} className="group-hover:translate-y-0.5 transition-transform"/>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
-        {/* THE STUDY */}
-        <section className="mb-16 md:mb-24">
+        <section className="mb-20">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500/60 whitespace-nowrap font-sans">The Study</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent" />
@@ -190,8 +156,7 @@ const Library = ({ vault, onUpdateVault }) => {
           </div>
         </section>
 
-        {/* DIALECTS & NAVIGATION */}
-        <section className="mb-16 md:mb-24">
+        <section className="mb-20">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Dialect & Navigation</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
@@ -222,10 +187,10 @@ const Library = ({ vault, onUpdateVault }) => {
             <div className="mt-8 animate-in fade-in slide-in-from-top-4 duration-500">
               <div className="bg-[#1A1423] border border-teal-500/20 rounded-[2.5rem] overflow-hidden shadow-2xl">
                 <div className="p-6 bg-teal-500/5 border-b border-white/5 flex justify-between items-center">
-                  <p className="text-[9px] font-black text-teal-400 uppercase tracking-widest">Universal Translation Guide</p>
+                  <p className="text-[9px] font-black text-teal-400 uppercase tracking-widest font-sans">Universal Translation Guide</p>
                   <Trophy size={14} className="text-teal-500/40" />
                 </div>
-                <div className="divide-y divide-white/5 font-sans">
+                <div className="divide-y divide-white/5">
                   {translations.map((t, i) => (
                     <div key={i} className="grid grid-cols-1 md:grid-cols-2 p-6 hover:bg-white/[0.02] transition-colors gap-4">
                       <div>
@@ -244,8 +209,7 @@ const Library = ({ vault, onUpdateVault }) => {
           )}
         </section>
 
-        {/* THE SANCTUARY */}
-        <section className="mb-16 md:mb-24">
+        <section className="mb-20">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Sanctuary</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
@@ -253,9 +217,7 @@ const Library = ({ vault, onUpdateVault }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {categories.sanctuary.map((item, idx) => (
               <div key={idx} className="bg-[#1A1423] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col h-full shadow-2xl group">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-8 border ${
-                  item.color === 'teal' ? 'bg-teal-400/5 text-teal-400 border-teal-400/10' : 'bg-white/5 text-slate-400 border-white/5'
-                }`}>{item.icon}</div>
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-8 border bg-teal-400/5 text-teal-400 border-teal-400/10">{item.icon}</div>
                 <h4 className="text-white font-bold text-lg font-serif italic mb-2 tracking-tight">{item.title}</h4>
                 <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">{item.desc}</p>
                 <div className="mt-auto space-y-4">
@@ -266,15 +228,6 @@ const Library = ({ vault, onUpdateVault }) => {
                       </a>
                     ))}
                   </div>
-                  {item.emergencyInfo && (
-                    <div className="p-4 rounded-2xl bg-teal-500/10 border-2 border-teal-500/30 flex items-start gap-3 mt-4 animate-pulse">
-                      <MessageSquare className="w-4 h-4 text-teal-300 mt-0.5 shrink-0" />
-                      <div>
-                        <p className="text-[8px] font-black uppercase tracking-[0.2em] text-teal-300 mb-1">Immediate Crisis Support</p>
-                        <p className="text-[11px] font-bold text-white tracking-wide">{item.emergencyInfo}</p>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             ))}
@@ -282,9 +235,9 @@ const Library = ({ vault, onUpdateVault }) => {
         </section>
 
         <footer className="mt-20 md:mt-32 pt-12 border-t border-white/5 text-center">
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.02] border border-white/5">
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.02] border border-white/5 font-sans">
             <ShoppingBag className="w-3 h-3 text-slate-600" />
-            <span className="text-[8px] font-medium uppercase tracking-[0.2em] text-slate-600 italic font-sans">Note on Reciprocity: We only recommend provisions verified for high-impact professional pivots.</span>
+            <span className="text-[8px] font-medium uppercase tracking-[0.2em] text-slate-600 italic">Affiliate Reciprocity: We only recommend tools that provide genuine leverage for professional pivots.</span>
           </div>
         </footer>
       </div>
