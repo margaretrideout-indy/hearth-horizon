@@ -74,7 +74,7 @@ const Library = () => {
               </div>
               <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Amazon Essentials</h4>
               <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">
-                Hand-picked workspace essentials, from ergonomic tech to the journals that kept me grounded during my 13-year tenure.
+                Hand-picked workspace essentials, from ergonomic tech to the journals that kept me grounded during my career.
               </p>
               <a href="https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?ref_=wl_share" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all mb-6 bg-orange-600/10 text-orange-400 border border-orange-500/20 hover:bg-orange-600 hover:text-white">
                 EXPLORE SHOP <ExternalLink className="ml-2 w-3 h-3" />
@@ -195,13 +195,13 @@ const Library = () => {
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Canadian Resource Portal</h4>
-              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">The CMHA provides comprehensive toolkits and nationwide support for managing mental health at work and home.</p>
+              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">The CMHA provides nationwide support and tools for managing mental health during major career and life shifts.</p>
               <div className="mt-auto space-y-4">
-                <a href="https://cmha.ca/find-help/finding-help/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
-                  ACCESS CMHA RESOURCES <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
+                <a href="https://cmha.ca/find-help/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                  ACCESS CMHA HELP <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
                 </a>
                 <div className="pt-3 border-t border-white/5">
-                  <span className="text-xs font-black uppercase tracking-widest text-white">Crisis Line: 686868</span>
+                  <span className="text-xs font-black uppercase tracking-widest text-white">Crisis Line: 9-8-8</span>
                 </div>
               </div>
             </div>
@@ -211,10 +211,10 @@ const Library = () => {
                 <FileText className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Burnout to Balance</h4>
-              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Scientific frameworks and somatic tools for down-regulating the nervous system during high-stress transitions.</p>
+              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">A Canadian recovery guide from CICMH using goal-hierarchy mapping to reverse exhaustion and cynicism.</p>
               <div className="mt-auto">
-                <a href="https://www.mentalhealth.org.uk/explore-mental-health/publications/how-manage-and-reduce-stress" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
-                  DOWNLOAD RESOURCE <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
+                <a href="https://campusmentalhealth.ca/wp-content/uploads/2021/03/CICMH_BurnoutRecovery_Infosheet_FINAL-EN.pdf" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                  DOWNLOAD RECOVERY GUIDE <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
                 </a>
               </div>
             </div>
@@ -224,7 +224,7 @@ const Library = () => {
                 <Wind className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">The Inner Advocate</h4>
-              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Mindfulness practices tailored for professional identity shifts and overcoming imposter syndrome.</p>
+              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Guided sessions tailored for identity shifts and quieting the inner critic during high-stakes pivots.</p>
               <div className="mt-auto">
                 <a href="https://self-compassion.org/guided-self-compassion-meditations-mp3-2/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   LISTEN TO SESSIONS <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
