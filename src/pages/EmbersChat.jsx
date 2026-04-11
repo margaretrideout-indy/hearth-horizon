@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Flame, Send, Sparkles, Loader2 } from 'lucide-react';
+import { Flame, Send, Sparkles, Loader2, Leaf, Mountain, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 
@@ -21,6 +21,38 @@ const FIXED_STARTERS = [
     subscription_tier: 'Seedling'
   }
 ];
+
+// Helper to render the specific badge style per tier
+const TierBadge = ({ tier }) => {
+  switch (tier) {
+    case 'Founder':
+      return (
+        <span className="bg-purple-900/30 text-purple-300 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-purple-500/30 flex items-center gap-1">
+          <Sparkles className="w-2.5 h-2.5" /> Founder
+        </span>
+      );
+    case 'Steward':
+      return (
+        <span className="bg-slate-800/50 text-slate-300 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-teal-500/20 flex items-center gap-1">
+          <Mountain className="w-2.5 h-2.5 text-teal-500" /> Steward
+        </span>
+      );
+    case 'Hearthkeeper':
+      return (
+        <span className="bg-teal-900/20 text-teal-400 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-teal-500/30 flex items-center gap-1">
+          <Flame className="w-2.5 h-2.5" /> Hearthkeeper
+        </span>
+      );
+    case 'Seedling':
+      return (
+        <span className="bg-green-900/10 text-green-500/60 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-green-500/10 flex items-center gap-1">
+          <Leaf className="w-2.5 h-2.5" /> Seedling
+        </span>
+      );
+    default:
+      return null;
+  }
+};
 
 export default function EmbersChat() {
   const [input, setInput] = useState('');
@@ -72,11 +104,7 @@ export default function EmbersChat() {
           <div key={msg.id} className="flex flex-col items-start opacity-90">
             <div className="flex items-center gap-2 mb-2 ml-1">
               <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{msg.author_name}</span>
-              {msg.subscription_tier === 'Founder' && (
-                <span className="bg-purple-900/30 text-purple-300 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-purple-500/30 flex items-center gap-1">
-                  <Sparkles className="w-2.5 h-2.5" /> Founder
-                </span>
-              )}
+              <TierBadge tier={msg.subscription_tier} />
             </div>
             <div className={`max-w-[85%] p-4 rounded-2xl border ${msg.subscription_tier === 'Founder' ? 'bg-[#2D243A] border-purple-500/30 shadow-[0_0_20px_rgba(168,85,247,0.05)]' : 'bg-white/[0.03] border-white/10'}`}>
               <p className="text-slate-200 text-sm leading-relaxed">{msg.content}</p>
@@ -109,11 +137,12 @@ export default function EmbersChat() {
                 <motion.div key={msg.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'}`}>
                   <div className="flex items-center gap-2 mb-2 px-1 text-[10px] text-slate-500 font-bold uppercase tracking-widest">
                     {msg.author_name}
+                    <TierBadge tier={msg.subscription_tier} />
                   </div>
-                  <div className={`max-w-[85%] p-4 rounded-2xl border transition-all ${isOwn ? 'bg-teal-600/10 border-teal-500/30 text-white' : 'bg-[#251D2F] border-white/5'}`}>
+                  <div className={`max-w-[85%] p-4 rounded-2xl border transition-all ${isOwn ? 'bg-teal-600/10 border-teal-500/30 text-white shadow-[0_4px_20px_rgba(20,184,166,0.05)]' : 'bg-[#251D2F] border-white/5'}`}>
                     <p className="text-slate-200 text-sm leading-relaxed">{msg.content}</p>
                   </div>
-                  <span className="text-[9px] text-slate-700 mt-2 px-1 uppercase">
+                  <span className="text-[9px] text-slate-700 mt-2 px-1 uppercase tracking-tighter">
                     {msg.created_date ? format(new Date(msg.created_date), 'h:mm a') : 'Now'}
                   </span>
                 </motion.div>
@@ -136,7 +165,7 @@ export default function EmbersChat() {
           <button 
             onClick={handleSend} 
             disabled={!input.trim() || sending} 
-            className="bg-teal-600 hover:bg-teal-500 text-white p-4 rounded-2xl transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-teal-900/20"
+            className="bg-teal-600 hover:bg-teal-500 text-white p-4 rounded-2xl transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-teal-900/20 flex items-center justify-center min-w-[56px]"
           >
             {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
           </button>
