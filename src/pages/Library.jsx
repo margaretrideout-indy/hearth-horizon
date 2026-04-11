@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
 import { 
   Library as LibraryIcon, Book, Package, Zap, BookOpen, ExternalLink, 
   ShieldCheck, FileText, Wind, ArrowRight, ShoppingBag, MessageSquare,
@@ -9,10 +10,9 @@ import {
 const Library = ({ vault, onUpdateVault }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDictionary, setShowDictionary] = useState(false);
-  const [activeTab, setActiveTab] = useState('all');
 
-  // These would ideally come from your global state/vault
-  const [harvestedItems, setHarvestedItems] = useState([
+  // In a production setup, this would be pulled from vault.provisions
+  const [harvestedItems] = useState([
     {
       title: "Agile/Scrum Certification",
       desc: "Currently bridging the gap from education timelines to sprint cycles.",
@@ -102,10 +102,9 @@ const Library = ({ vault, onUpdateVault }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-6 md:p-12 font-sans selection:bg-teal-500/30 selection:text-white">
+    <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-6 md:p-12 font-sans selection:bg-teal-500/30 selection:text-white animate-in fade-in duration-700">
       <div className="max-w-6xl mx-auto">
         
-        {/* HEADER */}
         <header className="mb-16 md:mb-24 flex flex-col md:flex-row justify-between items-start md:items-end gap-8 border-b border-white/5 pb-12">
           <div className="space-y-4">
             <div className="flex items-center gap-4">
@@ -124,20 +123,20 @@ const Library = ({ vault, onUpdateVault }) => {
             <input 
               type="text"
               placeholder="SEARCH ARCHIVES..."
-              className="w-full bg-white/[0.02] border border-white/5 rounded-full py-3 pl-10 pr-4 text-[9px] font-black tracking-widest text-white focus:outline-none focus:border-teal-500/50 transition-all placeholder:text-slate-700"
+              className="w-full bg-white/[0.02] border border-white/5 rounded-full py-3 pl-10 pr-4 text-[9px] font-black tracking-widest text-white focus:outline-none focus:border-teal-500/50 transition-all placeholder:text-slate-700 uppercase"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </header>
 
-        {/* 0. IN-TRANSIT (The Harvested Gaps) */}
+        {/* IN-TRANSIT SECTION */}
         {harvestedItems.length > 0 && (
-          <section className="mb-16 md:mb-24 animate-in fade-in slide-in-from-left-4 duration-1000">
+          <section className="mb-16 md:mb-24 animate-in slide-in-from-left-4 duration-1000">
             <div className="flex items-center gap-4 mb-10">
               <div className="flex items-center gap-2">
                 <Sparkles size={14} className="text-orange-400" />
-                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-orange-400 whitespace-nowrap">In-Transit Provisions</h3>
+                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-orange-400 whitespace-nowrap font-sans">In-Transit Provisions</h3>
               </div>
               <div className="h-[1px] flex-1 bg-gradient-to-r from-orange-400/20 to-transparent" />
             </div>
@@ -150,8 +149,8 @@ const Library = ({ vault, onUpdateVault }) => {
                     </div>
                     <div className="space-y-2 flex-1">
                       <div className="flex justify-between items-start">
-                        <h4 className="text-white font-bold text-lg font-serif italic">{item.title}</h4>
-                        <Badge variant="outline" className="border-orange-400/30 text-orange-400 text-[8px] px-2 uppercase">{item.eta} ETA</Badge>
+                        <h4 className="text-white font-bold text-lg font-serif italic tracking-tight">{item.title}</h4>
+                        <Badge variant="outline" className="border-orange-400/30 text-orange-400 text-[8px] px-2 uppercase font-black">{item.eta} ETA</Badge>
                       </div>
                       <p className="text-xs text-slate-500 font-light leading-relaxed italic">{item.desc}</p>
                       <div className="pt-4 flex items-center gap-4">
@@ -168,46 +167,46 @@ const Library = ({ vault, onUpdateVault }) => {
           </section>
         )}
 
-        {/* 1. THE STUDY */}
+        {/* THE STUDY */}
         <section className="mb-16 md:mb-24">
           <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500/60 whitespace-nowrap">The Study</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500/60 whitespace-nowrap font-sans">The Study</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {categories.study.map((item, idx) => (
-              <div key={idx} className="bg-white/[0.01] border border-white/5 p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] hover:bg-white/[0.03] transition-all group">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-6 md:mb-8 border border-white/5 shadow-[0_0_15px_rgba(20,184,166,0.1)]">
+              <div key={idx} className="bg-white/[0.01] border border-white/5 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] hover:bg-white/[0.03] transition-all group">
+                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-8 border border-white/5 shadow-[0_0_15px_rgba(20,184,166,0.1)]">
                   {item.icon}
                 </div>
-                <h4 className="text-white font-bold text-lg mb-3 font-serif italic">{item.title}</h4>
-                <p className="text-xs text-slate-500 font-light leading-relaxed mb-6 md:mb-8 italic">{item.desc}</p>
+                <h4 className="text-white font-bold text-lg mb-3 font-serif italic tracking-tight">{item.title}</h4>
+                <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">{item.desc}</p>
                 <a href={item.links[0].url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 bg-teal-600/10 border border-teal-500/20 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] text-teal-400 hover:bg-teal-600 hover:text-white transition-all mb-6">
                   {item.links[0].label} <ExternalLink className="ml-2 w-3 h-3" />
                 </a>
-                <p className="text-[8px] text-slate-600 uppercase tracking-tighter text-center italic">{item.footer}</p>
+                <p className="text-[8px] text-slate-600 uppercase tracking-tighter text-center italic font-black">{item.footer}</p>
               </div>
             ))}
           </div>
         </section>
 
-        {/* 2. DIALECTS & NAVIGATION */}
+        {/* DIALECTS & NAVIGATION */}
         <section className="mb-16 md:mb-24">
           <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Dialect & Navigation</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Dialect & Navigation</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {categories.dialects.map((item, idx) => (
-              <div key={idx} className="bg-white/[0.01] border border-white/5 p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] hover:bg-white/[0.03] transition-all group">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-6 md:mb-8 border border-white/5">
+              <div key={idx} className="bg-white/[0.01] border border-white/5 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] hover:bg-white/[0.03] transition-all group">
+                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-8 border border-white/5">
                   {item.icon}
                 </div>
                 <div className="flex justify-between items-start mb-3">
-                  <h4 className="text-white font-bold text-lg font-serif italic">{item.title}</h4>
-                  <span className="text-[7px] font-black text-teal-500/60 uppercase tracking-widest bg-teal-500/5 px-2 py-1 rounded-md border border-teal-500/10">{item.badge}</span>
+                  <h4 className="text-white font-bold text-lg font-serif italic tracking-tight">{item.title}</h4>
+                  <Badge className="bg-teal-500/10 text-teal-500 border-teal-500/20 text-[7px] font-black px-2 uppercase tracking-widest">{item.badge}</Badge>
                 </div>
-                <p className="text-xs text-slate-500 font-light leading-relaxed mb-6 md:mb-8 italic">{item.desc}</p>
+                <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">{item.desc}</p>
                 <button 
                   onClick={() => idx === 0 && setShowDictionary(!showDictionary)}
                   className="inline-flex items-center text-[9px] font-black uppercase tracking-[0.2em] text-teal-400 hover:text-white transition-all group/btn"
@@ -221,21 +220,21 @@ const Library = ({ vault, onUpdateVault }) => {
 
           {showDictionary && (
             <div className="mt-8 animate-in fade-in slide-in-from-top-4 duration-500">
-              <div className="bg-[#1A1423] border border-teal-500/20 rounded-[2rem] overflow-hidden shadow-2xl">
+              <div className="bg-[#1A1423] border border-teal-500/20 rounded-[2.5rem] overflow-hidden shadow-2xl">
                 <div className="p-6 bg-teal-500/5 border-b border-white/5 flex justify-between items-center">
                   <p className="text-[9px] font-black text-teal-400 uppercase tracking-widest">Universal Translation Guide</p>
                   <Trophy size={14} className="text-teal-500/40" />
                 </div>
-                <div className="divide-y divide-white/5">
+                <div className="divide-y divide-white/5 font-sans">
                   {translations.map((t, i) => (
                     <div key={i} className="grid grid-cols-1 md:grid-cols-2 p-6 hover:bg-white/[0.02] transition-colors gap-4">
                       <div>
                         <span className="text-[8px] font-black text-slate-600 uppercase tracking-tighter block mb-1">Industry-Specific Experience</span>
-                        <p className="text-sm text-slate-300 font-medium">{t.edu}</p>
+                        <p className="text-sm text-slate-300 font-medium leading-relaxed">{t.edu}</p>
                       </div>
                       <div>
-                        <span className="text-[8px] font-black text-teal-600 uppercase tracking-tighter block mb-1">Cross-Functional Market Value</span>
-                        <p className="text-sm text-white font-serif italic">{t.ops}</p>
+                        <span className="text-[8px] font-black text-teal-600 uppercase tracking-tighter block mb-1 font-sans">Cross-Functional Market Value</span>
+                        <p className="text-sm text-white font-serif italic leading-relaxed">{t.ops}</p>
                       </div>
                     </div>
                   ))}
@@ -245,20 +244,20 @@ const Library = ({ vault, onUpdateVault }) => {
           )}
         </section>
 
-        {/* 3. THE SANCTUARY */}
+        {/* THE SANCTUARY */}
         <section className="mb-16 md:mb-24">
           <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Sanctuary</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Sanctuary</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {categories.sanctuary.map((item, idx) => (
               <div key={idx} className="bg-[#1A1423] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col h-full shadow-2xl group">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border ${
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-8 border ${
                   item.color === 'teal' ? 'bg-teal-400/5 text-teal-400 border-teal-400/10' : 'bg-white/5 text-slate-400 border-white/5'
                 }`}>{item.icon}</div>
-                <h4 className="text-white font-bold text-lg font-serif italic mb-2">{item.title}</h4>
-                <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-6 italic">{item.desc}</p>
+                <h4 className="text-white font-bold text-lg font-serif italic mb-2 tracking-tight">{item.title}</h4>
+                <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">{item.desc}</p>
                 <div className="mt-auto space-y-4">
                   <div className="flex flex-col gap-3">
                     {item.links.map((link, lIdx) => (
@@ -282,11 +281,10 @@ const Library = ({ vault, onUpdateVault }) => {
           </div>
         </section>
 
-        {/* FOOTER */}
         <footer className="mt-20 md:mt-32 pt-12 border-t border-white/5 text-center">
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.02] border border-white/5">
             <ShoppingBag className="w-3 h-3 text-slate-600" />
-            <span className="text-[8px] font-medium uppercase tracking-[0.2em] text-slate-600 italic">Note on Reciprocity: We only recommend provisions verified for high-impact professional pivots.</span>
+            <span className="text-[8px] font-medium uppercase tracking-[0.2em] text-slate-600 italic font-sans">Note on Reciprocity: We only recommend provisions verified for high-impact professional pivots.</span>
           </div>
         </footer>
       </div>
