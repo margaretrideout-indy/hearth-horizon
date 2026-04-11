@@ -7,19 +7,30 @@ import {
 
 const Library = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [showDictionary, setShowDictionary] = useState(false);
+
+  // The dictionary now serves as a "Proof of Concept" for how any industry can be translated
+  const translations = [
+    { edu: "Front-line Delivery", ops: "Personalized User Experience (UX) & Scalable Execution" },
+    { edu: "Project Individualization", ops: "Custom Stakeholder Requirements & Targeted KPI Development" },
+    { edu: "Workflow Planning", ops: "Strategic Product Roadmapping & Lifecycle Management" },
+    { edu: "Conflict Resolution", ops: "High-Stakes Stakeholder Facilitation & Resource Optimization" },
+    { edu: "Client/Peer Relations", ops: "Cross-Functional Relationship Management (CRM)" },
+    { edu: "Continuous Assessment", ops: "Iterative Feedback Loops & Real-time Data Analysis" }
+  ];
 
   const provisions = {
     study: [
       {
         title: "The Indigo Library",
-        desc: "A curated collection of literature and professional tools selected to support your transition and personal sanctuary.",
+        desc: "A curated collection of literature and professional tools selected to support your career transition and personal sanctuary.",
         links: [{ label: "View Library", url: "https://www.indigo.ca" }],
         icon: <Book className="w-5 h-5" />,
         footer: "Verified Indigo Partner Resource."
       },
       {
         title: "Amazon Starter Kit",
-        desc: "A curated toolkit for the pivot: from essential connectivity hubs to focus-driven office tools.",
+        desc: "A curated toolkit for the professional pivot: from essential connectivity hubs to focus-driven office tools.",
         links: [{ label: "Explore Kit", url: "https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?ref_=wl_share" }],
         icon: <Package className="w-5 h-5" />,
         footer: "As an Amazon Associate I earn from qualifying purchases."
@@ -27,15 +38,15 @@ const Library = () => {
     ],
     dialects: [
       {
-        title: "The Education-to-Ops Dictionary",
-        desc: "Translate 'Curriculum Frameworks' into 'Product Roadmaps' and 'IEPs' into 'Stakeholder Requirements'.",
+        title: "The Universal Pivot Dictionary",
+        desc: "A framework for translating industry-specific language into high-impact corporate operations and management dialects.",
         links: [{ label: "Harvest Resource", url: "#" }],
         icon: <Languages className="w-5 h-5" />,
         badge: "Core Tool"
       },
       {
         title: "The Agile Navigator",
-        desc: "A primer on Scrum and Kanban for those moving from academic timelines to sprint cycles.",
+        desc: "A primer on Scrum and Kanban for professionals moving from traditional timelines to rapid sprint cycles.",
         links: [{ label: "Harvest Resource", url: "#" }],
         icon: <Map className="w-5 h-5" />,
         badge: "Market Gap"
@@ -44,14 +55,14 @@ const Library = () => {
     templates: [
       {
         title: "The Beacon-Ready Blueprint",
-        desc: "A structural resume layout designed to showcase your Narrative Beacon and 13-year expertise. Currently being refined.",
+        desc: "A structural resume layout designed to showcase your legacy expertise and your future market trajectory.",
         status: "In Development",
         icon: <Layout className="w-5 h-5" />,
         badge: "Blueprint"
       },
       {
         title: "Launch Mission Control",
-        desc: "A strategic tracking system to manage applications and align dialects across market trajectories.",
+        desc: "A strategic tracking system to manage cross-industry applications and align your professional narrative.",
         status: "Finalizing",
         icon: <ClipboardCheck className="w-5 h-5" />,
         badge: "System"
@@ -60,14 +71,14 @@ const Library = () => {
     workshop: [
       {
         title: "Teal HQ",
-        desc: "An all-in-one platform to manage your job search, track applications, and optimize your resume.",
+        desc: "An all-in-one platform to manage your job search, track applications, and optimize your professional materials.",
         links: [{ label: "Access Tool", url: "https://www.tealhq.com/" }],
         icon: <Zap className="w-5 h-5" />,
         badge: "Next Step"
       },
       {
         title: "Jobscan ATS",
-        desc: "Check how well your resume matches specific job descriptions to bypass automated filters.",
+        desc: "Analyze how well your experience matches specific job descriptions to bypass automated filtering systems.",
         links: [{ label: "Access Tool", url: "https://www.jobscan.co/" }],
         icon: <BookOpen className="w-5 h-5" />
       }
@@ -75,7 +86,7 @@ const Library = () => {
     sanctuary: [
       {
         title: "Pivot Resilience Toolkit",
-        desc: "Access the national mental health portal for 24/7 support and specialized counseling services across Canada.",
+        desc: "Access a national mental health portal for 24/7 support and specialized counseling services for those in transition.",
         links: [{ label: "Canada Mental Health Hub", url: "https://www.canada.ca/en/public-health/services/mental-health-services.html" }],
         emergencyInfo: "Text HOME to 686868",
         icon: <ShieldCheck className="w-5 h-5" />,
@@ -84,14 +95,14 @@ const Library = () => {
       },
       {
         title: "Burnout to Balance",
-        desc: "Vetted, free PDF workbooks designed to help regulate your nervous system after a career pivot.",
+        desc: "Vetted, free PDF workbooks designed to help regulate your nervous system during high-stakes career changes.",
         links: [{ label: "Download PDF Guides", url: "https://www.cci.health.wa.gov.au/Resources/Looking-After-Yourself" }],
         icon: <FileText className="w-5 h-5" />,
         color: "slate"
       },
       {
         title: "The Inner Advocate",
-        desc: "Guided audio sessions to help you quiet the inner critic during high-stakes transitions.",
+        desc: "Guided audio sessions to help you maintain self-compassion during professional transitions and high-stakes interviews.",
         links: [{ label: "Listen to Sessions", url: "https://self-compassion.org/guided-self-compassion-meditations-mp3-2/" }],
         icon: <Wind className="w-5 h-5" />,
         color: "slate"
@@ -113,7 +124,7 @@ const Library = () => {
               <h1 className="text-xl md:text-2xl font-serif italic text-white tracking-tight">The Library & Provisions</h1>
             </div>
             <p className="max-w-xl text-[10px] md:text-xs leading-relaxed text-slate-500 font-light italic">
-              Curated tools and blueprints to support your transition. Transparently vetted and selected to support the whole person.
+              A curated ecosystem of tools, blueprints, and resilience resources designed to support the modern professional pivot.
             </p>
           </div>
 
@@ -129,7 +140,7 @@ const Library = () => {
           </div>
         </header>
 
-        {/* 1. THE STUDY (Affiliate Section - Now Priority #1) */}
+        {/* 1. THE STUDY (Affiliate Priority) */}
         <section className="mb-16 md:mb-24">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500/60 whitespace-nowrap">The Study</h3>
@@ -158,7 +169,7 @@ const Library = () => {
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Dialect & Navigation</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {provisions.dialects.map((item, idx) => (
               <div key={idx} className="bg-white/[0.01] border border-white/5 p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] hover:bg-white/[0.03] transition-all group">
                 <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-6 md:mb-8 border border-white/5">
@@ -169,12 +180,40 @@ const Library = () => {
                   <span className="text-[7px] font-black text-teal-500/60 uppercase tracking-widest bg-teal-500/5 px-2 py-1 rounded-md border border-teal-500/10">{item.badge}</span>
                 </div>
                 <p className="text-xs text-slate-500 font-light leading-relaxed mb-6 md:mb-8 italic">{item.desc}</p>
-                <button className="inline-flex items-center text-[9px] font-black uppercase tracking-[0.2em] text-teal-400 hover:text-white transition-all group/btn">
-                  {item.links[0].label} <ArrowRight className="ml-2 w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
+                <button 
+                  onClick={() => idx === 0 && setShowDictionary(!showDictionary)}
+                  className="inline-flex items-center text-[9px] font-black uppercase tracking-[0.2em] text-teal-400 hover:text-white transition-all group/btn"
+                >
+                  {showDictionary && idx === 0 ? "Close Dictionary" : item.links[0].label} 
+                  <ArrowRight className={`ml-2 w-3 h-3 transition-transform ${showDictionary && idx === 0 ? 'rotate-90' : 'group-hover/btn:translate-x-1'}`} />
                 </button>
               </div>
             ))}
           </div>
+
+          {showDictionary && (
+            <div className="mt-8 animate-in fade-in slide-in-from-top-4 duration-500">
+              <div className="bg-[#1A1423] border border-teal-500/20 rounded-[2rem] overflow-hidden shadow-2xl">
+                <div className="p-6 bg-teal-500/5 border-b border-white/5">
+                  <p className="text-[9px] font-black text-teal-400 uppercase tracking-widest">Universal Translation Guide (Preview)</p>
+                </div>
+                <div className="divide-y divide-white/5">
+                  {translations.map((t, i) => (
+                    <div key={i} className="grid grid-cols-1 md:grid-cols-2 p-6 hover:bg-white/[0.02] transition-colors gap-4">
+                      <div>
+                        <span className="text-[8px] font-black text-slate-600 uppercase tracking-tighter block mb-1">Industry-Specific Experience</span>
+                        <p className="text-sm text-slate-300 font-medium">{t.edu}</p>
+                      </div>
+                      <div>
+                        <span className="text-[8px] font-black text-teal-600 uppercase tracking-tighter block mb-1">Cross-Functional Market Value</span>
+                        <p className="text-sm text-white font-serif italic">{t.ops}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </section>
 
         {/* 3. THE TEMPLATE ARCHIVE */}
