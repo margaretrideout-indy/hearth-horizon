@@ -28,7 +28,6 @@ const Library = ({ vault, onUpdateVault }) => {
         links: [{ label: "View Library", url: "https://www.indigo.ca" }],
         icon: <Book className="w-5 h-5" />,
         footer: "Verified Indigo Partner Resource.",
-        highlight: true
       },
       {
         title: "Amazon Starter Kit",
@@ -36,7 +35,6 @@ const Library = ({ vault, onUpdateVault }) => {
         links: [{ label: "Explore Kit", url: "https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?ref_=wl_share" }],
         icon: <Package className="w-5 h-5" />,
         footer: "As an Amazon Associate I earn from qualifying purchases.",
-        highlight: true
       }
     ],
     common: [
@@ -115,12 +113,9 @@ const Library = ({ vault, onUpdateVault }) => {
             </div>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
             {categories.study.map((item, idx) => (
-              <div key={idx} className="bg-white/[0.01] border border-white/5 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] hover:bg-white/[0.03] transition-all group relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                   <Sparkles className="text-teal-400 w-12 h-12" />
-                </div>
+              <div key={idx} className="bg-white/[0.02] border border-white/5 p-8 md:p-10 rounded-[2.5rem] hover:bg-white/[0.04] transition-all group relative">
                 <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-8 border border-white/5 shadow-[0_0_15px_rgba(20,184,166,0.1)]">
                   {item.icon}
                 </div>
@@ -136,7 +131,7 @@ const Library = ({ vault, onUpdateVault }) => {
         </section>
 
         {/* COMMON GROUNDS (Universal Free Tier) */}
-        <section className="mb-20 animate-in slide-in-from-bottom-4 duration-700">
+        <section className="mb-20">
           <div className="flex items-center gap-4 mb-10">
             <div className="flex items-center gap-2">
               <Gift size={14} className="text-teal-400" />
@@ -144,7 +139,7 @@ const Library = ({ vault, onUpdateVault }) => {
             </div>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-400/20 to-transparent" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {categories.common.map((item, idx) => (
               <div key={idx} className="bg-white/[0.02] border border-white/10 p-8 rounded-[2.5rem] flex flex-col sm:flex-row gap-6 items-start sm:items-center group hover:bg-white/[0.04] transition-all">
                 <div className="w-14 h-14 rounded-2xl bg-teal-500/5 flex items-center justify-center text-teal-400 shrink-0 border border-teal-500/10">
@@ -156,7 +151,7 @@ const Library = ({ vault, onUpdateVault }) => {
                     <span className="text-[7px] font-black text-teal-500 uppercase tracking-widest bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">{item.type}</span>
                   </div>
                   <p className="text-[10px] text-slate-500 italic leading-relaxed">{item.desc}</p>
-                  <button className="flex items-center gap-2 text-[9px] font-black text-white uppercase tracking-[0.2em] mt-2 group-hover:text-teal-400 transition-colors">
+                  <button className="flex items-center gap-2 text-[9px] font-black text-white uppercase tracking-[0.2em] mt-2 hover:text-teal-400 transition-colors">
                     Download <Download size={12} className="group-hover:translate-y-0.5 transition-transform"/>
                   </button>
                 </div>
@@ -171,9 +166,9 @@ const Library = ({ vault, onUpdateVault }) => {
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Dialect & Navigation</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             {categories.dialects.map((item, idx) => (
-              <div key={idx} className="bg-white/[0.01] border border-white/5 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] hover:bg-white/[0.03] transition-all group">
+              <div key={idx} className="bg-white/[0.02] border border-white/5 p-8 md:p-10 rounded-[2.5rem] hover:bg-white/[0.04] transition-all group">
                 <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-8 border border-white/5">
                   {item.icon}
                 </div>
@@ -202,14 +197,14 @@ const Library = ({ vault, onUpdateVault }) => {
                 </div>
                 <div className="divide-y divide-white/5">
                   {translations.map((t, i) => (
-                    <div key={i} className="grid grid-cols-1 md:grid-cols-2 p-6 hover:bg-white/[0.02] transition-colors gap-4">
+                    <div key={i} className="grid grid-cols-1 md:grid-cols-2 p-6 hover:bg-white/[0.02] transition-colors gap-4 font-sans">
                       <div>
                         <span className="text-[8px] font-black text-slate-600 uppercase tracking-tighter block mb-1">Industry-Specific Experience</span>
-                        <p className="text-sm text-slate-300 font-medium leading-relaxed">{t.edu}</p>
+                        <p className="text-sm text-slate-300 font-medium">{t.edu}</p>
                       </div>
                       <div>
-                        <span className="text-[8px] font-black text-teal-600 uppercase tracking-tighter block mb-1 font-sans">Cross-Functional Market Value</span>
-                        <p className="text-sm text-white font-serif italic leading-relaxed">{t.ops}</p>
+                        <span className="text-[8px] font-black text-teal-600 uppercase tracking-tighter block mb-1">Cross-Functional Market Value</span>
+                        <p className="text-sm text-white font-serif italic">{t.ops}</p>
                       </div>
                     </div>
                   ))}
@@ -225,7 +220,7 @@ const Library = ({ vault, onUpdateVault }) => {
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Sanctuary</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {categories.sanctuary.map((item, idx) => (
               <div key={idx} className="bg-[#1A1423] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col h-full shadow-2xl group">
                 <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-8 border bg-teal-400/5 text-teal-400 border-teal-400/10">{item.icon}</div>
