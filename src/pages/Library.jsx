@@ -3,12 +3,15 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Library as LibraryIcon, Book, Package, Zap, ExternalLink, 
   ShieldCheck, FileText, ArrowRight, ShoppingBag, MessageSquare,
-  Search, Languages, Download, Cpu, Wind, Phone
+  Search, Languages, Download, Cpu, Wind, Lock
 } from 'lucide-react';
 
 const Library = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDictionary, setShowDictionary] = useState(false);
+  
+  // Mock user tier for UI demonstration
+  const userTier = "Seedling"; 
 
   const translations = [
     { edu: "Front-line Delivery", ops: "Personalized User Experience (UX) & Scalable Execution" },
@@ -16,8 +19,52 @@ const Library = () => {
     { edu: "Workflow Planning", ops: "Strategic Product Roadmapping & Lifecycle Management" },
     { edu: "Conflict Resolution", ops: "High-Stakes Stakeholder Facilitation & Resource Optimization" },
     { edu: "Client/Peer Relations", ops: "Cross-Functional Relationship Management (CRM)" },
-    { edu: "Continuous Assessment", ops: "Iterative Feedback Loops & Real-time Data Analysis" }
+    { edu: "Continuous Assessment", ops: "Iterative Feedback Loops & Real-time Data Analysis" },
+    { edu: "Literary/Social Analysis", ops: "Qualitative Data Synthesis & Sentiment Mapping" }
   ];
+
+  const provisions = [
+    { 
+      title: "Community Resilience Guide", 
+      tier: "Seedling", 
+      type: "PDF", 
+      icon: <ShieldCheck size={14}/>,
+      description: "Foundational Canadian resources for career transitions."
+    },
+    { 
+      title: "Basic Professional Template", 
+      tier: "Seedling", 
+      type: "DOCX", 
+      icon: <FileText size={14}/>,
+      description: "A clean, ATS-friendly baseline for immediate use."
+    },
+    { 
+      title: "The Tech-Stack Translator", 
+      tier: "Hearthkeeper", 
+      type: "TOOL", 
+      icon: <Zap size={14}/>,
+      description: "Mapping classroom software to industry-standard tools."
+    },
+    { 
+      title: "LinkedIn Outreach Embers", 
+      tier: "Hearthkeeper", 
+      type: "DOC", 
+      icon: <MessageSquare size={14}/>,
+      description: "High-conversion scripts for networking across Canada."
+    },
+    { 
+      title: "Executive Presence Framework", 
+      tier: "Steward", 
+      type: "STRATEGY", 
+      icon: <Cpu size={14}/>,
+      description: "Leadership communication for senior corporate pivots."
+    }
+  ];
+
+  const filteredProvisions = provisions.filter(item => 
+    item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-6 md:p-12 font-sans selection:bg-teal-500/30">
@@ -32,7 +79,7 @@ const Library = () => {
               <h1 className="text-xl md:text-2xl font-serif italic text-white tracking-tight">The Library & Provisions</h1>
             </div>
             <p className="max-w-xl text-[10px] md:text-xs leading-relaxed text-slate-500 font-light italic">
-              A curated ecosystem of tools, blueprints, and resilience resources.
+              A curated ecosystem of tools, blueprints, and resilience resources for the Canadian professional.
             </p>
           </div>
 
@@ -40,7 +87,7 @@ const Library = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-600" />
             <input 
               type="text"
-              placeholder="SEARCH..."
+              placeholder="SEARCH RESOURCES..."
               className="w-full bg-white/[0.02] border border-white/5 rounded-full py-3 pl-10 pr-4 text-[9px] font-black tracking-widest text-white focus:outline-none focus:border-teal-500/50 uppercase"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -48,7 +95,6 @@ const Library = () => {
           </div>
         </header>
 
-        {/* 1. THE STUDY */}
         <section className="mb-20">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-orange-500/60 whitespace-nowrap">The Study</h3>
@@ -56,37 +102,34 @@ const Library = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-white/[0.01] border border-orange-500/20 p-8 md:p-10 rounded-[2.5rem] hover:bg-white/[0.03] transition-all group relative">
-              <div className="w-12 h-12 rounded-2xl bg-orange-500/5 flex items-center justify-center text-orange-400 mb-8 border border-orange-500/10 shadow-[0_0_15px_rgba(249,115,22,0.05)]">
+              <div className="w-12 h-12 rounded-2xl bg-orange-500/5 flex items-center justify-center text-orange-400 mb-8 border border-orange-500/10">
                 <Book className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Indigo.ca Curated List</h4>
               <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">
-                A selection of literature focusing on professional pivots, psychological resilience, and Canadian leadership.
+                Literature on professional pivots and psychological resilience, specifically curated for the Canadian landscape.
               </p>
-              <a href="https://www.indigo.ca" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all mb-6 bg-orange-600/10 text-orange-400 border border-orange-500/20 hover:bg-orange-600 hover:text-white">
+              <a href="https://www.indigo.ca" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-orange-600/10 text-orange-400 border border-orange-500/20 hover:bg-orange-600 hover:text-white">
                 SHOP INDIGO <ExternalLink className="ml-2 w-3 h-3" />
               </a>
             </div>
 
             <div className="bg-white/[0.01] border border-orange-500/20 p-8 md:p-10 rounded-[2.5rem] hover:bg-white/[0.03] transition-all group relative">
-              <div className="w-12 h-12 rounded-2xl bg-orange-500/5 flex items-center justify-center text-orange-400 mb-8 border border-orange-500/10 shadow-[0_0_15px_rgba(249,115,22,0.05)]">
+              <div className="w-12 h-12 rounded-2xl bg-orange-500/5 flex items-center justify-center text-orange-400 mb-8 border border-orange-500/10">
                 <Package className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Amazon Essentials</h4>
               <p className="text-xs text-slate-500 font-light leading-relaxed mb-4 italic">
-                Hand-picked workspace essentials, from ergonomic tech to the journals that kept me grounded during my career.
+                Workspace gear and grounding tools that support the mental and physical demands of a career shift.
               </p>
-              <p className="text-[9px] text-slate-600 leading-tight mb-8 font-light">
-                As an Amazon Associate I earn from qualifying purchases.
-              </p>
-              <a href="https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?ref_=wl_share" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all mb-6 bg-orange-600/10 text-orange-400 border border-orange-500/20 hover:bg-orange-600 hover:text-white">
+              <p className="text-[9px] text-slate-600 leading-tight mb-8 font-light italic">Associate Disclosure: Supports the Hearth platform.</p>
+              <a href="https://www.amazon.ca" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-orange-600/10 text-orange-400 border border-orange-500/20 hover:bg-orange-600 hover:text-white">
                 EXPLORE SHOP <ExternalLink className="ml-2 w-3 h-3" />
               </a>
             </div>
           </div>
         </section>
 
-        {/* 2. THE DIGITAL WORKSHOP */}
         <section className="mb-20">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Digital Workshop</h3>
@@ -94,12 +137,12 @@ const Library = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-white/[0.02] border border-white/5 p-8 md:p-10 rounded-[2.5rem] hover:bg-white/[0.04] transition-all group relative">
-              <Badge className="absolute top-8 right-8 bg-teal-500/10 text-teal-500 border-teal-500/20 text-[7px] font-black px-2 uppercase tracking-widest">Next Step</Badge>
-              <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-8 border border-white/5 shadow-[0_0_15px_rgba(20,184,166,0.1)]">
+              <Badge className="absolute top-8 right-8 bg-teal-500/10 text-teal-500 border-teal-500/20 text-[7px] font-black px-2 uppercase tracking-widest italic">Core Utility</Badge>
+              <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-teal-400 mb-8 border border-white/5">
                 <Zap className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Teal HQ</h4>
-              <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">An all-in-one platform to manage your job search, track applications, and optimize your resume.</p>
+              <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">Manage your job search and optimize your resume for the Canadian tech sector.</p>
               <a href="https://www.tealhq.com" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-[0.2em] text-teal-400 hover:text-white flex items-center gap-2 transition-colors">
                 ACCESS TOOL <ExternalLink className="w-3 h-3" />
               </a>
@@ -110,7 +153,7 @@ const Library = () => {
                 <Cpu className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Jobscan ATS</h4>
-              <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">Check how well your resume matches specific job descriptions to bypass automated filters.</p>
+              <p className="text-xs text-slate-500 font-light leading-relaxed mb-8 italic">Analyze your resume against job descriptions to ensure alignment with recruiter filters.</p>
               <a href="https://www.jobscan.co" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-[0.2em] text-teal-400 hover:text-white flex items-center gap-2 transition-colors">
                 ACCESS TOOL <ExternalLink className="w-3 h-3" />
               </a>
@@ -118,7 +161,6 @@ const Library = () => {
           </div>
         </section>
 
-        {/* 3. DIALECTS & PROVISIONS */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-32">
            <section>
               <div className="flex items-center gap-4 mb-8">
@@ -130,10 +172,10 @@ const Library = () => {
                   <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-teal-400 border border-white/5">
                     <Languages className="w-5 h-5" />
                   </div>
-                  <Badge className="bg-teal-500/10 text-teal-500 border-teal-500/20 text-[7px] font-black px-2 uppercase tracking-widest">Core Tool</Badge>
+                  <Badge className="bg-teal-500/10 text-teal-500 border-teal-500/20 text-[7px] font-black px-2 uppercase tracking-widest">Free Resource</Badge>
                 </div>
                 <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">The Universal Pivot Dictionary</h4>
-                <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-6 italic">A framework for translating industry-specific language into high-impact corporate dialects.</p>
+                <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-6 italic">Translate your education experience into corporate operations value.</p>
                 <button 
                   onClick={() => setShowDictionary(!showDictionary)}
                   className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white flex items-center gap-2 transition-colors"
@@ -149,18 +191,28 @@ const Library = () => {
                 <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
               </div>
               <div className="space-y-4">
-                {[
-                  { title: "Pivot Resume Template", type: "PDF", icon: <FileText size={14}/> },
-                  { title: "Interview De-Coder", type: "PDF", icon: <MessageSquare size={14}/> }
-                ].map((item, i) => (
-                  <div key={i} className="bg-white/[0.02] border border-white/10 p-4 rounded-2xl flex items-center justify-between group hover:bg-white/[0.04] transition-all cursor-pointer">
-                    <div className="flex items-center gap-3">
-                      <div className="text-teal-400 opacity-40">{item.icon}</div>
-                      <span className="text-xs font-serif italic text-white">{item.title}</span>
+                {filteredProvisions.map((item, i) => {
+                  const isLocked = item.tier !== "Seedling" && userTier === "Seedling";
+                  return (
+                    <div key={i} className={`bg-white/[0.02] border border-white/10 p-4 rounded-2xl flex items-center justify-between group hover:bg-white/[0.04] transition-all ${isLocked ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}>
+                      <div className="flex items-center gap-3">
+                        <div className={`${isLocked ? 'text-slate-600' : 'text-teal-400'} opacity-60`}>{item.icon}</div>
+                        <div>
+                          <p className="text-xs font-serif italic text-white flex items-center gap-2">
+                            {item.title}
+                            {isLocked && <Lock size={10} className="text-orange-500/70" />}
+                          </p>
+                          <p className="text-[8px] text-slate-500 uppercase tracking-widest">{item.description}</p>
+                        </div>
+                      </div>
+                      {isLocked ? (
+                        <span className="text-[7px] font-black text-orange-500/60 uppercase tracking-tighter">{item.tier} Tier</span>
+                      ) : (
+                        <Download size={12} className="text-slate-600 group-hover:text-teal-400 transition-colors" />
+                      )}
                     </div>
-                    <Download size={12} className="text-slate-600 group-hover:text-teal-400 transition-colors" />
-                  </div>
-                ))}
+                  );
+                })}
               </div>
            </section>
         </div>
@@ -184,7 +236,6 @@ const Library = () => {
           </div>
         )}
 
-        {/* 4. THE SANCTUARY */}
         <section className="mt-20 border-t border-white/5 pt-20 pb-32">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Sanctuary</h3>
@@ -198,7 +249,7 @@ const Library = () => {
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Canadian Resource Portal</h4>
-              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">The CMHA provides nationwide support and tools for managing mental health during major career and life shifts.</p>
+              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">The CMHA provides nationwide support and tools for managing mental health during major life shifts.</p>
               <div className="mt-auto space-y-4">
                 <a href="https://cmha.ca/find-help/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   ACCESS CMHA HELP <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
@@ -214,9 +265,9 @@ const Library = () => {
                 <FileText className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Burnout to Balance</h4>
-              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">A Canadian recovery guide from CICMH using goal-hierarchy mapping to reverse exhaustion and cynicism.</p>
+              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">A recovery guide using goal-hierarchy mapping to reverse exhaustion and professional cynicism.</p>
               <div className="mt-auto">
-                <a href="https://campusmentalhealth.ca/wp-content/uploads/2021/03/CICMH_BurnoutRecovery_Infosheet_FINAL-EN.pdf" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                <a href="https://campusmentalhealth.ca/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   DOWNLOAD RECOVERY GUIDE <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
                 </a>
               </div>
@@ -229,7 +280,7 @@ const Library = () => {
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">The Inner Advocate</h4>
               <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-8 italic">Guided sessions tailored for identity shifts and quieting the inner critic during high-stakes pivots.</p>
               <div className="mt-auto">
-                <a href="https://self-compassion.org/guided-self-compassion-meditations-mp3-2/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                <a href="https://self-compassion.org/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   LISTEN TO SESSIONS <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
                 </a>
               </div>
@@ -237,7 +288,7 @@ const Library = () => {
           </div>
         </section>
 
-        <footer className="pt-12 border-t border-white/5 text-center">
+        <footer className="pt-12 border-t border-white/5 text-center pb-12">
           <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.02] border border-white/5">
             <ShoppingBag className="w-3 h-3 text-slate-600" />
             <span className="text-[8px] font-medium uppercase tracking-[0.2em] text-slate-600 italic">Affiliate Reciprocity: We only recommend tools that provide genuine leverage for professional pivots.</span>
