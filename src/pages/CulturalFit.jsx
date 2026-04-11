@@ -76,27 +76,39 @@ export default function CulturalFit({ vault, onSync }) {
     }, 1200);
   };
 
+  const canNavigateTo = (step) => {
+    if (step === 1) return true;
+    if (step === 2) return bridgeData !== null;
+    if (step === 3) return selectedPath !== null;
+    if (step === 4) return selectedPath !== null;
+    return false;
+  };
+
   return (
     <div className="max-w-6xl mx-auto py-12 px-6 space-y-12 animate-in fade-in duration-700 selection:bg-teal-500/30">
       
-      <nav className="flex justify-between items-center bg-[#1A1423]/60 border border-white/5 rounded-full px-8 py-4 backdrop-blur-xl sticky top-4 z-50">
+      <nav className="flex justify-between items-center bg-[#1A1423]/60 border border-white/5 rounded-full px-4 md:px-8 py-4 backdrop-blur-xl sticky top-4 z-50">
         {[
           { id: 1, label: "THE DECODING", icon: ArrowRightLeft },
           { id: 2, label: "THE TOPOGRAPHY", icon: Compass },
           { id: 3, label: "THE HARVEST", icon: Pickaxe },
           { id: 4, label: "THE SUMMIT", icon: Mountain }
-        ].map((step) => (
-          <button 
-            key={step.id}
-            onClick={() => setActiveStep(step.id)}
-            className={`flex items-center gap-3 transition-all ${activeStep === step.id ? 'text-teal-400' : 'text-slate-500 hover:text-slate-300'}`}
-          >
-            <div className={`p-2 rounded-lg ${activeStep === step.id ? 'bg-teal-500/20 shadow-[0_0_10px_rgba(20,184,166,0.1)]' : 'bg-transparent'}`}>
-              <step.icon size={16} />
-            </div>
-            <span className="text-[9px] font-black tracking-[0.3em] hidden lg:block uppercase">{step.label}</span>
-          </button>
-        ))}
+        ].map((step) => {
+          const isAccessible = canNavigateTo(step.id);
+          return (
+            <button 
+              key={step.id}
+              disabled={!isAccessible}
+              onClick={() => setActiveStep(step.id)}
+              className={`flex items-center gap-3 transition-all ${activeStep === step.id ? 'text-teal-400' : isAccessible ? 'text-slate-500 hover:text-slate-300' : 'text-slate-800 cursor-not-allowed'}`}
+            >
+              <div className={`p-2 rounded-lg ${activeStep === step.id ? 'bg-teal-500/20 shadow-[0_0_10px_rgba(20,184,166,0.1)]' : 'bg-transparent'}`}>
+                <step.icon size={16} />
+              </div>
+              <span className="text-[9px] font-black tracking-[0.3em] hidden lg:block uppercase">{step.label}</span>
+            </button>
+          );
+        })}
       </nav>
 
       <main className="min-h-[600px]">
@@ -113,7 +125,7 @@ export default function CulturalFit({ vault, onSync }) {
             </div>
 
             <div className="lg:col-span-8 space-y-6">
-              <Card className="p-8 bg-[#1A1423]/60 border-white/5 shadow-2xl relative overflow-hidden rounded-[2.5rem]">
+              <Card className="p-4 md:p-8 bg-[#1A1423]/60 border-white/5 shadow-2xl relative overflow-hidden rounded-[2.5rem]">
                 <div className="absolute -top-10 -right-10 opacity-[0.03] pointer-events-none">
                    <Layers size={240} />
                 </div>
@@ -143,14 +155,14 @@ export default function CulturalFit({ vault, onSync }) {
                       const key = dialect === 'Project Lead' ? 'pm' : dialect === 'Data/Strategy' ? 'data' : 'ops';
                       const text = bridgeData?.[key];
                       return (
-                        <div key={i} className={`p-6 rounded-[2rem] border transition-all duration-700 ${text ? 'bg-teal-500/5 border-teal-500/20' : 'bg-white/[0.01] border-white/5 opacity-40'}`}>
+                        <div key={i} className={`p-4 md:p-6 rounded-[2rem] border transition-all duration-700 ${text ? 'bg-teal-500/5 border-teal-500/20' : 'bg-white/[0.01] border-white/5 opacity-40'}`}>
                           <div className="flex justify-between items-start gap-4">
-                            <div className="space-y-2">
+                            <div className="space-y-2 flex-1">
                               <span className="text-[8px] font-black text-teal-500/60 uppercase tracking-widest">{dialect} Dialect</span>
-                              <p className="text-sm text-slate-300 font-serif italic leading-relaxed">{text || "Establish any source experience to transcode..."}</p>
+                              <p className="text-sm text-slate-300 font-serif italic leading-relaxed">{text || "Establish source experience to transcode..."}</p>
                             </div>
                             {text && (
-                              <Button variant="ghost" size="icon" onClick={() => handleCopy(text)} className="text-slate-500 hover:text-teal-400">
+                              <Button variant="ghost" size="icon" onClick={() => handleCopy(text)} className="text-slate-500 hover:text-teal-400 shrink-0">
                                 {copied ? <Check size={16} /> : <Copy size={16} />}
                               </Button>
                             )}
@@ -161,7 +173,11 @@ export default function CulturalFit({ vault, onSync }) {
                   </div>
                 </div>
               </Card>
-              <Button onClick={() => setActiveStep(2)} className="w-full h-16 bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 text-slate-400 hover:text-white font-black rounded-2xl gap-3 uppercase tracking-widest transition-all">
+              <Button 
+                onClick={() => setActiveStep(2)} 
+                disabled={!bridgeData}
+                className="w-full h-16 bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 text-slate-400 hover:text-white font-black rounded-2xl gap-3 uppercase tracking-widest transition-all"
+              >
                 Map Market Topography <ArrowRight size={16} />
               </Button>
             </div>
@@ -278,12 +294,16 @@ export default function CulturalFit({ vault, onSync }) {
                
                <Button onClick={() => {
                  setIsAligning(true);
+                 const masterNarrative = bridgeData 
+                   ? `TRANSCODED NARRATIVES:\n\nProject Lead: ${bridgeData.pm}\n\nData/Strategy: ${bridgeData.data}\n\nOperations: ${bridgeData.ops}`
+                   : "No narratives generated.";
+                 navigator.clipboard.writeText(masterNarrative);
                  setTimeout(() => {
                    setActiveStep(4);
                    setIsAligning(false);
                  }, 1500);
                }} className="w-full h-20 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-[2rem] gap-4 uppercase mt-8 text-lg shadow-xl shadow-teal-500/10">
-                  {isAligning ? <Loader2 className="animate-spin" size={24} /> : <><Sparkles size={24} /> Finalize The Blueprint</>}
+                  {isAligning ? <Loader2 className="animate-spin" size={24} /> : <><Sparkles size={24} /> Copy & Finalize Blueprint</>}
                </Button>
             </div>
           </div>
@@ -299,7 +319,7 @@ export default function CulturalFit({ vault, onSync }) {
               <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.5em] italic">Alignment Secured</p>
             </div>
 
-            <Card className="p-12 bg-white/[0.01] border border-white/5 rounded-[3rem] relative backdrop-blur-3xl">
+            <Card className="p-8 md:p-12 bg-white/[0.01] border border-white/5 rounded-[3rem] relative backdrop-blur-3xl">
                <div className="space-y-8 relative z-10">
                   <p className="text-slate-400 italic text-xl leading-relaxed font-light">
                     "The distance to <span className="text-white font-bold underline decoration-teal-500 underline-offset-8">{selectedPath?.domain || "your new career"}</span> has been charted. Your narrative is fixed."
