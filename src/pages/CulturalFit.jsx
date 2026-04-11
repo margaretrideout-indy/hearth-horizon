@@ -64,7 +64,7 @@ export default function CulturalFit({ vault, onSync }) {
     setTimeout(() => {
       const verbBuffer = manualInput
         .trim()
-        .replace(/^(managed|developed|designed|coordinated|led|created|organized|overlooked|ran|built)\s+/i, "")
+        .replace(/^(managed|developed|designed|coordinated|led|created|organized|overlooked|ran|built|orchestrated|transformed|standardized)\s+/i, "")
         .replace(/^\w/, (c) => c.toLowerCase());
 
       setBridgeData({
