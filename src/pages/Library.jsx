@@ -3,12 +3,13 @@ import {
   Library as LibraryIcon, Book, Package, ExternalLink, 
   ShieldCheck, FileText, ArrowRight, ShoppingBag,
   Search, Wind, Lock, Globe,
-  Mountain, MessageSquare
+  Mountain, MessageSquare, X
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
-// Updated to use /present suffix to ensure a clean, read-only presentation view
-const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/present";
+// Using /preview provides a clean, non-editable player interface
+// users can simply close the tab to return to your site.
+const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/preview";
 
 const Badge = ({ children, className }) => (
   <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>
@@ -16,10 +17,11 @@ const Badge = ({ children, className }) => (
   </span>
 );
 
-const Library = () => {
+const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const openDeck = () => {
+    // This opens the deck in a new tab, keeping your library open in the original tab
     window.open(STRATEGY_DECK_URL, '_blank', 'noopener,noreferrer');
   };
   
@@ -106,16 +108,17 @@ const Library = () => {
                 <Badge className="bg-teal-500/10 text-teal-500 border-teal-500/20 italic">Blueprint v1.0</Badge>
                 <h2 className="text-4xl md:text-5xl font-serif italic text-white leading-tight">The Horizon Provisions:<br/>Master Strategy Deck</h2>
                 <p className="text-slate-400 text-sm md:text-base font-light leading-relaxed italic">
-                  One comprehensive blueprint containing the ROE Roadmap, LIRA Conversion, Skill Translation frameworks, and high-conversion networking scripts.
+                  One comprehensive blueprint containing the ROE Roadmap, LIRA Conversion, and high-conversion networking scripts.
                 </p>
                 <div className="flex pt-4">
                   <button 
                     onClick={openDeck}
                     className="h-16 px-12 bg-teal-600 hover:bg-teal-500 active:scale-95 text-black font-black rounded-2xl flex items-center justify-center gap-4 transition-all shadow-lg shadow-teal-500/20 uppercase tracking-widest text-[11px] group/btn"
                   >
-                    View Presentation <Globe size={18} className="group-hover/btn:rotate-12 transition-transform" />
+                    Open Blueprint <ExternalLink size={18} className="group-hover/btn:scale-110 transition-transform" />
                   </button>
                 </div>
+                <p className="text-[9px] text-slate-500 italic uppercase tracking-widest opacity-60">Opens in a new tab for focused study</p>
               </div>
               <div className="hidden lg:block">
                 <div className="aspect-video rounded-2xl bg-black/40 border border-white/5 p-8 flex flex-col justify-center space-y-4 font-sans">
@@ -129,7 +132,7 @@ const Library = () => {
                   </div>
                   <div className="flex items-center gap-3 text-orange-400">
                     <Lock size={18} />
-                    <span className="text-[10px] font-black uppercase tracking-widest">High-Conversion Networking</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest">Identity Re-Framing</span>
                   </div>
                 </div>
               </div>
@@ -152,7 +155,7 @@ const Library = () => {
               </div>
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Canada Mental Health Portal</h4>
               <p className="text-[10px] text-slate-400 font-light font-sans leading-relaxed mb-4 italic">
-                Official federal resources for mental health and immediate crisis assistance for adults.
+                Official federal resources for mental health and immediate crisis assistance.
               </p>
               <div className="bg-black/30 rounded-xl p-4 border border-white/5 mb-6 text-center">
                 <p className="text-[8px] font-black text-teal-500 uppercase tracking-[0.2em] mb-1">Emergency Text Support</p>
@@ -170,7 +173,7 @@ const Library = () => {
                 <FileText className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Burnout Recovery</h4>
-              <p className="text-[10px] text-slate-500 font-light font-sans leading-relaxed mb-8 italic">Evidence-based strategies for reversing professional burnout and cynicism.</p>
+              <p className="text-[10px] text-slate-500 font-light font-sans leading-relaxed mb-8 italic">Evidence-based strategies for reversing professional burnout.</p>
               <div className="mt-auto">
                 <a href="https://www.helpguide.org/articles/stress/burnout-prevention-and-recovery.htm" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   READ RECOVERY GUIDE <ArrowRight className="w-3 h-3 transition-transform group-hover/link:translate-x-1" />
@@ -204,4 +207,4 @@ const Library = () => {
   );
 };
 
-export default Library;
+export default App;
