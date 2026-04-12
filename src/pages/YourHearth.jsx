@@ -6,8 +6,102 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { 
   Flame, Compass, Heart, MessageSquare, Lock, Sparkles, 
-  Zap, BarChart, Clock, Upload, Loader2, CheckCircle2, RefreshCw, ArrowRight, Star, LocateFixed 
+  Zap, BarChart, Clock, Upload, Loader2, CheckCircle2, RefreshCw, 
+  ArrowRight, Star, LocateFixed, Circle, FileUp, Map, Trees,
+  ChevronDown, ChevronUp 
 } from 'lucide-react';
+
+// --- Pathfinder Protocol Helper Components ---
+
+const ProtocolMilestone = ({ icon: Icon, title, description, isCompleted, onClick }) => (
+  <div 
+    onClick={onClick}
+    className={`flex items-start gap-4 p-4 rounded-2xl border transition-all cursor-pointer ${
+      isCompleted 
+      ? 'bg-teal-500/5 border-teal-500/20 opacity-60' 
+      : 'bg-white/[0.02] border-white/5 hover:border-white/10 hover:bg-white/[0.04]'
+    }`}
+  >
+    <div className={`mt-1 shrink-0 ${isCompleted ? 'text-teal-500' : 'text-slate-600'}`}>
+      {isCompleted ? <CheckCircle2 size={20} /> : <Circle size={20} />}
+    </div>
+    <div className="flex-1 space-y-1">
+      <div className="flex items-center gap-2">
+        <Icon size={14} className={isCompleted ? 'text-teal-500' : 'text-slate-400'} />
+        <h4 className={`text-[10px] font-black uppercase tracking-widest ${isCompleted ? 'text-teal-200/50' : 'text-white'}`}>
+          {title}
+        </h4>
+      </div>
+      <p className="text-[10px] text-slate-500 font-light italic leading-relaxed">
+        {description}
+      </p>
+    </div>
+  </div>
+);
+
+const PathfinderProtocol = () => {
+  const [isOpen, setIsOpen] = useState(true);
+  const [completed, setCompleted] = useState([]);
+
+  const toggleMilestone = (id) => {
+    setCompleted(prev => 
+      prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id]
+    );
+  };
+
+  const milestones = [
+    { id: 'resume', icon: FileUp, title: "Ground Your Story", description: "Upload your resume here in Your Hearth to begin the translation." },
+    { id: 'checkin', icon: Compass, title: "Take the Pulse", description: "Complete your optional daily check-in to document your internal weather." },
+    { id: 'alignment', icon: Map, title: "Find Your North", description: "Explore Ecosystem Alignment in the Library to sync your values." },
+    { id: 'canopy', icon: Trees, title: "Take Flight", description: "Survey career pathways in The Canopy with strategic confidence." },
+    { id: 'embers', icon: Flame, title: "Share the Spark", description: "Visit Embers Chat and share a spark with fellow travelers." }
+  ];
+
+  const progress = Math.round((completed.length / milestones.length) * 100);
+
+  return (
+    <div className="w-full mb-12 animate-in fade-in slide-in-from-top-4 duration-1000">
+      <div className="bg-[#1A1423] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl">
+        <button 
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full p-6 flex items-center justify-between hover:bg-white/[0.02] transition-colors"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20">
+              <Compass className={progress === 100 ? "animate-bounce" : ""} size={20} />
+            </div>
+            <div className="text-left">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">Pathfinder's Protocol</h3>
+              <p className="text-[9px] text-slate-500 italic">Your journey from the floor to the canopy.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-6">
+            <div className="hidden md:flex flex-col items-end gap-1">
+              <div className="w-32 h-1 bg-slate-900 rounded-full overflow-hidden">
+                <div className="h-full bg-teal-500 transition-all duration-1000" style={{ width: `${progress}%` }} />
+              </div>
+              <span className="text-[8px] font-black text-teal-500/60 uppercase">{progress}% Migrated</span>
+            </div>
+            {isOpen ? <ChevronUp size={20} className="text-slate-600" /> : <ChevronDown size={20} className="text-slate-600" />}
+          </div>
+        </button>
+
+        {isOpen && (
+          <div className="p-6 pt-0 space-y-3">
+            <div className="h-[1px] w-full bg-white/5 mb-6" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {milestones.map((m) => (
+                <ProtocolMilestone key={m.id} {...m} isCompleted={completed.includes(m.id)} onClick={() => toggleMilestone(m.id)} />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// --- End Helper Components ---
 
 const Constellation = ({ pulses = [] }) => {
   const stars = useMemo(() => {
@@ -177,6 +271,8 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
   return (
     <div className="min-h-screen bg-[#0F0A15] text-white font-sans selection:bg-teal-500/30 pb-20">
       <div className="max-w-7xl mx-auto px-6 py-12">
+        
+        {/* Header Section */}
         <header className="mb-12">
           <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
             <div className="flex gap-6 items-center">
@@ -200,7 +296,8 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-12 relative px-4">
+          
+          <div className="grid grid-cols-3 gap-12 relative px-4 mb-12">
             {[
               { label: 'Discovery', icon: <Compass size={24} />, active: true },
               { label: 'Alignment', icon: <Lock size={18} />, active: false },
@@ -215,6 +312,10 @@ export default function Hearth({ vault, onSync, onResumeSync }) {
             ))}
             <div className="absolute top-8 left-0 w-full h-[1px] bg-gradient-to-r from-teal-500/50 via-white/5 to-white/5 -z-0" />
           </div>
+
+          {/* ADDED CHECKLIST HERE */}
+          <PathfinderProtocol />
+
         </header>
 
         <section className="mb-16">
