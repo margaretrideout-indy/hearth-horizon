@@ -131,16 +131,16 @@ const GroveTiers = ({ vault, onSync }) => {
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif italic text-white mb-8 md:mb-12 tracking-tight leading-tight">
             Transition with Intention.
           </h1>
-          <p className="max-w-3xl mx-auto text-base md:text-xl text-slate-400 font-light leading-relaxed mb-10 md:mb-16 italic px-4">
-            After 13 years in the education sector and a Master of Education in Indigenous Education, 
-            I’ve come to understand the deep roots of community, identity, and the power 
-            of a well-told story. I realized that a professional shift is more than a move—it's a 
-            migration of the self. Hearth & Horizon is the sanctuary for those ready to redesign 
-            their story.
+          <p className="max-w-4xl mx-auto text-base md:text-xl text-slate-400 font-light leading-relaxed mb-10 md:mb-16 italic px-4">
+            "With 13 years in the classroom and a Master of Education in Indigenous Studies, 
+            my work has always sat at the intersection of English, Psychology, and Sociology. 
+            I’ve spent a career studying how we learn, how we connect, and the power of a well-told story. 
+            I realized that a professional shift is more than a move—it's a migration of the self. 
+            Hearth & Horizon is the sanctuary for those ready to write their next chapter."
           </p>
           <div className="flex flex-col items-center gap-2">
-            <span className="text-white font-serif italic text-2xl">— Margaret Pardy, MEd</span>
-            <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-600">Founder</span>
+            <span className="text-white font-serif italic text-2xl">— Margaret Pardy, BA, BEd, MEd</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-600">Founder • Hearth & Horizon</span>
           </div>
         </header>
 
