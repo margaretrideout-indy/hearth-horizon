@@ -134,8 +134,8 @@ const GroveTiers = ({ vault, onSync }) => {
           </h1>
 
           <p className="max-w-4xl mx-auto text-base md:text-xl text-slate-400 font-light leading-relaxed mb-10 md:mb-16 italic px-4">
-            "As an **Indigenous educator** with 13 years in the classroom and a **Master of Education in Indigenous Studies**, 
-            my approach is rooted in the **Psychology and Sociology** of belonging. I have spent my career 
+            "As an Indigenous educator with 13 years in the classroom and a Master of Education in Indigenous Studies, 
+            my approach is rooted in the Psychology and Sociology of belonging. I have spent my career 
             learning how we anchor ourselves in community and identity during times of upheaval. 
             I realized that a professional shift is more than a move—it's a migration of the self. 
             Hearth & Horizon is the sanctuary for those ready to write their next chapter."
