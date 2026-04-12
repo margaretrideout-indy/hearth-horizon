@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { 
   Library as LibraryIcon, Book, Package, ExternalLink, 
   ShieldCheck, FileText, ArrowRight, ShoppingBag,
-  Search, Languages, Wind, Lock, Globe,
-  Mountain, FileDown, MessageSquare
+  Search, Wind, Lock, Globe,
+  Mountain, MessageSquare
 } from 'lucide-react';
+
+// --- CONFIGURATION ---
+const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/edit?usp=sharing";
 
 const Badge = ({ children, className }) => (
   <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>
@@ -15,14 +18,8 @@ const Badge = ({ children, className }) => (
 const Library = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const handleDownload = () => {
-    // Placeholder for download logic
-    console.log("Downloading provisions...");
-  };
-
-  const handleOpenDeck = () => {
-    // Placeholder for deck logic
-    console.log("Opening strategy deck...");
+  const openDeck = () => {
+    window.open(STRATEGY_DECK_URL, '_blank', 'noopener,noreferrer');
   };
   
   return (
@@ -91,7 +88,7 @@ const Library = () => {
           </div>
         </section>
 
-        {/* SECTION 2: THE MASTER PROVISION */}
+        {/* SECTION 2: THE MASTER PROVISION (HERO) */}
         <section className="mb-32">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">Master Provision</h3>
@@ -110,51 +107,56 @@ const Library = () => {
                 <p className="text-slate-400 text-sm md:text-base font-light leading-relaxed italic">
                   One comprehensive blueprint containing the ROE Roadmap, LIRA Conversion, Skill Translation frameworks, and high-conversion networking scripts.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                  <button onClick={handleDownload} className="h-16 px-10 bg-teal-600 hover:bg-teal-500 active:scale-95 text-black font-black rounded-2xl flex items-center justify-center gap-3 transition-all shadow-lg shadow-teal-500/10 uppercase tracking-widest text-[11px] group/btn">
-                    Download Provisions <FileDown size={18} />
-                  </button>
-                  <button onClick={handleOpenDeck} className="h-16 px-10 bg-white/5 border border-white/10 active:scale-95 text-white font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-white/10 transition-all uppercase tracking-widest text-[11px]">
-                    Open Slide Deck <Globe size={18} />
+                <div className="flex pt-4">
+                  <button 
+                    onClick={openDeck}
+                    className="h-16 px-12 bg-teal-600 hover:bg-teal-500 active:scale-95 text-black font-black rounded-2xl flex items-center justify-center gap-4 transition-all shadow-lg shadow-teal-500/20 uppercase tracking-widest text-[11px] group/btn"
+                  >
+                    Access Strategy Deck <Globe size={18} className="group-hover/btn:rotate-12 transition-transform" />
                   </button>
                 </div>
               </div>
               <div className="hidden lg:block">
                 <div className="aspect-video rounded-2xl bg-black/40 border border-white/5 p-8 flex flex-col justify-center space-y-4 font-sans">
-                  <div className="flex items-center gap-3 text-teal-400"><ShieldCheck size={18} /><span className="text-[10px] font-black uppercase tracking-widest">Canadian Compliance & ROE</span></div>
-                  <div className="flex items-center gap-3 text-purple-400"><Wind size={18} /><span className="text-[10px] font-black uppercase tracking-widest">LIRA / Pension Shielding</span></div>
-                  <div className="flex items-center gap-3 text-orange-400"><Lock size={18} /><span className="text-[10px] font-black uppercase tracking-widest">High-Conversion Networking</span></div>
+                  <div className="flex items-center gap-3 text-teal-400">
+                    <ShieldCheck size={18} />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Canadian Compliance & ROE</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-purple-400">
+                    <Wind size={18} />
+                    <span className="text-[10px] font-black uppercase tracking-widest">LIRA / Pension Shielding</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-orange-400">
+                    <Lock size={18} />
+                    <span className="text-[10px] font-black uppercase tracking-widest">High-Conversion Networking</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* SECTION 4: THE SANCTUARY */}
+        {/* SECTION 3: THE SANCTUARY */}
         <section className="mt-20 border-t border-white/5 pt-20 pb-32">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Sanctuary</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* UPDATED ADULT CRISIS RESOURCE */}
             <div className="bg-[#1A1423] border border-teal-500/20 p-8 rounded-[2.5rem] flex flex-col relative group overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-500 to-transparent opacity-50"></div>
               <Badge className="absolute top-6 right-6 bg-teal-500/10 text-teal-500 border-teal-500/20 italic">24/7 Support</Badge>
               <div className="w-10 h-10 rounded-xl bg-teal-400/5 text-teal-400 flex items-center justify-center mb-6 border border-teal-400/10 shadow-[0_0_15px_rgba(20,184,166,0.1)]">
                 <MessageSquare className="w-5 h-5" />
               </div>
-              <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Canada Mental Health Resources</h4>
+              <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Canada Mental Health Portal</h4>
               <p className="text-[10px] text-slate-400 font-light font-sans leading-relaxed mb-4 italic">
-                Official federal resources for improving mental health and accessing immediate crisis assistance for adults.
+                Official federal resources for mental health and immediate crisis assistance for adults.
               </p>
-              
               <div className="bg-black/30 rounded-xl p-4 border border-white/5 mb-6 text-center">
                 <p className="text-[8px] font-black text-teal-500 uppercase tracking-[0.2em] mb-1">Emergency Text Support</p>
                 <p className="text-2xl font-black text-white tracking-[0.1em]">686868</p>
               </div>
-
               <div className="mt-auto">
                 <a href="https://www.canada.ca/en/public-health/topics/improving-your-mental-health.html" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   VISIT PORTAL <ArrowRight className="w-3 h-3 transition-transform group-hover/link:translate-x-1" />
