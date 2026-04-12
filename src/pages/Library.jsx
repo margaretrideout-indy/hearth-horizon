@@ -82,7 +82,7 @@ const Library = () => {
         </section>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-32">
-           <section>
+            <section>
               <div className="flex items-center gap-4 mb-8">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Dialect</h3>
                 <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
@@ -120,9 +120,9 @@ const Library = () => {
                     ))}
                  </ul>
               </div>
-           </section>
+            </section>
 
-           <section>
+            <section>
               <div className="flex items-center gap-4 mb-8">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">Provisions</h3>
                 <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
@@ -151,7 +151,7 @@ const Library = () => {
                   );
                 })}
               </div>
-           </section>
+            </section>
         </div>
 
         {showDictionary && (
@@ -251,53 +251,53 @@ const TRANSLATIONS = [
 
 const PROVISIONS = [
   { 
-    title: "Community Resilience Guide", 
+    title: "The Canadian Transition Map", 
     tier: "Seedling", 
     type: "PDF", 
     icon: <ShieldCheck size={14}/>,
-    description: "Foundational Canadian resources for career transitions."
+    description: "Checklist for SIN, CRA, and provincial health docs during a pivot."
   },
   { 
-    title: "Basic Professional Template", 
+    title: "ATS-Ready Legacy Template", 
     tier: "Seedling", 
     type: "DOCX", 
     icon: <FileText size={14}/>,
-    description: "A clean, ATS-friendly baseline for immediate use."
+    description: "Structure designed to highlight transferable skills over titles."
   },
   { 
     title: "Teal HQ Search Tracker", 
     tier: "Seedling", 
     type: "EXT", 
     icon: <Zap size={14}/>,
-    description: "External: Managed job application tracking platform."
+    description: "External: CRM to track applications and networking leads."
   },
   { 
-    title: "The Tech-Stack Translator", 
+    title: "Ed-to-Corp Tech Map", 
     tier: "Hearthkeeper", 
     type: "TOOL", 
     icon: <Cpu size={14}/>,
     description: "Mapping classroom software to industry-standard tools."
   },
   { 
-    title: "LinkedIn Outreach Embers", 
+    title: "The Coffee Chat Script", 
     tier: "Hearthkeeper", 
     type: "DOC", 
     icon: <MessageSquare size={14}/>,
-    description: "High-conversion scripts for networking across Canada."
+    description: "High-conversion scripts for Canadian career-changers."
   },
   { 
-    title: "Jobscan ATS Analyzer", 
+    title: "Jobscan Audit Tool", 
     tier: "Hearthkeeper", 
     type: "EXT", 
     icon: <Search size={14}/>,
-    description: "External: Audit your resume against specific job IDs."
+    description: "External: Audit resume against specific job IDs."
   },
   { 
-    title: "Executive Presence Framework", 
+    title: "Values-Alignment Matrix", 
     tier: "Steward", 
     type: "STRATEGY", 
     icon: <Globe size={14}/>,
-    description: "Leadership communication for senior corporate pivots."
+    description: "Framework for vetting company culture against personal ethics."
   }
 ];
 
