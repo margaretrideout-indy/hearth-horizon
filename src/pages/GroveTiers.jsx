@@ -142,8 +142,12 @@ const GroveTiers = ({ vault, onSync }) => {
           </p>
 
           <div className="flex flex-col items-center gap-2">
-            <span className="text-white font-serif italic text-2xl">— Margaret Pardy, BA, BEd, MEd</span>
-            <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-600">Founder • Hearth & Horizon</span>
+            <span className="text-white font-serif italic text-2xl">
+              — Margaret, Founder | BA, BEd, MEd
+            </span>
+            <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-600 italic">
+              Hearth & Horizon
+            </span>
           </div>
         </header>
 
