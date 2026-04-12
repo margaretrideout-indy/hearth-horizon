@@ -7,7 +7,8 @@ import {
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
-const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/edit?usp=sharing";
+// Updated to use /present suffix to ensure a clean, read-only presentation view
+const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/present";
 
 const Badge = ({ children, className }) => (
   <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>
@@ -112,7 +113,7 @@ const Library = () => {
                     onClick={openDeck}
                     className="h-16 px-12 bg-teal-600 hover:bg-teal-500 active:scale-95 text-black font-black rounded-2xl flex items-center justify-center gap-4 transition-all shadow-lg shadow-teal-500/20 uppercase tracking-widest text-[11px] group/btn"
                   >
-                    Access Strategy Deck <Globe size={18} className="group-hover/btn:rotate-12 transition-transform" />
+                    View Presentation <Globe size={18} className="group-hover/btn:rotate-12 transition-transform" />
                   </button>
                 </div>
               </div>
