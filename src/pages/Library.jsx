@@ -54,7 +54,7 @@ const Library = () => {
           </div>
         </header>
 
-        {/* SECTION 1: THE STUDY (AFFILIATE LINKS) */}
+        {/* SECTION 1: THE STUDY */}
         <section className="mb-20">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-orange-500/60 whitespace-nowrap">The Study</h3>
@@ -90,7 +90,7 @@ const Library = () => {
           </div>
         </section>
 
-        {/* SECTION 2: THE MASTER PROVISION (BLUEPRINT HERO) */}
+        {/* SECTION 2: THE MASTER PROVISION */}
         <section className="mb-32">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">Master Provision</h3>
@@ -110,81 +110,26 @@ const Library = () => {
                   One comprehensive blueprint containing the ROE Roadmap, LIRA Conversion, Skill Translation frameworks, and high-conversion networking scripts.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                  <button 
-                    onClick={handleDownload}
-                    className="h-16 px-10 bg-teal-600 hover:bg-teal-500 active:scale-95 text-black font-black rounded-2xl flex items-center justify-center gap-3 transition-all shadow-lg shadow-teal-500/10 uppercase tracking-widest text-[11px] group/btn"
-                  >
-                    Download Provisions <FileDown size={18} className="group-hover/btn:translate-y-0.5 transition-transform" />
+                  <button onClick={handleDownload} className="h-16 px-10 bg-teal-600 hover:bg-teal-500 active:scale-95 text-black font-black rounded-2xl flex items-center justify-center gap-3 transition-all shadow-lg shadow-teal-500/10 uppercase tracking-widest text-[11px] group/btn">
+                    Download Provisions <FileDown size={18} />
                   </button>
-                  <button 
-                    onClick={handleOpenDeck}
-                    className="h-16 px-10 bg-white/5 border border-white/10 active:scale-95 text-white font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-white/10 transition-all uppercase tracking-widest text-[11px]"
-                  >
+                  <button onClick={handleOpenDeck} className="h-16 px-10 bg-white/5 border border-white/10 active:scale-95 text-white font-black rounded-2xl flex items-center justify-center gap-3 hover:bg-white/10 transition-all uppercase tracking-widest text-[11px]">
                     Open Slide Deck <Globe size={18} />
                   </button>
                 </div>
               </div>
-              
               <div className="hidden lg:block">
-                <div className="aspect-video rounded-2xl bg-black/40 border border-white/5 p-8 flex flex-col justify-center space-y-4">
-                  <div className="flex items-center gap-3 text-teal-400">
-                    <ShieldCheck size={18} />
-                    <span className="text-[10px] font-black uppercase tracking-widest font-sans">Canadian Compliance & ROE</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-purple-400">
-                    <Wind size={18} />
-                    <span className="text-[10px] font-black uppercase tracking-widest font-sans">LIRA / Pension Shielding</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-orange-400">
-                    <Lock size={18} />
-                    <span className="text-[10px] font-black uppercase tracking-widest font-sans">High-Conversion Networking</span>
-                  </div>
+                <div className="aspect-video rounded-2xl bg-black/40 border border-white/5 p-8 flex flex-col justify-center space-y-4 font-sans">
+                  <div className="flex items-center gap-3 text-teal-400"><ShieldCheck size={18} /><span className="text-[10px] font-black uppercase tracking-widest">Canadian Compliance & ROE</span></div>
+                  <div className="flex items-center gap-3 text-purple-400"><Wind size={18} /><span className="text-[10px] font-black uppercase tracking-widest">LIRA / Pension Shielding</span></div>
+                  <div className="flex items-center gap-3 text-orange-400"><Lock size={18} /><span className="text-[10px] font-black uppercase tracking-widest">High-Conversion Networking</span></div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* SECTION 3: DIALECT & ECOSYSTEM */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-32">
-          <section className="space-y-8">
-            <div className="flex items-center gap-4">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Dialect</h3>
-              <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
-            </div>
-            <div className="bg-white/[0.01] border border-white/5 p-8 rounded-[2.5rem] hover:bg-white/[0.03] transition-all group">
-              <Languages className="w-5 h-5 text-teal-400 mb-6" />
-              <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">The Universal Pivot Dictionary</h4>
-              <p className="text-[10px] text-slate-500 font-light leading-relaxed mb-6 italic font-sans">Translate legacy experience into high-impact corporate operations value.</p>
-              <button 
-                onClick={() => setShowDictionary(!showDictionary)}
-                className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white flex items-center gap-2 transition-colors"
-              >
-                {showDictionary ? "CLOSE DICTIONARY" : "HARVEST RESOURCE"} <ArrowRight className={`w-3 h-3 transition-transform ${showDictionary ? 'rotate-90' : ''}`} />
-              </button>
-            </div>
-          </section>
-
-          <section className="space-y-8">
-            <div className="flex items-center gap-4">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500/60 whitespace-nowrap font-sans">Ecosystem</h3>
-              <div className="h-[1px] flex-1 bg-gradient-to-r from-white/5 to-transparent" />
-            </div>
-            <div className="bg-[#1A1423]/50 border border-white/5 p-8 rounded-[2.5rem]">
-              <ul className="space-y-4 font-sans">
-                {ECOSYSTEM_LINKS.map((link) => (
-                  <li key={link.name} className="flex items-center justify-between text-[9px] font-bold text-slate-400 hover:text-teal-400 cursor-pointer border-b border-white/5 pb-3">
-                    <a href={link.url} target="_blank" rel="noopener noreferrer" className="flex justify-between w-full">
-                       {link.name.toUpperCase()} <ExternalLink size={12} />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        </div>
-
-        {/* SECTION 4: THE SANCTUARY (EMERGENCY 686868) */}
+        {/* SECTION 4: THE SANCTUARY (EMERGENCY 686868 - ADULT FOCUSED) */}
         <section className="mt-20 border-t border-white/5 pt-20 pb-32">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Sanctuary</h3>
@@ -192,37 +137,36 @@ const Library = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
-            {/* UPDATED: FIXED CRISIS TEXT LINE LINK */}
+            {/* FIXED ADULT CRISIS RESOURCE */}
             <div className="bg-[#1A1423] border border-teal-500/20 p-8 rounded-[2.5rem] flex flex-col relative group overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-500 to-transparent opacity-50"></div>
               <Badge className="absolute top-6 right-6 bg-teal-500/10 text-teal-500 border-teal-500/20 italic">24/7 Support</Badge>
               <div className="w-10 h-10 rounded-xl bg-teal-400/5 text-teal-400 flex items-center justify-center mb-6 border border-teal-400/10 shadow-[0_0_15px_rgba(20,184,166,0.1)]">
                 <MessageSquare className="w-5 h-5" />
               </div>
-              <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Crisis Text Line</h4>
+              <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Crisis Text Line (Adults)</h4>
               <p className="text-[10px] text-slate-400 font-light font-sans leading-relaxed mb-4 italic">
-                Free, confidential support via text for anyone in Canada experiencing emotional distress.
+                Confidential crisis support for adults across Canada via text, powered by Wellness Together.
               </p>
               
               <div className="bg-black/30 rounded-xl p-4 border border-white/5 mb-6 text-center">
-                <p className="text-[8px] font-black text-teal-500 uppercase tracking-[0.2em] mb-1">Text CONNECT to</p>
+                <p className="text-[8px] font-black text-teal-500 uppercase tracking-[0.2em] mb-1">Text WELLNESS to</p>
                 <p className="text-2xl font-black text-white tracking-[0.1em]">686868</p>
               </div>
 
               <div className="mt-auto">
-                <a href="https://www.kidshelpphone.ca/crisis-text-line" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                <a href="https://www.wellnesstogether.ca/en-CA/crisis/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   VISIT PORTAL <ArrowRight className="w-3 h-3 transition-transform group-hover/link:translate-x-1" />
                 </a>
               </div>
             </div>
 
-            {/* UPDATED: RELEVANT BURNOUT RESOURCE */}
             <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col group">
               <div className="w-10 h-10 rounded-xl bg-teal-400/5 text-teal-400 flex items-center justify-center mb-6 border border-teal-400/10">
                 <FileText className="w-5 h-5" />
               </div>
-              <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Burnout to Balance</h4>
-              <p className="text-[10px] text-slate-500 font-light font-sans leading-relaxed mb-8 italic">A recovery guide using goal-hierarchy mapping to reverse professional cynicism.</p>
+              <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Burnout Recovery</h4>
+              <p className="text-[10px] text-slate-500 font-light font-sans leading-relaxed mb-8 italic">Evidence-based strategies for reversing professional burnout and cynicism.</p>
               <div className="mt-auto">
                 <a href="https://www.helpguide.org/articles/stress/burnout-prevention-and-recovery.htm" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   READ RECOVERY GUIDE <ArrowRight className="w-3 h-3 transition-transform group-hover/link:translate-x-1" />
@@ -235,7 +179,7 @@ const Library = () => {
                 <Wind className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">The Inner Advocate</h4>
-              <p className="text-[10px] text-slate-500 font-light font-sans leading-relaxed mb-8 italic">Guided sessions tailored for identity shifts and quieting the inner critic.</p>
+              <p className="text-[10px] text-slate-500 font-light font-sans leading-relaxed mb-8 italic">Guided exercises for navigating identity shifts with self-compassion.</p>
               <div className="mt-auto">
                 <a href="https://self-compassion.org/category/exercises/#guided-meditations" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   LISTEN TO SESSIONS <ArrowRight className="w-3 h-3 transition-transform group-hover/link:translate-x-1" />
@@ -257,16 +201,6 @@ const Library = () => {
 };
 
 export default Library;
-
-const TRANSLATIONS = [
-  { edu: "Front-line Delivery", ops: "Personalized User Experience (UX) & Scalable Execution" },
-  { edu: "Project Individualization", ops: "Custom Stakeholder Requirements & Targeted KPI Development" },
-  { edu: "Workflow Planning", ops: "Strategic Product Roadmapping & Lifecycle Management" },
-  { edu: "Conflict Resolution", ops: "High-Stakes Stakeholder Facilitation & Resource Optimization" },
-  { edu: "Client/Peer Relations", ops: "Cross-Functional Relationship Management (CRM)" },
-  { edu: "Continuous Assessment", ops: "Iterative Feedback Loops & Real-time Data Analysis" },
-  { edu: "Literary/Social Analysis", ops: "Qualitative Data Synthesis & Sentiment Mapping" }
-];
 
 const ECOSYSTEM_LINKS = [
   { name: 'Invest in Canada', url: 'https://www.investcanada.ca' },
