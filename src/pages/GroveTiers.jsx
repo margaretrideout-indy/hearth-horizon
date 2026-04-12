@@ -128,16 +128,19 @@ const GroveTiers = ({ vault, onSync }) => {
             <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">Welcome to the Sanctuary</span>
           </div>
+          
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif italic text-white mb-8 md:mb-12 tracking-tight leading-tight">
             Transition with Intention.
           </h1>
+
           <p className="max-w-4xl mx-auto text-base md:text-xl text-slate-400 font-light leading-relaxed mb-10 md:mb-16 italic px-4">
-            "With 13 years in the classroom and a Master of Education in Indigenous Studies, 
-            my work has always sat at the intersection of English, Psychology, and Sociology. 
-            I’ve spent a career studying how we learn, how we connect, and the power of a well-told story. 
+            "As an **Indigenous educator** with 13 years in the classroom and a **Master of Education in Indigenous Studies**, 
+            my approach is rooted in the **Psychology and Sociology** of belonging. I have spent my career 
+            learning how we anchor ourselves in community and identity during times of upheaval. 
             I realized that a professional shift is more than a move—it's a migration of the self. 
             Hearth & Horizon is the sanctuary for those ready to write their next chapter."
           </p>
+
           <div className="flex flex-col items-center gap-2">
             <span className="text-white font-serif italic text-2xl">— Margaret Pardy, BA, BEd, MEd</span>
             <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-600">Founder • Hearth & Horizon</span>
