@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Users, Mail, Activity, Check, X, Clock, Send, Zap } from 'lucide-react';
+import { Users, Mail, Activity, Check, X, Clock, Send, Zap, BarChart3, TrendingUp } from 'lucide-react';
 
 const ForestAdmin = () => {
   const queryClient = useQueryClient();
@@ -37,7 +37,8 @@ const ForestAdmin = () => {
       } else {
         return await window.base44.entities.User.create({ 
           email: cleanEmail, 
-          subscription_tier: tier 
+          subscription_tier: tier,
+          progress_data: JSON.stringify({ status: 'Joined', last_activity: new Date().toISOString() })
         });
       }
     },
@@ -60,7 +61,8 @@ const ForestAdmin = () => {
       } else {
         await window.base44.entities.User.create({ 
           email: cleanEmail, 
-          subscription_tier: 'Hearthkeeper' 
+          subscription_tier: 'Hearthkeeper',
+          progress_data: JSON.stringify({ status: 'Seat Granted', last_activity: new Date().toISOString() })
         });
       }
       
@@ -89,6 +91,15 @@ const ForestAdmin = () => {
 
   const safeDwellers = Array.isArray(dwellers) ? dwellers : [];
   const pendingRequests = (Array.isArray(requests) ? requests : []).filter(r => r.status === 'available');
+
+  // Helper to parse progress
+  const getProgress = (dweller) => {
+    try {
+      return dweller.progress_data ? JSON.parse(dweller.progress_data) : { status: 'Unknown', last_activity: null };
+    } catch {
+      return { status: 'Legacy', last_activity: null };
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#1A1423] p-8 font-sans text-slate-200">
@@ -127,16 +138,20 @@ const ForestAdmin = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <StatCard title="Total Dwellers" value={safeDwellers.length} icon={<Users />} />
         <StatCard title="Seat Requests" value={pendingRequests.length} icon={<Mail />} />
         <StatCard title="Active Tiers" value="3 Levels" icon={<Activity />} />
+        <StatCard title="System Pulse" value="Healthy" icon={<TrendingUp />} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-[#241B2E] border border-white/5 rounded-[2.5rem] p-10 shadow-xl">
           <div className="flex justify-between items-center mb-10">
-            <h3 className="font-bold text-xl text-white">Recent Members</h3>
+            <h3 className="font-bold text-xl text-white flex items-center gap-3">
+              <BarChart3 className="w-5 h-5 text-teal-500" />
+              Dweller Progress
+            </h3>
           </div>
           
           <div className="overflow-x-auto">
@@ -145,23 +160,34 @@ const ForestAdmin = () => {
                 <tr className="text-[10px] font-black text-slate-600 uppercase tracking-widest border-b border-white/5">
                   <th className="pb-4 px-2">Dweller Email</th>
                   <th className="pb-4 px-2">Current Tier</th>
+                  <th className="pb-4 px-2 text-center">Progress Status</th>
+                  <th className="pb-4 px-2 text-right">Last Active</th>
                 </tr>
               </thead>
               <tbody className="text-sm font-medium">
-                {[...safeDwellers].reverse().slice(0, 10).map(dweller => (
-                  <tr key={dweller.id} className="border-b border-white/[0.02] hover:bg-white/[0.01] transition-colors group">
-                    <td className="py-6 px-2 text-slate-300">{dweller.email}</td>
-                    <td className="py-6 px-2">
-                      <span className={`px-3 py-1 rounded-full text-[10px] uppercase font-black tracking-tighter ${
-                        dweller.subscription_tier === 'Steward' ? 'bg-purple-500/10 text-purple-400' :
-                        dweller.subscription_tier === 'Hearthkeeper' ? 'bg-teal-500/10 text-teal-400' :
-                        'bg-white/5 text-slate-500'
-                      }`}>
-                        {dweller.subscription_tier || 'Seedling'}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {[...safeDwellers].reverse().slice(0, 15).map(dweller => {
+                  const progress = getProgress(dweller);
+                  return (
+                    <tr key={dweller.id} className="border-b border-white/[0.02] hover:bg-white/[0.01] transition-colors group">
+                      <td className="py-6 px-2 text-slate-300">{dweller.email}</td>
+                      <td className="py-6 px-2">
+                        <span className={`px-3 py-1 rounded-full text-[10px] uppercase font-black tracking-tighter ${
+                          dweller.subscription_tier === 'Steward' ? 'bg-purple-500/10 text-purple-400' :
+                          dweller.subscription_tier === 'Hearthkeeper' ? 'bg-teal-500/10 text-teal-400' :
+                          'bg-white/5 text-slate-500'
+                        }`}>
+                          {dweller.subscription_tier || 'Seedling'}
+                        </span>
+                      </td>
+                      <td className="py-6 px-2 text-center">
+                        <span className="text-[10px] text-slate-400 italic font-light">{progress.status || 'Active'}</span>
+                      </td>
+                      <td className="py-6 px-2 text-right text-slate-500 text-[10px] font-mono">
+                        {progress.last_activity ? new Date(progress.last_activity).toLocaleDateString() : '—'}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -216,13 +242,13 @@ const ForestAdmin = () => {
 };
 
 const StatCard = ({ title, value, icon }) => (
-  <div className="bg-[#241B2E] border border-white/5 rounded-[2.5rem] p-10 flex items-center justify-between group hover:border-teal-500/10 transition-all shadow-lg">
+  <div className="bg-[#241B2E] border border-white/5 rounded-[2.5rem] p-8 flex items-center justify-between group hover:border-teal-500/10 transition-all shadow-lg">
     <div>
       <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">{title}</div>
-      <div className="text-4xl font-black text-white">{value}</div>
+      <div className="text-3xl font-black text-white">{value}</div>
     </div>
-    <div className="p-4 bg-white/5 rounded-2xl text-slate-600 group-hover:text-teal-400 group-hover:bg-teal-400/5 transition-all">
-      {React.cloneElement(icon, { className: 'w-6 h-6' })}
+    <div className="p-3 bg-white/5 rounded-2xl text-slate-600 group-hover:text-teal-400 group-hover:bg-teal-400/5 transition-all">
+      {React.cloneElement(icon, { className: 'w-5 h-5' })}
     </div>
   </div>
 );
