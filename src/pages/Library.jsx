@@ -16,14 +16,11 @@ const Library = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDictionary, setShowDictionary] = useState(false);
 
-  // Actions for the Master Provision buttons
   const handleDownload = () => {
-    // Replace with actual direct PDF download link when ready
     window.open('#', '_blank');
   };
 
   const handleOpenDeck = () => {
-    // Replace with your actual Google Slides / Canva link
     window.open('#', '_blank');
   };
   
@@ -64,7 +61,6 @@ const Library = () => {
             <div className="h-[1px] flex-1 bg-gradient-to-r from-orange-500/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* INDIGO */}
             <div className="bg-white/[0.01] border border-orange-500/20 p-8 md:p-10 rounded-[2.5rem] hover:bg-white/[0.03] transition-all group relative">
               <div className="w-12 h-12 rounded-2xl bg-orange-500/5 flex items-center justify-center text-orange-400 mb-8 border border-orange-500/10">
                 <Book className="w-5 h-5" />
@@ -78,7 +74,6 @@ const Library = () => {
               </a>
             </div>
 
-            {/* AMAZON - LINK UPDATED */}
             <div className="bg-white/[0.01] border border-orange-500/20 p-8 md:p-10 rounded-[2.5rem] hover:bg-white/[0.03] transition-all group relative">
               <div className="w-12 h-12 rounded-2xl bg-orange-500/5 flex items-center justify-center text-orange-400 mb-8 border border-orange-500/10">
                 <Package className="w-5 h-5" />
@@ -197,7 +192,7 @@ const Library = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
-            {/* CRISIS CARD WITH SHORTCODE */}
+            {/* UPDATED: FIXED CRISIS TEXT LINE LINK */}
             <div className="bg-[#1A1423] border border-teal-500/20 p-8 rounded-[2.5rem] flex flex-col relative group overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-500 to-transparent opacity-50"></div>
               <Badge className="absolute top-6 right-6 bg-teal-500/10 text-teal-500 border-teal-500/20 italic">24/7 Support</Badge>
@@ -215,12 +210,13 @@ const Library = () => {
               </div>
 
               <div className="mt-auto">
-                <a href="https://www.crisistextline.ca/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                <a href="https://www.kidshelpphone.ca/crisis-text-line" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   VISIT PORTAL <ArrowRight className="w-3 h-3 transition-transform group-hover/link:translate-x-1" />
                 </a>
               </div>
             </div>
 
+            {/* UPDATED: RELEVANT BURNOUT RESOURCE */}
             <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[2.5rem] hover:border-teal-500/20 transition-all flex flex-col group">
               <div className="w-10 h-10 rounded-xl bg-teal-400/5 text-teal-400 flex items-center justify-center mb-6 border border-teal-400/10">
                 <FileText className="w-5 h-5" />
@@ -228,8 +224,8 @@ const Library = () => {
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">Burnout to Balance</h4>
               <p className="text-[10px] text-slate-500 font-light font-sans leading-relaxed mb-8 italic">A recovery guide using goal-hierarchy mapping to reverse professional cynicism.</p>
               <div className="mt-auto">
-                <a href="https://campusmentalhealth.ca/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
-                  DOWNLOAD RECOVERY <ArrowRight className="w-3 h-3 transition-transform group-hover/link:translate-x-1" />
+                <a href="https://www.helpguide.org/articles/stress/burnout-prevention-and-recovery.htm" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                  READ RECOVERY GUIDE <ArrowRight className="w-3 h-3 transition-transform group-hover/link:translate-x-1" />
                 </a>
               </div>
             </div>
@@ -241,7 +237,7 @@ const Library = () => {
               <h4 className="text-white font-bold text-sm font-serif italic mb-2 tracking-tight">The Inner Advocate</h4>
               <p className="text-[10px] text-slate-500 font-light font-sans leading-relaxed mb-8 italic">Guided sessions tailored for identity shifts and quieting the inner critic.</p>
               <div className="mt-auto">
-                <a href="https://self-compassion.org/" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
+                <a href="https://self-compassion.org/category/exercises/#guided-meditations" target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white transition-colors flex items-center gap-2 group/link">
                   LISTEN TO SESSIONS <ArrowRight className="w-3 h-3 transition-transform group-hover/link:translate-x-1" />
                 </a>
               </div>
