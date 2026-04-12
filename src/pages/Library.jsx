@@ -3,7 +3,7 @@ import {
   Library as LibraryIcon, Book, Package, ExternalLink, 
   ShieldCheck, FileText, ArrowRight, ShoppingBag,
   Search, Wind, Lock, Globe,
-  Mountain, MessageSquare
+  Mountain, MessageSquare, Compass, Trees
 } from 'lucide-react';
 
 // --- CONFIGURATION ---
@@ -88,7 +88,34 @@ const App = () => {
           </div>
         </section>
 
-        {/* SECTION 2: THE MASTER PROVISION (HERO) */}
+        {/* SECTION 2: THE FOREST GUIDE (NEW ADDITION) */}
+        <section className="mb-16 md:mb-20">
+          <div className="flex items-center gap-4 mb-8 md:mb-10">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-green-500/60 whitespace-nowrap">Forest Guide</h3>
+            <div className="h-[1px] flex-1 bg-gradient-to-r from-green-500/20 to-transparent" />
+          </div>
+          <div className="bg-white/[0.02] border border-green-500/20 p-8 md:p-10 rounded-[2.5rem] relative overflow-hidden group">
+            <div className="absolute -right-8 -bottom-8 text-green-500/[0.03] group-hover:text-green-500/[0.06] transition-colors pointer-events-none">
+              <Trees size={240} />
+            </div>
+            <div className="relative z-10 flex flex-col md:flex-row gap-8 items-start md:items-center">
+              <div className="w-14 h-14 rounded-2xl bg-green-500/5 flex items-center justify-center text-green-400 border border-green-500/10">
+                <Compass className="w-7 h-7" />
+              </div>
+              <div className="flex-1 space-y-2">
+                <h4 className="text-white font-bold text-xl font-serif italic tracking-tight">The Career Migration Map</h4>
+                <p className="text-slate-400 text-xs md:text-sm font-light italic leading-relaxed max-w-2xl">
+                  An interactive walkthrough of the "Forest Floor" to the "Canopy"—understanding the levels of transition, risk assessment, and seasonal timing for your departure.
+                </p>
+              </div>
+              <button className="h-12 px-8 bg-green-600/10 hover:bg-green-600 text-green-400 hover:text-white border border-green-500/20 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all shrink-0 w-full md:w-auto">
+                VIEW MAP
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 3: THE MASTER PROVISION (HERO) */}
         <section className="mb-20 md:mb-32">
           <div className="flex items-center gap-4 mb-8 md:mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">Master Provision</h3>
@@ -138,7 +165,7 @@ const App = () => {
           </div>
         </section>
 
-        {/* SECTION 3: THE SANCTUARY */}
+        {/* SECTION 4: THE SANCTUARY */}
         <section className="mt-16 md:mt-20 border-t border-white/5 pt-16 md:pt-20 pb-20 md:pb-32">
           <div className="flex items-center gap-4 mb-8 md:mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Sanctuary</h3>
