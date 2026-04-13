@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Compass, Map, Trees, FileText, Sparkles, BookOpen, 
   ChevronRight, Activity, Zap, MessageSquare 
@@ -10,9 +10,39 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function YourHearth({ vault, onResumeSync }) {
   const [isProtocolOpen, setIsProtocolOpen] = useState(true);
   
-  const maturityPulses = vault?.pulses || 8; 
+  // Checking if the resume exists in the vault to trigger the state change
+  const hasResume = vault?.isAligned || !!vault?.resume;
+  
+  const maturityPulses = vault?.pulses || (hasResume ? 8 : 0); 
   const maturityTarget = 14;
   const syncPercentage = Math.round((maturityPulses / maturityTarget) * 100);
+
+  // Dynamic Log Logic
+  const getDynamicLogs = () => {
+    const baseLogs = [
+      { date: "08.04.26", event: "First Light", desc: "Your personal Hearth is now established and ready for sync." }
+    ];
+
+    if (!hasResume) {
+      return [
+        { 
+          date: "--.--.--", 
+          event: "Awaiting Connection", 
+          desc: "The logbook is quiet. Tend the hearth by uploading your resume to begin your journey.",
+          isPending: true 
+        },
+        ...baseLogs
+      ];
+    }
+
+    return [
+      { date: "13.04.26", event: "New Growth Found", desc: "Your background in education is an 88% match for 'L&D Operations'." },
+      { date: "10.04.26", event: "Surveying the Land", desc: "Detected hiring surges across the Canadian tech corridor." },
+      ...baseLogs
+    ];
+  };
+
+  const activeLogs = getDynamicLogs();
 
   return (
     <div className="max-w-6xl mx-auto space-y-12 pb-24 p-6 bg-[#0A080D]">
@@ -29,8 +59,8 @@ export default function YourHearth({ vault, onResumeSync }) {
           <div className="relative flex justify-between w-full px-4">
             {[
               { label: 'Discovery', sub: 'ROOTWERK', icon: Compass, active: true },
-              { label: 'Alignment', sub: 'ECOSYSTEM', icon: Map, active: false },
-              { label: 'Launch', sub: 'CANOPY', icon: Trees, active: false }
+              { label: 'Alignment', sub: 'ECOSYSTEM', icon: Map, active: hasResume },
+              { label: 'Launch', sub: 'CANOPY', icon: Trees, active: hasResume }
             ].map((node, i) => (
               <div key={i} className="flex flex-col items-center gap-4 z-10">
                 <div className={`p-4 rounded-[1.5rem] border transition-all duration-700 ${
@@ -69,7 +99,11 @@ export default function YourHearth({ vault, onResumeSync }) {
               </div>
               <div className="flex items-center gap-6">
                 <div className="hidden md:block w-48 h-1 bg-zinc-900 rounded-full overflow-hidden">
-                   <div className="h-full bg-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.5)]" style={{ width: `${syncPercentage}%` }} />
+                   <motion.div 
+                     initial={{ width: 0 }}
+                     animate={{ width: `${syncPercentage}%` }}
+                     className="h-full bg-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.5)]" 
+                   />
                 </div>
                 <span className="text-[10px] font-black text-teal-500 uppercase tracking-widest">{syncPercentage}% Prepared</span>
                 <ChevronRight className={`w-4 h-4 text-zinc-600 transition-transform duration-500 ${isProtocolOpen ? 'rotate-90' : ''}`} />
@@ -86,9 +120,9 @@ export default function YourHearth({ vault, onResumeSync }) {
                 >
                   <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-4 bg-zinc-950/20">
                     {[
-                      { title: "Experience History", status: "Mapped", icon: BookOpen, color: "text-teal-500" },
-                      { title: "Core Strengths", status: "Identified", icon: Activity, color: "text-teal-500" },
-                      { title: "Industry Pivot", status: "Translating", icon: Sparkles, color: "text-purple-500" },
+                      { title: "Experience History", status: hasResume ? "Mapped" : "Waiting", icon: BookOpen, color: hasResume ? "text-teal-500" : "text-zinc-700" },
+                      { title: "Core Strengths", status: hasResume ? "Identified" : "Waiting", icon: Activity, color: hasResume ? "text-teal-500" : "text-zinc-700" },
+                      { title: "Industry Pivot", status: hasResume ? "Translating" : "Waiting", icon: Sparkles, color: hasResume ? "text-purple-500" : "text-zinc-700" },
                       { title: "Pathway Readiness", status: "Pending", icon: Zap, color: "text-zinc-700" }
                     ].map((item, i) => (
                       <div key={i} className="flex items-center justify-between p-5 rounded-2xl bg-zinc-900/30 border border-zinc-800/40 hover:border-teal-500/20 transition-all">
@@ -118,14 +152,18 @@ export default function YourHearth({ vault, onResumeSync }) {
                 </p>
                 <Button 
                   onClick={onResumeSync}
-                  className="bg-transparent border-2 border-teal-500 text-teal-400 hover:bg-teal-500 hover:text-[#0A080D] font-black rounded-xl h-14 px-10 transition-all shadow-[0_0_20px_rgba(20,184,166,0.1)] uppercase text-[10px] tracking-widest flex items-center gap-3 mx-auto md:mx-0"
+                  className={`bg-transparent border-2 font-black rounded-xl h-14 px-10 transition-all uppercase text-[10px] tracking-widest flex items-center gap-3 mx-auto md:mx-0 ${
+                    hasResume 
+                      ? "border-zinc-700 text-zinc-500 cursor-default" 
+                      : "border-teal-500 text-teal-400 hover:bg-teal-500 hover:text-[#0A080D] shadow-[0_0_20px_rgba(20,184,166,0.1)]"
+                  }`}
                 >
-                  <FileText className="w-4 h-4" /> Upload Resume for Sync
+                  <FileText className="w-4 h-4" /> {hasResume ? "Resume Synced" : "Upload Resume for Sync"}
                 </Button>
               </div>
-              <div className="w-56 h-56 rounded-[3rem] bg-zinc-950 border border-zinc-900 flex items-center justify-center relative shadow-inner overflow-hidden">
-                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.1),transparent)] animate-pulse" />
-                 <Sparkles className="w-12 h-12 text-teal-500/20 group-hover:text-teal-400 transition-all duration-1000 group-hover:scale-125" />
+              <div className="w-56 h-56 rounded-[3rem] bg-zinc-950 border border-zinc-800 flex items-center justify-center relative shadow-inner overflow-hidden">
+                 <div className={`absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.15),transparent)] ${!hasResume ? "animate-pulse" : ""}`} />
+                 <Sparkles className={`w-12 h-12 transition-all duration-1000 ${hasResume ? "text-teal-400 scale-110" : "text-teal-500/20 group-hover:text-teal-400 group-hover:scale-125"}`} />
               </div>
             </div>
           </Card>
@@ -135,25 +173,39 @@ export default function YourHearth({ vault, onResumeSync }) {
         <div className="space-y-8">
           <Card className="bg-[#110E16] border-zinc-800/50 rounded-[2.5rem] p-8 shadow-2xl">
             <h3 className="text-white text-[10px] font-black uppercase tracking-[0.3em] mb-8 flex items-center gap-3">
-              <div className="w-1.5 h-1.5 rounded-full bg-teal-500 shadow-[0_0_8px_rgba(20,184,166,1)]" />
+              <motion.div 
+                animate={!hasResume ? { opacity: [0.3, 1, 0.3] } : {}}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="w-1.5 h-1.5 rounded-full bg-teal-500 shadow-[0_0_8px_rgba(20,184,166,1)]" 
+              />
               The Logbook
             </h3>
             <div className="space-y-6">
-              {[
-                { date: "13.04.26", event: "New Growth Found", desc: "Your background in education is an 88% match for 'L&D Operations'." },
-                { date: "10.04.26", event: "Surveying the Land", desc: "Detected hiring surges across the Canadian tech corridor." },
-                { date: "08.04.26", event: "First Light", desc: "Your personal Hearth is now established and ready for sync." }
-              ].map((log, i) => (
-                <div key={i} className="group cursor-default">
-                  <div className="flex justify-between items-end mb-1">
-                    <p className="text-xs font-bold text-white uppercase tracking-tighter group-hover:text-teal-400 transition-colors">{log.event}</p>
-                    <p className="text-[8px] font-black text-zinc-700 tracking-[0.2em]">{log.date}</p>
-                  </div>
-                  <p className="text-[11px] text-zinc-500 italic leading-relaxed font-light border-l border-zinc-800 pl-4 mt-2 group-hover:border-teal-500/50 transition-colors">
-                    {log.desc}
-                  </p>
-                </div>
-              ))}
+              <AnimatePresence mode="popLayout">
+                {activeLogs.map((log, i) => (
+                  <motion.div 
+                    key={log.event}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                    className="group cursor-default"
+                  >
+                    <div className="flex justify-between items-end mb-1">
+                      <p className={`text-xs font-bold uppercase tracking-tighter transition-colors ${log.isPending ? 'text-zinc-600 italic' : 'text-white group-hover:text-teal-400'}`}>
+                        {log.event}
+                      </p>
+                      <p className="text-[8px] font-black text-zinc-700 tracking-[0.2em]">{log.date}</p>
+                    </div>
+                    <p className={`text-[11px] leading-relaxed font-light border-l pl-4 mt-2 transition-colors ${
+                      log.isPending 
+                        ? 'text-zinc-700 border-zinc-900 italic' 
+                        : 'text-zinc-500 italic border-zinc-800 group-hover:border-teal-500/50'
+                    }`}>
+                      {log.desc}
+                    </p>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
           </Card>
         </div>
