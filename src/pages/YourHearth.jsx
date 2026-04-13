@@ -148,7 +148,7 @@ export default function YourHearth({ vault, onResumeSync }) {
                   <h2 className="text-3xl font-bold text-white font-serif italic leading-tight">Tend the Hearth.</h2>
                 </div>
                 <p className="text-zinc-500 text-sm leading-relaxed max-w-sm font-light mx-auto md:mx-0">
-                  By syncing your **resume**, we can translate your leadership and educational legacy into the new growth opportunities ahead.
+                  By syncing your resume, we can translate your leadership and educational legacy into the new growth opportunities ahead.
                 </p>
                 <Button 
                   onClick={onResumeSync}
