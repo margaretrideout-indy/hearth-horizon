@@ -51,10 +51,7 @@ const Library = ({ vault, onSaveBlueprint }) => {
   const navigate = useNavigate();
   const scriptRef = useRef(null);
   
-  // State for Navigation/Clean View
   const [activeTool, setActiveTool] = useState(null);
-  
-  // Existing States
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSector, setActiveSector] = useState("All");
   const [copied, setCopied] = useState(false);
@@ -133,7 +130,7 @@ const Library = ({ vault, onSaveBlueprint }) => {
           </div>
         </header>
 
-        {/* SECTION 1: THE STUDY (Indigo & Amazon) */}
+        {/* SECTION 1: THE STUDY */}
         <section className="mb-16">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400/60 whitespace-nowrap">The Study</h3>
@@ -161,7 +158,7 @@ const Library = ({ vault, onSaveBlueprint }) => {
           </div>
         </section>
 
-        {/* SECTION 2: THE CANOPY HUB (Interactive Grid) */}
+        {/* SECTION 2: THE CANOPY HUB */}
         <section className="mb-16">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Canopy Hub</h3>
@@ -181,7 +178,6 @@ const Library = ({ vault, onSaveBlueprint }) => {
               </button>
             </div>
 
-            {/* HEARTHKEEPER PROVISIONS CARD */}
             <div className="bg-[#16121D] border border-teal-500/10 p-8 rounded-2xl md:rounded-[2.5rem] relative group hover:border-teal-500/30 transition-all flex flex-col shadow-xl">
               {!isHearthkeeper && (
                 <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[6px] rounded-2xl md:rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all">
@@ -193,6 +189,13 @@ const Library = ({ vault, onSaveBlueprint }) => {
               <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 mb-6 w-fit italic tracking-tighter uppercase">Tactical Provisions</Badge>
               <h4 className="text-xl text-white font-serif italic mb-4">Hearthkeeper Tools</h4>
               <div className="space-y-3 mt-4">
+                <div onClick={() => setActiveTool('ledger')} className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${activeTool === 'ledger' ? 'bg-teal-500/20 border-teal-500/50' : 'bg-black/40 border-teal-500/10 group-hover:border-teal-500/30'}`}>
+                  <div className="flex items-center gap-3">
+                    <Compass size={14} className="text-teal-400/50" />
+                    <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Identity Ledger (Slides)</span>
+                  </div>
+                  {activeTool === 'ledger' && <ArrowRight size={12} className="text-teal-400" />}
+                </div>
                 <div onClick={() => setActiveTool('reframing')} className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${activeTool === 'reframing' ? 'bg-teal-500/20 border-teal-500/50' : 'bg-black/40 border-teal-500/10 group-hover:border-teal-500/30'}`}>
                   <div className="flex items-center gap-3">
                     <Layers size={14} className="text-teal-500/50" />
@@ -210,7 +213,6 @@ const Library = ({ vault, onSaveBlueprint }) => {
               </div>
             </div>
 
-            {/* STEWARD ASSETS CARD */}
             <div className="bg-[#16121D] border border-purple-500/10 p-8 rounded-2xl md:rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col shadow-xl">
               {!isSteward && (
                 <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[6px] rounded-2xl md:rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all">
@@ -252,10 +254,32 @@ const Library = ({ vault, onSaveBlueprint }) => {
                 >
                   <ArrowRight className="w-3 h-3 rotate-180" /> Back to Canopy
                 </button>
-                <Badge className={`${activeTool === 'reframing' || activeTool === 'kindling' ? 'bg-teal-500/10 text-teal-400' : 'bg-purple-500/10 text-purple-400'} px-4 py-1.5`}>
+                <Badge className={`${activeTool === 'ledger' || activeTool === 'reframing' || activeTool === 'kindling' ? 'bg-teal-500/10 text-teal-400' : 'bg-purple-500/10 text-purple-400'} px-4 py-1.5`}>
                   {activeTool.replace(/([A-Z])/g, ' $1')} Active
                 </Badge>
               </div>
+
+              {/* IDENTITY LEDGER VIEW */}
+              {activeTool === 'ledger' && (
+                <div className="flex flex-col gap-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                    <div className="relative aspect-video w-full bg-[#1A1025] rounded-[2.5rem] border border-teal-500/20 overflow-hidden shadow-2xl">
+                    <iframe 
+                        src="/path-to-your-ledger.html"
+                        className="w-full h-full border-none"
+                        title="Identity Ledger"
+                    />
+                    </div>
+                    <div className="flex justify-center">
+                    <button 
+                        onClick={() => setActiveTool('reframing')}
+                        className="group flex items-center gap-4 px-8 py-4 bg-teal-500/10 border border-teal-500/30 rounded-2xl hover:bg-teal-500 hover:text-black transition-all"
+                    >
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Proceed to Interactive Engine</span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                    </div>
+                </div>
+              )}
 
               {/* REFRAMING ENGINE VIEW */}
               {activeTool === 'reframing' && (
