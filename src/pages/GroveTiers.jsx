@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Flame, Heart, Sprout, Globe, ShieldCheck, Check, Leaf, Mountain, UserPlus,
-  Smartphone, Share2, PlusSquare 
+  Smartphone, Share2, PlusSquare, Sparkles 
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const LINK_HEARTHKEEPER = 'https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03';
 const LINK_STEWARD = 'https://buy.stripe.com/aFafZhfG8aebdqI4hIdAk04';
@@ -62,7 +62,7 @@ const GroveTiers = ({ vault, onSync }) => {
       price: "FREE",
       period: "ALWAYS OPEN",
       desc: '"A quiet space for those beginning to look toward a new horizon."',
-      features: ["Foundational Badge", "Community Resources", "Access to Library", "Embers Chat"],
+      features: ["Foundational Badge", "Community Resources", "Access to Library"],
       button: "GET STARTED",
       onClick: handleSeedling,
       icon: <Leaf className="w-5 h-5 text-teal-400" />
@@ -109,7 +109,7 @@ const GroveTiers = ({ vault, onSync }) => {
   return (
     <div className="relative min-h-screen bg-[#0A080D] text-slate-300 font-sans selection:bg-teal-500/30 overflow-x-hidden">
       
-      {/* 1. Arvâni (Northern Lights) Background Pulse */}
+      {/* 1. Arvâni Background Pulse */}
       <div className="absolute top-0 left-0 w-full h-[70vh] bg-[radial-gradient(circle_at_50%_0%,rgba(20,184,166,0.08),rgba(147,51,234,0.03)_40%,transparent_80%)] pointer-events-none" />
       
       <div className="absolute top-8 right-8 z-20">
@@ -139,8 +139,7 @@ const GroveTiers = ({ vault, onSync }) => {
             Transition with Intention.
           </h1>
 
-          {/* 2. THE FOUNDER'S MESSAGE */}
-          <div className="max-w-5xl mx-auto p-8 md:p-12 rounded-[3rem] bg-[#110E16]/60 backdrop-blur-xl border border-zinc-800/50 shadow-2xl relative overflow-hidden mb-12">
+          <div className="max-w-5xl mx-auto p-8 md:p-12 rounded-[3rem] bg-[#110E16]/60 backdrop-blur-xl border border-zinc-800/50 shadow-2xl relative overflow-hidden mb-16">
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-purple-500/5 rounded-full blur-[60px]" />
             <p className="relative z-10 text-base md:text-lg text-zinc-300 font-light leading-relaxed mb-8 italic">
               "As an Indigenous educator with 13 years in the classroom and a Master of Education in Indigenous Studies, 
@@ -155,7 +154,7 @@ const GroveTiers = ({ vault, onSync }) => {
             </div>
           </div>
 
-          {/* 3. THE RECIPROCITY MODEL (Plant a Seed) */}
+          {/* THE RECIPROCITY MODEL BLOCK */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -163,7 +162,7 @@ const GroveTiers = ({ vault, onSync }) => {
             className="max-w-3xl mx-auto mb-24 p-1 border-t border-b border-teal-500/10"
           >
             <div className="py-12 px-6 space-y-8 bg-gradient-to-b from-transparent via-teal-500/5 to-transparent">
-              <div className="space-y-3">
+              <div className="space-y-3 text-center">
                 <div className="flex justify-center gap-6 text-teal-500/40 mb-4">
                   <Sprout size={18} />
                   <Heart size={18} />
@@ -171,11 +170,19 @@ const GroveTiers = ({ vault, onSync }) => {
                 </div>
                 <h3 className="text-white font-serif italic text-3xl">The Reciprocity Model</h3>
                 <p className="text-zinc-400 text-sm max-w-xl mx-auto font-light leading-relaxed italic">
-                  Hearth & Horizon is nourished by the principle of reciprocity. While we offer structured tiers for those who need dedicated tools, the sanctuary is sustained by those who can give back. Your "Seed" directly funds scholarship seats for pathfinders in deep transition.
+                  Hearth & Horizon is nourished by the principle of reciprocity. Your contribution directly funds scholarship seats for those in transition. 
                 </p>
+                <div className="pt-4 space-y-2">
+                  <div className="inline-flex items-center gap-2 text-teal-400 font-black uppercase tracking-[0.2em] text-[10px] py-2 px-4 rounded-full bg-teal-500/10 border border-teal-500/20">
+                    <Sparkles className="w-3 h-3" /> Lightkeeper Gift Included
+                  </div>
+                  <p className="text-[11px] text-zinc-500 font-medium italic">
+                    Donators receive immediate access to the <strong>Embers Chat</strong> and the <strong>Lightkeeper</strong> badge.
+                  </p>
+                </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <div className="flex flex-col items-center gap-6">
                 <button 
                   onClick={() => window.open(LINK_DONATION, '_blank')}
                   className="px-10 py-5 rounded-2xl bg-teal-500 text-[#0A080D] text-[11px] font-black uppercase tracking-[0.3em] hover:bg-[#4df7d5] hover:scale-105 transition-all shadow-[0_0_30px_rgba(20,184,166,0.3)] flex items-center gap-3 group"
@@ -183,7 +190,7 @@ const GroveTiers = ({ vault, onSync }) => {
                   <Heart size={16} className="group-hover:fill-current" /> Plant A Seed
                 </button>
                 <div className="flex items-center gap-2 text-[9px] font-black text-zinc-600 uppercase tracking-widest">
-                  <ShieldCheck size={14} className="text-teal-900" /> Secure via Stripe
+                  <ShieldCheck size={14} className="text-teal-900" /> Secure Reciprocity via Stripe
                 </div>
               </div>
             </div>
@@ -237,10 +244,10 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        {/* MOBILE OPTIMIZATION / FOOTER */}
+        {/* MOBILE / FOOTER */}
         <section className="max-w-4xl mx-auto border-t border-zinc-900 pt-16">
-          <div className="p-8 sm:p-12 rounded-[3rem] bg-[#110E16]/40 border border-zinc-800/50 text-center md:text-left">
-            <div className="flex flex-col md:flex-row gap-8 items-center">
+          <div className="p-8 sm:p-12 rounded-[3rem] bg-[#110E16]/40 border border-zinc-800/50">
+            <div className="flex flex-col md:flex-row gap-8 items-center text-center md:text-left">
               <div className="p-4 rounded-3xl bg-teal-500/10 text-teal-400">
                 <Smartphone className="w-8 h-8" />
               </div>
