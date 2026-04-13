@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Library as LibraryIcon, Book, Package, ExternalLink, 
   ShieldCheck, FileText, ArrowRight, ShoppingBag,
-  Wind, Lock, Globe, Mountain, MessageSquare, Sparkles,
+  Wind, Lock, Mountain, MessageSquare, Sparkles,
   Zap, Compass
 } from 'lucide-react';
 
@@ -17,6 +17,7 @@ const Badge = ({ children, className }) => (
 
 const Library = ({ vault }) => {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('Operations');
   
   const userTier = vault?.tier || 'Seedling';
   const isHearthkeeper = userTier === 'Hearthkeeper' || userTier === 'Steward';
@@ -25,28 +26,31 @@ const Library = ({ vault }) => {
   const openDeck = () => {
     window.open(STRATEGY_DECK_URL, '_blank', 'noopener,noreferrer');
   };
-  
-  const canopyTools = [
-    { 
-      title: "Tactical Outreach Scripts", 
-      desc: "High-conversion templates for networking outside of education.",
-      icon: <MessageSquare size={20} />,
-      type: "Provisions",
-      minTier: "Hearthkeeper"
+
+  const translationData = [
+    {
+      category: "Operations",
+      mappings: [
+        { old: "Running daily routines", root: "Process Management", horizon: "Operational Continuity" },
+        { old: "Improving how things work", root: "Efficiency Audit", horizon: "Process Optimization" },
+        { old: "Fixing immediate problems", root: "Crisis Management", horizon: "Critical Incident Resolution" }
+      ]
     },
-    { 
-      title: "Identity Reframing Tool", 
-      desc: "Converting 'Teacher' skills into 'Project Manager' or 'L&D' language.",
-      icon: <Zap size={20} />,
-      type: "Interactive",
-      minTier: "Hearthkeeper"
+    {
+      category: "Strategy",
+      mappings: [
+        { old: "Planning for the year", root: "Future Casting", horizon: "Strategic Roadmap Development" },
+        { old: "Deciding where money goes", root: "Asset Distribution", horizon: "Resource Allocation" },
+        { old: "Setting goals", root: "Metric Definition", horizon: "KPI Alignment & OKR Tracking" }
+      ]
     },
-    { 
-      title: "Ecosystem Topography", 
-      desc: "Strategic intelligence on industry shifts and high-alignment hiring trends.",
-      icon: <Mountain size={20} />,
-      type: "Steward Exclusive",
-      minTier: "Steward"
+    {
+      category: "People",
+      mappings: [
+        { old: "Training others", root: "Knowledge Transfer", horizon: "Talent Development & Enablement" },
+        { old: "Working with other groups", root: "Diplomacy", horizon: "Cross-Functional Collaboration" },
+        { old: "Managing personalities", root: "Psychological Safety", horizon: "Stakeholder Management" }
+      ]
     }
   ];
 
@@ -57,6 +61,7 @@ const Library = ({ vault }) => {
 
       <div className="max-w-6xl mx-auto relative z-10">
         
+        {/* Header */}
         <header className="mb-12 md:mb-20 flex flex-col md:flex-row justify-between items-start md:items-end gap-8 border-b border-white/5 pb-10 md:pb-12">
           <div className="space-y-4">
             <div className="flex items-center gap-4">
@@ -79,6 +84,7 @@ const Library = ({ vault }) => {
           </div>
         </header>
 
+        {/* Master Provision Section */}
         <section className="mb-20 md:mb-32">
           <div className="flex items-center gap-4 mb-8 md:mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">Core Provision</h3>
@@ -123,64 +129,112 @@ const Library = ({ vault }) => {
           </div>
         </section>
 
+        {/* The Canopy Hub Section */}
         <section className="mb-20 md:mb-32">
           <div className="flex items-center gap-4 mb-8 md:mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-500/60 whitespace-nowrap">The Canopy Hub</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {canopyTools.map((tool, i) => {
-              const isLocked = (tool.minTier === 'Hearthkeeper' && !isHearthkeeper) || 
-                               (tool.minTier === 'Steward' && !isSteward);
-              
-              return (
-                <div key={i} className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col min-h-[340px]">
-                  {isLocked && (
-                    <div className="absolute inset-0 z-20 bg-[#0A080D]/80 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all duration-500">
-                      <Lock className="w-5 h-5 text-purple-500/50 mb-4" />
-                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-6">
-                        {tool.minTier === 'Steward' ? "Steward Exclusive" : "Hearthkeeper Access"}
-                      </p>
-                      <button 
-                        onClick={() => navigate('/grove')}
-                        className="px-6 py-3 border border-purple-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-purple-400 hover:bg-purple-500/10 transition-all"
-                      >
-                        Upgrade Stand
-                      </button>
-                    </div>
-                  )}
-                  
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-8 border transition-colors ${
-                    tool.minTier === 'Steward' 
-                      ? 'bg-purple-500/5 text-purple-400 border-purple-500/10' 
-                      : 'bg-teal-500/5 text-teal-400 border-teal-500/10'
-                  }`}>
-                    {tool.icon}
-                  </div>
-                  
-                  <Badge className={`mb-4 w-fit ${
-                    tool.minTier === 'Steward' 
-                      ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' 
-                      : 'bg-teal-500/10 text-teal-400 border-teal-500/20'
-                  }`}>
-                    {tool.type}
-                  </Badge>
-                  
-                  <h4 className="text-white font-bold text-lg mb-2 font-serif italic">{tool.title}</h4>
-                  <p className="text-[11px] text-zinc-500 font-light leading-relaxed mb-8 italic">{tool.desc}</p>
-                  
-                  <button className={`mt-auto flex items-center gap-2 text-[9px] font-black uppercase tracking-widest transition-colors ${
-                    tool.minTier === 'Steward' ? 'text-purple-400 group-hover:text-purple-300' : 'text-teal-400 group-hover:text-teal-300'
-                  }`}>
-                    {isLocked ? "PREVIEW PROVISION" : "ACCESS TOOL"} <ArrowRight size={12} />
-                  </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            {/* 1. Tactical Outreach Scripts */}
+            <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col">
+              {!isHearthkeeper && (
+                <div className="absolute inset-0 z-20 bg-[#0A080D]/80 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all">
+                  <Lock className="w-5 h-5 text-purple-500/50 mb-4" />
+                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-6">Hearthkeeper Access</p>
+                  <button onClick={() => navigate('/grove')} className="px-6 py-3 border border-purple-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-purple-400 hover:bg-purple-500/10 transition-all">Upgrade Stand</button>
                 </div>
-              );
-            })}
+              )}
+              <div className="w-12 h-12 rounded-xl bg-teal-500/5 text-teal-400 flex items-center justify-center mb-8 border border-teal-500/10">
+                <MessageSquare size={20} />
+              </div>
+              <Badge className="mb-4 w-fit bg-teal-500/10 text-teal-400 border border-teal-500/20">Provisions</Badge>
+              <h4 className="text-white font-bold text-lg mb-2 font-serif italic">Tactical Outreach Scripts</h4>
+              <p className="text-[11px] text-zinc-500 font-light leading-relaxed mb-8 italic">Universal templates for high-conversion networking outside your current sector.</p>
+              <button className="mt-auto flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-teal-400 group-hover:text-teal-300">
+                {isHearthkeeper ? "ACCESS SCRIPTS" : "PREVIEW PROVISION"} <ArrowRight size={12} />
+              </button>
+            </div>
+
+            {/* 2. Identity Reframing Dictionary (The Data Mapping Component) */}
+            <div className="lg:col-span-2 bg-[#110E16]/40 border border-zinc-800 rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col overflow-hidden min-h-[400px]">
+              {!isHearthkeeper && (
+                <div className="absolute inset-0 z-20 bg-[#0A080D]/80 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all">
+                  <Lock className="w-5 h-5 text-purple-500/50 mb-4" />
+                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-6">Hearthkeeper Access</p>
+                  <button onClick={() => navigate('/grove')} className="px-6 py-3 border border-purple-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-purple-400 hover:bg-purple-500/10 transition-all">Upgrade Stand</button>
+                </div>
+              )}
+              
+              <div className="p-8 border-b border-white/5 flex items-center justify-between bg-black/20">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-teal-500/5 text-teal-400 flex items-center justify-center border border-teal-500/10">
+                    <Zap size={18} />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold text-sm font-serif italic">Identity Reframing Dictionary</h4>
+                    <p className="text-[9px] text-zinc-500 uppercase tracking-widest font-black">Quick Sector-to-Sector Translations</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  {translationData.map((cat) => (
+                    <button 
+                      key={cat.category}
+                      onClick={() => setActiveTab(cat.category)}
+                      className={`px-3 py-1.5 rounded-lg text-[8px] font-black uppercase tracking-tighter transition-all ${
+                        activeTab === cat.category ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30' : 'bg-white/5 text-zinc-600 border border-transparent'
+                      }`}
+                    >
+                      {cat.category}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-8 space-y-4 overflow-y-auto max-h-[300px] scrollbar-hide">
+                {translationData.find(c => c.category === activeTab).mappings.map((item, i) => (
+                  <div key={i} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center p-4 rounded-2xl bg-black/40 border border-white/5 transition-all">
+                    <div className="flex flex-col">
+                      <span className="text-[7px] font-black text-zinc-700 uppercase mb-1">Old Soil</span>
+                      <span className="text-[10px] text-zinc-500 italic">"{item.old}"</span>
+                    </div>
+                    <div className="flex justify-center md:block">
+                      <span className="px-2 py-0.5 rounded-full bg-zinc-800/50 border border-zinc-700 text-[7px] font-black text-zinc-500 uppercase">{item.root}</span>
+                    </div>
+                    <div className="flex flex-col md:items-end">
+                      <span className="text-[7px] font-black text-teal-500/40 uppercase mb-1">New Horizon</span>
+                      <span className="text-[10px] text-white font-medium">{item.horizon}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 3. Ecosystem Topography (Steward Exclusive) */}
+            <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col">
+              {!isSteward && (
+                <div className="absolute inset-0 z-20 bg-[#0A080D]/80 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all">
+                  <Lock className="w-5 h-5 text-purple-500/50 mb-4" />
+                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-6">Steward Exclusive</p>
+                  <button onClick={() => navigate('/grove')} className="px-6 py-3 border border-purple-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-purple-400 hover:bg-purple-500/10 transition-all">Upgrade Stand</button>
+                </div>
+              )}
+              <div className="w-12 h-12 rounded-xl bg-purple-500/5 text-purple-400 flex items-center justify-center mb-8 border border-purple-500/10">
+                <Mountain size={20} />
+              </div>
+              <Badge className="mb-4 w-fit bg-purple-500/10 text-purple-400 border border-purple-500/20">Intelligence</Badge>
+              <h4 className="text-white font-bold text-lg mb-2 font-serif italic">Ecosystem Topography</h4>
+              <p className="text-[11px] text-zinc-500 font-light leading-relaxed mb-8 italic">Strategic intelligence on emerging hiring trends and industry-specific alignment.</p>
+              <button className="mt-auto flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-purple-400 group-hover:text-purple-300">
+                {isSteward ? "ACCESS INTEL" : "PREVIEW PROVISION"} <ArrowRight size={12} />
+              </button>
+            </div>
           </div>
         </section>
 
+        {/* The Study Section */}
         <section className="mb-20 md:mb-32">
           <div className="flex items-center gap-4 mb-8 md:mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-600 whitespace-nowrap">The Study</h3>
@@ -216,6 +270,7 @@ const Library = ({ vault }) => {
           </div>
         </section>
 
+        {/* The Sanctuary Section */}
         <section id="sanctuary" className="border-t border-white/5 pt-16 pb-20 md:pb-32">
           <div className="flex items-center gap-4 mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Sanctuary</h3>
@@ -228,7 +283,6 @@ const Library = ({ vault }) => {
                 <MessageSquare className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-sm font-serif italic mb-2">Mental Health Portal</h4>
-              <p className="text-[10px] text-zinc-500 font-light leading-relaxed mb-6 italic">Official federal resources for immediate assistance.</p>
               <div className="bg-black/40 rounded-2xl p-6 border border-white/5 mb-8 text-center shadow-inner">
                 <p className="text-[8px] font-black text-teal-500 uppercase tracking-[0.2em] mb-1 opacity-60">Text Support</p>
                 <p className="text-2xl font-black text-white tracking-[0.2em]">686868</p>
