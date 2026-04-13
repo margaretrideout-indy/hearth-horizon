@@ -209,10 +209,10 @@ const Library = ({ vault, isAdmin }) => {
                   </div>
                   {activeTool === 'architect' && <ArrowRight size={12} className="text-purple-400" />}
                 </div>
-                <div onClick={() => setActiveTool('sponsorship')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'sponsorship' ? 'bg-purple-500/20 border-purple-500/50' : 'bg-black/40 border-purple-500/10'}`}>
+                <div onClick={() => setActiveTool('sponsorship')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'sponsorship' ? 'bg-purple-500/20 border-purple-500/50' : 'bg-black/40 border-teal-500/10'}`}>
                   <div className="flex items-center gap-3">
                     <Compass size={14} className="text-purple-500/50" />
-                    <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Sponsorship Protocol</span>
+                    <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Council of Allies</span>
                   </div>
                   {activeTool === 'sponsorship' && <ArrowRight size={12} className="text-purple-400" />}
                 </div>
@@ -314,24 +314,48 @@ const Library = ({ vault, isAdmin }) => {
 
               {activeTool === 'sponsorship' && (
                 <div className="max-w-3xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
-                  <div className="text-center space-y-4">
-                    <h3 className="text-2xl font-serif italic text-white">The Sponsorship Protocol</h3>
-                    <p className="text-[10px] text-zinc-500 uppercase tracking-[0.3em] font-bold">Strategic Social Capital</p>
+                  <div className="text-center space-y-4 border-b border-purple-500/10 pb-8">
+                    <h3 className="text-2xl font-serif italic text-white">The Council of Allies</h3>
+                    <p className="text-[9px] text-purple-400 uppercase tracking-[0.3em] font-black">Strategic Sponsorship Protocol</p>
+                    <div className="flex flex-col md:flex-row justify-center gap-4 mt-6">
+                      <div className="px-4 py-2 bg-purple-500/5 border border-purple-500/20 rounded-lg">
+                        <span className="text-[8px] text-zinc-500 uppercase block mb-1">Objective</span>
+                        <span className="text-[10px] text-zinc-300 italic">Transition from advice seeker to advocacy partner.</span>
+                      </div>
+                      <div className="px-4 py-2 bg-purple-500/5 border border-purple-500/20 rounded-lg">
+                        <span className="text-[8px] text-zinc-500 uppercase block mb-1">Goal</span>
+                        <span className="text-[10px] text-zinc-300 italic">Build a circle that opens restricted doors.</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-1 gap-4">
+
+                  <div className="grid grid-cols-1 gap-6">
                     {[
-                      { rule: "Sponsorship vs. Mentorship", desc: "Mentors give advice; Sponsors give power. Show up as a solution to their problems, not a student of their time." },
-                      { rule: "The Value-Exchange Ask", desc: "Never ask to 'pick a brain.' Offer a unique perspective on their current goals or provide a bridge to a resource they need." },
-                      { rule: "The 90-Day Cadence", desc: "High-level connections require low-friction maintenance. Send one relevant insight or a 'Thought of you' note every quarter." }
+                      { 
+                        rule: "Ally vs. Guide", 
+                        desc: "Guides offer wisdom; Allies offer access and reputation. A Guide tells you which path to take; an Ally speaks your name in rooms you haven't entered yet." 
+                      },
+                      { 
+                        rule: "The Hearth-Fire Exchange", 
+                        desc: "Never approach to 'extract' wisdom. Bring fuel to their fire instead. Sharing an industry insight or a resource transforms you from a 'Student' to a 'Peer'." 
+                      },
+                      { 
+                        rule: "Seasonal Tending", 
+                        desc: "Relationships die when ignored but burn out when smothered. Implement a 90-day cadence—one light touchpoint per quarter keeps the connection warm." 
+                      }
                     ].map((item, i) => (
-                      <div key={i} className="flex gap-6 p-8 bg-[#110E16] border border-purple-500/5 rounded-[2.5rem] hover:border-purple-500/20 transition-all">
+                      <div key={i} className="flex gap-6 p-8 bg-[#110E16] border border-purple-500/10 rounded-[2.5rem] hover:border-purple-500/30 transition-all shadow-xl">
                         <div className="text-purple-500/20 font-serif text-4xl italic">0{i+1}</div>
                         <div>
-                          <h4 className="text-[11px] font-black text-purple-400 uppercase tracking-widest mb-2">{item.rule}</h4>
+                          <h4 className="text-[11px] font-black text-purple-400 uppercase tracking-widest mb-3">{item.rule}</h4>
                           <p className="text-sm text-zinc-400 leading-relaxed font-light">{item.desc}</p>
                         </div>
                       </div>
                     ))}
+                  </div>
+
+                  <div className="p-8 bg-purple-900/10 border border-purple-500/20 rounded-[2rem] text-center italic">
+                    <p className="text-xs text-purple-300 font-serif">"Most high-impact roles are never posted. They are filled through the quiet recommendations of Allies. Tending to this Council is your most effective tool for career sovereignty."</p>
                   </div>
                 </div>
               )}
