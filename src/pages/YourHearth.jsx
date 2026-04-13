@@ -1,23 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Compass, Map, Trees, FileText, Sparkles, BookOpen, 
-  ChevronRight, Activity, Zap, MessageSquare 
+  ChevronRight, Activity, Zap, ShieldCheck 
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function YourHearth({ vault, onResumeSync }) {
+export default function YourHearth({ vault, onResumeSync, onNavigateToLibrary }) {
   const [isProtocolOpen, setIsProtocolOpen] = useState(true);
+  const [sentiment, setSentiment] = useState(null);
+  const [reflection, setReflection] = useState("");
   
-  // Checking if the resume exists in the vault to trigger the state change
+  // Logic for dynamic states
   const hasResume = vault?.isAligned || !!vault?.resume;
-  
+  const moodStreak = vault?.moodStreak || 3; // Simulated for logic demonstration
   const maturityPulses = vault?.pulses || (hasResume ? 8 : 0); 
   const maturityTarget = 14;
   const syncPercentage = Math.round((maturityPulses / maturityTarget) * 100);
 
-  // Dynamic Log Logic
+  const sentiments = [
+    { emoji: '🌱', label: 'New', type: 'positive' },
+    { emoji: '🌲', label: 'Steady', type: 'positive' },
+    { emoji: '🏔️', label: 'Stretched', type: 'heavy' },
+    { emoji: '🔥', label: 'Inspired', type: 'positive' },
+    { emoji: '✨', label: 'Clear', type: 'positive' }
+  ];
+
   const getDynamicLogs = () => {
     const baseLogs = [
       { date: "08.04.26", event: "First Light", desc: "Your personal Hearth is now established and ready for sync." }
@@ -55,7 +64,6 @@ export default function YourHearth({ vault, onResumeSync }) {
 
         <div className="relative flex justify-center items-center max-w-2xl mx-auto py-8">
           <div className="absolute h-[1px] w-full bg-zinc-800" />
-          
           <div className="relative flex justify-between w-full px-4">
             {[
               { label: 'Discovery', sub: 'ROOTWERK', icon: Compass, active: true },
@@ -139,7 +147,7 @@ export default function YourHearth({ vault, onResumeSync }) {
             </AnimatePresence>
           </Card>
 
-          {/* Alignment Engine - The Resume Section */}
+          {/* Alignment Engine */}
           <Card className="p-10 bg-gradient-to-br from-[#110E16] to-[#0A080D] border-zinc-800/50 rounded-[2.5rem] relative overflow-hidden group shadow-2xl">
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
               <div className="flex-1 space-y-6 text-center md:text-left">
@@ -148,7 +156,7 @@ export default function YourHearth({ vault, onResumeSync }) {
                   <h2 className="text-3xl font-bold text-white font-serif italic leading-tight">Tend the Hearth.</h2>
                 </div>
                 <p className="text-zinc-500 text-sm leading-relaxed max-w-sm font-light mx-auto md:mx-0">
-                  By syncing your resume, we can translate your leadership and educational legacy into the new growth opportunities ahead.
+                  By syncing your **resume**, we can translate your leadership and educational legacy into the new growth opportunities ahead.
                 </p>
                 <Button 
                   onClick={onResumeSync}
@@ -161,7 +169,7 @@ export default function YourHearth({ vault, onResumeSync }) {
                   <FileText className="w-4 h-4" /> {hasResume ? "Resume Synced" : "Upload Resume for Sync"}
                 </Button>
               </div>
-              <div className="w-56 h-56 rounded-[3rem] bg-zinc-950 border border-zinc-800 flex items-center justify-center relative shadow-inner overflow-hidden">
+              <div className="w-56 h-56 rounded-[3rem] bg-zinc-950 border border-zinc-900 flex items-center justify-center relative shadow-inner overflow-hidden">
                  <div className={`absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.15),transparent)] ${!hasResume ? "animate-pulse" : ""}`} />
                  <Sparkles className={`w-12 h-12 transition-all duration-1000 ${hasResume ? "text-teal-400 scale-110" : "text-teal-500/20 group-hover:text-teal-400 group-hover:scale-125"}`} />
               </div>
@@ -169,8 +177,9 @@ export default function YourHearth({ vault, onResumeSync }) {
           </Card>
         </div>
 
-        {/* The Logbook */}
+        {/* Right Column: Logbook & Reflection */}
         <div className="space-y-8">
+          {/* The Logbook */}
           <Card className="bg-[#110E16] border-zinc-800/50 rounded-[2.5rem] p-8 shadow-2xl">
             <h3 className="text-white text-[10px] font-black uppercase tracking-[0.3em] mb-8 flex items-center gap-3">
               <motion.div 
@@ -206,6 +215,86 @@ export default function YourHearth({ vault, onResumeSync }) {
                   </motion.div>
                 ))}
               </AnimatePresence>
+            </div>
+          </Card>
+
+          {/* Evening Reflection */}
+          <Card className="bg-[#110E16] border-zinc-800/50 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
+            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-teal-500/5 blur-[50px] rounded-full" />
+            
+            <h3 className="text-white text-[10px] font-black uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
+              <Sparkles className="w-3 h-3 text-purple-400" />
+              Evening Reflection
+            </h3>
+
+            <div className="space-y-8 relative z-10">
+              <p className="text-[11px] text-zinc-400 italic">How are you feeling about the path today?</p>
+              
+              <div className="flex justify-between items-start">
+                {sentiments.map((item) => (
+                  <button
+                    key={item.label}
+                    onClick={() => setSentiment(item)}
+                    className="flex flex-col items-center gap-3 group w-14"
+                  >
+                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center text-lg transition-all duration-500 ${
+                      sentiment?.label === item.label 
+                        ? 'bg-teal-500/20 border border-teal-500 shadow-[0_0_20px_rgba(20,184,166,0.2)] scale-110' 
+                        : 'bg-zinc-950 border border-zinc-900 grayscale hover:grayscale-0'
+                    }`}>
+                      {item.emoji}
+                    </div>
+                    <span className={`text-[7px] font-black uppercase tracking-[0.2em] transition-colors ${
+                      sentiment?.label === item.label ? 'text-teal-400' : 'text-zinc-700 group-hover:text-zinc-500'
+                    }`}>
+                      {item.label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              <AnimatePresence>
+                {moodStreak >= 3 && sentiment?.type === 'heavy' && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="p-4 rounded-2xl bg-teal-500/5 border border-teal-500/20 space-y-2"
+                  >
+                    <div className="flex items-center gap-2 text-teal-400">
+                      <ShieldCheck size={12} />
+                      <p className="text-[9px] font-black uppercase tracking-widest">A Moment for Tending</p>
+                    </div>
+                    <p className="text-[10px] text-zinc-500 italic leading-relaxed">
+                      The path has felt a bit steep lately. Remember, the <strong>Sanctuary</strong> in the Library is open for a quiet moment of rest.
+                    </p>
+                    <button 
+                      onClick={onNavigateToLibrary}
+                      className="text-[9px] text-teal-500 font-bold hover:text-teal-300 uppercase tracking-tighter"
+                    >
+                      Go to Sanctuary →
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div className="space-y-4">
+                <textarea
+                  value={reflection}
+                  onChange={(e) => setReflection(e.target.value)}
+                  placeholder="Anything on your mind?"
+                  className="w-full bg-[#0D0B12] border border-zinc-800/50 rounded-2xl p-5 text-xs text-zinc-300 placeholder:text-zinc-700 focus:outline-none focus:border-teal-500/30 transition-all resize-none h-24 font-light italic"
+                />
+                <Button 
+                  className={`w-full text-[9px] font-black uppercase tracking-[0.3em] h-12 rounded-xl transition-all ${
+                    sentiment || reflection 
+                      ? 'bg-teal-500/10 border border-teal-500/20 text-teal-400 hover:bg-teal-500/20' 
+                      : 'bg-zinc-900 text-zinc-700 border border-zinc-800/50'
+                  }`}
+                >
+                  Seal Observation
+                </Button>
+              </div>
             </div>
           </Card>
         </div>
