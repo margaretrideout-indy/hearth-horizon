@@ -11,14 +11,14 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
   const isGrove = location.pathname === '/' || location.pathname === '/grove';
 
   const journeyItems = [
-    { name: "Hearth", path: "/hearth", icon: <Flame size={16} />, tier: "Seedling" },
-    { name: "Alignment", path: "/alignment", icon: <Compass size={16} />, tier: "Seedling" },
-    { name: "Launch", path: "/launch", icon: <Rocket size={16} />, tier: "Seedling" },
+    { name: "Hearth", path: "/hearth", icon: <Flame size={14} />, tier: "Seedling" },
+    { name: "Alignment", path: "/alignment", icon: <Compass size={14} />, tier: "Seedling" },
+    { name: "Launch", path: "/launch", icon: <Rocket size={14} />, tier: "Seedling" },
   ];
 
   const communityItems = [
-    { name: "Embers", path: "/embers", icon: <MessageSquare size={16} />, tier: "Seedling" },
-    { name: "Library", path: "/library", icon: <Library size={16} />, tier: "Seedling" },
+    { name: "Embers", path: "/embers", icon: <MessageSquare size={14} />, tier: "Seedling" },
+    { name: "Library", path: "/library", icon: <Library size={14} />, tier: "Seedling" },
   ];
 
   const isLocked = (itemTier) => {
@@ -34,17 +34,17 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
       <button
         onClick={() => !locked && navigate(item.path)}
         disabled={locked}
-        className={`flex items-center gap-2 px-2.5 py-2 md:px-4 md:py-2 rounded-xl transition-all duration-500 group whitespace-nowrap border ${
+        className={`flex items-center gap-2 px-3 py-2 md:px-4 md:py-2.5 rounded-xl transition-all duration-500 group whitespace-nowrap border ${
           locked ? 'opacity-20 cursor-not-allowed border-transparent' : 'opacity-100 hover:bg-white/5 border-transparent'
-        } ${isActive ? 'bg-teal-500/10 border-teal-500/20 text-teal-400 shadow-[0_0_15px_rgba(20,184,166,0.1)]' : 'text-slate-400'}`}
+        } ${isActive ? 'bg-teal-500/10 border-teal-500/20 text-teal-400 shadow-[0_0_20px_rgba(20,184,166,0.1)]' : 'text-zinc-400'}`}
       >
-        <span className={`${isActive ? 'text-teal-400' : 'text-slate-500 group-hover:text-teal-500'}`}>
+        <span className={`${isActive ? 'text-teal-400' : 'text-zinc-500 group-hover:text-teal-400'}`}>
           {item.icon}
         </span>
-        <span className="hidden sm:inline text-[9px] font-black uppercase tracking-[0.2em]">
+        <span className="hidden sm:inline text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em]">
           {item.name}
         </span>
-        {locked && <Lock size={10} className="text-slate-700 ml-1" />}
+        {locked && <Lock size={10} className="text-zinc-700 ml-1" />}
       </button>
     );
   };
@@ -53,21 +53,21 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
     <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
       
       {!isGrove && (
-        <nav className="fixed top-2 md:top-6 left-0 right-0 z-50 flex justify-center px-2 md:px-4">
-          <div className="flex items-center gap-1 md:gap-3 p-1.5 bg-[#1C1622]/90 backdrop-blur-2xl border border-white/10 rounded-2xl md:rounded-full shadow-2xl max-w-[95vw] overflow-x-auto no-scrollbar">
+        <nav className="fixed top-3 md:top-8 left-0 right-0 z-50 flex justify-center px-4">
+          <div className="flex items-center gap-1 md:gap-2 p-1.5 bg-[#141118]/80 backdrop-blur-2xl border border-white/5 rounded-2xl md:rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] max-w-full overflow-x-auto no-scrollbar">
             
             <div className="flex items-center gap-1">
-              <div className="hidden lg:block pr-3 mr-2 border-r border-white/5 pl-2">
-                <p className="text-[7px] font-black text-slate-600 uppercase tracking-[0.3em]">Your Journey</p>
+              <div className="hidden lg:block pr-4 mr-2 border-r border-white/5 pl-4">
+                <p className="text-[7px] font-black text-zinc-600 uppercase tracking-[0.3em]">The Path</p>
               </div>
               {journeyItems.map(item => <NavItem key={item.path} item={item} />)}
             </div>
 
-            <div className="w-1 h-1 rounded-full bg-teal-500/30 shrink-0 mx-1 animate-pulse" />
+            <div className="w-1 h-1 rounded-full bg-teal-500/20 shrink-0 mx-2" />
 
             <div className="flex items-center gap-1">
-              <div className="hidden lg:block pr-3 mr-2 border-r border-white/5">
-                <p className="text-[7px] font-black text-slate-600 uppercase tracking-[0.3em]">Community</p>
+              <div className="hidden lg:block pr-4 mr-2 border-r border-white/5">
+                <p className="text-[7px] font-black text-zinc-600 uppercase tracking-[0.3em]">The Commons</p>
               </div>
               {communityItems.map(item => <NavItem key={item.path} item={item} />)}
             </div>
@@ -75,7 +75,7 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
         </nav>
       )}
 
-      <main className={`w-full px-4 md:px-0 ${!isGrove ? "pt-28 md:pt-36" : ""}`}>
+      <main className={`w-full transition-all duration-700 ${!isGrove ? "pt-24 md:pt-40 px-4 md:px-8" : ""}`}>
         <div className="max-w-7xl mx-auto">
           {children}
         </div>
