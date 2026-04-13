@@ -7,7 +7,7 @@ import { base44 } from '@/api/base44Client';
 import AppLayout from './components/layout/AppLayout';
 import YourHearth from './pages/YourHearth';
 import CulturalFit from './pages/CulturalFit';
-import Canopy from './pages/Canopy'; // This is your Launch component
+import Canopy from './pages/Canopy'; 
 import Library from './pages/Library';
 import GroveTiers from './pages/GroveTiers';
 import EmbersChat from './pages/EmbersChat'; 
@@ -81,14 +81,24 @@ function ProtectedRoute({ children }) {
 function AppRoutes() {
   const [sanctuaryState, setSanctuaryState] = useState(() => {
     const saved = localStorage.getItem('vault_reset_final');
-    return saved ? JSON.parse(saved) : {
+    const initialState = {
       name: "Traveler",
-      tier: "Free",
+      tier: "Seedling",
       journey: "Professional Transition",
       isAligned: false,
       pulses: [],
       resume: null,
+      blueprints: [], // Essential for Steward logic
     };
+
+    if (!saved) return initialState;
+    try {
+        const parsed = JSON.parse(saved);
+        // Merge saved data with initial structure to ensure new fields exist
+        return { ...initialState, ...parsed };
+    } catch (e) {
+        return initialState;
+    }
   });
 
   useEffect(() => {
@@ -100,7 +110,7 @@ function AppRoutes() {
       ...prev,
       isAligned: true,
       resume: {
-        name: file.name,
+        name: file?.name || "Uploaded Document",
         lastSynced: new Date().toISOString()
       }
     }));
@@ -169,7 +179,7 @@ function AppRoutes() {
         <Route path="/library" element={
           <ProtectedRoute>
             <AppLayout currentTier={sanctuaryState.tier}>
-              <Library vault={sanctuaryState} />
+              <Library vault={sanctuaryState} onSync={forceSync} />
             </AppLayout>
           </ProtectedRoute>
         } />
