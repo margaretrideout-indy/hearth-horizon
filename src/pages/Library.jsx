@@ -11,6 +11,7 @@ import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/preview";
+const WORKSHEET_PDF_URL = "https://drive.google.com/file/d/1tRcav7TbSA1YaXlOmlapcEkpb7n1L1xf/view?usp=drive_link";
 
 const DICTIONARY_DATA = [
   { sector: "Education", old: "Classroom Management", root: "Stakeholder Dynamics", new: "Conflict Resolution & Operational Flow" },
@@ -178,6 +179,7 @@ const Library = ({ vault, onSaveBlueprint }) => {
               </button>
             </div>
 
+            {/* HEARTHKEEPER TOOLS */}
             <div className="bg-[#16121D] border border-teal-500/10 p-8 rounded-2xl md:rounded-[2.5rem] relative group hover:border-teal-500/30 transition-all flex flex-col shadow-xl">
               {!isHearthkeeper && (
                 <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[6px] rounded-2xl md:rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all">
@@ -188,22 +190,42 @@ const Library = ({ vault, onSaveBlueprint }) => {
               )}
               <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 mb-6 w-fit italic tracking-tighter uppercase">Tactical Provisions</Badge>
               <h4 className="text-xl text-white font-serif italic mb-4">Hearthkeeper Tools</h4>
+              
               <div className="space-y-3 mt-4">
-                <div onClick={() => setActiveTool('ledger')} className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${activeTool === 'ledger' ? 'bg-teal-500/20 border-teal-500/50' : 'bg-black/40 border-teal-500/10 group-hover:border-teal-500/30'}`}>
-                  <div className="flex items-center gap-3">
-                    <Compass size={14} className="text-teal-400/50" />
-                    <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Identity Ledger (Slides)</span>
+                {/* IDENTITY LEDGER + PDF WORKBOOK */}
+                <div className={`flex flex-col gap-3 p-4 rounded-xl border transition-all ${activeTool === 'ledger' ? 'bg-teal-500/20 border-teal-500/50' : 'bg-black/40 border-teal-500/10 group-hover:border-teal-500/30'}`}>
+                  <div 
+                    onClick={() => setActiveTool('ledger')} 
+                    className="flex items-center justify-between cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Compass size={14} className="text-teal-400" />
+                      <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest">Identity Ledger (Slides)</span>
+                    </div>
+                    <ArrowRight size={12} className={activeTool === 'ledger' ? 'text-teal-400' : 'text-zinc-600'} />
                   </div>
-                  {activeTool === 'ledger' && <ArrowRight size={12} className="text-teal-400" />}
+                  
+                  <div className="pl-7 pt-1 border-t border-white/5">
+                    <a 
+                      href={WORKSHEET_PDF_URL} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-[9px] font-bold text-teal-500/60 hover:text-teal-400 transition-colors uppercase tracking-widest"
+                    >
+                      <Save size={10} /> Download Worksheet (PDF)
+                    </a>
+                  </div>
                 </div>
-                <div onClick={() => setActiveTool('reframing')} className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${activeTool === 'reframing' ? 'bg-teal-500/20 border-teal-500/50' : 'bg-black/40 border-teal-500/10 group-hover:border-teal-500/30'}`}>
+
+                <div onClick={() => setActiveTool('reframing')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'reframing' ? 'bg-teal-500/20 border-teal-500/50' : 'bg-black/40 border-teal-500/10 group-hover:border-teal-500/30'}`}>
                   <div className="flex items-center gap-3">
                     <Layers size={14} className="text-teal-500/50" />
                     <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Identity Reframing Engine</span>
                   </div>
                   {activeTool === 'reframing' && <ArrowRight size={12} className="text-teal-400" />}
                 </div>
-                <div onClick={() => setActiveTool('kindling')} className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${activeTool === 'kindling' ? 'bg-teal-500/20 border-teal-500/50' : 'bg-black/40 border-teal-500/10 group-hover:border-teal-500/30'}`}>
+
+                <div onClick={() => setActiveTool('kindling')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'kindling' ? 'bg-teal-500/20 border-teal-500/50' : 'bg-black/40 border-teal-500/10 group-hover:border-teal-500/30'}`}>
                   <div className="flex items-center gap-3">
                     <MessageSquare size={14} className="text-teal-500/50" />
                     <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Kindling (Outreach)</span>
@@ -213,6 +235,7 @@ const Library = ({ vault, onSaveBlueprint }) => {
               </div>
             </div>
 
+            {/* STEWARD ASSETS */}
             <div className="bg-[#16121D] border border-purple-500/10 p-8 rounded-2xl md:rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col shadow-xl">
               {!isSteward && (
                 <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[6px] rounded-2xl md:rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all">
@@ -224,14 +247,14 @@ const Library = ({ vault, onSaveBlueprint }) => {
               <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-6 w-fit italic tracking-tighter uppercase">Strategic Intelligence</Badge>
               <h4 className="text-xl text-white font-serif italic mb-4">Steward Assets</h4>
               <div className="space-y-3 mt-4">
-                <div onClick={() => setActiveTool('architect')} className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${activeTool === 'architect' ? 'bg-purple-500/20 border-purple-500/50' : 'bg-black/40 border-purple-500/10 group-hover:border-purple-500/30'}`}>
+                <div onClick={() => setActiveTool('architect')} className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${activeTool === 'architect' ? 'bg-purple-500/20 border-purple-500/50' : 'bg-black/40 border-teal-500/10 group-hover:border-purple-500/30'}`}>
                   <div className="flex items-center gap-3">
                     <Zap size={14} className="text-purple-500/50" />
                     <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">The Script Architect</span>
                   </div>
                   {activeTool === 'architect' && <ArrowRight size={12} className="text-purple-400" />}
                 </div>
-                <div onClick={() => setActiveTool('sponsorship')} className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${activeTool === 'sponsorship' ? 'bg-purple-500/20 border-purple-500/50' : 'bg-black/40 border-purple-500/10 group-hover:border-purple-500/30'}`}>
+                <div onClick={() => setActiveTool('sponsorship')} className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${activeTool === 'sponsorship' ? 'bg-purple-500/20 border-purple-500/50' : 'bg-black/40 border-teal-500/10 group-hover:border-purple-500/30'}`}>
                   <div className="flex items-center gap-3">
                     <Compass size={14} className="text-purple-500/50" />
                     <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Sponsorship Framework</span>
