@@ -21,6 +21,9 @@ const GroveTiers = ({ vault, onSync }) => {
   };
 
   const handleSeedling = () => {
+    // Update Vault state to Seedling
+    onSync({ tier: 'Seedling' });
+    
     if (hasSession) {
       navigate('/hearth');
     } else {
@@ -28,7 +31,10 @@ const GroveTiers = ({ vault, onSync }) => {
     }
   };
 
-  const handlePaid = (stripeUrl) => {
+  const handlePaid = (stripeUrl, tierName) => {
+    // Update Vault state to the selected paid tier
+    onSync({ tier: tierName });
+    
     if (hasSession) {
       navigate('/hearth');
     } else {
@@ -49,6 +55,8 @@ const GroveTiers = ({ vault, onSync }) => {
         claimed_by: user.email,
         status: 'available'
       });
+      // Temporarily set to Seedling while waitlisted, or keep as is
+      onSync({ tier: 'Seedling' }); 
       setRequestStatus('success');
     } catch (error) {
       console.error("Seat request failed", error);
@@ -85,7 +93,7 @@ const GroveTiers = ({ vault, onSync }) => {
         "Full Market Topography"
       ],
       button: "SELECT PLAN",
-      onClick: () => handlePaid(LINK_HEARTHKEEPER),
+      onClick: () => handlePaid(LINK_HEARTHKEEPER, 'Hearthkeeper'),
       highlight: true,
       icon: <Flame className="w-5 h-5 text-teal-400" />
     },
@@ -102,7 +110,7 @@ const GroveTiers = ({ vault, onSync }) => {
         "Sponsors 1 Hearthkeeper Seat"
       ],
       button: "SELECT PLAN",
-      onClick: () => handlePaid(LINK_STEWARD),
+      onClick: () => handlePaid(LINK_STEWARD, 'Steward'),
       icon: <Mountain className="w-5 h-5 text-teal-400" />
     },
     {
