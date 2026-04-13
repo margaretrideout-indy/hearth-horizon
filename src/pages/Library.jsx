@@ -56,7 +56,7 @@ const Library = ({ vault }) => {
           </div>
         </header>
 
-        {/* SECTION 1: THE STUDY (Affiliate Links - High Priority) */}
+        {/* SECTION 1: THE STUDY (Affiliate Priority) */}
         <section className="mb-16">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-600 whitespace-nowrap">The Study</h3>
@@ -65,7 +65,7 @@ const Library = ({ vault }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] hover:border-purple-500/30 transition-all group flex flex-col">
               <Book className="w-8 h-8 text-purple-400 mb-6" />
-              <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Indigo.ca Curated List</h4>
+              <h4 className="text-lg text-white font-serif italic mb-3">Indigo.ca Curated List</h4>
               <p className="text-[11px] text-zinc-500 italic mb-8 font-light leading-relaxed">Pivotal literature on career migration and psychological resilience.</p>
               <a href="https://www.indigo.ca" target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-purple-600/10 text-purple-400 border border-purple-500/20 hover:bg-purple-600 hover:text-white">
                 SHOP CURATED LIST <ExternalLink className="ml-2 w-3 h-3" />
@@ -74,7 +74,8 @@ const Library = ({ vault }) => {
 
             <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] hover:border-purple-500/30 transition-all group flex flex-col">
               <Package className="w-8 h-8 text-purple-400 mb-6" />
-              <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Amazon Essentials</h4>
+              <h4 className="text-lg text-white font-serif italic mb-2">Amazon Essentials</h4>
+              <p className="text-[9px] text-zinc-600 font-medium uppercase tracking-tighter mb-4 italic">As an Amazon Associate I earn from qualifying purchases.</p>
               <p className="text-[11px] text-zinc-500 italic mb-8 font-light leading-relaxed">Grounding tools and ergonomic gear for your new workspace.</p>
               <a href="https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?ref_=wl_share" target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-purple-600/10 text-purple-400 border border-purple-500/20 hover:bg-purple-600 hover:text-white">
                 EXPLORE SHOP <ExternalLink className="ml-2 w-3 h-3" />
@@ -83,7 +84,7 @@ const Library = ({ vault }) => {
           </div>
         </section>
 
-        {/* SECTION 2: CORE & CANOPY (Balanced Size) */}
+        {/* SECTION 2: CANOPY HUB & CORE PROVISION */}
         <section className="mb-16">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Canopy Hub</h3>
@@ -91,31 +92,27 @@ const Library = ({ vault }) => {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            {/* Core Provision (Downsized to fit card aesthetic) */}
-            <div className="bg-gradient-to-br from-[#110E16] to-[#0A080D] border border-teal-500/30 p-8 rounded-[2.5rem] flex flex-col relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-8 text-teal-500/5 group-hover:text-teal-500/10 transition-colors pointer-events-none">
-                <Mountain size={180} />
-              </div>
+            {/* Core Provision */}
+            <div className="bg-gradient-to-br from-[#110E16] to-[#0A080D] border border-teal-500/30 p-8 rounded-[2.5rem] flex flex-col relative overflow-hidden">
               <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 italic mb-6 w-fit">Foundational Gift</Badge>
-              <h4 className="text-xl text-white font-serif italic mb-4">Master Strategy Deck</h4>
+              <h4 className="text-xl text-white font-serif italic mb-4 leading-tight">Master Strategy Deck</h4>
               <p className="text-[11px] text-zinc-500 font-light italic leading-relaxed mb-10">The primary map for your transition and resignation protocol.</p>
               <button onClick={openDeck} className="mt-auto h-14 bg-teal-500 hover:bg-teal-400 text-[#0A080D] font-black rounded-xl flex items-center justify-center gap-3 transition-all uppercase tracking-[0.15em] text-[9px]">
                 Open Blueprint <ExternalLink size={14} />
               </button>
             </div>
 
-            {/* Hearthkeeper Provisions */}
+            {/* Hearthkeeper Card */}
             <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] relative group hover:border-teal-500/30 transition-all flex flex-col">
               {!isHearthkeeper && (
                 <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all">
                   <Lock className="w-5 h-5 text-teal-500/40 mb-3" />
                   <p className="text-[9px] font-black uppercase tracking-[0.2em] text-teal-500/60 mb-5">Hearthkeeper Required</p>
-                  <button onClick={() => navigate('/grove')} className="px-6 py-3 bg-teal-500/10 border border-teal-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-teal-400">Upgrade Standing</button>
+                  <button onClick={() => navigate('/grove')} className="px-6 py-3 bg-teal-500/10 border border-teal-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-teal-400 hover:bg-teal-500 hover:text-black transition-all">Upgrade Standing</button>
                 </div>
               )}
               <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 mb-6 w-fit italic tracking-tighter">Tactical Provisions</Badge>
-              <h4 className="text-xl text-white font-serif italic mb-4">Tactical Scripts & Dictionary</h4>
+              <h4 className="text-xl text-white font-serif italic mb-4 leading-tight">Hearthkeeper Tools</h4>
               <div className="space-y-3 mt-4">
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-black/40 border border-white/5 group-hover:border-teal-500/10 transition-all">
                   <MessageSquare size={14} className="text-teal-500/50" />
@@ -123,7 +120,7 @@ const Library = ({ vault }) => {
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-black/40 border border-white/5 group-hover:border-teal-500/10 transition-all">
                   <Layers size={14} className="text-teal-500/50" />
-                  <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Identity Reframing Dictionary</span>
+                  <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Identity Dictionary</span>
                 </div>
               </div>
               <button className="mt-8 text-[9px] font-black text-teal-500 uppercase tracking-[0.2em] flex items-center gap-2 hover:text-white transition-colors">
@@ -131,21 +128,21 @@ const Library = ({ vault }) => {
               </button>
             </div>
 
-            {/* Steward Provisions */}
+            {/* Steward Card */}
             <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col">
               {!isSteward && (
                 <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all">
                   <Lock className="w-5 h-5 text-purple-500/40 mb-3" />
                   <p className="text-[9px] font-black uppercase tracking-[0.2em] text-purple-500/60 mb-5">Steward Required</p>
-                  <button onClick={() => navigate('/grove')} className="px-6 py-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-purple-400">Upgrade Standing</button>
+                  <button onClick={() => navigate('/grove')} className="px-6 py-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-purple-400 hover:bg-purple-500 hover:text-black transition-all">Upgrade Standing</button>
                 </div>
               )}
               <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-6 w-fit italic tracking-tighter">Strategic Intelligence</Badge>
-              <h4 className="text-xl text-white font-serif italic mb-4">Ecosystem Topography</h4>
+              <h4 className="text-xl text-white font-serif italic mb-4 leading-tight">Steward Assets</h4>
               <div className="space-y-3 mt-4">
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-black/40 border border-white/5 group-hover:border-purple-500/10 transition-all">
                   <Zap size={14} className="text-purple-500/50" />
-                  <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Market Alignment Ledger</span>
+                  <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">Alignment Ledger</span>
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-black/40 border border-white/5 group-hover:border-purple-500/10 transition-all">
                   <Compass size={14} className="text-purple-500/50" />
@@ -159,15 +156,13 @@ const Library = ({ vault }) => {
           </div>
         </section>
 
-        {/* SECTION 3: THE SANCTUARY (Restored) */}
+        {/* SECTION 3: THE SANCTUARY (Full Restore) */}
         <section id="sanctuary" className="mb-20 pt-10 border-t border-white/5">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Sanctuary</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* Crisis Card */}
             <div className="bg-[#110E16]/60 border border-zinc-800 p-8 rounded-[2.5rem] flex flex-col relative group hover:border-teal-500/30 transition-all">
               <Badge className="absolute top-6 right-6 bg-teal-500/10 text-teal-400 border border-teal-500/20 italic">Support</Badge>
               <div className="bg-black/40 rounded-2xl p-6 border border-white/5 mb-8 text-center shadow-inner mt-6">
@@ -179,23 +174,17 @@ const Library = ({ vault }) => {
               </a>
             </div>
 
-            {/* Burnout Recovery Card */}
             <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] hover:border-teal-500/30 transition-all flex flex-col">
-              <div className="w-10 h-10 rounded-xl bg-teal-400/5 text-teal-400 flex items-center justify-center mb-6 border border-teal-400/10">
-                <HeartPulse className="w-5 h-5" />
-              </div>
+              <HeartPulse className="w-8 h-8 text-teal-400 mb-6" />
               <h4 className="text-white font-bold text-sm font-serif italic mb-2">Burnout Recovery</h4>
-              <p className="text-[10px] text-zinc-500 font-light leading-relaxed mb-8 italic">Scientific strategies for professional renewal and nervous system regulation.</p>
+              <p className="text-[10px] text-zinc-500 font-light leading-relaxed mb-8 italic">Strategies for professional renewal and nervous system regulation.</p>
               <a href="https://www.helpguide.org/articles/stress/burnout-prevention-and-recovery.htm" target="_blank" rel="noopener noreferrer" className="mt-auto text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white flex items-center gap-2">
                 READ GUIDE <ArrowRight className="w-3 h-3" />
               </a>
             </div>
 
-            {/* Inner Advocate Card */}
             <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] hover:border-teal-500/30 transition-all flex flex-col">
-              <div className="w-10 h-10 rounded-xl bg-teal-400/5 text-teal-400 flex items-center justify-center mb-6 border border-teal-400/10">
-                <Wind className="w-5 h-5" />
-              </div>
+              <Wind className="w-8 h-8 text-teal-400 mb-6" />
               <h4 className="text-white font-bold text-sm font-serif italic mb-2">The Inner Advocate</h4>
               <p className="text-[10px] text-zinc-500 font-light leading-relaxed mb-8 italic">Identity-shifting exercises built on self-compassion and polyvagal frameworks.</p>
               <a href="https://self-compassion.org/category/exercises/#guided-meditations" target="_blank" rel="noopener noreferrer" className="mt-auto text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white flex items-center gap-2">
@@ -208,8 +197,8 @@ const Library = ({ vault }) => {
         <footer className="pt-12 border-t border-white/5 text-center pb-12">
           <div className="inline-flex flex-col items-center gap-3 px-8 py-6 rounded-[2rem] bg-white/[0.02] border border-white/5">
             <ShoppingBag className="w-4 h-4 text-zinc-700" />
-            <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-zinc-600 italic max-w-sm text-center">
-              Affiliate Reciprocity: Contributions support the Scholarship Seat program.
+            <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-zinc-600 italic max-w-sm text-center leading-relaxed">
+              Affiliate Reciprocity: Support the Hearth scholarship program through your intentional purchases.
             </span>
           </div>
         </footer>
