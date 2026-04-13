@@ -1,24 +1,24 @@
-import AdminDashboard from './pages/AdminDashboard';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
+// Pages & Components
 import AppLayout from './components/layout/AppLayout';
 import YourHearth from './pages/YourHearth';
 import CulturalFit from './pages/CulturalFit';
-import Canopy from './pages/Canopy';
+import Canopy from './pages/Canopy'; // This is your Launch component
 import Library from './pages/Library';
 import GroveTiers from './pages/GroveTiers';
-// 1. Import the EmbersChat component
 import EmbersChat from './pages/EmbersChat'; 
+import AdminDashboard from './pages/AdminDashboard';
 
 const queryClient = new QueryClient();
 const ADMIN_EMAIL = "margaretpardy@gmail.com"; 
 
 function LoadingScreen() {
   return (
-    <div className="min-h-screen bg-[#0F0A15] flex items-center justify-center">
+    <div className="min-h-screen bg-[#0A080D] flex items-center justify-center">
       <div className="w-6 h-6 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
     </div>
   );
@@ -109,26 +109,36 @@ function AppRoutes() {
   const forceSync = (updates) => setSanctuaryState(prev => ({ ...prev, ...updates }));
 
   return (
-    <div className="min-h-screen bg-[#0F0A15] text-white selection:bg-teal-500/30 font-sans">
+    <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
       <Routes>
+        {/* Admin Route */}
         <Route path="/admin" element={
           <AdminRoute>
             <AdminDashboard vault={sanctuaryState} onSync={forceSync} />
           </AdminRoute>
         } />
         
+        {/* Public Routes */}
         <Route path="/" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} />} />
         <Route path="/grove" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} />} />
         
+        {/* Protected Hearth Route */}
         <Route path="/hearth" element={
           <ProtectedRoute>
             <AppLayout currentTier={sanctuaryState.tier}>
-              <YourHearth vault={sanctuaryState} onSync={forceSync} onResumeSync={handleResumeSync} />
+              <YourHearth 
+                vault={sanctuaryState} 
+                onSync={forceSync} 
+                onResumeSync={handleResumeSync}
+                onNavigateToLibrary={() => window.location.href = '/library'}
+                onNavigateToEmbers={() => window.location.href = '/embers'}
+                onNavigateToLaunch={() => window.location.href = '/launch'}
+              />
             </AppLayout>
           </ProtectedRoute>
         } />
 
-        {/* 2. Added the Embers Chat Route */}
+        {/* Embers Chat Route */}
         <Route path="/embers" element={
           <ProtectedRoute>
             <AppLayout currentTier={sanctuaryState.tier}>
@@ -137,6 +147,7 @@ function AppRoutes() {
           </ProtectedRoute>
         } />
         
+        {/* Alignment Route */}
         <Route path="/alignment" element={
           <ProtectedRoute>
             <AppLayout currentTier={sanctuaryState.tier}>
@@ -145,7 +156,8 @@ function AppRoutes() {
           </ProtectedRoute>
         } />
         
-        <Route path="/canopy" element={
+        {/* Updated Launch Route (formerly Canopy) */}
+        <Route path="/launch" element={
           <ProtectedRoute>
             <AppLayout currentTier={sanctuaryState.tier}>
               <Canopy vault={sanctuaryState} onSync={forceSync} />
@@ -153,6 +165,7 @@ function AppRoutes() {
           </ProtectedRoute>
         } />
         
+        {/* Library Route */}
         <Route path="/library" element={
           <ProtectedRoute>
             <AppLayout currentTier={sanctuaryState.tier}>
@@ -161,6 +174,7 @@ function AppRoutes() {
           </ProtectedRoute>
         } />
 
+        {/* Catch-all Redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
