@@ -5,13 +5,13 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Progress } from "@/components/ui/progress";
 import { 
   Compass, Mountain, Loader2, 
   Binoculars, ArrowRight, 
   ArrowRightLeft, Sparkles, TrendingUp,
   Copy, Check, AlertCircle, Pickaxe,
-  Layers, Target, CheckCircle2, Microscope
+  Layers, Target, CheckCircle2, Microscope,
+  Languages
 } from 'lucide-react';
 
 export default function CulturalFit({ vault, onSync }) {
@@ -88,9 +88,9 @@ export default function CulturalFit({ vault, onSync }) {
   return (
     <div className="max-w-6xl mx-auto py-8 md:py-12 px-4 md:px-6 space-y-8 md:space-y-12 animate-in fade-in duration-700 selection:bg-teal-500/30 overflow-x-hidden">
       
-      <nav className="flex justify-between items-center bg-[#1A1423]/60 border border-white/5 rounded-2xl md:rounded-full px-2 md:px-8 py-3 md:py-4 backdrop-blur-xl sticky top-4 z-50 shadow-2xl">
+      <nav className="flex justify-between items-center bg-[#1C1622]/60 border border-white/5 rounded-2xl md:rounded-full px-2 md:px-8 py-3 md:py-4 backdrop-blur-xl sticky top-4 z-50 shadow-2xl">
         {[
-          { id: 1, label: "THE DECODING", icon: ArrowRightLeft },
+          { id: 1, label: "THE TRANSLATING", icon: Languages },
           { id: 2, label: "THE TOPOGRAPHY", icon: Compass },
           { id: 3, label: "THE HARVEST", icon: Pickaxe },
           { id: 4, label: "THE SUMMIT", icon: Mountain }
@@ -127,14 +127,14 @@ export default function CulturalFit({ vault, onSync }) {
               <div className="w-12 h-12 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20 mx-auto lg:mx-0">
                 <Microscope size={24} />
               </div>
-              <h1 className="text-3xl md:text-4xl font-serif italic text-white leading-tight">Linguistic<br/>Transcoding</h1>
+              <h1 className="text-3xl md:text-4xl font-serif italic text-white leading-tight">Legacy<br/>Translation</h1>
               <p className="text-slate-500 text-[10px] md:text-[11px] leading-relaxed italic font-light max-w-sm mx-auto lg:mx-0">
                 "Extract the raw value from your history and translate it into the operational dialect of your next domain."
               </p>
             </div>
 
             <div className="lg:col-span-8 space-y-6">
-              <Card className="p-5 md:p-8 bg-[#1A1423]/60 border-white/5 shadow-2xl relative overflow-hidden rounded-[2rem] md:rounded-[2.5rem]">
+              <Card className="p-5 md:p-8 bg-[#1C1622]/60 border-white/5 shadow-2xl relative overflow-hidden rounded-[2rem] md:rounded-[2.5rem]">
                 <div className="absolute -top-10 -right-10 opacity-[0.03] pointer-events-none">
                    <Layers size={240} />
                 </div>
@@ -154,7 +154,7 @@ export default function CulturalFit({ vault, onSync }) {
                         disabled={isGenerating || !manualInput}
                         className="h-14 md:h-16 bg-teal-600 hover:bg-teal-500 text-black px-10 font-black rounded-2xl transition-all shadow-lg shadow-teal-500/10 active:scale-95 shrink-0"
                       >
-                        {isGenerating ? <Loader2 className="animate-spin" /> : "TRANSCODE"}
+                        {isGenerating ? <Loader2 className="animate-spin" /> : "TRANSLATE"}
                       </Button>
                     </div>
                   </div>
@@ -171,7 +171,7 @@ export default function CulturalFit({ vault, onSync }) {
                             opacity: text ? 1 : 0.4,
                             backgroundColor: text ? "rgba(20, 184, 166, 0.05)" : "rgba(255, 255, 255, 0.01)"
                           }}
-                          className={`p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border transition-all duration-700 ${text ? 'border-teal-500/20 shadow-[0_0_20px_rgba(20,184,166,0.05)]' : 'border-white/5'}`}
+                          className={`p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border transition-all duration-700 ${text ? 'border-teal-500/20 shadow-[0_0_20px_rgba(20, 184, 166, 0.05)]' : 'border-white/5'}`}
                         >
                           <div className="flex justify-between items-start gap-4">
                             <div className="space-y-2 flex-1">
@@ -218,8 +218,8 @@ export default function CulturalFit({ vault, onSync }) {
                   <Card 
                     key={idx} 
                     onClick={() => setSelectedPath(path)}
-                    className={`group cursor-pointer p-6 md:p-8 bg-[#1A1423]/40 border-white/5 transition-all duration-500 rounded-[2rem] md:rounded-[2.5rem] relative overflow-hidden
-                      ${isSelected ? 'ring-1 ring-teal-500/50 shadow-[0_0_40px_rgba(20,184,166,0.1)] border-teal-500/40' : 'hover:border-white/10 hover:bg-[#1A1423]/60'}`}
+                    className={`group cursor-pointer p-6 md:p-8 bg-[#1C1622]/40 border-white/5 transition-all duration-500 rounded-[2rem] md:rounded-[2.5rem] relative overflow-hidden
+                      ${isSelected ? 'ring-1 ring-teal-500/50 shadow-[0_0_40px_rgba(20,184,166,0.1)] border-teal-500/40' : 'hover:border-white/10 hover:bg-[#1C1622]/60'}`}
                   >
                     <div className="space-y-6 relative z-10">
                       <div className="flex justify-between items-start">
@@ -299,7 +299,7 @@ export default function CulturalFit({ vault, onSync }) {
 
             <div className="lg:col-span-8 space-y-4">
                {gapData.map((item, i) => (
-                  <Card key={i} className="p-5 md:p-6 bg-[#1A1423]/40 border-white/5 rounded-2xl hover:border-teal-500/20 transition-all group">
+                  <Card key={i} className="p-5 md:p-6 bg-[#1C1622]/40 border-white/5 rounded-2xl hover:border-teal-500/20 transition-all group">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div className="flex items-center gap-4 md:gap-6">
                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center border shrink-0 ${item.status === 'aligned' ? 'bg-teal-500/5 text-teal-400 border-teal-500/10' : 'bg-slate-500/5 text-slate-400 border-white/5'}`}>
@@ -330,6 +330,7 @@ export default function CulturalFit({ vault, onSync }) {
                    ? `TRANSCODED NARRATIVES:\n\nProject Lead: ${bridgeData.pm}\n\nData/Strategy: ${bridgeData.data}\n\nOperations: ${bridgeData.ops}`
                    : "No narratives generated.";
                  navigator.clipboard.writeText(masterNarrative);
+                 onSync({ isAligned: true });
                  setTimeout(() => {
                    setActiveStep(4);
                    setIsAligning(false);
@@ -359,8 +360,8 @@ export default function CulturalFit({ vault, onSync }) {
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-                    <Button onClick={() => navigate('/canopy')} className="h-16 px-12 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-2xl uppercase tracking-widest flex items-center gap-3 transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-teal-500/20">
-                      Enter The Canopy <Binoculars size={18} />
+                    <Button onClick={() => navigate('/launch')} className="h-16 px-12 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-2xl uppercase tracking-widest flex items-center gap-3 transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-teal-500/20">
+                      Enter Launch Mode <Binoculars size={18} />
                     </Button>
                   </div>
                </div>
