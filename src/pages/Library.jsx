@@ -15,7 +15,7 @@ const Badge = ({ children, className }) => (
   </span>
 );
 
-const App = () => {
+const Library = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const openDeck = () => {
@@ -23,7 +23,7 @@ const App = () => {
   };
   
   return (
-    <div className="min-h-screen bg-[#0F0A15] text-slate-300 p-4 sm:p-6 md:p-12 font-sans selection:bg-teal-500/30">
+    <div className="min-h-screen bg-[#0A080D] text-slate-300 p-4 sm:p-6 md:p-12 font-sans selection:bg-teal-500/30">
       <div className="max-w-6xl mx-auto">
         
         {/* Header Section */}
@@ -52,28 +52,28 @@ const App = () => {
           </div>
         </header>
 
-        {/* SECTION 1: THE STUDY */}
+        {/* SECTION 1: THE STUDY (Updated to Purple/Grey) */}
         <section className="mb-16 md:mb-20">
           <div className="flex items-center gap-4 mb-8 md:mb-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-orange-500/60 whitespace-nowrap">The Study</h3>
-            <div className="h-[1px] flex-1 bg-gradient-to-r from-orange-500/20 to-transparent" />
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-500/60 whitespace-nowrap">The Study</h3>
+            <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-            <div className="bg-white/[0.01] border border-orange-500/20 p-6 sm:p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] hover:bg-white/[0.03] transition-all group relative">
-              <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-orange-500/5 flex items-center justify-center text-orange-400 mb-6 md:mb-8 border border-orange-500/10">
+            <div className="bg-white/[0.01] border border-purple-500/20 p-6 sm:p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] hover:bg-white/[0.03] transition-all group relative">
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-purple-500/5 flex items-center justify-center text-purple-400 mb-6 md:mb-8 border border-purple-500/10">
                 <Book className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Indigo.ca Curated List</h4>
               <p className="text-[11px] md:text-xs text-slate-500 font-light leading-relaxed mb-6 md:mb-8 italic">
                 Literature on professional pivots and psychological resilience, specifically curated for the Canadian landscape.
               </p>
-              <a href="https://www.indigo.ca" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-12 md:h-14 rounded-xl md:rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-orange-600/10 text-orange-400 border border-orange-500/20 hover:bg-orange-600 hover:text-white">
+              <a href="https://www.indigo.ca" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-12 md:h-14 rounded-xl md:rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-purple-600/10 text-purple-400 border border-purple-500/20 hover:bg-purple-600 hover:text-white">
                 SHOP CURATED LIST <ExternalLink className="ml-2 w-3 h-3" />
               </a>
             </div>
 
-            <div className="bg-white/[0.01] border border-orange-500/20 p-6 sm:p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] hover:bg-white/[0.03] transition-all group relative">
-              <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-orange-500/5 flex items-center justify-center text-orange-400 mb-6 md:mb-8 border border-orange-500/10">
+            <div className="bg-white/[0.01] border border-purple-500/20 p-6 sm:p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] hover:bg-white/[0.03] transition-all group relative">
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-purple-500/5 flex items-center justify-center text-purple-400 mb-6 md:mb-8 border border-purple-500/10">
                 <Package className="w-5 h-5" />
               </div>
               <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Amazon Essentials</h4>
@@ -81,21 +81,21 @@ const App = () => {
                 Workspace gear and grounding tools that support the mental and physical demands of a career shift.
               </p>
               <p className="text-[8px] md:text-[9px] text-slate-600 leading-tight mb-6 md:mb-8 font-light italic uppercase tracking-tighter">Associate Disclosure: Supports the Hearth platform.</p>
-              <a href="https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?ref_=wl_share" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-12 md:h-14 rounded-xl md:rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-orange-600/10 text-orange-400 border border-orange-500/20 hover:bg-orange-600 hover:text-white">
+              <a href="https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?ref_=wl_share" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-12 md:h-14 rounded-xl md:rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-purple-600/10 text-purple-400 border border-purple-500/20 hover:bg-purple-600 hover:text-white">
                 EXPLORE SHOP <ExternalLink className="ml-2 w-3 h-3" />
               </a>
             </div>
           </div>
         </section>
 
-        {/* SECTION 2: THE MASTER PROVISION (HERO) */}
+        {/* SECTION 2: THE MASTER PROVISION (Teal/Grey) */}
         <section className="mb-20 md:mb-32">
           <div className="flex items-center gap-4 mb-8 md:mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">Master Provision</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
           
-          <div className="bg-gradient-to-br from-[#1A1423] to-[#0F0A15] border border-teal-500/30 p-8 sm:p-10 md:p-12 rounded-[2.5rem] md:rounded-[3rem] shadow-2xl relative overflow-hidden group">
+          <div className="bg-gradient-to-br from-[#1A1423] to-[#0A080D] border border-teal-500/30 p-8 sm:p-10 md:p-12 rounded-[2.5rem] md:rounded-[3rem] shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-12 text-teal-500/5 group-hover:text-teal-500/10 transition-colors pointer-events-none">
               <Mountain size={300} className="w-48 h-48 md:w-72 md:h-72" />
             </div>
@@ -128,7 +128,7 @@ const App = () => {
                     <Wind size={18} className="shrink-0" />
                     <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest leading-tight">LIRA / Pension Shielding</span>
                   </div>
-                  <div className="flex items-center gap-3 text-orange-400">
+                  <div className="flex items-center gap-3 text-slate-400">
                     <Lock size={18} className="shrink-0" />
                     <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest leading-tight">Identity Re-Framing</span>
                   </div>
@@ -139,7 +139,7 @@ const App = () => {
         </section>
 
         {/* SECTION 3: THE SANCTUARY */}
-        <section className="mt-16 md:mt-20 border-t border-white/5 pt-16 md:pt-20 pb-20 md:pb-32">
+        <section id="sanctuary" className="mt-16 md:mt-20 border-t border-white/5 pt-16 md:pt-20 pb-20 md:pb-32 scroll-mt-20">
           <div className="flex items-center gap-4 mb-8 md:mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap font-sans">The Sanctuary</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
@@ -205,4 +205,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Library;
