@@ -3,18 +3,35 @@
 @tailwind utilities;
 
 :root {
-  background-color: #1A1423;
+  /* Set to your deep Arvâni background */
+  background-color: #0A080D; 
   color-scheme: dark;
 }
 
 body {
   margin: 0;
+  /* Added serif fallback for your headers */
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #0A080D;
+  color: #A1A1AA; /* Zinc-400 equivalent for base text readability */
 }
 
-/* Custom Embers Scrollbar */
+/* --- ACCESSIBILITY OVERRIDES --- */
+
+/* Visible Focus Rings: Essential for keyboard navigation */
+:focus-visible {
+  outline: 2px solid #39D7B8 !important; 
+  outline-offset: 4px;
+}
+
+/* Button Focus: Keeps the 'Sanctuary' vibe while staying accessible */
+button:focus-visible {
+  box-shadow: 0 0 0 2px #0A080D, 0 0 0 4px #39D7B8;
+}
+
+/* Custom Embers Scrollbar: Refined for better contrast */
 .embers-scroll::-webkit-scrollbar {
   width: 5px;
 }
@@ -24,21 +41,29 @@ body {
 }
 
 .embers-scroll::-webkit-scrollbar-thumb {
-  background: #2D243A;
+  background: #1A1423; /* Darker purple base */
   border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 .embers-scroll::-webkit-scrollbar-thumb:hover {
-  background: #2DD4BF;
+  background: #39D7B8; /* Teal hover to match your buttons */
 }
 
-/* Smooth Scrolling */
+/* --- GLOBAL BEHAVIORS --- */
+
 html {
   scroll-behavior: smooth;
 }
 
-/* Global Transition Defaults */
+/* Global Transition Defaults: Snappy but smooth */
 .transition-all {
-  transition-duration: 200ms;
+  transition-duration: 250ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Selection highlight: That nice teal glow when highlighting text */
+::selection {
+  background-color: rgba(57, 215, 184, 0.2);
+  color: #39D7B8;
 }
