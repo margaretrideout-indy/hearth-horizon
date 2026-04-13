@@ -9,6 +9,7 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
   const navigate = useNavigate();
   
   const isGrove = location.pathname === '/' || location.pathname === '/grove';
+  const isEmbers = location.pathname === '/embers';
 
   const journeyItems = [
     { name: "Hearth", path: "/hearth", icon: <Flame size={14} />, tier: "Seedling" },
@@ -50,7 +51,7 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
+    <div className="h-[100dvh] bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans flex flex-col overflow-hidden">
       
       {!isGrove && (
         <nav className="fixed top-3 md:top-8 left-0 right-0 z-50 flex justify-center px-4">
@@ -75,8 +76,8 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
         </nav>
       )}
 
-      <main className={`w-full transition-all duration-700 ${!isGrove ? "pt-24 md:pt-40 px-4 md:px-8" : ""}`}>
-        <div className="max-w-7xl mx-auto">
+      <main className={`flex-1 w-full transition-all duration-700 overflow-hidden flex flex-col ${!isGrove ? "pt-20 md:pt-36" : ""}`}>
+        <div className={`w-full mx-auto flex-1 flex flex-col ${isEmbers ? "max-w-full h-full px-0" : "max-w-7xl px-4 md:px-8 overflow-y-auto"}`}>
           {children}
         </div>
       </main>
