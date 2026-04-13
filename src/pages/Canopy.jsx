@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  Rocket, Search, MapPin, Zap, ArrowUpRight, Anchor, Sparkles, Target, Flame
+  Rocket, Search, MapPin, Zap, ArrowUpRight, Anchor, Sparkles, Target, Flame, Copy, Check
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,6 +24,8 @@ const CANADIAN_HUBS = [
 export default function Launch({ vault }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedHub, setSelectedHub] = useState('All Canada');
+  const [remoteOnly, setRemoteOnly] = useState(false);
+  const [copiedId, setCopiedId] = useState(null);
   
   const hasUploadedResume = vault?.isAligned || !!vault?.resume; 
 
@@ -33,44 +35,48 @@ export default function Launch({ vault }) {
       title: "Learning & Development Specialist", 
       company: "Volta Health Tech", 
       location: "Halifax, NS", 
+      isRemote: true,
       alignment: 96, 
-      tags: ["L&D", "Public Sector Pivot"],
+      tags: ["L&D", "Strategic Design"],
       salary: "$80k - $105k",
       url: "https://www.linkedin.com/jobs/search/?keywords=Learning%20Development%20Specialist",
-      translation: "Matches your 13 years of Curriculum Development and Program Management experience."
+      translation: "Matches your deep experience in curriculum management and high-level program delivery."
     },
     { 
       id: 2, 
-      title: "Project Coordinator (Cybersecurity)", 
+      title: "Project Coordinator", 
       company: "CyberNB", 
       location: "Fredericton, NB", 
+      isRemote: false,
       alignment: 91, 
-      tags: ["Project Management", "Gov-Tech"],
+      tags: ["Project Management", "Operations"],
       salary: "$75k - $95k",
       url: "https://www.careerbeacon.com/en/search/project-coordinator",
-      translation: "Your 'Conflict Resolution' and 'Stakeholder Engagement' skills map to high-stakes project coordination."
+      translation: "Your skills in complex stakeholder engagement and outcome tracking map directly to this role."
     },
     { 
       id: 3, 
-      title: "Program Manager, AI Data", 
+      title: "Program Manager, Operations", 
       company: "Vector Institute", 
       location: "Toronto, ON", 
+      isRemote: true,
       alignment: 93, 
-      tags: ["AI Operations", "Strategy"],
+      tags: ["Strategy", "Data Synthesis"],
       salary: "$110k - $145k",
-      url: "https://www.linkedin.com/jobs/search/?keywords=AI%20Program%20Manager",
-      translation: "Your Master of Education in Indigenous Studies provides the unique qualitative data synthesis required here."
+      url: "https://www.linkedin.com/jobs/search/?keywords=Program%20Manager",
+      translation: "Your background in synthesizing diverse qualitative data provides the exact edge needed here."
     },
     { 
       id: 4, 
       title: "Customer Success Lead", 
       company: "Benevity", 
       location: "Calgary, AB", 
+      isRemote: true,
       alignment: 87, 
-      tags: ["Social Impact", "SaaS"],
+      tags: ["Social Impact", "CX"],
       salary: "$90k - $120k",
       url: "https://www.linkedin.com/jobs/search/?keywords=Customer%20Success%20Lead",
-      translation: "Your legacy in front-line delivery translates to high-tier Customer Experience (CX) management."
+      translation: "Your history of front-line delivery translates to high-tier professional service management."
     }
   ];
 
@@ -78,12 +84,19 @@ export default function Launch({ vault }) {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           job.tags.some(t => t.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesHub = selectedHub === 'All Canada' || job.location.includes(selectedHub.split(',')[0]);
-    return matchesSearch && matchesHub;
+    const matchesRemote = !remoteOnly || job.isRemote;
+    return matchesSearch && matchesHub && matchesRemote;
   });
+
+  const handleCopyCoverLetter = (job) => {
+    const draft = `Subject: Application for ${job.title} at ${job.company}\n\nHi team,\n\nI noticed this role requires someone with strong ${job.tags[0]} skills. My professional background has prepared me for this because: ${job.translation}\n\nLooking forward to discussing how my career legacy can support your mission.`;
+    navigator.clipboard.writeText(draft);
+    setCopiedId(job.id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto pb-20 p-6">
-      {/* 1. Reciprocity Banner (The Stripe Hook) */}
       {!vault?.isVip && (
         <Card className="bg-teal-500/10 border-teal-500/20 p-4 rounded-2xl flex items-center justify-between group cursor-pointer" 
               onClick={() => window.open('YOUR_STRIPE_LINK_HERE', '_blank')}>
@@ -108,14 +121,13 @@ export default function Launch({ vault }) {
         <h1 className="text-4xl font-bold text-white font-heading italic">Propulsion & Opportunities</h1>
         <p className="text-gray-400 text-lg max-w-2xl">
           {hasUploadedResume 
-            ? "Your launchpad into the Canadian tech ecosystem, calibrated to your legacy expertise."
-            : "Survey the landscape. These high-ground roles are selected for their alignment with professional educators transitioning to tech."}
+            ? "Your launchpad into the tech ecosystem, calibrated to your professional DNA."
+            : "Survey the landscape. These high-ground roles are selected for their alignment with diverse career backgrounds pivoting to tech."}
         </p>
       </header>
 
       {hasUploadedResume && (
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-top-4 duration-700">
-          {/* Main Stat Card - Dark Purple / Teal */}
           <Card className="bg-gradient-to-br from-[#1C1622] to-teal-500/10 border-teal-500/20 p-6 rounded-[2rem] relative overflow-hidden group shadow-xl">
             <Sparkles className="absolute -right-4 -top-4 w-24 h-24 text-teal-500/5 rotate-12 group-hover:rotate-45 transition-transform duration-1000" />
             <div className="relative z-10">
@@ -125,30 +137,27 @@ export default function Launch({ vault }) {
             </div>
           </Card>
           
-          {/* Keyword Card */}
           <Card className="bg-[#1C1622]/40 border-white/5 p-6 rounded-[2rem] flex flex-col justify-center">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-teal-500/60 mb-2">Top Keyword Match</p>
             <h3 className="text-sm font-bold text-white uppercase tracking-wider">Strategic Program Design</h3>
             <p className="text-[10px] text-slate-500 mt-1">Found in your most compatible postings.</p>
           </Card>
 
-          {/* Pulse Card */}
           <Card className="bg-[#1C1622]/40 border-white/5 p-6 rounded-[2rem] flex flex-col justify-center">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Market Pulse</p>
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Atlantic Tech Expansion</h3>
-            <p className="text-[10px] text-slate-500 mt-1">Surge detected in Halifax & Fredericton hubs.</p>
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Expansion Opportunity</h3>
+            <p className="text-[10px] text-slate-500 mt-1">Surge detected in national remote hiring.</p>
           </Card>
         </section>
       )}
 
-      {/* Search Bar - Darkened to Grey/Teal Theme */}
       <Card className="p-4 bg-[#1C1622]/80 border-white/5 backdrop-blur-md shadow-2xl rounded-3xl">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
           <div className="relative md:col-span-2">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
             <Input 
               placeholder="Search by role or skill..." 
-              className="pl-10 bg-[#0A080D] border-gray-800 text-white focus:border-teal-500 transition-colors rounded-xl"
+              className="pl-10 bg-[#0A080D] border-gray-800 text-white focus:border-teal-500 rounded-xl"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -156,20 +165,33 @@ export default function Launch({ vault }) {
           <div className="relative">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
             <select 
-              className="w-full h-10 pl-10 pr-4 bg-[#0A080D] border-gray-800 text-sm text-white rounded-xl appearance-none focus:ring-1 focus:ring-teal-500 outline-none cursor-pointer"
+              className="w-full h-10 pl-10 pr-4 bg-[#0A080D] border-gray-800 text-sm text-white rounded-xl appearance-none outline-none cursor-pointer"
               value={selectedHub}
               onChange={(e) => setSelectedHub(e.target.value)}
             >
               {CANADIAN_HUBS.map(hub => <option key={hub} value={hub}>{hub}</option>)}
             </select>
           </div>
-          <Button className="bg-teal-600 hover:bg-teal-500 text-white font-bold transition-all shadow-[0_0_15px_rgba(20,184,166,0.3)] rounded-xl uppercase text-[10px] tracking-widest">
+          
+          <div className="flex items-center justify-center gap-2">
+            <input 
+              type="checkbox" 
+              id="remote-toggle"
+              className="w-4 h-4 accent-teal-500 bg-black border-gray-700 rounded cursor-pointer"
+              checked={remoteOnly}
+              onChange={(e) => setRemoteOnly(e.target.checked)}
+            />
+            <label htmlFor="remote-toggle" className="text-[10px] font-bold text-slate-400 uppercase tracking-widest cursor-pointer">
+              Remote Only
+            </label>
+          </div>
+
+          <Button className="bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl uppercase text-[10px] tracking-widest">
             Refine Launch
           </Button>
         </div>
       </Card>
 
-      {/* Job Cards */}
       <div className="grid gap-4 min-h-[400px]">
         {filteredJobs.map((job) => (
           <Card 
@@ -205,24 +227,35 @@ export default function Launch({ vault }) {
                   </Badge>
                 </div>
 
-                {hasUploadedResume && (
-                  <div className="bg-[#2D2438]/20 border border-white/5 p-4 rounded-2xl animate-in fade-in duration-500">
-                    <div className="flex items-center gap-2 mb-2">
+                <div className="bg-[#2D2438]/20 border border-white/5 p-4 rounded-2xl animate-in fade-in duration-500">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
                       <Target size={12} className="text-teal-500" />
-                      <span className="text-[9px] font-black uppercase tracking-widest text-teal-500">Transcoding Logic</span>
+                      <span className="text-[9px] font-black uppercase tracking-widest text-teal-500">
+                        {hasUploadedResume ? "Legacy Match" : "Universal Pivot Logic"}
+                      </span>
                     </div>
-                    <p className="text-[11px] text-slate-400 leading-relaxed font-light italic">
-                      "{job.translation}"
-                    </p>
+                    <button 
+                      onClick={() => handleCopyCoverLetter(job)}
+                      className="flex items-center gap-1 text-[9px] font-bold text-slate-500 hover:text-teal-400 transition-colors"
+                    >
+                      {copiedId === job.id ? <Check size={12} /> : <Copy size={12} />}
+                      {copiedId === job.id ? "COPIED" : "DRAFT COVER LETTER"}
+                    </button>
                   </div>
-                )}
+                  <p className="text-[11px] text-slate-400 leading-relaxed font-light italic">
+                    "{hasUploadedResume 
+                      ? job.translation 
+                      : "This role values core competencies like stakeholder communication and adaptive problem-solving that bridge any professional background."}"
+                  </p>
+                </div>
               </div>
 
               <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-4 border-t md:border-t-0 md:border-l border-white/5 pt-4 md:pt-0 md:pl-8">
                 <div className="text-right">
                   {hasUploadedResume ? (
                     <>
-                      <span className="text-3xl font-black text-teal-500 block leading-none">{job.alignment}%</span>
+                      <span className="text-3xl font-black text-teal-400 block leading-none">{job.alignment}%</span>
                       <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mt-1">Alignment Score</p>
                     </>
                   ) : (
@@ -257,7 +290,7 @@ export default function Launch({ vault }) {
         <div className="space-y-1">
           <h3 className="text-white font-medium italic">Scanning across the Hubs...</h3>
           <p className="text-gray-500 text-sm max-w-sm mx-auto">
-            Monitoring the Canadian tech pulse to find roles where your 13-year legacy is the missing piece.
+            Monitoring the Canadian tech pulse to find roles where your professional legacy is the missing piece.
           </p>
         </div>
       </div>
