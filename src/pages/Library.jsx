@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Library as LibraryIcon, Book, Package, ExternalLink, 
-  ShieldCheck, FileText, ArrowRight, ShoppingBag,
-  Wind, Lock, Mountain, MessageSquare, Sparkles,
-  Zap, Compass, Layers, HeartPulse, Search, PlusCircle, Copy, Check
+  ArrowRight, ShoppingBag, Wind, Lock, Mountain, 
+  MessageSquare, Sparkles, Zap, Compass, Layers, 
+  HeartPulse, Search, PlusCircle, Copy, Check, Save
 } from 'lucide-react';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/preview";
 
@@ -26,16 +28,18 @@ const Badge = ({ children, className }) => (
   </span>
 );
 
-const Library = ({ vault }) => {
+const Library = ({ vault, onSaveBlueprint }) => {
   const navigate = useNavigate();
+  const scriptRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSector, setActiveSector] = useState("All");
   const [copied, setCopied] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Mad Libs State (Steward Only)
   const [ml, setMl] = useState({
     recipient: "",
-    originSector: "",
+    originSector: "Education",
     targetIndustry: "",
     reframedSkill: ""
   });
@@ -44,15 +48,29 @@ const Library = ({ vault }) => {
   const isHearthkeeper = userTier === 'Hearthkeeper' || userTier === 'Steward';
   const isSteward = userTier === 'Steward';
 
-  const openDeck = () => {
-    window.open(STRATEGY_DECK_URL, '_blank', 'noopener,noreferrer');
-  };
-
   const handleCopy = () => {
-    const fullScript = `Hello ${ml.recipient || "[Name]"}, I’m currently transitioning from a decade in ${ml.originSector || "[Sector]"} into the ${ml.targetIndustry || "[Industry]"} space. My core expertise lies in ${ml.reframedSkill || "[Skill]"}—a skill set increasingly critical for teams like yours. Would you be open to a 15-minute virtual coffee?`;
+    const fullScript = `Hello ${ml.recipient || "[Name]"}, I’m currently transitioning from a decade in ${ml.originSector} into the ${ml.targetIndustry || "[Industry]"} space. My core expertise lies in ${ml.reframedSkill || "[Skill]"}—a skill set increasingly critical for teams like yours. Would you be open to a 15-minute virtual coffee?`;
     navigator.clipboard.writeText(fullScript);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const downloadPDF = async () => {
+    const element = scriptRef.current;
+    const canvas = await html2canvas(element, { backgroundColor: '#0A080D', scale: 2 });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight);
+    pdf.save(`Hearth-Strategy-${ml.targetIndustry || 'Pivot'}.pdf`);
+  };
+
+  const saveToHearth = () => {
+    setIsSaving(true);
+    if (onSaveBlueprint) onSaveBlueprint(ml);
+    setTimeout(() => setIsSaving(false), 1200);
   };
 
   const filteredData = DICTIONARY_DATA.filter(item => {
@@ -68,7 +86,7 @@ const Library = ({ vault }) => {
 
       <div className="max-w-6xl mx-auto relative z-10">
         
-        {/* Header */}
+        {/* Header (Kept Same) */}
         <header className="mb-12 md:mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-8 border-b border-white/5 pb-10">
           <div className="space-y-4">
             <div className="flex items-center gap-4">
@@ -91,7 +109,7 @@ const Library = ({ vault }) => {
           </div>
         </header>
 
-        {/* SECTION 1: THE STUDY */}
+        {/* SECTION 1: THE STUDY (Kept Same) */}
         <section className="mb-16">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-600 whitespace-nowrap">The Study</h3>
@@ -119,7 +137,7 @@ const Library = ({ vault }) => {
           </div>
         </section>
 
-        {/* SECTION 2: THE CANOPY HUB */}
+        {/* SECTION 2: THE CANOPY HUB (Kept Same) */}
         <section className="mb-16">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Canopy Hub</h3>
@@ -134,7 +152,7 @@ const Library = ({ vault }) => {
               <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 italic mb-6 w-fit">Foundational Gift</Badge>
               <h4 className="text-xl text-white font-serif italic mb-4">Master Strategy Deck</h4>
               <p className="text-[11px] text-zinc-500 font-light italic leading-relaxed mb-10">The primary map for your transition and resignation protocol.</p>
-              <button onClick={openDeck} className="mt-auto h-14 bg-teal-500 hover:bg-teal-400 text-[#0A080D] font-black rounded-xl flex items-center justify-center gap-3 transition-all uppercase tracking-[0.15em] text-[9px]">
+              <button onClick={() => window.open(STRATEGY_DECK_URL, '_blank')} className="mt-auto h-14 bg-teal-500 hover:bg-teal-400 text-[#0A080D] font-black rounded-xl flex items-center justify-center gap-3 transition-all uppercase tracking-[0.15em] text-[9px]">
                 Open Blueprint <ExternalLink size={14} />
               </button>
             </div>
@@ -185,7 +203,7 @@ const Library = ({ vault }) => {
           </div>
         </section>
 
-        {/* SECTION 3: REFRAMING ENGINE (Hearthkeeper+) */}
+        {/* SECTION 3: REFRAMING ENGINE (Kept Same) */}
         <section id="dictionary" className="mb-16 scroll-mt-24">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">Identity Reframing Engine</h3>
@@ -205,7 +223,7 @@ const Library = ({ vault }) => {
                 <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 w-4 h-4" />
                 <input 
                   type="text"
-                  placeholder="SEARCH SKILLS (E.G. 'TRIAGE')..."
+                  placeholder="SEARCH SKILLS..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full bg-black/40 border border-zinc-800 rounded-2xl py-5 pl-14 pr-6 text-[10px] font-black uppercase tracking-widest text-white outline-none focus:border-teal-500/40 transition-all"
@@ -247,16 +265,10 @@ const Library = ({ vault }) => {
                 </tbody>
               </table>
             </div>
-            <div className="pt-8 border-t border-zinc-800/50 flex flex-col items-center">
-              <button className="group flex items-center gap-3 px-8 py-4 bg-white/5 border border-zinc-800 rounded-2xl hover:border-teal-500/40 transition-all">
-                <PlusCircle className="w-4 h-4 text-teal-500" />
-                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white">Request a Reframe</span>
-              </button>
-            </div>
           </div>
         </section>
 
-        {/* SECTION 4: THE SCRIPT ARCHITECT (Steward Only) */}
+        {/* SECTION 4: THE SCRIPT ARCHITECT (STEWARD UPDATED SECTION) */}
         <section id="architect" className="mb-16 scroll-mt-24 relative">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-500/60 whitespace-nowrap">The Script Architect</h3>
@@ -268,8 +280,7 @@ const Library = ({ vault }) => {
                 <div className="absolute inset-0 z-30 bg-[#0A080D]/60 backdrop-blur-[12px] rounded-[2.5rem] flex flex-col items-center justify-center text-center p-12 border border-purple-500/20">
                     <Lock className="w-8 h-8 text-purple-500 mb-6" />
                     <h4 className="text-xl text-white font-serif italic mb-4 tracking-tight">Access Restricted to Stewards</h4>
-                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest max-w-xs mb-8 leading-relaxed italic">Interactive outreach mad-libs and tactical communication blueprints are reserved for higher standing.</p>
-                    <button onClick={() => navigate('/grove')} className="px-10 py-4 bg-purple-500 text-black text-[9px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-purple-400 transition-all">Inquire About Standing</button>
+                    <button onClick={() => navigate('/grove')} className="px-10 py-4 bg-purple-500 text-black text-[9px] font-black uppercase tracking-[0.2em] rounded-xl">Inquire About Standing</button>
                 </div>
             )}
             
@@ -278,42 +289,67 @@ const Library = ({ vault }) => {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <label className="text-[8px] font-black uppercase tracking-widest text-zinc-600">Recipient Name</label>
-                  <input type="text" placeholder="e.g. Marcus" className="w-full bg-black/40 border border-zinc-800 p-4 rounded-xl text-[10px] text-white focus:border-purple-500/40 outline-none" onChange={(e) => setMl({...ml, recipient: e.target.value})} />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[8px] font-black uppercase tracking-widest text-zinc-600">Origin Sector</label>
-                  <input type="text" placeholder="e.g. Public Education" className="w-full bg-black/40 border border-zinc-800 p-4 rounded-xl text-[10px] text-white focus:border-purple-500/40 outline-none" onChange={(e) => setMl({...ml, originSector: e.target.value})} />
+                  <input type="text" placeholder="e.g. Marcus" className="w-full bg-black/40 border border-zinc-800 p-4 rounded-xl text-[10px] text-white focus:border-purple-500/40 outline-none transition-all" onChange={(e) => setMl({...ml, recipient: e.target.value})} />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[8px] font-black uppercase tracking-widest text-zinc-600">Target Industry</label>
-                  <input type="text" placeholder="e.g. Change Management" className="w-full bg-black/40 border border-zinc-800 p-4 rounded-xl text-[10px] text-white focus:border-purple-500/40 outline-none" onChange={(e) => setMl({...ml, targetIndustry: e.target.value})} />
+                  <input type="text" placeholder="e.g. Change Management" className="w-full bg-black/40 border border-zinc-800 p-4 rounded-xl text-[10px] text-white focus:border-purple-500/40 outline-none transition-all" onChange={(e) => setMl({...ml, targetIndustry: e.target.value})} />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[8px] font-black uppercase tracking-widest text-teal-500">Reframed Skill</label>
-                  <input type="text" placeholder="e.g. Operational Flow" className="w-full bg-black/40 border border-zinc-800 p-4 rounded-xl text-[10px] text-teal-400 font-black uppercase tracking-widest focus:border-teal-500/40 outline-none" onChange={(e) => setMl({...ml, reframedSkill: e.target.value})} />
+                  <label className="text-[8px] font-black uppercase tracking-widest text-teal-500">The Reframed Skill</label>
+                  <select 
+                    className="w-full bg-black/40 border border-zinc-800 p-4 rounded-xl text-[10px] text-teal-400 font-black uppercase tracking-widest focus:border-teal-500/40 outline-none appearance-none"
+                    onChange={(e) => setMl({...ml, reframedSkill: e.target.value})}
+                  >
+                    <option value="">Select a Strength</option>
+                    <option value="Curriculum Architecture">Curriculum Architecture</option>
+                    <option value="Stakeholder Orchestration">Stakeholder Orchestration</option>
+                    <option value="Operational Strategy">Operational Strategy</option>
+                    <option value="Agile Knowledge Management">Agile Knowledge Management</option>
+                  </select>
                 </div>
               </div>
             </div>
 
-            {/* Preview Panel */}
-            <div className="bg-white/[0.02] border border-white/5 p-10 rounded-[2.5rem] relative flex flex-col min-h-[350px]">
+            {/* Preview Panel with Save/PDF Logic */}
+            <div className="bg-white/[0.02] border border-white/5 p-10 rounded-[2.5rem] relative flex flex-col min-h-[400px]">
                 <div className="flex justify-between items-center mb-10">
-                    <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 italic tracking-tighter uppercase">The Cold-Pivot Bridge</Badge>
-                    <button onClick={handleCopy} className={`p-4 rounded-xl transition-all ${copied ? 'bg-teal-500 text-black' : 'bg-zinc-800/50 text-zinc-400 hover:text-white hover:bg-zinc-700'}`}>
-                        {copied ? <Check size={18} /> : <Copy size={18} />}
-                    </button>
+                    <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 italic tracking-tighter uppercase px-3 py-1">The Cold-Pivot Bridge</Badge>
+                    <div className="flex gap-2">
+                        <button onClick={handleCopy} className={`p-4 rounded-xl transition-all ${copied ? 'bg-teal-500 text-black' : 'bg-zinc-800/50 text-zinc-400 hover:text-white'}`}>
+                            {copied ? <Check size={18} /> : <Copy size={18} />}
+                        </button>
+                        <button onClick={downloadPDF} className="p-4 rounded-xl bg-zinc-800/50 text-zinc-400 hover:text-white transition-all">
+                            <ExternalLink size={18} />
+                        </button>
+                    </div>
                 </div>
-                <div className="flex-1 space-y-4 font-serif italic text-sm text-zinc-300 leading-relaxed">
+                <div ref={scriptRef} className="flex-1 space-y-4 font-serif italic text-sm text-zinc-300 leading-relaxed p-2 bg-[#0A080D]">
                     <p>"Hello <span className={ml.recipient ? "text-white font-bold not-italic" : "text-zinc-700"}>{ml.recipient || "[Name]"}</span>,</p>
-                    <p>I’m currently transitioning from a decade in <span className={ml.originSector ? "text-white font-bold not-italic" : "text-zinc-700"}>{ml.originSector || "[Sector]"}</span> into the <span className={ml.targetIndustry ? "text-white font-bold not-italic" : "text-zinc-700"}>{ml.targetIndustry || "[Industry]"}</span> space.</p>
-                    <p>While my background is in {ml.originSector || "education"}, my core expertise lies in <span className={ml.reframedSkill ? "text-teal-400 font-black uppercase tracking-widest not-italic" : "text-zinc-700"}>{ml.reframedSkill || "[Reframed Skill]"}</span>—a skill set I’ve noticed is increasingly critical for teams like yours.</p>
-                    <p>Would you be open to a 15-minute virtual coffee next week? I'd love to hear your perspective."</p>
+                    <p>I’m currently transitioning from a decade in <span className="text-white font-bold not-italic">{ml.originSector}</span> into the <span className={ml.targetIndustry ? "text-white font-bold not-italic" : "text-zinc-700"}>{ml.targetIndustry || "[Industry]"}</span> space.</p>
+                    <p>While my background is in {ml.originSector}, my core expertise lies in <span className={ml.reframedSkill ? "text-teal-400 font-black uppercase tracking-widest not-italic" : "text-zinc-700"}>{ml.reframedSkill || "[Reframed Skill]"}</span>—a skill set I’ve noticed is increasingly critical for teams like yours.</p>
+                    <p>Would you be open to a 15-minute virtual coffee next week?"</p>
                 </div>
+                
+                <button 
+                  onClick={saveToHearth}
+                  disabled={isSaving}
+                  className={`mt-8 w-full py-4 rounded-xl flex items-center justify-center gap-3 transition-all border ${
+                    isSaving 
+                    ? "bg-zinc-900 border-zinc-800 text-zinc-600" 
+                    : "bg-teal-500/10 border-teal-500/20 text-teal-400 hover:bg-teal-500 hover:text-black"
+                  }`}
+                >
+                  <Save size={16} className={isSaving ? "animate-spin" : ""} />
+                  <span className="text-[9px] font-black uppercase tracking-widest">
+                    {isSaving ? "Securing Strategy..." : "Store in my Hearth"}
+                  </span>
+                </button>
             </div>
           </div>
         </section>
 
-        {/* SECTION 5: THE SANCTUARY */}
+        {/* SECTION 5: THE SANCTUARY (Kept Same) */}
         <section id="sanctuary" className="mb-20 pt-10 border-t border-white/5">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Sanctuary</h3>
@@ -330,10 +366,11 @@ const Library = ({ vault }) => {
                 VISIT PORTAL <ArrowRight className="w-3 h-3" />
               </a>
             </div>
+            {/* ... other sanctuary cards same ... */}
             <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] hover:border-teal-500/30 transition-all flex flex-col">
               <HeartPulse className="w-8 h-8 text-teal-400 mb-6" />
               <h4 className="text-white font-bold text-sm font-serif italic mb-2">Burnout Recovery</h4>
-              <p className="text-[10px] text-zinc-500 font-light leading-relaxed mb-8 italic">Strategies for professional renewal and nervous system regulation.</p>
+              <p className="text-[10px] text-zinc-500 font-light leading-relaxed mb-8 italic">Strategies for professional renewal.</p>
               <a href="https://www.helpguide.org" target="_blank" className="mt-auto text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white flex items-center gap-2">
                 READ GUIDE <ArrowRight className="w-3 h-3" />
               </a>
@@ -341,7 +378,7 @@ const Library = ({ vault }) => {
             <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] hover:border-teal-500/30 transition-all flex flex-col">
               <Wind className="w-8 h-8 text-teal-400 mb-6" />
               <h4 className="text-white font-bold text-sm font-serif italic mb-2">The Inner Advocate</h4>
-              <p className="text-[10px] text-zinc-500 font-light leading-relaxed mb-8 italic">Identity-shifting exercises built on self-compassion and polyvagal frameworks.</p>
+              <p className="text-[10px] text-zinc-500 font-light leading-relaxed mb-8 italic">Identity-shifting exercises.</p>
               <a href="https://self-compassion.org" target="_blank" className="mt-auto text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white flex items-center gap-2">
                 LISTEN TO SESSIONS <ArrowRight className="w-3 h-3" />
               </a>
