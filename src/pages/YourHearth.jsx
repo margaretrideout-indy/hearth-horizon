@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Compass, Map, Trees, FileText, Sparkles, BookOpen, 
-  ChevronRight, Activity, Zap, ShieldCheck 
+  ChevronRight, Activity, Zap, ShieldCheck, Box
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,12 +12,20 @@ export default function YourHearth({ vault, onResumeSync, onNavigateToLibrary })
   const [sentiment, setSentiment] = useState(null);
   const [reflection, setReflection] = useState("");
   
+  // Tier Logic
+  const userTier = vault?.tier || 'Seedling';
+  const canArchitect = userTier === 'Steward' || userTier === 'Sentinel';
+  
   // Logic for dynamic states
   const hasResume = vault?.isAligned || !!vault?.resume;
-  const moodStreak = vault?.moodStreak || 3; // Simulated for logic demonstration
-  const maturityPulses = vault?.pulses || (hasResume ? 8 : 0); 
+  const blueprints = canArchitect ? (vault?.blueprints || []) : [];
+  const moodStreak = vault?.moodStreak || 3; 
+  
+  // Progress logic: Base 8 for resume, 2 per blueprint
+  const baseMaturity = hasResume ? 8 : 0;
+  const maturityPulses = baseMaturity + (blueprints.length * 2); 
   const maturityTarget = 14;
-  const syncPercentage = Math.round((maturityPulses / maturityTarget) * 100);
+  const syncPercentage = Math.min(Math.round((maturityPulses / maturityTarget) * 100), 100);
 
   const sentiments = [
     { emoji: '🌱', label: 'New', type: 'positive' },
@@ -44,11 +52,21 @@ export default function YourHearth({ vault, onResumeSync, onNavigateToLibrary })
       ];
     }
 
-    return [
+    const logs = [
       { date: "13.04.26", event: "New Growth Found", desc: "Your background in education is an 88% match for 'L&D Operations'." },
       { date: "10.04.26", event: "Surveying the Land", desc: "Detected hiring surges across the Canadian tech corridor." },
       ...baseLogs
     ];
+
+    if (blueprints.length > 0) {
+      logs.unshift({ 
+        date: "Today", 
+        event: "Blueprint Sealed", 
+        desc: `New pivot strategy for ${blueprints[0].title} added to your vault.` 
+      });
+    }
+
+    return logs;
   };
 
   const activeLogs = getDynamicLogs();
@@ -57,9 +75,22 @@ export default function YourHearth({ vault, onResumeSync, onNavigateToLibrary })
     <div className="max-w-6xl mx-auto space-y-12 pb-24 p-6 bg-[#0A080D]">
       {/* Top Nav: The Path */}
       <header className="relative py-12 text-center space-y-8">
-        <div className="space-y-2">
+        <div className="space-y-4">
           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60">Operational Base</p>
           <h1 className="text-5xl font-bold text-white font-heading italic tracking-tight">The Hearth</h1>
+          
+          {/* Tier Standing Badge */}
+          <div className="flex justify-center pt-2">
+            <div className="flex items-center gap-3 px-5 py-2 rounded-2xl border border-zinc-800 bg-[#110E16] shadow-xl">
+              <div className={`w-2 h-2 rounded-full shadow-[0_0_10px_rgba(20,184,166,0.5)] ${
+                userTier === 'Seedling' ? 'bg-emerald-500' : 
+                userTier === 'Steward' ? 'bg-teal-400' : 'bg-purple-500'
+              }`} />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">
+                Current Standing: <span className="text-white ml-1">{userTier}</span>
+              </span>
+            </div>
+          </div>
         </div>
 
         <div className="relative flex justify-center items-center max-w-2xl mx-auto py-8">
@@ -68,7 +99,7 @@ export default function YourHearth({ vault, onResumeSync, onNavigateToLibrary })
             {[
               { label: 'Discovery', sub: 'ROOTWERK', icon: Compass, active: true },
               { label: 'Alignment', sub: 'ECOSYSTEM', icon: Map, active: hasResume },
-              { label: 'Launch', sub: 'CANOPY', icon: Trees, active: hasResume }
+              { label: 'Launch', sub: 'CANOPY', icon: Trees, active: blueprints.length > 0 }
             ].map((node, i) => (
               <div key={i} className="flex flex-col items-center gap-4 z-10">
                 <div className={`p-4 rounded-[1.5rem] border transition-all duration-700 ${
@@ -126,21 +157,51 @@ export default function YourHearth({ vault, onResumeSync, onNavigateToLibrary })
                   exit={{ height: 0, opacity: 0 }}
                   className="border-t border-zinc-800/30"
                 >
-                  <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-4 bg-zinc-950/20">
-                    {[
-                      { title: "Experience History", status: hasResume ? "Mapped" : "Waiting", icon: BookOpen, color: hasResume ? "text-teal-500" : "text-zinc-700" },
-                      { title: "Core Strengths", status: hasResume ? "Identified" : "Waiting", icon: Activity, color: hasResume ? "text-teal-500" : "text-zinc-700" },
-                      { title: "Industry Pivot", status: hasResume ? "Translating" : "Waiting", icon: Sparkles, color: hasResume ? "text-purple-500" : "text-zinc-700" },
-                      { title: "Pathway Readiness", status: "Pending", icon: Zap, color: "text-zinc-700" }
-                    ].map((item, i) => (
-                      <div key={i} className="flex items-center justify-between p-5 rounded-2xl bg-zinc-900/30 border border-zinc-800/40 hover:border-teal-500/20 transition-all">
-                        <div className="flex items-center gap-4">
-                          <item.icon className={`w-4 h-4 ${item.color}`} />
-                          <p className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">{item.title}</p>
+                  <div className="p-8 space-y-6 bg-zinc-950/20">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {[
+                        { title: "Experience History", status: hasResume ? "Mapped" : "Waiting", icon: BookOpen, color: hasResume ? "text-teal-500" : "text-zinc-700" },
+                        { title: "Core Strengths", status: hasResume ? "Identified" : "Waiting", icon: Activity, color: hasResume ? "text-teal-500" : "text-zinc-700" },
+                        { 
+                          title: "Industry Pivot", 
+                          status: canArchitect ? (blueprints.length > 0 ? "Architected" : (hasResume ? "Ready" : "Waiting")) : "Locked", 
+                          icon: Sparkles, 
+                          color: blueprints.length > 0 ? "text-purple-500" : "text-zinc-700" 
+                        },
+                        { title: "Pathway Readiness", status: syncPercentage > 80 ? "High" : "Pending", icon: Zap, color: syncPercentage > 80 ? "text-teal-500" : "text-zinc-700" }
+                      ].map((item, i) => (
+                        <div key={i} className="flex items-center justify-between p-5 rounded-2xl bg-zinc-900/30 border border-zinc-800/40 hover:border-teal-500/20 transition-all">
+                          <div className="flex items-center gap-4">
+                            <item.icon className={`w-4 h-4 ${item.color}`} />
+                            <p className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">{item.title}</p>
+                          </div>
+                          <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">{item.status}</span>
                         </div>
-                        <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">{item.status}</span>
+                      ))}
+                    </div>
+
+                    {/* Tier-Gated Repository */}
+                    {canArchitect && blueprints.length > 0 && (
+                      <div className="mt-8 pt-6 border-t border-zinc-900 space-y-4">
+                        <div className="flex items-center gap-2 px-2">
+                          <Box className="w-3 h-3 text-teal-500" />
+                          <p className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em]">Stored Blueprints</p>
+                        </div>
+                        <div className="grid grid-cols-1 gap-2">
+                          {blueprints.map((bp, i) => (
+                            <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-teal-500/5 border border-teal-500/10 hover:border-teal-500/30 transition-all group">
+                              <div className="flex flex-col">
+                                <span className="text-[10px] font-bold text-teal-400 uppercase tracking-tight">{bp.title}</span>
+                                <span className="text-[8px] text-zinc-500 uppercase tracking-widest">{bp.tier} Level Strategy</span>
+                              </div>
+                              <Button variant="ghost" className="h-8 px-4 text-[8px] font-black text-teal-500/60 group-hover:text-teal-400 uppercase">
+                                Open Schematic
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </motion.div>
               )}
