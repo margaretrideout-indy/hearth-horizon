@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Flame, Wind, Zap, Lock, 
-  TrendingUp, MessagesSquare, Compass, Check, Leaf, Mountain, Heart, UserPlus,
+  Flame, Heart, Sprout, Globe, ShieldCheck, Check, Leaf, Mountain, UserPlus,
   Smartphone, Share2, PlusSquare 
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -110,8 +109,8 @@ const GroveTiers = ({ vault, onSync }) => {
   return (
     <div className="relative min-h-screen bg-[#0A080D] text-slate-300 font-sans selection:bg-teal-500/30 overflow-x-hidden">
       
-      {/* 1. Luminous Header with dynamic Arvâni Glow */}
-      <div className="absolute top-0 left-0 w-full h-[50vh] bg-[radial-gradient(circle_at_50%_0%,rgba(20,184,166,0.1),rgba(147,51,234,0.03)_40%,transparent_70%)] pointer-events-none" />
+      {/* 1. Arvâni (Northern Lights) Background Pulse */}
+      <div className="absolute top-0 left-0 w-full h-[70vh] bg-[radial-gradient(circle_at_50%_0%,rgba(20,184,166,0.08),rgba(147,51,234,0.03)_40%,transparent_80%)] pointer-events-none" />
       
       <div className="absolute top-8 right-8 z-20">
         <button 
@@ -127,10 +126,10 @@ const GroveTiers = ({ vault, onSync }) => {
 
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-24 relative z-10">
         
-        <header className="mb-24 md:mb-32 text-center">
+        <header className="mb-16 md:mb-24 text-center">
           <motion.div 
             animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 3, repeat: Infinity }}
+            transition={{ duration: 4, repeat: Infinity }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-500/5 border border-teal-500/10 mb-8"
           >
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">Welcome to the Sanctuary</span>
@@ -140,31 +139,64 @@ const GroveTiers = ({ vault, onSync }) => {
             Transition with Intention.
           </h1>
 
-          {/* 3. The Founder's Message Card with Twilight Pulse */}
-          <div className="max-w-5xl mx-auto p-8 md:p-12 rounded-[3rem] bg-[#110E16]/80 backdrop-blur-lg border border-zinc-800 shadow-[0_20px_60px_rgba(147,51,234,0.02)] relative overflow-hidden group mb-16 md:mb-20">
-            {/* Soft background pulse */}
+          {/* 2. THE FOUNDER'S MESSAGE */}
+          <div className="max-w-5xl mx-auto p-8 md:p-12 rounded-[3rem] bg-[#110E16]/60 backdrop-blur-xl border border-zinc-800/50 shadow-2xl relative overflow-hidden mb-12">
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-purple-500/5 rounded-full blur-[60px]" />
-            
-            <p className="relative z-10 text-base md:text-lg text-zinc-300 font-light leading-relaxed mb-10 italic">
+            <p className="relative z-10 text-base md:text-lg text-zinc-300 font-light leading-relaxed mb-8 italic">
               "As an Indigenous educator with 13 years in the classroom and a Master of Education in Indigenous Studies, 
               my approach is rooted in the Psychology and Sociology of belonging. I have spent my career 
               learning how we anchor ourselves in community and identity during times of upheaval. 
               I realized that a professional shift is more than a move—it's a migration of the self. 
               Hearth & Horizon is the sanctuary for those ready to write their next chapter."
             </p>
-
             <div className="relative z-10 flex flex-col items-center gap-2">
-              <span className="text-white font-serif italic text-2xl">
-                — Margaret, Founder | BA, BEd, MEd
-              </span>
-              <span className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-600 italic">
-                Hearth & Horizon
-              </span>
+              <span className="text-white font-serif italic text-2xl">— Margaret, Founder | BA, BEd, MEd</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-600">Hearth & Horizon</span>
             </div>
           </div>
+
+          {/* 3. THE RECIPROCITY MODEL (Plant a Seed) */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-3xl mx-auto mb-24 p-1 border-t border-b border-teal-500/10"
+          >
+            <div className="py-12 px-6 space-y-8 bg-gradient-to-b from-transparent via-teal-500/5 to-transparent">
+              <div className="space-y-3">
+                <div className="flex justify-center gap-6 text-teal-500/40 mb-4">
+                  <Sprout size={18} />
+                  <Heart size={18} />
+                  <Globe size={18} />
+                </div>
+                <h3 className="text-white font-serif italic text-3xl">The Reciprocity Model</h3>
+                <p className="text-zinc-400 text-sm max-w-xl mx-auto font-light leading-relaxed italic">
+                  Hearth & Horizon is nourished by the principle of reciprocity. While we offer structured tiers for those who need dedicated tools, the sanctuary is sustained by those who can give back. Your "Seed" directly funds scholarship seats for pathfinders in deep transition.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <button 
+                  onClick={() => window.open(LINK_DONATION, '_blank')}
+                  className="px-10 py-5 rounded-2xl bg-teal-500 text-[#0A080D] text-[11px] font-black uppercase tracking-[0.3em] hover:bg-[#4df7d5] hover:scale-105 transition-all shadow-[0_0_30px_rgba(20,184,166,0.3)] flex items-center gap-3 group"
+                >
+                  <Heart size={16} className="group-hover:fill-current" /> Plant A Seed
+                </button>
+                <div className="flex items-center gap-2 text-[9px] font-black text-zinc-600 uppercase tracking-widest">
+                  <ShieldCheck size={14} className="text-teal-900" /> Secure via Stripe
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </header>
 
+        {/* TIERS SECTION */}
         <section className="mb-24 md:mb-48">
+          <div className="text-center mb-16 space-y-4">
+             <h2 className="text-white font-serif italic text-4xl">Choose Your Path</h2>
+             <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">Structured Support Options</p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {tiers.map((tier, idx) => (
               <div key={idx} className={`relative flex flex-col p-8 sm:p-10 rounded-[2.5rem] border transition-all duration-500 bg-[#110E16]/60 backdrop-blur-sm ${
@@ -203,18 +235,33 @@ const GroveTiers = ({ vault, onSync }) => {
               </div>
             ))}
           </div>
-          
-          <div className="mt-20 text-center">
-             <button 
-              onClick={() => window.open(LINK_DONATION, '_blank')}
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full border border-teal-500/20 bg-teal-500/5 text-teal-400 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-teal-500/10 transition-all shadow-[0_0_20px_rgba(20,184,166,0.1)] group"
-            >
-              <motion.div animate={{ rotate: [0, 20, -20, 0] }} transition={{ duration: 1, repeat: Infinity, repeatDelay: 2 }}><Heart className="w-4 h-4 text-teal-500" /></motion.div> Plant A Seed (Donate)
-            </button>
+        </section>
+
+        {/* MOBILE OPTIMIZATION / FOOTER */}
+        <section className="max-w-4xl mx-auto border-t border-zinc-900 pt-16">
+          <div className="p-8 sm:p-12 rounded-[3rem] bg-[#110E16]/40 border border-zinc-800/50 text-center md:text-left">
+            <div className="flex flex-col md:flex-row gap-8 items-center">
+              <div className="p-4 rounded-3xl bg-teal-500/10 text-teal-400">
+                <Smartphone className="w-8 h-8" />
+              </div>
+              <div className="flex-1 space-y-4">
+                <h3 className="text-white font-serif italic text-2xl">Keep the Sanctuary Close</h3>
+                <p className="text-zinc-500 text-sm font-light leading-relaxed">
+                  For a native experience during your transition, add Hearth & Horizon to your home screen.
+                </p>
+                <div className="flex flex-wrap justify-center md:justify-start gap-6 pt-2">
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase text-zinc-400">
+                    <Share2 size={12} className="text-teal-500" /> iOS: Share &gt; Add to Home
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase text-zinc-400">
+                    <PlusSquare size={12} className="text-teal-500" /> Android: Menu &gt; Install
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* mobile app section... (kept generic for structure) */}
       </div>
     </div>
   );
