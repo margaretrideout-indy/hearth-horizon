@@ -36,7 +36,6 @@ const Library = ({ vault, onSaveBlueprint }) => {
   const [copied, setCopied] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Mad Libs State (Steward Only)
   const [ml, setMl] = useState({
     recipient: "",
     originSector: "Education",
@@ -86,7 +85,6 @@ const Library = ({ vault, onSaveBlueprint }) => {
 
       <div className="max-w-6xl mx-auto relative z-10">
         
-        {/* Header (Kept Same) */}
         <header className="mb-12 md:mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-8 border-b border-white/5 pb-10">
           <div className="space-y-4">
             <div className="flex items-center gap-4">
@@ -109,7 +107,6 @@ const Library = ({ vault, onSaveBlueprint }) => {
           </div>
         </header>
 
-        {/* SECTION 1: THE STUDY (Kept Same) */}
         <section className="mb-16">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-600 whitespace-nowrap">The Study</h3>
@@ -137,7 +134,6 @@ const Library = ({ vault, onSaveBlueprint }) => {
           </div>
         </section>
 
-        {/* SECTION 2: THE CANOPY HUB (Kept Same) */}
         <section className="mb-16">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Canopy Hub</h3>
@@ -203,72 +199,80 @@ const Library = ({ vault, onSaveBlueprint }) => {
           </div>
         </section>
 
-        {/* SECTION 3: REFRAMING ENGINE (Kept Same) */}
-        <section id="dictionary" className="mb-16 scroll-mt-24">
+        <section id="dictionary" className="mb-16 scroll-mt-24 relative group">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">Identity Reframing Engine</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
 
-          <div className={`bg-[#110E16]/60 border border-zinc-800 rounded-[2.5rem] p-8 md:p-12 relative ${!isHearthkeeper && 'opacity-40 pointer-events-none'}`}>
+          <div className="relative rounded-[2.5rem] border border-zinc-800 bg-[#110E16]/60 p-8 md:p-12 transition-all group-hover:border-teal-500/30 overflow-hidden">
             {!isHearthkeeper && (
-                <div className="absolute inset-0 flex items-center justify-center z-10">
-                    <div className="bg-black/60 p-4 rounded-xl border border-teal-500/20 backdrop-blur-sm">
-                        <p className="text-[9px] font-black uppercase tracking-widest text-teal-400">Unlock at Hearthkeeper Tier</p>
-                    </div>
-                </div>
-            )}
-            <div className="flex flex-col md:flex-row gap-6 mb-12">
-              <div className="relative flex-1">
-                <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 w-4 h-4" />
-                <input 
-                  type="text"
-                  placeholder="SEARCH SKILLS..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-black/40 border border-zinc-800 rounded-2xl py-5 pl-14 pr-6 text-[10px] font-black uppercase tracking-widest text-white outline-none focus:border-teal-500/40 transition-all"
-                />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {["All", "Education", "Healthcare", "Service", "Public Sector"].map((s) => (
-                  <button key={s} onClick={() => setActiveSector(s)} className={`px-5 py-2.5 rounded-xl text-[8px] font-black uppercase tracking-widest border transition-all ${activeSector === s ? 'bg-teal-500 text-black border-teal-500' : 'bg-transparent text-zinc-500 border-zinc-800 hover:border-zinc-700'}`}>
-                    {s}
+              <div className="absolute inset-0 z-20 flex items-center justify-center p-12 text-center backdrop-blur-md bg-black/10 transition-all">
+                <div className="bg-[#0A080D]/90 p-10 rounded-3xl border border-teal-500/30 flex flex-col items-center shadow-2xl">
+                  <Lock className="w-8 h-8 text-teal-500/60 mb-6" />
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-400 mb-6 leading-tight">Identity Reframing Engine</p>
+                  <p className="text-[11px] text-teal-200/50 italic mb-8 max-w-sm">
+                    Access pivotal vocabulary to reframe your expertise. Upgrade to the Hearthkeeper tier to unlock this engine.
+                  </p>
+                  <button onClick={() => navigate('/grove')} className="px-8 py-3.5 bg-teal-500 text-[#0A080D] rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-teal-400 active:scale-95 transition-all">
+                    Inquire About Standing
                   </button>
-                ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="overflow-x-auto mb-10">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="border-b border-zinc-800">
-                    <th className="pb-6 text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em]">Old Soil</th>
-                    <th className="pb-6 text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em]">Functional Root</th>
-                    <th className="pb-6 text-[9px] font-black text-teal-500 uppercase tracking-[0.2em]">New Horizon</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredData.map((item, i) => (
-                    <tr key={i} className="group border-b border-white/[0.02] hover:bg-white/[0.01]">
-                      <td className="py-6 pr-4">
-                        <div className="text-xs text-white font-serif italic">{item.old}</div>
-                        <div className="text-[8px] text-zinc-600 uppercase mt-1 font-bold">{item.sector}</div>
-                      </td>
-                      <td className="py-6 pr-4">
-                        <Badge className="bg-zinc-800/50 text-zinc-400 border border-zinc-700/50 italic">{item.root}</Badge>
-                      </td>
-                      <td className="py-6">
-                        <div className="text-xs text-teal-400 font-black uppercase tracking-wider group-hover:text-white transition-colors">{item.new}</div>
-                      </td>
-                    </tr>
+            <div className={`relative ${!isHearthkeeper ? 'pointer-events-none opacity-30' : ''}`}>
+              <div className="flex flex-col md:flex-row gap-6 mb-12">
+                <div className="relative flex-1">
+                  <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 w-4 h-4" />
+                  <input 
+                    type="text"
+                    placeholder="SEARCH SKILLS..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-black/40 border border-zinc-800 rounded-2xl py-5 pl-14 pr-6 text-[10px] font-black uppercase tracking-widest text-white outline-none focus:border-teal-500/40 transition-all"
+                  />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {["All", "Education", "Healthcare", "Service", "Public Sector"].map((s) => (
+                    <button key={s} onClick={() => setActiveSector(s)} className={`px-5 py-2.5 rounded-xl text-[8px] font-black uppercase tracking-widest border transition-all ${activeSector === s ? 'bg-teal-500 text-black border-teal-500' : 'bg-transparent text-zinc-500 border-zinc-800 hover:border-zinc-700'}`}>
+                      {s}
+                    </button>
                   ))}
-                </tbody>
-              </table>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto mb-10">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="border-b border-zinc-800">
+                      <th className="pb-6 text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em]">Old Soil</th>
+                      <th className="pb-6 text-[9px] font-black text-zinc-600 uppercase tracking-[0.2em]">Functional Root</th>
+                      <th className="pb-6 text-[9px] font-black text-teal-500 uppercase tracking-[0.2em]">New Horizon</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredData.map((item, i) => (
+                      <tr key={i} className="group border-b border-white/[0.02] hover:bg-white/[0.01]">
+                        <td className="py-6 pr-4">
+                          <div className="text-xs text-white font-serif italic">{item.old}</div>
+                          <div className="text-[8px] text-zinc-600 uppercase mt-1 font-bold">{item.sector}</div>
+                        </td>
+                        <td className="py-6 pr-4">
+                          <Badge className="bg-zinc-800/50 text-zinc-400 border border-zinc-700/50 italic">{item.root}</Badge>
+                        </td>
+                        <td className="py-6">
+                          <div className="text-xs text-teal-400 font-black uppercase tracking-wider group-hover:text-white transition-colors">{item.new}</div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* SECTION 4: THE SCRIPT ARCHITECT (STEWARD UPDATED SECTION) */}
         <section id="architect" className="mb-16 scroll-mt-24 relative">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-500/60 whitespace-nowrap">The Script Architect</h3>
@@ -284,7 +288,6 @@ const Library = ({ vault, onSaveBlueprint }) => {
                 </div>
             )}
             
-            {/* Input Panel */}
             <div className="space-y-6 bg-[#110E16]/40 border border-zinc-800 p-10 rounded-[2.5rem]">
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -311,7 +314,6 @@ const Library = ({ vault, onSaveBlueprint }) => {
               </div>
             </div>
 
-            {/* Preview Panel with Save/PDF Logic */}
             <div className="bg-white/[0.02] border border-white/5 p-10 rounded-[2.5rem] relative flex flex-col min-h-[400px]">
                 <div className="flex justify-between items-center mb-10">
                     <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 italic tracking-tighter uppercase px-3 py-1">The Cold-Pivot Bridge</Badge>
@@ -349,7 +351,6 @@ const Library = ({ vault, onSaveBlueprint }) => {
           </div>
         </section>
 
-        {/* SECTION 5: THE SANCTUARY (Kept Same) */}
         <section id="sanctuary" className="mb-20 pt-10 border-t border-white/5">
           <div className="flex items-center gap-4 mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Sanctuary</h3>
@@ -366,7 +367,6 @@ const Library = ({ vault, onSaveBlueprint }) => {
                 VISIT PORTAL <ArrowRight className="w-3 h-3" />
               </a>
             </div>
-            {/* ... other sanctuary cards same ... */}
             <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] hover:border-teal-500/30 transition-all flex flex-col">
               <HeartPulse className="w-8 h-8 text-teal-400 mb-6" />
               <h4 className="text-white font-bold text-sm font-serif italic mb-2">Burnout Recovery</h4>
