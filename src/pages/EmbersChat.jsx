@@ -108,13 +108,12 @@ export default function EmbersChat() {
   };
 
   return (
-    /* Changed h-screen to h-[100dvh] to fix mobile browser bar issues */
-    <div className="flex flex-col h-[100dvh] bg-[#0A080D] md:h-[800px] md:rounded-[2.5rem] md:border border-white/5 overflow-hidden shadow-2xl relative">
+    <div className="flex flex-col h-full w-full bg-[#0A080D] md:rounded-t-[2.5rem] md:border-x md:border-t border-white/5 overflow-hidden shadow-2xl relative min-h-0 flex-1">
       
       {/* Aurora Glow Background */}
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-10%,rgba(20,184,166,0.05),transparent_60%)] pointer-events-none" />
       
-      {/* Messages Container - added touch scrolling support */}
+      {/* Messages Container */}
       <div 
         ref={scrollRef} 
         className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 space-y-6 md:space-y-8 scroll-smooth scrollbar-hide relative z-10 overscroll-contain"
@@ -176,9 +175,9 @@ export default function EmbersChat() {
         </AnimatePresence>
       </div>
 
-      {/* Input Area - Adjusted for mobile safe areas */}
-      <div className="p-4 pb-8 md:pb-6 md:p-6 bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 shrink-0 z-20">
-        <div className="relative flex items-center gap-2 md:gap-3">
+      {/* Input Area */}
+      <div className="p-4 pb-6 md:pb-8 lg:pb-10 bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 shrink-0 z-20">
+        <div className="relative flex items-center gap-2 md:gap-3 max-w-7xl mx-auto">
           <input
             type="text"
             value={input}
