@@ -68,7 +68,8 @@ const ForestAdmin = () => {
       
       return await window.base44.entities.VoucherPool.update(requestId, { 
         status: 'claimed',
-        claimed_date: new Date().toISOString()
+        claimed_date: new Date().toISOString(),
+        user_email: cleanEmail
       });
     },
     onSuccess: () => {
@@ -92,7 +93,6 @@ const ForestAdmin = () => {
   const safeDwellers = Array.isArray(dwellers) ? dwellers : [];
   const pendingRequests = (Array.isArray(requests) ? requests : []).filter(r => r.status === 'available');
 
-  // Helper to parse progress
   const getProgress = (dweller) => {
     try {
       return dweller.progress_data ? JSON.parse(dweller.progress_data) : { status: 'Unknown', last_activity: null };
