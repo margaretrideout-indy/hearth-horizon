@@ -3,7 +3,7 @@ import { Flame, Send, Sparkles, Loader2, Leaf, Mountain, Heart } from 'lucide-re
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 
-// Mock base44 for standalone preview - in production this uses your actual client
+// Mock base44 for standalone preview
 const base44 = {
   auth: { me: async () => ({ full_name: 'Margaret (Founder)', email: 'margaret@thehearth.com', subscription_tier: 'Founder' }) },
   entities: { EmberPost: { list: async () => [], create: async () => ({}) } }
@@ -40,7 +40,7 @@ const TierBadge = ({ tier }) => {
           <span className="bg-teal-500/20 text-teal-300 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-teal-400/40 flex items-center gap-1 shadow-[0_0_15px_rgba(20,184,166,0.2)]">
             <Heart className="w-2.5 h-2.5 fill-current" /> Lightkeeper
           </span>
-          <span className="text-[7px] text-zinc-600 font-bold uppercase tracking-widest ml-1">Reciprocity Partner</span>
+          <span className="text-[7px] text-zinc-600 font-bold uppercase tracking-widest ml-1 hidden sm:inline">Reciprocity Partner</span>
         </div>
       );
     case 'Steward':
@@ -108,15 +108,17 @@ export default function EmbersChat() {
   };
 
   return (
-    <div className="flex flex-col h-screen max-h-[100dvh] bg-[#0A080D] md:rounded-[2.5rem] md:border border-white/5 overflow-hidden shadow-2xl relative">
+    /* Changed h-screen to h-[100dvh] to fix mobile browser bar issues */
+    <div className="flex flex-col h-[100dvh] bg-[#0A080D] md:h-[800px] md:rounded-[2.5rem] md:border border-white/5 overflow-hidden shadow-2xl relative">
       
       {/* Aurora Glow Background */}
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-10%,rgba(20,184,166,0.05),transparent_60%)] pointer-events-none" />
       
+      {/* Messages Container - added touch scrolling support */}
       <div 
         ref={scrollRef} 
-        className="flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-8 scroll-smooth scrollbar-hide relative z-10"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 space-y-6 md:space-y-8 scroll-smooth scrollbar-hide relative z-10 overscroll-contain"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
       >
         {FIXED_STARTERS.map((msg) => (
           <div key={msg.id} className="flex flex-col items-start opacity-90">
@@ -126,13 +128,12 @@ export default function EmbersChat() {
               </span>
               <TierBadge tier={msg.subscription_tier} />
             </div>
-            <div className={`max-w-[85%] p-4 rounded-2xl border ${msg.subscription_tier === 'Founder' ? 'bg-[#1A1423] border-purple-500/30 shadow-[0_0_20px_rgba(168,85,247,0.05)]' : 'bg-white/[0.02] border-white/5'}`}>
+            <div className={`max-w-[90%] md:max-w-[85%] p-4 rounded-2xl border ${msg.subscription_tier === 'Founder' ? 'bg-[#1A1423] border-purple-500/30 shadow-[0_0_20px_rgba(168,85,247,0.05)]' : 'bg-white/[0.02] border-white/5'}`}>
               <p className="text-zinc-300 text-sm leading-relaxed font-light italic">{msg.content}</p>
             </div>
           </div>
         ))}
 
-        {/* Luminous Arvâni Divider */}
         <div className="flex items-center gap-4 py-4 opacity-30">
           <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-teal-500/50 to-transparent" />
           <Flame className="w-3 h-3 text-teal-500 animate-pulse" />
@@ -144,12 +145,12 @@ export default function EmbersChat() {
             <motion.div 
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }} 
-              className="py-12 text-center flex flex-col items-center gap-3"
+              className="py-8 md:py-12 text-center flex flex-col items-center gap-3"
             >
               <div className="w-10 h-10 rounded-full bg-white/[0.02] border border-white/5 flex items-center justify-center">
                 <Flame className="w-5 h-5 text-zinc-600 animate-pulse" />
               </div>
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">
+              <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-zinc-500 px-4 text-center">
                 The hearth is warm... be the first to share a spark.
               </p>
             </motion.div>
@@ -162,7 +163,7 @@ export default function EmbersChat() {
                     {formatAuthorName(msg.author_name)}
                     <TierBadge tier={msg.subscription_tier} />
                   </div>
-                  <div className={`max-w-[85%] p-4 rounded-2xl border transition-all ${isOwn ? 'bg-teal-500/10 border-teal-500/30 text-white shadow-[0_4px_20px_rgba(20,184,166,0.05)]' : 'bg-[#110E16] border-white/5'}`}>
+                  <div className={`max-w-[90%] md:max-w-[85%] p-4 rounded-2xl border transition-all ${isOwn ? 'bg-teal-500/10 border-teal-500/30 text-white shadow-[0_4px_20px_rgba(20,184,166,0.05)]' : 'bg-[#110E16] border-white/5'}`}>
                     <p className="text-zinc-300 text-sm leading-relaxed font-light">{msg.content}</p>
                   </div>
                   <span className="text-[9px] text-zinc-700 mt-2 px-1 uppercase tracking-tighter">
@@ -175,28 +176,28 @@ export default function EmbersChat() {
         </AnimatePresence>
       </div>
 
-      {/* Input Area */}
-      <div className="p-4 md:p-6 bg-[#0A080D]/90 backdrop-blur-xl border-t border-white/5 shrink-0 z-20">
-        <div className="relative flex items-center gap-3">
+      {/* Input Area - Adjusted for mobile safe areas */}
+      <div className="p-4 pb-8 md:pb-6 md:p-6 bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 shrink-0 z-20">
+        <div className="relative flex items-center gap-2 md:gap-3">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Share an ember..."
-            className="w-full bg-[#110E16] border border-zinc-800 rounded-2xl px-5 py-4 text-sm text-zinc-300 focus:outline-none focus:border-teal-500/40 transition-all placeholder:text-zinc-700 font-light"
+            className="w-full bg-[#110E16] border border-zinc-800 rounded-xl md:rounded-2xl px-4 py-3 md:px-5 md:py-4 text-base md:text-sm text-zinc-300 focus:outline-none focus:border-teal-500/40 transition-all placeholder:text-zinc-700 font-light"
           />
           <button 
             onClick={handleSend} 
             disabled={!input.trim() || sending} 
-            className="bg-teal-500 hover:bg-teal-400 text-[#0A080D] p-4 rounded-2xl transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-teal-500/10 flex items-center justify-center min-w-[56px]"
+            className="bg-teal-500 hover:bg-teal-400 text-[#0A080D] p-3 md:p-4 rounded-xl md:rounded-2xl transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-teal-500/10 flex items-center justify-center min-w-[48px] md:min-w-[56px]"
           >
             {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
           </button>
         </div>
-        <div className="flex flex-col items-center mt-4 space-y-1">
-          <span className="text-[9px] text-zinc-600 font-black uppercase tracking-[0.2em]">Reciprocity is the fuel</span>
-          <p className="text-[8px] text-zinc-700 italic text-center leading-tight max-w-[250px]">{TOS_TEXT}</p>
+        <div className="flex flex-col items-center mt-3 md:mt-4 space-y-1">
+          <span className="text-[8px] md:text-[9px] text-zinc-600 font-black uppercase tracking-[0.2em]">Reciprocity is the fuel</span>
+          <p className="text-[7px] md:text-[8px] text-zinc-700 italic text-center leading-tight max-w-[200px] md:max-w-[250px]">{TOS_TEXT}</p>
         </div>
       </div>
     </div>
