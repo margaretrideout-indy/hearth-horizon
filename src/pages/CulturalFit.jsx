@@ -8,13 +8,13 @@ import { Input } from '@/components/ui/input';
 import { 
   Compass, Mountain, Loader2, 
   Binoculars, ArrowRight, 
-  ArrowRightLeft, Sparkles, TrendingUp,
+  Sparkles, TrendingUp,
   Copy, Check, AlertCircle, Pickaxe,
   Layers, Target, CheckCircle2, Microscope,
   Languages
 } from 'lucide-react';
 
-export default function CulturalFit({ vault, onSync }) {
+export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(1);
   const [isAligning, setIsAligning] = useState(false);
@@ -40,10 +40,10 @@ export default function CulturalFit({ vault, onSync }) {
   }, []);
 
   const gapData = [
-    { skill: "Industry-Standard Frameworks", status: "missing", impact: "high", effort: "2 weeks", category: "Knowledge" },
-    { skill: "Stakeholder Management", status: "aligned", impact: "critical", effort: "sync'd", category: "Leadership" },
-    { skill: "Domain-Specific Technicals", status: "missing", impact: "medium", effort: "1 month", category: "Technical" },
-    { skill: "Cross-Functional Communication", status: "aligned", impact: "high", effort: "sync'd", category: "Soft Skills" },
+    { skill: "Industry-Standard Frameworks", status: "missing", effort: "2 weeks", category: "Knowledge", provisionId: "frameworks" },
+    { skill: "Stakeholder Management", status: "aligned", effort: "sync'd", category: "Leadership" },
+    { skill: "Domain-Specific Technicals", status: "missing", effort: "1 month", category: "Technical", provisionId: "tech-deep-dive" },
+    { skill: "Cross-Functional Communication", status: "aligned", effort: "sync'd", category: "Soft Skills" },
   ];
 
   const trajectories = [
@@ -81,19 +81,17 @@ export default function CulturalFit({ vault, onSync }) {
     if (step === 1) return true;
     if (step === 2) return bridgeData !== null;
     if (step === 3) return selectedPath !== null;
-    if (step === 4) return selectedPath !== null;
     return false;
   };
 
   return (
     <div className="max-w-6xl mx-auto py-8 md:py-12 px-4 md:px-6 space-y-8 md:space-y-12 animate-in fade-in duration-700 selection:bg-teal-500/30 overflow-x-hidden">
       
-      <nav className="flex justify-between items-center bg-[#1C1622]/60 border border-white/5 rounded-2xl md:rounded-full px-2 md:px-8 py-3 md:py-4 backdrop-blur-xl sticky top-4 z-50 shadow-2xl">
+      <nav className="flex justify-center items-center bg-[#1C1622]/60 border border-white/5 rounded-2xl md:rounded-full px-4 md:px-12 py-3 md:py-4 backdrop-blur-xl sticky top-4 z-50 shadow-2xl gap-8 md:gap-16">
         {[
           { id: 1, label: "THE TRANSLATING", icon: Languages },
           { id: 2, label: "THE TOPOGRAPHY", icon: Compass },
-          { id: 3, label: "THE HARVEST", icon: Pickaxe },
-          { id: 4, label: "THE SUMMIT", icon: Mountain }
+          { id: 3, label: "THE HARVEST", icon: Pickaxe }
         ].map((step) => {
           const isAccessible = canNavigateTo(step.id);
           const isActive = activeStep === step.id;
@@ -214,6 +212,7 @@ export default function CulturalFit({ vault, onSync }) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               {trajectories.map((path, idx) => {
                 const isSelected = selectedPath?.domain === path.domain;
+                const canSeeData = userTier !== "Seedling";
                 return (
                   <Card 
                     key={idx} 
@@ -226,7 +225,11 @@ export default function CulturalFit({ vault, onSync }) {
                          <Badge className={`${isSelected ? 'bg-teal-500 text-black' : 'bg-teal-500/10 text-teal-400'} border-transparent text-[9px] font-black px-3 py-1`}>
                            {path.fit}% POTENTIAL MATCH
                          </Badge>
-                         <TrendingUp size={16} className={path.velocity === 'High' ? 'text-teal-400 animate-pulse' : 'text-slate-700'} />
+                         {canSeeData ? (
+                            <TrendingUp size={16} className={path.velocity === 'High' ? 'text-teal-400 animate-pulse' : 'text-slate-700'} />
+                         ) : (
+                            <Target size={14} className="text-slate-800" />
+                         )}
                       </div>
                       <div className="space-y-2">
                         <h4 className={`font-bold text-lg leading-tight transition-colors ${isSelected ? 'text-white' : 'text-slate-300'}`}>
@@ -238,7 +241,7 @@ export default function CulturalFit({ vault, onSync }) {
                         <div className="space-y-1">
                           <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest italic">Est. Range</p>
                           <p className={`text-xl font-black italic transition-colors ${isSelected ? 'text-white' : 'text-slate-400'}`}>
-                            {path.salary}
+                            {canSeeData ? path.salary : "••••••••"}
                           </p>
                         </div>
                       </div>
@@ -263,104 +266,105 @@ export default function CulturalFit({ vault, onSync }) {
         )}
 
         {activeStep === 3 && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 animate-in slide-in-from-right-8 duration-700">
-            <div className="lg:col-span-4 space-y-6 md:space-y-8">
-               <div className="space-y-4 text-center lg:text-left">
-                  <div className="w-12 h-12 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20 mx-auto lg:mx-0">
-                    <Target size={24} />
+          <div className="animate-in slide-in-from-right-8 duration-700 space-y-12">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
+              <div className="lg:col-span-4 space-y-6 md:space-y-8">
+                  <div className="space-y-4 text-center lg:text-left">
+                    <div className="w-12 h-12 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20 mx-auto lg:mx-0">
+                      <Target size={24} />
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-serif italic text-white tracking-tight">The Harvest</h2>
+                    <p className="text-slate-500 text-xs italic">
+                      Mapping the distance between current state and <span className="text-teal-400 font-bold">{selectedPath?.domain}</span>.
+                    </p>
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-serif italic text-white tracking-tight">The Harvest</h2>
-                  <p className="text-slate-500 text-xs italic">
-                    Mapping the distance between current state and <span className="text-teal-400 font-bold">{selectedPath?.domain}</span>.
-                  </p>
-               </div>
 
-               <Card className="p-6 md:p-8 bg-teal-500/5 border-teal-500/20 rounded-[2rem] relative overflow-hidden group">
-                  <motion.div 
-                    className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-transparent opacity-50"
-                    animate={{ opacity: [0.3, 0.6, 0.3] }}
-                    transition={{ duration: 4, repeat: Infinity }}
-                  />
-                  <p className="text-[9px] font-black text-teal-500/60 uppercase tracking-[0.3em] mb-4 italic relative z-10">Analysis Depth</p>
-                  <div className="flex items-end gap-3 mb-4 relative z-10">
-                     <span className="text-5xl font-black italic text-white">82%</span>
-                     <span className="text-[9px] text-slate-500 uppercase pb-2 font-bold tracking-widest italic">Ready</span>
-                  </div>
-                  <div className="relative h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                  <Card className="p-6 md:p-8 bg-teal-500/5 border-teal-500/20 rounded-[2rem] relative overflow-hidden group">
                     <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: "82%" }}
-                      transition={{ duration: 1.5, ease: "circOut" }}
-                      className="absolute top-0 left-0 h-full bg-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.5)]"
+                      className="absolute inset-0 bg-gradient-to-br from-teal-500/10 to-transparent opacity-50"
+                      animate={{ opacity: [0.3, 0.6, 0.3] }}
+                      transition={{ duration: 4, repeat: Infinity }}
                     />
-                  </div>
-               </Card>
-            </div>
-
-            <div className="lg:col-span-8 space-y-4">
-               {gapData.map((item, i) => (
-                  <Card key={i} className="p-5 md:p-6 bg-[#1C1622]/40 border-white/5 rounded-2xl hover:border-teal-500/20 transition-all group">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      <div className="flex items-center gap-4 md:gap-6">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center border shrink-0 ${item.status === 'aligned' ? 'bg-teal-500/5 text-teal-400 border-teal-500/10' : 'bg-slate-500/5 text-slate-400 border-white/5'}`}>
-                           {item.status === 'aligned' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
-                        </div>
-                        <div className="space-y-1">
-                          <h4 className="text-sm text-white font-bold group-hover:text-teal-400 transition-colors">{item.skill}</h4>
-                          <div className="flex flex-wrap gap-2 md:gap-3 items-center">
-                            <span className="text-[8px] font-black text-slate-600 uppercase tracking-widest">{item.category}</span>
-                            <div className="hidden md:block w-1 h-1 rounded-full bg-slate-800" />
-                            <span className="text-[8px] font-bold text-teal-500/40 italic uppercase">{item.effort} Required</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {item.status === 'missing' && (
-                        <button onClick={() => navigate('/library')} className="text-[9px] font-black uppercase text-slate-500 hover:text-teal-400 transition-colors tracking-widest border-b border-transparent hover:border-teal-400/50 pb-1 w-fit">
-                          Link Provision
-                        </button>
-                      )}
+                    <p className="text-[9px] font-black text-teal-500/60 uppercase tracking-[0.3em] mb-4 italic relative z-10">Analysis Depth</p>
+                    <div className="flex items-end gap-3 mb-4 relative z-10">
+                       <span className="text-5xl font-black italic text-white">82%</span>
+                       <span className="text-[9px] text-slate-500 uppercase pb-2 font-bold tracking-widest italic">Ready</span>
+                    </div>
+                    <div className="relative h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: "82%" }}
+                        transition={{ duration: 1.5, ease: "circOut" }}
+                        className="absolute top-0 left-0 h-full bg-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.5)]"
+                      />
                     </div>
                   </Card>
-               ))}
-               
-               <Button onClick={() => {
-                 setIsAligning(true);
-                 const masterNarrative = bridgeData 
-                   ? `TRANSCODED NARRATIVES:\n\nProject Lead: ${bridgeData.pm}\n\nData/Strategy: ${bridgeData.data}\n\nOperations: ${bridgeData.ops}`
-                   : "No narratives generated.";
-                 navigator.clipboard.writeText(masterNarrative);
-                 onSync({ isAligned: true });
-                 setTimeout(() => {
-                   setActiveStep(4);
-                   setIsAligning(false);
-                 }, 1500);
-               }} className="w-full h-20 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-[1.5rem] md:rounded-[2rem] gap-4 uppercase mt-8 text-lg shadow-xl shadow-teal-500/10 active:scale-95">
-                  {isAligning ? <Loader2 className="animate-spin" size={24} /> : <><Sparkles size={24} /> Copy & Finalize Blueprint</>}
-               </Button>
-            </div>
-          </div>
-        )}
-
-        {activeStep === 4 && (
-          <div className="max-w-3xl mx-auto text-center space-y-8 md:space-y-10 animate-in zoom-in-95 duration-1000 py-12 md:py-20 px-4">
-            <div className="space-y-4">
-              <div className="w-20 h-20 md:w-24 md:h-24 bg-teal-500/5 rounded-full flex items-center justify-center mx-auto border border-teal-500/10 shadow-[0_0_50px_rgba(20,184,166,0.15)]">
-                <Mountain size={40} className="text-teal-400 animate-pulse" />
               </div>
-              <h1 className="text-4xl md:text-5xl font-serif italic text-white tracking-tight uppercase">The Summit</h1>
-              <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.5em] italic">Alignment Secured</p>
+
+              <div className="lg:col-span-8 space-y-4">
+                  {gapData.map((item, i) => (
+                    <Card key={i} className="p-5 md:p-6 bg-[#1C1622]/40 border-white/5 rounded-2xl hover:border-teal-500/20 transition-all group">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="flex items-center gap-4 md:gap-6">
+                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center border shrink-0 ${item.status === 'aligned' ? 'bg-teal-500/5 text-teal-400 border-teal-500/10' : 'bg-slate-500/5 text-slate-400 border-white/5'}`}>
+                             {item.status === 'aligned' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
+                          </div>
+                          <div className="space-y-1">
+                            <h4 className="text-sm text-white font-bold group-hover:text-teal-400 transition-colors">{item.skill}</h4>
+                            <div className="flex flex-wrap gap-2 md:gap-3 items-center">
+                              <span className="text-[8px] font-black text-slate-600 uppercase tracking-widest">{item.category}</span>
+                              <div className="hidden md:block w-1 h-1 rounded-full bg-slate-800" />
+                              <span className="text-[8px] font-bold text-teal-500/40 italic uppercase">{item.effort} Required</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {item.status === 'missing' && (
+                          <button onClick={() => navigate('/library')} className="text-[9px] font-black uppercase text-slate-500 hover:text-teal-400 transition-colors tracking-widest border-b border-transparent hover:border-teal-400/50 pb-1 w-fit">
+                            Link Provision
+                          </button>
+                        )}
+                      </div>
+                    </Card>
+                  ))}
+              </div>
             </div>
 
-            <Card className="p-8 md:p-12 bg-white/[0.01] border border-white/5 rounded-[2.5rem] md:rounded-[3rem] relative backdrop-blur-3xl overflow-hidden">
+            {/* THE FINALIZED BLUEPRINT CARD */}
+            <Card className="p-8 md:p-12 bg-white/[0.01] border border-teal-500/20 rounded-[2.5rem] md:rounded-[3rem] relative backdrop-blur-3xl overflow-hidden mt-12 shadow-2xl">
                <div className="absolute inset-0 bg-gradient-to-b from-teal-500/5 to-transparent pointer-events-none" />
-               <div className="space-y-8 relative z-10">
-                  <p className="text-slate-400 italic text-lg md:text-xl leading-relaxed font-light">
-                    "The distance to <span className="text-white font-bold underline decoration-teal-500 underline-offset-8 decoration-2">{selectedPath?.domain || "your new career"}</span> has been charted. Your narrative is fixed."
+               <div className="absolute top-0 right-0 p-8 opacity-10"><Sparkles size={60} className="text-teal-400" /></div>
+               
+               <div className="space-y-8 relative z-10 max-w-2xl mx-auto text-center">
+                  <div className="space-y-2">
+                    <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.5em] italic">Alignment Secured</p>
+                    <h3 className="text-3xl md:text-4xl font-serif italic text-white tracking-tight underline decoration-teal-500/30 underline-offset-8">Finalized Blueprint</h3>
+                  </div>
+
+                  <p className="text-slate-400 italic text-lg leading-relaxed font-light">
+                    "The distance to <span className="text-white font-bold">{selectedPath?.domain}</span> has been charted. Your narrative is ready for the market."
                   </p>
-                  
+
+                  <div className="bg-black/40 p-6 md:p-8 rounded-2xl border border-white/5 text-slate-300 italic font-serif leading-relaxed text-sm md:text-base shadow-inner">
+                    {bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Data/Strategy' ? 'data' : 'pm')]}
+                  </div>
+
                   <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-                    <Button onClick={() => navigate('/launch')} className="h-16 px-12 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-2xl uppercase tracking-widest flex items-center gap-3 transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-teal-500/20">
+                    <Button 
+                      onClick={() => handleCopy(bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Data/Strategy' ? 'data' : 'pm')])}
+                      className="h-16 px-10 bg-white/[0.03] hover:bg-white/[0.08] text-white font-black rounded-2xl uppercase tracking-widest border border-white/10 flex items-center gap-3 transition-all"
+                    >
+                      {copied ? <Check size={18} /> : <Copy size={18} />}
+                      {copied ? "Copied" : "Copy to Resume"}
+                    </Button>
+
+                    <Button 
+                      onClick={() => {
+                        onSync({ isAligned: true });
+                        navigate('/launch');
+                      }} 
+                      className="h-16 px-10 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-2xl uppercase tracking-widest flex items-center gap-3 transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-teal-500/20"
+                    >
                       Enter Launch Mode <Binoculars size={18} />
                     </Button>
                   </div>
