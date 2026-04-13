@@ -62,7 +62,12 @@ const GroveTiers = ({ vault, onSync }) => {
       price: "FREE",
       period: "ALWAYS OPEN",
       desc: '"A quiet space for those beginning to look toward a new horizon."',
-      features: ["Foundational Badge", "Community Resources", "Access to Library"],
+      features: [
+        "Foundational Badge", 
+        "Community Resources", 
+        "Access to Library (Basic)",
+        "Standard Alignment Preview"
+      ],
       button: "GET STARTED",
       onClick: handleSeedling,
       icon: <Leaf className="w-5 h-5 text-teal-400" />
@@ -72,7 +77,13 @@ const GroveTiers = ({ vault, onSync }) => {
       price: "$3",
       period: "$5/MO AFTER FIRST MONTH",
       desc: '"Removing the noise to keep your creative fires burning bright."',
-      features: ["Everything in Seedling", "Unlimited Digital Tools", "Hearthkeeper Badge"],
+      features: [
+        "Everything in Seedling", 
+        "Hearthkeeper Badge", 
+        "Unlimited Digital Tools", 
+        "Financial Transition Guides",
+        "Full Market Topography"
+      ],
       button: "SELECT PLAN",
       onClick: () => handlePaid(LINK_HEARTHKEEPER),
       highlight: true,
@@ -85,6 +96,7 @@ const GroveTiers = ({ vault, onSync }) => {
       desc: '"Full oversight and total access to the entire landscape."',
       features: [
         "Everything in Hearthkeeper", 
+        "Steward's Mantle Badge",
         "Ecosystem Alignment", 
         "The Canopy Hub",
         "Sponsors 1 Hearthkeeper Seat"
