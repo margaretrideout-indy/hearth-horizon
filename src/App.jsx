@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -16,6 +16,80 @@ import AdminDashboard from './pages/AdminDashboard';
 const queryClient = new QueryClient();
 const ADMIN_EMAIL = "margaretpardy@gmail.com"; 
 
+// --- 1. HEARTH CONTEXT ---
+const HearthContext = createContext();
+
+export function useHearth() {
+  const context = useContext(HearthContext);
+  if (!context) throw new Error("useHearth must be used within a HearthProvider");
+  return context;
+}
+
+function HearthProvider({ children }) {
+  const queryClient = useQueryClient();
+
+  // Global Auth Check
+  const { data: user, isLoading: authLoading } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me(),
+    retry: false,
+  });
+
+  const isAdmin = user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+  // Vault/Sanctuary State
+  const [sanctuaryState, setSanctuaryState] = useState(() => {
+    const saved = localStorage.getItem('vault_reset_final');
+    const initialState = {
+      name: "Traveler",
+      tier: "Seedling",
+      journey: "Professional Transition",
+      isAligned: false,
+      pulses: [],
+      resume: null,
+      blueprints: [], 
+    };
+
+    if (!saved) return initialState;
+    try {
+      const parsed = JSON.parse(saved);
+      return { ...initialState, ...parsed };
+    } catch (e) {
+      return initialState;
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('vault_reset_final', JSON.stringify(sanctuaryState));
+  }, [sanctuaryState]);
+
+  const forceSync = (updates) => setSanctuaryState(prev => ({ ...prev, ...updates }));
+
+  const handleResumeSync = (file) => {
+    setSanctuaryState(prev => ({
+      ...prev,
+      isAligned: true,
+      resume: {
+        name: file?.name || "Uploaded Document",
+        lastSynced: new Date().toISOString()
+      }
+    }));
+  };
+
+  const value = {
+    user,
+    isAdmin,
+    authLoading,
+    vault: sanctuaryState,
+    onSync: forceSync,
+    onResumeSync: handleResumeSync,
+    effectiveTier: isAdmin ? 'Steward' : sanctuaryState.tier
+  };
+
+  return <HearthContext.Provider value={value}>{children}</HearthContext.Provider>;
+}
+
+// --- 2. UTILITY COMPONENTS ---
 function LoadingScreen() {
   return (
     <div className="min-h-screen bg-[#0A080D] flex items-center justify-center">
@@ -25,15 +99,11 @@ function LoadingScreen() {
 }
 
 function AdminRoute({ children }) {
-  const { data: user, isLoading } = useQuery({
-    queryKey: ['me'],
-    queryFn: () => base44.auth.me(),
-    retry: false,
-  });
+  const { user, isAdmin, authLoading } = useHearth();
 
-  if (isLoading) return <LoadingScreen />;
+  if (authLoading) return <LoadingScreen />;
   
-  if (!user || user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+  if (!user || !isAdmin) {
     return <Navigate to="/" replace />;
   }
 
@@ -41,12 +111,8 @@ function AdminRoute({ children }) {
 }
 
 function ProtectedRoute({ children }) {
+  const { user, authLoading, onSync } = useHearth();
   const queryClient = useQueryClient();
-  const { data: user, isLoading } = useQuery({
-    queryKey: ['me'],
-    queryFn: () => base44.auth.me(),
-    retry: false,
-  });
 
   useEffect(() => {
     const checkVipStatus = async () => {
@@ -72,59 +138,15 @@ function ProtectedRoute({ children }) {
     if (user) checkVipStatus();
   }, [user, queryClient]);
 
-  if (isLoading) return <LoadingScreen />;
+  if (authLoading) return <LoadingScreen />;
   if (!user) return <Navigate to="/grove" replace />;
   
   return children;
 }
 
+// --- 3. MAIN ROUTING ---
 function AppRoutes() {
-  // Fetch current user globally to determine God Mode status
-  const { data: user } = useQuery({
-    queryKey: ['me'],
-    queryFn: () => base44.auth.me(),
-    retry: false,
-  });
-
-  const isAdmin = user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-
-  const [sanctuaryState, setSanctuaryState] = useState(() => {
-    const saved = localStorage.getItem('vault_reset_final');
-    const initialState = {
-      name: "Traveler",
-      tier: "Seedling",
-      journey: "Professional Transition",
-      isAligned: false,
-      pulses: [],
-      resume: null,
-      blueprints: [], 
-    };
-
-    if (!saved) return initialState;
-    try {
-        const parsed = JSON.parse(saved);
-        return { ...initialState, ...parsed };
-    } catch (e) {
-        return initialState;
-    }
-  });
-
-  useEffect(() => {
-    localStorage.setItem('vault_reset_final', JSON.stringify(sanctuaryState));
-  }, [sanctuaryState]);
-
-  const handleResumeSync = (file) => {
-    setSanctuaryState(prev => ({
-      ...prev,
-      isAligned: true,
-      resume: {
-        name: file?.name || "Uploaded Document",
-        lastSynced: new Date().toISOString()
-      }
-    }));
-  };
-
-  const forceSync = (updates) => setSanctuaryState(prev => ({ ...prev, ...updates }));
+  const { isAdmin, vault, onSync, onResumeSync, effectiveTier } = useHearth();
 
   return (
     <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
@@ -132,22 +154,22 @@ function AppRoutes() {
         {/* Admin Route */}
         <Route path="/admin" element={
           <AdminRoute>
-            <AdminDashboard vault={sanctuaryState} onSync={forceSync} />
+            <AdminDashboard vault={vault} onSync={onSync} />
           </AdminRoute>
         } />
         
         {/* Public Routes */}
-        <Route path="/" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} isAdmin={isAdmin} />} />
-        <Route path="/grove" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} isAdmin={isAdmin} />} />
+        <Route path="/" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
+        <Route path="/grove" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         
         {/* Protected Hearth Route */}
         <Route path="/hearth" element={
           <ProtectedRoute>
-            <AppLayout currentTier={isAdmin ? 'Steward' : sanctuaryState.tier}>
+            <AppLayout currentTier={effectiveTier}>
               <YourHearth 
-                vault={sanctuaryState} 
-                onSync={forceSync} 
-                onResumeSync={handleResumeSync}
+                vault={vault} 
+                onSync={onSync} 
+                onResumeSync={onResumeSync}
                 isAdmin={isAdmin}
                 onNavigateToLibrary={() => window.location.href = '/library'}
                 onNavigateToEmbers={() => window.location.href = '/embers'}
@@ -160,7 +182,7 @@ function AppRoutes() {
         {/* Embers Chat Route */}
         <Route path="/embers" element={
           <ProtectedRoute>
-            <AppLayout currentTier={isAdmin ? 'Steward' : sanctuaryState.tier}>
+            <AppLayout currentTier={effectiveTier}>
               <EmbersChat isAdmin={isAdmin} />
             </AppLayout>
           </ProtectedRoute>
@@ -169,17 +191,17 @@ function AppRoutes() {
         {/* Alignment Route */}
         <Route path="/alignment" element={
           <ProtectedRoute>
-            <AppLayout currentTier={isAdmin ? 'Steward' : sanctuaryState.tier}>
-              <CulturalFit vault={sanctuaryState} onSync={forceSync} isAdmin={isAdmin} />
+            <AppLayout currentTier={effectiveTier}>
+              <CulturalFit vault={vault} onSync={onSync} isAdmin={isAdmin} />
             </AppLayout>
           </ProtectedRoute>
         } />
         
-        {/* Updated Launch Route (formerly Canopy) */}
+        {/* Launch Route */}
         <Route path="/launch" element={
           <ProtectedRoute>
-            <AppLayout currentTier={isAdmin ? 'Steward' : sanctuaryState.tier}>
-              <Canopy vault={sanctuaryState} onSync={forceSync} isAdmin={isAdmin} />
+            <AppLayout currentTier={effectiveTier}>
+              <Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} />
             </AppLayout>
           </ProtectedRoute>
         } />
@@ -187,8 +209,8 @@ function AppRoutes() {
         {/* Library Route */}
         <Route path="/library" element={
           <ProtectedRoute>
-            <AppLayout currentTier={isAdmin ? 'Steward' : sanctuaryState.tier}>
-              <Library vault={sanctuaryState} onSync={forceSync} isAdmin={isAdmin} />
+            <AppLayout currentTier={effectiveTier}>
+              <Library vault={vault} onSync={onSync} isAdmin={isAdmin} />
             </AppLayout>
           </ProtectedRoute>
         } />
@@ -203,9 +225,11 @@ function AppRoutes() {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router>
-        <AppRoutes />
-      </Router>
+      <HearthProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </HearthProvider>
     </QueryClientProvider>
   );
 }
