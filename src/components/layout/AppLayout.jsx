@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
-  Flame, Compass, MessageSquare, Library, Layers, Lock 
+  Flame, Compass, MessageSquare, Library, Rocket, Lock 
 } from 'lucide-react';
 
 const AppLayout = ({ children, currentTier = "Seedling" }) => {
@@ -17,7 +17,7 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
 
   const communityItems = [
     { name: "Embers", path: "/embers", icon: <MessageSquare size={16} />, tier: "Seedling" },
-    { name: "Canopy", path: "/canopy", icon: <Layers size={16} />, tier: "Seedling" },
+    { name: "Launch", path: "/launch", icon: <Rocket size={16} />, tier: "Seedling" },
     { name: "Library", path: "/library", icon: <Library size={16} />, tier: "Seedling" },
   ];
 
@@ -34,7 +34,6 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
       <button
         onClick={() => !locked && navigate(item.path)}
         disabled={locked}
-        // Reduced padding for mobile (px-2) and increased for desktop (md:px-4)
         className={`flex items-center gap-2 px-2.5 py-2 md:px-4 md:py-2 rounded-xl transition-all duration-500 group whitespace-nowrap border ${
           locked ? 'opacity-20 cursor-not-allowed border-transparent' : 'opacity-100 hover:bg-white/5 border-transparent'
         } ${isActive ? 'bg-teal-500/10 border-teal-500/20 text-teal-400 shadow-[0_0_15px_rgba(20,184,166,0.1)]' : 'text-slate-400'}`}
@@ -42,7 +41,6 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
         <span className={`${isActive ? 'text-teal-400' : 'text-slate-500 group-hover:text-teal-500'}`}>
           {item.icon}
         </span>
-        {/* Adjusted text visibility: hidden on very small phones, shown on small-plus */}
         <span className="hidden sm:inline text-[9px] font-black uppercase tracking-[0.2em]">
           {item.name}
         </span>
@@ -52,11 +50,10 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F0A15] text-white selection:bg-teal-500/30 font-sans">
+    <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
       
       {!isGrove && (
         <nav className="fixed top-2 md:top-6 left-0 right-0 z-50 flex justify-center px-2 md:px-4">
-          {/* Added 'w-full max-w-fit' and improved flex wrapping behavior */}
           <div className="flex items-center gap-1 md:gap-3 p-1.5 bg-[#1C1622]/90 backdrop-blur-2xl border border-white/10 rounded-2xl md:rounded-full shadow-2xl max-w-[95vw] overflow-x-auto no-scrollbar">
             
             <div className="flex items-center gap-1">
@@ -78,7 +75,6 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
         </nav>
       )}
 
-      {/* Increased top padding for mobile to prevent the Nav from covering the title */}
       <main className={`w-full px-4 md:px-0 ${!isGrove ? "pt-28 md:pt-36" : ""}`}>
         <div className="max-w-7xl mx-auto">
           {children}
