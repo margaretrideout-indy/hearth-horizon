@@ -13,11 +13,11 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
   const journeyItems = [
     { name: "Hearth", path: "/hearth", icon: <Flame size={16} />, tier: "Seedling" },
     { name: "Alignment", path: "/alignment", icon: <Compass size={16} />, tier: "Seedling" },
+    { name: "Launch", path: "/launch", icon: <Rocket size={16} />, tier: "Seedling" },
   ];
 
   const communityItems = [
     { name: "Embers", path: "/embers", icon: <MessageSquare size={16} />, tier: "Seedling" },
-    { name: "Launch", path: "/launch", icon: <Rocket size={16} />, tier: "Seedling" },
     { name: "Library", path: "/library", icon: <Library size={16} />, tier: "Seedling" },
   ];
 
