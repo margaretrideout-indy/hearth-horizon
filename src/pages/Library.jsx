@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/preview";
-const WORKSHEET_PDF_URL = "https://drive.google.com/file/d/1tRcav7TbSA1YaXlOmlapcEkpb7n1L1xf/view?usp=drive_link";
+const WORKSHEET_PDF_URL = "https://drive.google.com/uc?export=download&id=1tRcav7TbSA1YaXlOmlapcEkpb7n1L1xf";
 const AMZ_WISHLIST_URL = "https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD";
 const INDIGO_LIST_URL = "https://www.indigo.ca"; // Replace with specific list URL if available
 
