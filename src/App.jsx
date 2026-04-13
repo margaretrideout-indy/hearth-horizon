@@ -79,6 +79,15 @@ function ProtectedRoute({ children }) {
 }
 
 function AppRoutes() {
+  // Fetch current user globally to determine God Mode status
+  const { data: user } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me(),
+    retry: false,
+  });
+
+  const isAdmin = user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
   const [sanctuaryState, setSanctuaryState] = useState(() => {
     const saved = localStorage.getItem('vault_reset_final');
     const initialState = {
@@ -88,13 +97,12 @@ function AppRoutes() {
       isAligned: false,
       pulses: [],
       resume: null,
-      blueprints: [], // Essential for Steward logic
+      blueprints: [], 
     };
 
     if (!saved) return initialState;
     try {
         const parsed = JSON.parse(saved);
-        // Merge saved data with initial structure to ensure new fields exist
         return { ...initialState, ...parsed };
     } catch (e) {
         return initialState;
@@ -129,17 +137,18 @@ function AppRoutes() {
         } />
         
         {/* Public Routes */}
-        <Route path="/" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} />} />
-        <Route path="/grove" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} />} />
+        <Route path="/" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} isAdmin={isAdmin} />} />
+        <Route path="/grove" element={<GroveTiers vault={sanctuaryState} onSync={forceSync} isAdmin={isAdmin} />} />
         
         {/* Protected Hearth Route */}
         <Route path="/hearth" element={
           <ProtectedRoute>
-            <AppLayout currentTier={sanctuaryState.tier}>
+            <AppLayout currentTier={isAdmin ? 'Steward' : sanctuaryState.tier}>
               <YourHearth 
                 vault={sanctuaryState} 
                 onSync={forceSync} 
                 onResumeSync={handleResumeSync}
+                isAdmin={isAdmin}
                 onNavigateToLibrary={() => window.location.href = '/library'}
                 onNavigateToEmbers={() => window.location.href = '/embers'}
                 onNavigateToLaunch={() => window.location.href = '/launch'}
@@ -151,8 +160,8 @@ function AppRoutes() {
         {/* Embers Chat Route */}
         <Route path="/embers" element={
           <ProtectedRoute>
-            <AppLayout currentTier={sanctuaryState.tier}>
-              <EmbersChat />
+            <AppLayout currentTier={isAdmin ? 'Steward' : sanctuaryState.tier}>
+              <EmbersChat isAdmin={isAdmin} />
             </AppLayout>
           </ProtectedRoute>
         } />
@@ -160,8 +169,8 @@ function AppRoutes() {
         {/* Alignment Route */}
         <Route path="/alignment" element={
           <ProtectedRoute>
-            <AppLayout currentTier={sanctuaryState.tier}>
-              <CulturalFit vault={sanctuaryState} onSync={forceSync} />
+            <AppLayout currentTier={isAdmin ? 'Steward' : sanctuaryState.tier}>
+              <CulturalFit vault={sanctuaryState} onSync={forceSync} isAdmin={isAdmin} />
             </AppLayout>
           </ProtectedRoute>
         } />
@@ -169,8 +178,8 @@ function AppRoutes() {
         {/* Updated Launch Route (formerly Canopy) */}
         <Route path="/launch" element={
           <ProtectedRoute>
-            <AppLayout currentTier={sanctuaryState.tier}>
-              <Canopy vault={sanctuaryState} onSync={forceSync} />
+            <AppLayout currentTier={isAdmin ? 'Steward' : sanctuaryState.tier}>
+              <Canopy vault={sanctuaryState} onSync={forceSync} isAdmin={isAdmin} />
             </AppLayout>
           </ProtectedRoute>
         } />
@@ -178,8 +187,8 @@ function AppRoutes() {
         {/* Library Route */}
         <Route path="/library" element={
           <ProtectedRoute>
-            <AppLayout currentTier={sanctuaryState.tier}>
-              <Library vault={sanctuaryState} onSync={forceSync} />
+            <AppLayout currentTier={isAdmin ? 'Steward' : sanctuaryState.tier}>
+              <Library vault={sanctuaryState} onSync={forceSync} isAdmin={isAdmin} />
             </AppLayout>
           </ProtectedRoute>
         } />
