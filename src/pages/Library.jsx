@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Library as LibraryIcon, Book, Package, ExternalLink, 
   ShieldCheck, FileText, ArrowRight, ShoppingBag,
   Wind, Lock, Mountain, MessageSquare, Sparkles,
-  Zap, Compass
+  Zap, Compass, Layers
 } from 'lucide-react';
 
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/preview";
@@ -17,7 +17,6 @@ const Badge = ({ children, className }) => (
 
 const Library = ({ vault }) => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('Operations');
   
   const userTier = vault?.tier || 'Seedling';
   const isHearthkeeper = userTier === 'Hearthkeeper' || userTier === 'Steward';
@@ -26,33 +25,6 @@ const Library = ({ vault }) => {
   const openDeck = () => {
     window.open(STRATEGY_DECK_URL, '_blank', 'noopener,noreferrer');
   };
-
-  const translationData = [
-    {
-      category: "Operations",
-      mappings: [
-        { old: "Running daily routines", root: "Process Management", horizon: "Operational Continuity" },
-        { old: "Improving how things work", root: "Efficiency Audit", horizon: "Process Optimization" },
-        { old: "Fixing immediate problems", root: "Crisis Management", horizon: "Critical Incident Resolution" }
-      ]
-    },
-    {
-      category: "Strategy",
-      mappings: [
-        { old: "Planning for the year", root: "Future Casting", horizon: "Strategic Roadmap Development" },
-        { old: "Deciding where money goes", root: "Asset Distribution", horizon: "Resource Allocation" },
-        { old: "Setting goals", root: "Metric Definition", horizon: "KPI Alignment & OKR Tracking" }
-      ]
-    },
-    {
-      category: "People",
-      mappings: [
-        { old: "Training others", root: "Knowledge Transfer", horizon: "Talent Development & Enablement" },
-        { old: "Working with other groups", root: "Diplomacy", horizon: "Cross-Functional Collaboration" },
-        { old: "Managing personalities", root: "Psychological Safety", horizon: "Stakeholder Management" }
-      ]
-    }
-  ];
 
   return (
     <div className="min-h-screen bg-[#0A080D] text-zinc-400 p-4 sm:p-6 md:p-12 font-sans selection:bg-teal-500/30 overflow-x-hidden">
@@ -102,9 +74,6 @@ const Library = ({ vault }) => {
                   <Sparkles size={10} className="mr-1.5" /> Foundational Gift
                 </Badge>
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif italic text-white leading-tight">The Horizon Provisions:<br/>Master Strategy Deck</h2>
-                <p className="text-zinc-400 text-sm md:text-base font-light leading-relaxed italic max-w-lg">
-                  The foundational map for your resignation and transition. Provided freely to ensure your peace of mind as you step toward the horizon.
-                </p>
                 <button 
                   onClick={openDeck}
                   className="h-16 px-12 bg-teal-500 hover:bg-teal-400 active:scale-95 text-[#0A080D] font-black rounded-2xl flex items-center justify-center gap-4 transition-all shadow-lg shadow-teal-500/20 uppercase tracking-[0.2em] text-[10px] group/btn w-full sm:w-auto"
@@ -112,14 +81,12 @@ const Library = ({ vault }) => {
                   Open Blueprint <ExternalLink size={18} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform shrink-0" />
                 </button>
               </div>
-              
               <div className="grid grid-cols-1 gap-4">
                 {[
                   { icon: <ShieldCheck size={18} />, label: "Canadian Compliance & ROE", color: "text-teal-400" },
-                  { icon: <Wind size={18} />, label: "LIRA / Pension Shielding", color: "text-purple-400" },
-                  { icon: <Compass size={18} />, label: "The Resignation Protocol", color: "text-zinc-500" }
+                  { icon: <Wind size={18} />, label: "LIRA / Pension Shielding", color: "text-purple-400" }
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-4 bg-black/40 border border-white/5 p-5 rounded-2xl hover:border-white/10 transition-colors">
+                  <div key={i} className="flex items-center gap-4 bg-black/40 border border-white/5 p-5 rounded-2xl">
                     <div className={`${item.color}`}>{item.icon}</div>
                     <span className="text-[10px] font-black uppercase tracking-widest text-zinc-300">{item.label}</span>
                   </div>
@@ -129,108 +96,89 @@ const Library = ({ vault }) => {
           </div>
         </section>
 
-        {/* The Canopy Hub Section */}
+        {/* The Canopy Hub - Balanced Two-Card Layout */}
         <section className="mb-20 md:mb-32">
           <div className="flex items-center gap-4 mb-8 md:mb-10">
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-500/60 whitespace-nowrap">The Canopy Hub</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             
-            {/* 1. Tactical Outreach Scripts */}
-            <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col">
+            {/* Hearthkeeper Provisions Card */}
+            <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] relative group hover:border-teal-500/30 transition-all flex flex-col min-h-[450px]">
               {!isHearthkeeper && (
-                <div className="absolute inset-0 z-20 bg-[#0A080D]/80 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all">
-                  <Lock className="w-5 h-5 text-purple-500/50 mb-4" />
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-6">Hearthkeeper Access</p>
-                  <button onClick={() => navigate('/grove')} className="px-6 py-3 border border-purple-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-purple-400 hover:bg-purple-500/10 transition-all">Upgrade Stand</button>
-                </div>
-              )}
-              <div className="w-12 h-12 rounded-xl bg-teal-500/5 text-teal-400 flex items-center justify-center mb-8 border border-teal-500/10">
-                <MessageSquare size={20} />
-              </div>
-              <Badge className="mb-4 w-fit bg-teal-500/10 text-teal-400 border border-teal-500/20">Provisions</Badge>
-              <h4 className="text-white font-bold text-lg mb-2 font-serif italic">Tactical Outreach Scripts</h4>
-              <p className="text-[11px] text-zinc-500 font-light leading-relaxed mb-8 italic">Universal templates for high-conversion networking outside your current sector.</p>
-              <button className="mt-auto flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-teal-400 group-hover:text-teal-300">
-                {isHearthkeeper ? "ACCESS SCRIPTS" : "PREVIEW PROVISION"} <ArrowRight size={12} />
-              </button>
-            </div>
-
-            {/* 2. Identity Reframing Dictionary (The Data Mapping Component) */}
-            <div className="lg:col-span-2 bg-[#110E16]/40 border border-zinc-800 rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col overflow-hidden min-h-[400px]">
-              {!isHearthkeeper && (
-                <div className="absolute inset-0 z-20 bg-[#0A080D]/80 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all">
-                  <Lock className="w-5 h-5 text-purple-500/50 mb-4" />
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-6">Hearthkeeper Access</p>
-                  <button onClick={() => navigate('/grove')} className="px-6 py-3 border border-purple-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-purple-400 hover:bg-purple-500/10 transition-all">Upgrade Stand</button>
+                <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[8px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all">
+                  <Lock className="w-6 h-6 text-teal-500/50 mb-4" />
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-teal-500 mb-6 font-sans">Hearthkeeper Stand Required</p>
+                  <button onClick={() => navigate('/grove')} className="px-8 py-4 bg-teal-500/10 border border-teal-500/20 rounded-2xl text-[9px] font-black uppercase tracking-widest text-teal-400 hover:bg-teal-500 hover:text-black transition-all">Upgrade Standing</button>
                 </div>
               )}
               
-              <div className="p-8 border-b border-white/5 flex items-center justify-between bg-black/20">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-teal-500/5 text-teal-400 flex items-center justify-center border border-teal-500/10">
-                    <Zap size={18} />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-bold text-sm font-serif italic">Identity Reframing Dictionary</h4>
-                    <p className="text-[9px] text-zinc-500 uppercase tracking-widest font-black">Quick Sector-to-Sector Translations</p>
-                  </div>
+              <div className="flex justify-between items-start mb-10">
+                <div className="w-14 h-14 rounded-2xl bg-teal-500/5 text-teal-400 flex items-center justify-center border border-teal-500/10">
+                  <Zap size={24} />
                 </div>
-                <div className="flex gap-2">
-                  {translationData.map((cat) => (
-                    <button 
-                      key={cat.category}
-                      onClick={() => setActiveTab(cat.category)}
-                      className={`px-3 py-1.5 rounded-lg text-[8px] font-black uppercase tracking-tighter transition-all ${
-                        activeTab === cat.category ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30' : 'bg-white/5 text-zinc-600 border border-transparent'
-                      }`}
-                    >
-                      {cat.category}
-                    </button>
-                  ))}
-                </div>
+                <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20">Tactical Survival Kit</Badge>
               </div>
 
-              <div className="p-8 space-y-4 overflow-y-auto max-h-[300px] scrollbar-hide">
-                {translationData.find(c => c.category === activeTab).mappings.map((item, i) => (
-                  <div key={i} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center p-4 rounded-2xl bg-black/40 border border-white/5 transition-all">
-                    <div className="flex flex-col">
-                      <span className="text-[7px] font-black text-zinc-700 uppercase mb-1">Old Soil</span>
-                      <span className="text-[10px] text-zinc-500 italic">"{item.old}"</span>
+              <h4 className="text-2xl text-white font-serif italic mb-4 leading-tight">Hearthkeeper Provisions</h4>
+              <p className="text-xs text-zinc-500 font-light italic leading-relaxed mb-10">Operational tools designed for the immediate demands of professional pivoting.</p>
+
+              <div className="space-y-3">
+                {[
+                  { title: "Tactical Outreach Scripts", type: "PDF / Template", icon: <MessageSquare size={14} /> },
+                  { title: "Identity Reframing Dictionary", type: "Reference Guide", icon: <Layers size={14} /> },
+                  { title: "The Coffee Chat Protocol", type: "System", icon: <Compass size={14} /> }
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-white/5 hover:border-teal-500/20 cursor-pointer group/item transition-all">
+                    <div className="flex items-center gap-3">
+                      <div className="text-teal-500/40 group-hover/item:text-teal-400">{item.icon}</div>
+                      <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">{item.title}</span>
                     </div>
-                    <div className="flex justify-center md:block">
-                      <span className="px-2 py-0.5 rounded-full bg-zinc-800/50 border border-zinc-700 text-[7px] font-black text-zinc-500 uppercase">{item.root}</span>
-                    </div>
-                    <div className="flex flex-col md:items-end">
-                      <span className="text-[7px] font-black text-teal-500/40 uppercase mb-1">New Horizon</span>
-                      <span className="text-[10px] text-white font-medium">{item.horizon}</span>
-                    </div>
+                    <span className="text-[8px] font-black text-zinc-600 group-hover/item:text-teal-500 uppercase">{item.type}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* 3. Ecosystem Topography (Steward Exclusive) */}
-            <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col">
+            {/* Steward Provisions Card */}
+            <div className="bg-[#110E16]/40 border border-zinc-800 p-8 rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col min-h-[450px]">
               {!isSteward && (
-                <div className="absolute inset-0 z-20 bg-[#0A080D]/80 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all">
-                  <Lock className="w-5 h-5 text-purple-500/50 mb-4" />
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-6">Steward Exclusive</p>
-                  <button onClick={() => navigate('/grove')} className="px-6 py-3 border border-purple-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-purple-400 hover:bg-purple-500/10 transition-all">Upgrade Stand</button>
+                <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[8px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center transition-all">
+                  <Lock className="w-6 h-6 text-purple-500/50 mb-4" />
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-purple-500 mb-6 font-sans">Steward Standing Required</p>
+                  <button onClick={() => navigate('/grove')} className="px-8 py-4 bg-purple-500/10 border border-purple-500/20 rounded-2xl text-[9px] font-black uppercase tracking-widest text-purple-400 hover:bg-purple-500 hover:text-black transition-all">Upgrade Standing</button>
                 </div>
               )}
-              <div className="w-12 h-12 rounded-xl bg-purple-500/5 text-purple-400 flex items-center justify-center mb-8 border border-purple-500/10">
-                <Mountain size={20} />
+              
+              <div className="flex justify-between items-start mb-10">
+                <div className="w-14 h-14 rounded-2xl bg-purple-500/5 text-purple-400 flex items-center justify-center border border-purple-500/10">
+                  <Mountain size={24} />
+                </div>
+                <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20">Strategic Intelligence</Badge>
               </div>
-              <Badge className="mb-4 w-fit bg-purple-500/10 text-purple-400 border border-purple-500/20">Intelligence</Badge>
-              <h4 className="text-white font-bold text-lg mb-2 font-serif italic">Ecosystem Topography</h4>
-              <p className="text-[11px] text-zinc-500 font-light leading-relaxed mb-8 italic">Strategic intelligence on emerging hiring trends and industry-specific alignment.</p>
-              <button className="mt-auto flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-purple-400 group-hover:text-purple-300">
-                {isSteward ? "ACCESS INTEL" : "PREVIEW PROVISION"} <ArrowRight size={12} />
-              </button>
+
+              <h4 className="text-2xl text-white font-serif italic mb-4 leading-tight">Steward Provisions</h4>
+              <p className="text-xs text-zinc-500 font-light italic leading-relaxed mb-10">High-level ecosystem topography for long-term industry mastery and sponsorship.</p>
+
+              <div className="space-y-3">
+                {[
+                  { title: "Ecosystem Topography Map", type: "Intelligence", icon: <Layers size={14} /> },
+                  { title: "The Sponsorship Framework", type: "Leadership", icon: <Sparkles size={14} /> },
+                  { title: "Market Alignment Ledger", type: "Data", icon: <ShieldCheck size={14} /> }
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-black/40 border border-white/5 hover:border-purple-500/20 cursor-pointer group/item transition-all">
+                    <div className="flex items-center gap-3">
+                      <div className="text-purple-500/40 group-hover/item:text-purple-400">{item.icon}</div>
+                      <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">{item.title}</span>
+                    </div>
+                    <span className="text-[8px] font-black text-zinc-600 group-hover/item:text-purple-500 uppercase">{item.type}</span>
+                  </div>
+                ))}
+              </div>
             </div>
+
           </div>
         </section>
 
@@ -240,29 +188,18 @@ const Library = ({ vault }) => {
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-600 whitespace-nowrap">The Study</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-zinc-800 to-transparent" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-            <div className="bg-[#110E16]/40 border border-zinc-800 p-6 sm:p-8 md:p-10 rounded-[2.5rem] hover:border-purple-500/30 transition-all group relative">
-              <div className="w-12 h-12 rounded-2xl bg-purple-500/5 flex items-center justify-center text-purple-400 mb-8 border border-purple-500/10">
-                <Book className="w-5 h-5" />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-[#110E16]/40 border border-zinc-800 p-10 rounded-[2.5rem] hover:border-purple-500/30 transition-all group relative">
+              <Book className="w-8 h-8 text-purple-400 mb-8" />
               <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Indigo.ca Curated List</h4>
-              <p className="text-[11px] md:text-xs text-zinc-500 font-light leading-relaxed mb-8 italic">
-                Literature on professional pivots and psychological resilience, specifically curated for the Canadian landscape.
-              </p>
               <a href="https://www.indigo.ca" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-purple-600/10 text-purple-400 border border-purple-500/20 hover:bg-purple-600 hover:text-white">
                 SHOP CURATED LIST <ExternalLink className="ml-2 w-3 h-3" />
               </a>
             </div>
 
-            <div className="bg-[#110E16]/40 border border-zinc-800 p-6 sm:p-8 md:p-10 rounded-[2.5rem] hover:border-purple-500/30 transition-all group relative">
-              <div className="w-12 h-12 rounded-2xl bg-purple-500/5 flex items-center justify-center text-purple-400 mb-8 border border-purple-500/10">
-                <Package className="w-5 h-5" />
-              </div>
+            <div className="bg-[#110E16]/40 border border-zinc-800 p-10 rounded-[2.5rem] hover:border-purple-500/30 transition-all group relative">
+              <Package className="w-8 h-8 text-purple-400 mb-8" />
               <h4 className="text-white font-bold text-lg mb-3 font-serif italic">Amazon Essentials</h4>
-              <p className="text-[11px] md:text-xs text-zinc-500 font-light leading-relaxed mb-4 italic">
-                Workspace gear and grounding tools that support the mental and physical demands of a career shift.
-              </p>
-              <p className="text-[8px] md:text-[9px] text-zinc-700 leading-tight mb-8 font-light italic uppercase tracking-tighter">Associate Disclosure: Supports the Hearth platform.</p>
               <a href="https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD?ref_=wl_share" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-purple-600/10 text-purple-400 border border-purple-500/20 hover:bg-purple-600 hover:text-white">
                 EXPLORE SHOP <ExternalLink className="ml-2 w-3 h-3" />
               </a>
@@ -276,41 +213,15 @@ const Library = ({ vault }) => {
             <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Sanctuary</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-[#110E16]/60 border border-zinc-800 p-8 rounded-[2.5rem] flex flex-col relative group overflow-hidden hover:border-teal-500/30 transition-all">
               <Badge className="absolute top-6 right-6 bg-teal-500/10 text-teal-400 border border-teal-500/20 italic">Crisis Support</Badge>
-              <div className="w-12 h-12 rounded-xl bg-teal-400/5 text-teal-400 flex items-center justify-center mb-8 border border-teal-400/10">
-                <MessageSquare className="w-5 h-5" />
-              </div>
-              <h4 className="text-white font-bold text-sm font-serif italic mb-2">Mental Health Portal</h4>
-              <div className="bg-black/40 rounded-2xl p-6 border border-white/5 mb-8 text-center shadow-inner">
-                <p className="text-[8px] font-black text-teal-500 uppercase tracking-[0.2em] mb-1 opacity-60">Text Support</p>
+              <div className="bg-black/40 rounded-2xl p-6 border border-white/5 mb-8 text-center shadow-inner mt-8">
+                <p className="text-[8px] font-black text-teal-500 uppercase tracking-[0.2em] mb-1 opacity-60">Text Support (Canada)</p>
                 <p className="text-2xl font-black text-white tracking-[0.2em]">686868</p>
               </div>
               <a href="https://www.canada.ca/en/public-health/topics/improving-your-mental-health.html" target="_blank" rel="noopener noreferrer" className="mt-auto text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white flex items-center gap-2 group/link">
                 VISIT PORTAL <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
-              </a>
-            </div>
-
-            <div className="bg-[#110E16]/60 border border-zinc-800 p-8 rounded-[2.5rem] hover:border-teal-500/30 transition-all flex flex-col group">
-              <div className="w-12 h-12 rounded-xl bg-teal-400/5 text-teal-400 flex items-center justify-center mb-8 border border-teal-400/10">
-                <FileText className="w-5 h-5" />
-              </div>
-              <h4 className="text-white font-bold text-sm font-serif italic mb-2">Burnout Recovery</h4>
-              <p className="text-[10px] text-zinc-500 font-light leading-relaxed mb-8 italic">Evidence-based strategies for professional renewal.</p>
-              <a href="https://www.helpguide.org/articles/stress/burnout-prevention-and-recovery.htm" target="_blank" rel="noopener noreferrer" className="mt-auto text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white flex items-center gap-2 group/link">
-                READ GUIDE <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
-              </a>
-            </div>
-
-            <div className="bg-[#110E16]/60 border border-zinc-800 p-8 rounded-[2.5rem] hover:border-teal-500/30 transition-all flex flex-col group">
-              <div className="w-12 h-12 rounded-xl bg-teal-400/5 text-teal-400 flex items-center justify-center mb-8 border border-teal-400/10">
-                <Wind className="w-5 h-5" />
-              </div>
-              <h4 className="text-white font-bold text-sm font-serif italic mb-2">The Inner Advocate</h4>
-              <p className="text-[10px] text-zinc-500 font-light leading-relaxed mb-8 italic">Guided exercises for navigating identity shifts with self-compassion.</p>
-              <a href="https://self-compassion.org/category/exercises/#guided-meditations" target="_blank" rel="noopener noreferrer" className="mt-auto text-[9px] font-black uppercase tracking-widest text-teal-400 hover:text-white flex items-center gap-2 group/link">
-                LISTEN TO SESSIONS <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1 transition-transform" />
               </a>
             </div>
           </div>
