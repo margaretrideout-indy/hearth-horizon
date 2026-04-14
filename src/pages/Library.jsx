@@ -5,7 +5,7 @@ import {
   ArrowRight, ShoppingBag, Wind, Lock, Mountain, 
   MessageSquare, Zap, Compass, Layers, 
   HeartPulse, Search, Copy, Save,
-  Database, FileText
+  Database, FileText, X
 } from 'lucide-react';
 
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/preview";
@@ -49,12 +49,45 @@ const Badge = ({ children, className }) => (
   </span>
 );
 
+const StandingModal = ({ isOpen, onClose, type }) => {
+  if (!isOpen) return null;
+  const isSteward = type === 'steward';
+  
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+      <div className="absolute inset-0 bg-[#0A080D]/80 backdrop-blur-md" onClick={onClose} />
+      <div className={`relative w-full max-w-lg bg-[#16121D] border ${isSteward ? 'border-purple-500/30' : 'border-teal-500/30'} rounded-[2.5rem] p-8 md:p-12 shadow-2xl animate-in zoom-in-95 duration-200`}>
+        <button onClick={onClose} className="absolute top-8 right-8 text-zinc-500 hover:text-white transition-colors">
+          <X size={20} />
+        </button>
+        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-8 ${isSteward ? 'bg-purple-500/10 text-purple-400' : 'bg-teal-500/10 text-teal-400'}`}>
+          <Lock size={24} />
+        </div>
+        <h3 className="text-2xl font-serif italic text-white mb-4">Elevating Your Standing</h3>
+        <p className="text-sm text-zinc-400 leading-relaxed italic mb-8">
+          The {isSteward ? 'Steward' : 'Hearthkeeper'} provisions contain high-leverage strategic assets. Access is granted through verified professional migration milestones or direct mentorship.
+        </p>
+        <div className="space-y-4">
+          <div className="p-6 bg-black/40 rounded-2xl border border-white/5">
+            <h4 className={`text-[10px] font-black uppercase tracking-widest mb-2 ${isSteward ? 'text-purple-400' : 'text-teal-400'}`}>How to progress</h4>
+            <p className="text-xs text-zinc-500 font-light leading-relaxed">Reach out to the Hearthkeeper via the <span className="text-white">Grove Connect</span> to discuss your current project scope and alignment with these advanced protocols.</p>
+          </div>
+          <button onClick={onClose} className="w-full h-14 rounded-2xl bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-[0.2em] text-white hover:bg-white/10 transition-all">
+            Return to Canopy
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Library = ({ vault, isAdmin }) => {
   const navigate = useNavigate();
-  const [activeTool, setActiveTool] = useState(null);
+  const [activeTool, setActiveTool] = useState('reframing');
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSector, setActiveSector] = useState("All");
   const [copied, setCopied] = useState(false);
+  const [modalType, setModalType] = useState(null);
   
   const userTier = isAdmin ? 'Steward' : (vault?.tier || 'Seedling');
   const isHearthkeeper = isAdmin || userTier === 'Hearthkeeper' || userTier === 'Steward';
@@ -75,6 +108,8 @@ const Library = ({ vault, isAdmin }) => {
 
   return (
     <div className="min-h-screen bg-[#0A080D] text-zinc-300 p-4 sm:p-6 md:p-12 font-sans selection:bg-teal-500/30 overflow-x-hidden">
+      <StandingModal isOpen={!!modalType} onClose={() => setModalType(null)} type={modalType} />
+      
       <div className="fixed top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-10%,rgba(20,184,166,0.05),transparent_70%)] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
@@ -155,7 +190,7 @@ const Library = ({ vault, isAdmin }) => {
                 <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center">
                   <Lock className="w-5 h-5 text-teal-500/40 mb-3" />
                   <p className="text-[9px] font-black uppercase tracking-[0.2em] text-teal-500/60 mb-5">Hearthkeeper Required</p>
-                  <button onClick={() => navigate('/grove')} className="px-6 py-3 bg-teal-500/10 border border-teal-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-teal-400">Upgrade Standing</button>
+                  <button onClick={() => setModalType('hearthkeeper')} className="px-6 py-3 bg-teal-500/10 border border-teal-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-teal-400">View Requirements</button>
                 </div>
               )}
               <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 mb-6 w-fit italic tracking-tighter uppercase">Tactical Provisions</Badge>
@@ -200,7 +235,7 @@ const Library = ({ vault, isAdmin }) => {
                 <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center">
                   <Lock className="w-5 h-5 text-purple-500/40 mb-3" />
                   <p className="text-[9px] font-black uppercase tracking-[0.2em] text-purple-500/60 mb-5">Steward Required</p>
-                  <button onClick={() => navigate('/grove')} className="px-6 py-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-purple-400">Upgrade Standing</button>
+                  <button onClick={() => setModalType('steward')} className="px-6 py-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-purple-400">View Requirements</button>
                 </div>
               )}
               <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-6 w-fit italic tracking-tighter uppercase">Strategic Intelligence</Badge>
@@ -236,7 +271,7 @@ const Library = ({ vault, isAdmin }) => {
               </div>
 
               {activeTool === 'reframing' && (
-                <div className="bg-[#110E16]/60 border border-teal-500/10 rounded-[2.5rem] p-6 md:p-12 shadow-2xl backdrop-blur-sm">
+                <div className="bg-[#110E16]/60 border border-teal-500/10 rounded-[2.5rem] p-4 md:p-12 shadow-2xl backdrop-blur-sm">
                    <div className="flex flex-col md:flex-row gap-6 mb-12">
                     <div className="relative flex-1">
                       <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4" />
@@ -256,7 +291,29 @@ const Library = ({ vault, isAdmin }) => {
                       ))}
                     </div>
                   </div>
-                  <div className="overflow-x-auto">
+
+                  {/* MOBILE CARD VIEW */}
+                  <div className="block md:hidden space-y-4">
+                    {filteredData.map((item, i) => (
+                      <div key={i} className="p-6 bg-black/40 border border-white/5 rounded-3xl space-y-4">
+                        <div>
+                          <span className="text-[8px] font-black text-zinc-600 uppercase tracking-widest block mb-1">Legacy Soil</span>
+                          <div className="text-sm text-white font-serif italic">{item.old}</div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[8px] font-black text-zinc-600 uppercase tracking-widest">Core:</span>
+                          <Badge className="bg-zinc-900 text-zinc-400 border border-zinc-800 italic">{item.root}</Badge>
+                        </div>
+                        <div className="pt-3 border-t border-white/5">
+                          <span className="text-[8px] font-black text-teal-500 uppercase tracking-widest block mb-1">New Horizon</span>
+                          <div className="text-xs text-teal-400 font-black uppercase tracking-wider">{item.new}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* DESKTOP TABLE VIEW */}
+                  <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left">
                       <thead>
                         <tr className="border-b border-zinc-800">
@@ -431,13 +488,8 @@ const Library = ({ vault, isAdmin }) => {
           </div>
         </section>
 
-        <footer className="pt-12 border-t border-white/5 text-center pb-12">
-          <div className="inline-flex flex-col items-center gap-3 px-8 py-6 rounded-[2rem] bg-white/[0.02] border border-white/5 shadow-inner">
-            <ShoppingBag className="w-4 h-4 text-zinc-600" />
-            <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-zinc-500 italic max-w-sm text-center leading-relaxed">
-              Affiliate Reciprocity: Support the Hearth scholarship program through your intentional purchases.
-            </span>
-          </div>
+        <footer className="pt-10 border-t border-white/5 text-center">
+            <p className="text-[8px] font-black text-zinc-600 uppercase tracking-[0.5em]">Hearth Horizon &copy; 2026</p>
         </footer>
       </div>
     </div>
