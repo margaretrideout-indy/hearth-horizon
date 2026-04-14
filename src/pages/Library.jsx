@@ -9,13 +9,13 @@ import {
 } from 'lucide-react';
 
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/preview";
-const WORKSHEET_PDF_URL = "https://drive.google.com/uc?export=download&id=1tRcav7TbSA1YaXlOmlapcEkpb7n1L1xf";
+const IDENTITY_LEDGER_URL = "https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link";
 const AMZ_WISHLIST_URL = "https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD";
-const INDIGO_LIST_URL = "https://www.indigo.ca"; // Replace with specific list URL if available
+const INDIGO_LIST_URL = "https://www.indigo.ca"; 
 
 const DICTIONARY_DATA = [
-  { sector: "Education", old: "Classroom Management", root: "Stakeholder Dynamics", new: "Conflict Resolution & Operational Flow" },
-  { sector: "Education", old: "IEP Development", root: "Strategic Roadmap", new: "Specification Mapping" },
+  { sector: "Education", old: "Classroom Management", root: "Operational Flow", new: "Agile Project Oversight" },
+  { sector: "Education", old: "Curriculum Development", root: "Information Architecture", new: "Content Strategy & Taxonomy" },
   { sector: "Healthcare", old: "Patient Triage", root: "Resource Prioritization", new: "Throughput Optimization" },
   { sector: "Healthcare", old: "Bedside Manner", root: "High-Stakes Communication", new: "Client Relations Management" },
   { sector: "Service", old: "Shift Scheduling", root: "Logistics", new: "Workforce Deployment" },
@@ -28,17 +28,17 @@ const KINDLING_SCRIPTS = [
   {
     title: "The Mutual Connect",
     desc: "For when you have a contact in common.",
-    text: "Hi [Name], I saw we are both connected to [Contact]. I'm currently pivoting from Education into [Industry] and would love to hear about your journey at [Company]."
+    text: "Hi [Name], I saw we are both connected to [Contact]. I'm currently pivoting from [Current Sector] into [Industry] and would love to hear about your journey at [Company]."
   },
   {
     title: "The Project Deep-Dive",
     desc: "Highlighting a specific piece of their work.",
-    text: "Hi [Name], I recently followed your work on [Project]. As I transition into [Industry], your approach to [Specific Skill] really resonated with my background in curriculum architecture."
+    text: "Hi [Name], I recently followed your work on [Project]. As I transition into [Industry], your approach to [Specific Skill] really resonated with my background in [Your Field]."
   },
   {
     title: "The Reconnection",
     desc: "For someone you haven't spoken to in years.",
-    text: "Hi [Name], it's been a while! I've been watching your growth in [Industry] from afar. I'm stepping away from the classroom this year and would love to catch up for 15 minutes."
+    text: "Hi [Name], it's been a while! I've been watching your growth in [Industry] from afar. I'm stepping away from my current role this year and would love to catch up for 15 minutes."
   }
 ];
 
@@ -74,7 +74,7 @@ const Library = ({ vault, isAdmin }) => {
 
   return (
     <div className="min-h-screen bg-[#0A080D] text-zinc-300 p-4 sm:p-6 md:p-12 font-sans selection:bg-teal-500/30 overflow-x-hidden">
-      <div className="fixed top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-10%,rgba(168,85,247,0.04),transparent_70%)] pointer-events-none" />
+      <div className="fixed top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-10%,rgba(20,184,166,0.05),transparent_70%)] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
         
@@ -104,25 +104,25 @@ const Library = ({ vault, isAdmin }) => {
         {/* SECTION 1: THE STUDY */}
         <section className="mb-16">
           <div className="flex items-center gap-4 mb-8">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400/60 whitespace-nowrap">The Study</h3>
-            <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Study</h3>
+            <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-[#16121D] border border-purple-500/10 p-8 rounded-[2.5rem] hover:border-purple-500/40 transition-all group flex flex-col shadow-xl">
-              <Book className="w-8 h-8 text-purple-400 mb-6" />
+            <div className="bg-[#110E16] border border-zinc-800/50 p-8 rounded-[2.5rem] hover:border-teal-500/40 transition-all group flex flex-col shadow-xl">
+              <Book className="w-8 h-8 text-teal-400 mb-6" />
               <h4 className="text-lg text-white font-serif italic mb-3">Indigo Curated List</h4>
-              <p className="text-[11px] text-zinc-300 italic mb-8 font-light leading-relaxed">Pivotal literature on career migration, identity, and resilience.</p>
-              <a href={INDIGO_LIST_URL} target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-purple-600/10 text-purple-400 border border-purple-500/30 hover:bg-purple-600 hover:text-white">
+              <p className="text-[11px] text-zinc-400 italic mb-8 font-light leading-relaxed">Pivotal literature on career migration, identity, and resilience.</p>
+              <a href={INDIGO_LIST_URL} target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-teal-500/5 text-teal-400 border border-teal-500/20 hover:bg-teal-500 hover:text-black">
                 SHOP THE COLLECTION <ExternalLink className="ml-2 w-3 h-3" />
               </a>
             </div>
 
-            <div className="bg-[#16121D] border border-purple-500/10 p-8 rounded-[2.5rem] hover:border-purple-500/40 transition-all group flex flex-col shadow-xl">
-              <Package className="w-8 h-8 text-purple-400 mb-6" />
+            <div className="bg-[#110E16] border border-zinc-800/50 p-8 rounded-[2.5rem] hover:border-teal-500/40 transition-all group flex flex-col shadow-xl">
+              <Package className="w-8 h-8 text-teal-400 mb-6" />
               <h4 className="text-lg text-white font-serif italic mb-2">Amazon Essentials</h4>
-              <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-tighter mb-4 italic">As an Amazon Associate I earn from qualifying purchases.</p>
-              <p className="text-[11px] text-zinc-300 italic mb-8 font-light leading-relaxed">Grounding tools, tech, and workspace gear for your new chapter.</p>
-              <a href={AMZ_WISHLIST_URL} target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-purple-600/10 text-purple-400 border border-purple-500/30 hover:bg-purple-600 hover:text-white">
+              <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-tighter mb-4 italic">As an Amazon Associate I earn from qualifying purchases.</p>
+              <p className="text-[11px] text-zinc-400 italic mb-8 font-light leading-relaxed">Grounding tools, tech, and workspace gear for your new chapter.</p>
+              <a href={AMZ_WISHLIST_URL} target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-teal-500/5 text-teal-400 border border-teal-500/20 hover:bg-teal-500 hover:text-black">
                 EXPLORE THE SHOP <ExternalLink className="ml-2 w-3 h-3" />
               </a>
             </div>
@@ -132,8 +132,8 @@ const Library = ({ vault, isAdmin }) => {
         {/* SECTION 2: THE CANOPY HUB */}
         <section className="mb-16">
           <div className="flex items-center gap-4 mb-8">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Canopy Hub</h3>
-            <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-500/60 whitespace-nowrap">The Canopy Hub</h3>
+            <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -149,7 +149,7 @@ const Library = ({ vault, isAdmin }) => {
               </button>
             </div>
 
-            <div className="bg-[#16121D] border border-teal-500/10 p-8 rounded-[2.5rem] relative group hover:border-teal-500/30 transition-all flex flex-col shadow-xl">
+            <div className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2.5rem] relative group hover:border-teal-500/30 transition-all flex flex-col shadow-xl">
               {!isHearthkeeper && (
                 <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center">
                   <Lock className="w-5 h-5 text-teal-500/40 mb-3" />
@@ -160,7 +160,7 @@ const Library = ({ vault, isAdmin }) => {
               <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 mb-6 w-fit italic tracking-tighter uppercase">Tactical Provisions</Badge>
               <h4 className="text-xl text-white font-serif italic mb-4">Hearthkeeper Tools</h4>
               <div className="space-y-3 mt-4">
-                <div className={`flex flex-col gap-3 p-4 rounded-xl border transition-all ${activeTool === 'ledger' ? 'bg-teal-500/20 border-teal-500/50' : 'bg-black/40 border-teal-500/10'}`}>
+                <div className={`flex flex-col gap-3 p-4 rounded-xl border transition-all ${activeTool === 'ledger' ? 'bg-teal-500/10 border-teal-500/50' : 'bg-black/40 border-zinc-800'}`}>
                   <div onClick={() => setActiveTool('ledger')} className="flex items-center justify-between cursor-pointer">
                     <div className="flex items-center gap-3">
                       <Compass size={14} className="text-teal-400" />
@@ -169,21 +169,21 @@ const Library = ({ vault, isAdmin }) => {
                     <ArrowRight size={12} className={activeTool === 'ledger' ? 'text-teal-400' : 'text-zinc-600'} />
                   </div>
                   <div className="pl-7 pt-1 border-t border-white/5">
-                    <a href={WORKSHEET_PDF_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[9px] font-bold text-teal-500/60 hover:text-teal-400 uppercase tracking-widest transition-colors">
-                      <Save size={10} /> Download PDF
+                    <a href={IDENTITY_LEDGER_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[9px] font-bold text-teal-500/60 hover:text-teal-400 uppercase tracking-widest transition-colors">
+                      <Save size={10} /> View Schematic
                     </a>
                   </div>
                 </div>
-                <div onClick={() => setActiveTool('reframing')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'reframing' ? 'bg-teal-500/20 border-teal-500/50' : 'bg-black/40 border-teal-500/10'}`}>
+                <div onClick={() => setActiveTool('reframing')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'reframing' ? 'bg-teal-500/10 border-teal-500/50' : 'bg-black/40 border-zinc-800'}`}>
                   <div className="flex items-center gap-3">
-                    <Layers size={14} className="text-teal-500/50" />
+                    <Layers size={14} className="text-teal-400/50" />
                     <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Reframing Engine</span>
                   </div>
                   {activeTool === 'reframing' && <ArrowRight size={12} className="text-teal-400" />}
                 </div>
-                <div onClick={() => setActiveTool('kindling')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'kindling' ? 'bg-teal-500/20 border-teal-500/50' : 'bg-black/40 border-teal-500/10'}`}>
+                <div onClick={() => setActiveTool('kindling')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'kindling' ? 'bg-teal-500/10 border-teal-500/50' : 'bg-black/40 border-zinc-800'}`}>
                   <div className="flex items-center gap-3">
-                    <MessageSquare size={14} className="text-teal-500/50" />
+                    <MessageSquare size={14} className="text-teal-400/50" />
                     <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Kindling Scripts</span>
                   </div>
                   {activeTool === 'kindling' && <ArrowRight size={12} className="text-teal-400" />}
@@ -191,7 +191,7 @@ const Library = ({ vault, isAdmin }) => {
               </div>
             </div>
 
-            <div className="bg-[#16121D] border border-purple-500/10 p-8 rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col shadow-xl">
+            <div className="bg-[#110E16] border border-purple-500/10 p-8 rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col shadow-xl">
               {!isSteward && (
                 <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center">
                   <Lock className="w-5 h-5 text-purple-500/40 mb-3" />
@@ -202,14 +202,14 @@ const Library = ({ vault, isAdmin }) => {
               <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-6 w-fit italic tracking-tighter uppercase">Strategic Intelligence</Badge>
               <h4 className="text-xl text-white font-serif italic mb-4">Steward Assets</h4>
               <div className="space-y-3 mt-4">
-                <div onClick={() => setActiveTool('architect')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'architect' ? 'bg-purple-500/20 border-purple-500/50' : 'bg-black/40 border-purple-500/10'}`}>
+                <div onClick={() => setActiveTool('architect')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'architect' ? 'bg-purple-500/10 border-purple-500/50' : 'bg-black/40 border-zinc-800'}`}>
                   <div className="flex items-center gap-3">
                     <Zap size={14} className="text-purple-500/50" />
                     <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Cold Bridge Gallery</span>
                   </div>
                   {activeTool === 'architect' && <ArrowRight size={12} className="text-purple-400" />}
                 </div>
-                <div onClick={() => setActiveTool('sponsorship')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'sponsorship' ? 'bg-purple-500/20 border-purple-500/50' : 'bg-black/40 border-teal-500/10'}`}>
+                <div onClick={() => setActiveTool('sponsorship')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'sponsorship' ? 'bg-purple-500/10 border-purple-500/50' : 'bg-black/40 border-zinc-800'}`}>
                   <div className="flex items-center gap-3">
                     <Compass size={14} className="text-purple-500/50" />
                     <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Council of Allies</span>
@@ -232,7 +232,7 @@ const Library = ({ vault, isAdmin }) => {
               </div>
 
               {activeTool === 'reframing' && (
-                <div className="bg-[#110E16]/60 border border-teal-500/10 rounded-[2.5rem] p-6 md:p-12">
+                <div className="bg-[#110E16]/60 border border-teal-500/10 rounded-[2.5rem] p-6 md:p-12 shadow-2xl backdrop-blur-sm">
                    <div className="flex flex-col md:flex-row gap-6 mb-12">
                     <div className="relative flex-1">
                       <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4" />
@@ -246,7 +246,7 @@ const Library = ({ vault, isAdmin }) => {
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {["All", "Education", "Healthcare", "Service", "Public Sector"].map((s) => (
-                        <button key={s} onClick={() => setActiveSector(s)} className={`px-5 py-2.5 rounded-xl text-[8px] font-black uppercase tracking-widest border transition-all ${activeSector === s ? 'bg-teal-500 text-black border-teal-500' : 'bg-transparent text-zinc-400 border-zinc-800'}`}>
+                        <button key={s} onClick={() => setActiveSector(s)} className={`px-5 py-2.5 rounded-xl text-[8px] font-black uppercase tracking-widest border transition-all ${activeSector === s ? 'bg-teal-500 text-black border-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.3)]' : 'bg-transparent text-zinc-400 border-zinc-800'}`}>
                           {s}
                         </button>
                       ))}
@@ -256,17 +256,17 @@ const Library = ({ vault, isAdmin }) => {
                     <table className="w-full text-left">
                       <thead>
                         <tr className="border-b border-zinc-800">
-                          <th className="pb-6 text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em]">Old Soil</th>
-                          <th className="pb-6 text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em]">Functional Root</th>
-                          <th className="pb-6 text-[9px] font-black text-teal-500 uppercase tracking-[0.2em]">New Horizon</th>
+                          <th className="pb-6 text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em]">Legacy Soil</th>
+                          <th className="pb-6 text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em]">Functional Core</th>
+                          <th className="pb-6 text-[9px] font-black text-teal-500 uppercase tracking-[0.2em]">The New Horizon</th>
                         </tr>
                       </thead>
                       <tbody>
                         {filteredData.map((item, i) => (
                           <tr key={i} className="group border-b border-white/[0.02] hover:bg-white/[0.01]">
                             <td className="py-6 pr-4"><div className="text-xs text-white font-serif italic">{item.old}</div></td>
-                            <td className="py-6 pr-4"><Badge className="bg-zinc-800/80 text-zinc-300 border border-zinc-700/50 italic">{item.root}</Badge></td>
-                            <td className="py-6"><div className="text-xs text-teal-400 font-black uppercase tracking-wider group-hover:text-white">{item.new}</div></td>
+                            <td className="py-6 pr-4"><Badge className="bg-zinc-900 text-zinc-400 border border-zinc-800 italic">{item.root}</Badge></td>
+                            <td className="py-6"><div className="text-xs text-teal-400 font-black uppercase tracking-wider group-hover:text-white transition-colors">{item.new}</div></td>
                           </tr>
                         ))}
                       </tbody>
@@ -278,11 +278,17 @@ const Library = ({ vault, isAdmin }) => {
               {activeTool === 'kindling' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {KINDLING_SCRIPTS.map((script, i) => (
-                    <div key={i} className="bg-[#110F15] border border-teal-500/10 p-8 rounded-[2rem] flex flex-col hover:border-teal-500/40 transition-all shadow-xl">
+                    <div key={i} className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2rem] flex flex-col hover:border-teal-500/40 transition-all shadow-xl group">
                       <h4 className="text-sm font-serif italic text-white mb-2">{script.title}</h4>
-                      <p className="text-[10px] text-zinc-500 mb-8 leading-relaxed italic">{script.desc}</p>
-                      <button onClick={() => handleCopy(script.text)} className="mt-auto w-full py-4 rounded-xl bg-teal-500/5 border border-teal-500/20 text-[9px] font-black uppercase tracking-widest text-teal-400 hover:bg-teal-500 hover:text-black">
-                         {copied ? 'Copied' : 'Copy Script'}
+                      <p className="text-[10px] text-zinc-500 mb-6 leading-relaxed italic">{script.desc}</p>
+                      
+                      {/* DIRECT SCRIPT PREVIEW */}
+                      <div className="p-4 bg-black/40 border border-white/5 rounded-xl text-[10px] text-zinc-400 font-serif italic leading-relaxed mb-6">
+                        "{script.text}"
+                      </div>
+
+                      <button onClick={() => handleCopy(script.text)} className="mt-auto w-full py-4 rounded-xl bg-teal-500/5 border border-teal-500/20 text-[9px] font-black uppercase tracking-widest text-teal-400 hover:bg-teal-500 hover:text-black transition-all">
+                         {copied ? 'Copied to Clipboard' : 'Copy Script'}
                       </button>
                     </div>
                   ))}
@@ -317,32 +323,13 @@ const Library = ({ vault, isAdmin }) => {
                   <div className="text-center space-y-4 border-b border-purple-500/10 pb-8">
                     <h3 className="text-2xl font-serif italic text-white">The Council of Allies</h3>
                     <p className="text-[9px] text-purple-400 uppercase tracking-[0.3em] font-black">Strategic Sponsorship Protocol</p>
-                    <div className="flex flex-col md:flex-row justify-center gap-4 mt-6">
-                      <div className="px-4 py-2 bg-purple-500/5 border border-purple-500/20 rounded-lg">
-                        <span className="text-[8px] text-zinc-500 uppercase block mb-1">Objective</span>
-                        <span className="text-[10px] text-zinc-300 italic">Transition from advice seeker to advocacy partner.</span>
-                      </div>
-                      <div className="px-4 py-2 bg-purple-500/5 border border-purple-500/20 rounded-lg">
-                        <span className="text-[8px] text-zinc-500 uppercase block mb-1">Goal</span>
-                        <span className="text-[10px] text-zinc-300 italic">Build a circle that opens restricted doors.</span>
-                      </div>
-                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 gap-6">
                     {[
-                      { 
-                        rule: "Ally vs. Guide", 
-                        desc: "Guides offer wisdom; Allies offer access and reputation. A Guide tells you which path to take; an Ally speaks your name in rooms you haven't entered yet." 
-                      },
-                      { 
-                        rule: "The Hearth-Fire Exchange", 
-                        desc: "Never approach to 'extract' wisdom. Bring fuel to their fire instead. Sharing an industry insight or a resource transforms you from a 'Student' to a 'Peer'." 
-                      },
-                      { 
-                        rule: "Seasonal Tending", 
-                        desc: "Relationships die when ignored but burn out when smothered. Implement a 90-day cadence—one light touchpoint per quarter keeps the connection warm." 
-                      }
+                      { rule: "Ally vs. Guide", desc: "Guides offer wisdom; Allies offer access. A Guide tells you which path to take; an Ally speaks your name in rooms you haven't entered yet." },
+                      { rule: "The Hearth-Fire Exchange", desc: "Never approach to 'extract' wisdom. Bring fuel to their fire instead. Sharing an industry insight or a resource transforms you from a 'Student' to a 'Peer'." },
+                      { rule: "Seasonal Tending", desc: "Relationships die when ignored but burn out when smothered. Implement a 90-day cadence—one light touchpoint per quarter keeps the connection warm." }
                     ].map((item, i) => (
                       <div key={i} className="flex gap-6 p-8 bg-[#110E16] border border-purple-500/10 rounded-[2.5rem] hover:border-purple-500/30 transition-all shadow-xl">
                         <div className="text-purple-500/20 font-serif text-4xl italic">0{i+1}</div>
@@ -352,10 +339,6 @@ const Library = ({ vault, isAdmin }) => {
                         </div>
                       </div>
                     ))}
-                  </div>
-
-                  <div className="p-8 bg-purple-900/10 border border-purple-500/20 rounded-[2rem] text-center italic">
-                    <p className="text-xs text-purple-300 font-serif">"Most high-impact roles are never posted. They are filled through the quiet recommendations of Allies. Tending to this Council is your most effective tool for career sovereignty."</p>
                   </div>
                 </div>
               )}
@@ -375,23 +358,23 @@ const Library = ({ vault, isAdmin }) => {
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#16121D] border border-teal-500/10 p-8 rounded-[2.5rem] flex flex-col items-center justify-center text-center shadow-xl">
+            <div className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2.5rem] flex flex-col items-center justify-center text-center shadow-xl">
               <p className="text-[8px] font-black text-teal-500 uppercase tracking-[0.2em] mb-3 opacity-60">Crisis Text Line (Canada)</p>
               <p className="text-3xl font-black text-white tracking-[0.2em] mb-2">686868</p>
               <p className="text-[9px] text-zinc-500 uppercase tracking-widest font-bold">Text "CONNECT" to start</p>
             </div>
             
-            <div className="bg-[#16121D] border border-teal-500/10 p-8 rounded-[2.5rem] hover:border-teal-500/30 transition-all flex flex-col shadow-xl">
-              <HeartPulse className="w-8 h-8 text-teal-400 mb-6" />
+            <button className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2.5rem] hover:border-teal-500/30 hover:bg-teal-500/5 transition-all flex flex-col text-left shadow-xl group">
+              <HeartPulse className="w-8 h-8 text-teal-400 mb-6 group-hover:scale-110 transition-transform" />
               <h4 className="text-white font-serif italic mb-2">Burnout Recovery</h4>
-              <p className="text-[10px] text-zinc-300 font-light leading-relaxed italic">Strategic pauses and neurological grounding for the high-pivot professional.</p>
-            </div>
+              <p className="text-[10px] text-zinc-400 font-light leading-relaxed italic">Strategic pauses and neurological grounding for the professional pivot.</p>
+            </button>
 
-            <div className="bg-[#16121D] border border-teal-500/10 p-8 rounded-[2.5rem] hover:border-teal-500/30 transition-all flex flex-col shadow-xl">
-              <Wind className="w-8 h-8 text-teal-400 mb-6" />
+            <button className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2.5rem] hover:border-teal-500/30 hover:bg-teal-500/5 transition-all flex flex-col text-left shadow-xl group">
+              <Wind className="w-8 h-8 text-teal-400 mb-6 group-hover:rotate-12 transition-transform" />
               <h4 className="text-white font-serif italic mb-2">The Inner Advocate</h4>
-              <p className="text-[10px] text-zinc-300 font-light leading-relaxed italic">Tools for silencing the 'Imposter' and reframing your worth in new markets.</p>
-            </div>
+              <p className="text-[10px] text-zinc-400 font-light leading-relaxed italic">Tools for silencing the 'Imposter' and reframing your worth in new markets.</p>
+            </button>
           </div>
         </section>
 
