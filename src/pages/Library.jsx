@@ -5,11 +5,12 @@ import {
   ArrowRight, ShoppingBag, Wind, Lock, Mountain, 
   MessageSquare, Zap, Compass, Layers, 
   HeartPulse, Search, Copy, Save,
-  Database
+  Database, FileText
 } from 'lucide-react';
 
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/preview";
 const IDENTITY_LEDGER_URL = "https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link";
+const AUTHORITY_WORKSHEET_URL = "https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link";
 const AMZ_WISHLIST_URL = "https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD";
 const INDIGO_LIST_URL = "https://www.indigo.ca"; 
 
@@ -168,9 +169,13 @@ const Library = ({ vault, isAdmin }) => {
                     </div>
                     <ArrowRight size={12} className={activeTool === 'ledger' ? 'text-teal-400' : 'text-zinc-600'} />
                   </div>
-                  <div className="pl-7 pt-1 border-t border-white/5">
+                  <div className="pl-7 pt-1 border-t border-white/5 flex flex-col gap-2">
                     <a href={IDENTITY_LEDGER_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[9px] font-bold text-teal-500/60 hover:text-teal-400 uppercase tracking-widest transition-colors">
                       <Save size={10} /> View Schematic
+                    </a>
+                    {/* ADDED: Worksheet Download Link */}
+                    <a href={AUTHORITY_WORKSHEET_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[9px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">
+                      <FileText size={10} /> Authority Worksheet (PDF)
                     </a>
                   </div>
                 </div>
