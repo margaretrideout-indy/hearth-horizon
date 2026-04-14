@@ -486,7 +486,7 @@ const Library = ({ vault, isAdmin }) => {
               <p className="text-[10px] text-zinc-400 font-light leading-relaxed italic">Strategic pauses and neurological grounding for the professional pivot.</p>
             </a>
 
-            {/* THE INNER ADVOCATE */}
+            {/* YOUR INNER ADVOCATE */}
             <a 
               href="https://podcasts.apple.com/ca/podcast/your-inner-advocate/id1722984987" 
               target="_blank" 
@@ -494,7 +494,7 @@ const Library = ({ vault, isAdmin }) => {
               className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2.5rem] hover:border-teal-500/30 hover:bg-teal-500/5 transition-all flex flex-col text-left shadow-xl group"
             >
               <Wind className="w-8 h-8 text-teal-400 mb-6 group-hover:rotate-12 transition-transform" />
-              <h4 className="text-white font-serif italic mb-2">The Inner Advocate</h4>
+              <h4 className="text-white font-serif italic mb-2">Your Inner Advocate</h4>
               <p className="text-[10px] text-zinc-400 font-light leading-relaxed italic">Tools for silencing the 'Imposter' and reframing your worth in new markets.</p>
             </a>
           </div>
