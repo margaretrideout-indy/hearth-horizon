@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
@@ -59,6 +59,9 @@ function HearthProvider({ children }) {
     }
   });
 
+  // Library Persistence State
+  const [activeLibraryTool, setActiveLibraryTool] = useState(null);
+
   useEffect(() => {
     localStorage.setItem('vault_reset_final', JSON.stringify(sanctuaryState));
   }, [sanctuaryState]);
@@ -83,7 +86,9 @@ function HearthProvider({ children }) {
     vault: sanctuaryState,
     onSync: forceSync,
     onResumeSync: handleResumeSync,
-    effectiveTier: isAdmin ? 'Steward' : sanctuaryState.tier
+    effectiveTier: isAdmin ? 'Steward' : sanctuaryState.tier,
+    activeLibraryTool,
+    onSetLibraryTool: setActiveLibraryTool
   };
 
   return <HearthContext.Provider value={value}>{children}</HearthContext.Provider>;
@@ -111,7 +116,7 @@ function AdminRoute({ children }) {
 }
 
 function ProtectedRoute({ children }) {
-  const { user, authLoading, onSync } = useHearth();
+  const { user, authLoading } = useHearth();
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -147,6 +152,7 @@ function ProtectedRoute({ children }) {
 // --- 3. MAIN ROUTING ---
 function AppRoutes() {
   const { isAdmin, vault, onSync, onResumeSync, effectiveTier } = useHearth();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
@@ -171,9 +177,9 @@ function AppRoutes() {
                 onSync={onSync} 
                 onResumeSync={onResumeSync}
                 isAdmin={isAdmin}
-                onNavigateToLibrary={() => window.location.href = '/library'}
-                onNavigateToEmbers={() => window.location.href = '/embers'}
-                onNavigateToLaunch={() => window.location.href = '/launch'}
+                onNavigateToLibrary={() => navigate('/library')}
+                onNavigateToEmbers={() => navigate('/embers')}
+                onNavigateToLaunch={() => navigate('/launch')}
               />
             </AppLayout>
           </ProtectedRoute>
