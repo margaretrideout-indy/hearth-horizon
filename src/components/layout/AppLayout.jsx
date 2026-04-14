@@ -1,7 +1,8 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { base44 } from '@/api/base44Client';
 import { 
-  Flame, Compass, MessageSquare, Library, Rocket, Lock 
+  Flame, Compass, MessageSquare, Library, Rocket, Lock, LogIn
 } from 'lucide-react';
 
 const AppLayout = ({ children, currentTier = "Seedling" }) => {
@@ -18,8 +19,8 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
   ];
 
   const communityItems = [
-    { name: "Embers", path: "/embers", icon: <MessageSquare size={14} />, tier: "Seedling" },
     { name: "Library", path: "/library", icon: <Library size={14} />, tier: "Seedling" },
+    { name: "Embers", path: "/embers", icon: <MessageSquare size={14} />, tier: "Seedling" },
   ];
 
   const isLocked = (itemTier) => {
@@ -57,12 +58,22 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
         <nav className="absolute top-3 md:top-6 left-0 right-0 z-50 flex justify-center px-4">
           <div className="flex items-center gap-1 md:gap-2 p-1.5 bg-[#141118]/80 backdrop-blur-2xl border border-white/5 rounded-2xl md:rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] max-w-full overflow-x-auto no-scrollbar">
             <div className="flex items-center gap-1">
+              <span className="hidden md:inline text-[7px] font-black uppercase tracking-[0.25em] text-zinc-700 px-2">The Self</span>
               {journeyItems.map(item => <NavItem key={item.path} item={item} />)}
             </div>
             <div className="w-1 h-1 rounded-full bg-teal-500/20 shrink-0 mx-2" />
             <div className="flex items-center gap-1">
+              <span className="hidden md:inline text-[7px] font-black uppercase tracking-[0.25em] text-zinc-700 px-2">The Commons</span>
               {communityItems.map(item => <NavItem key={item.path} item={item} />)}
             </div>
+            <div className="w-1 h-1 rounded-full bg-zinc-800 shrink-0 mx-1" />
+            <button
+              onClick={() => base44.auth.redirectToLogin(location.pathname)}
+              className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-zinc-600 hover:text-teal-400 hover:bg-white/5 transition-all border border-transparent whitespace-nowrap"
+            >
+              <LogIn size={14} />
+              <span className="hidden sm:inline text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em]">Login</span>
+            </button>
           </div>
         </nav>
       )}

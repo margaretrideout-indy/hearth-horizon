@@ -40,10 +40,10 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
   }, []);
 
   const gapData = [
-    { skill: "Industry-Standard Frameworks", status: "missing", effort: "2 weeks", category: "Knowledge", provisionId: "frameworks" },
-    { skill: "Stakeholder Management", status: "aligned", effort: "sync'd", category: "Leadership" },
-    { skill: "Domain-Specific Technicals", status: "missing", effort: "1 month", category: "Technical", provisionId: "tech-deep-dive" },
-    { skill: "Cross-Functional Communication", status: "aligned", effort: "sync'd", category: "Soft Skills" },
+    { skill: "Industry-Standard Frameworks", status: "missing", effort: "2 weeks", category: "Knowledge", url: "https://www.coursera.org/search?query=project+management+frameworks" },
+    { skill: "Stakeholder Management", status: "aligned", effort: "sync'd", category: "Leadership", url: null },
+    { skill: "Domain-Specific Technicals", status: "missing", effort: "1 month", category: "Technical", url: "https://www.linkedin.com/learning/topics/technical-skills" },
+    { skill: "Cross-Functional Communication", status: "aligned", effort: "sync'd", category: "Soft Skills", url: null },
   ];
 
   const trajectories = [
@@ -126,9 +126,6 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
                 <Microscope size={24} />
               </div>
               <h1 className="text-3xl md:text-4xl font-serif italic text-white leading-tight">Legacy<br/>Translation</h1>
-              <p className="text-slate-500 text-[10px] md:text-[11px] leading-relaxed italic font-light max-w-sm mx-auto lg:mx-0">
-                "Extract the raw value from your history and translate it into the operational dialect of your next domain."
-              </p>
             </div>
 
             <div className="lg:col-span-8 space-y-6">
@@ -206,7 +203,6 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
           <div className="space-y-12 animate-in fade-in duration-1000">
             <header className="text-center max-w-2xl mx-auto space-y-4">
               <h2 className="text-3xl md:text-4xl font-serif italic text-white tracking-tight">Market Topography</h2>
-              <p className="text-slate-500 text-[10px] md:text-[11px] font-light italic uppercase tracking-widest px-4">Select a trajectory to begin the deep-scan</p>
             </header>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
@@ -274,9 +270,6 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
                       <Target size={24} />
                     </div>
                     <h2 className="text-3xl md:text-4xl font-serif italic text-white tracking-tight">The Harvest</h2>
-                    <p className="text-slate-500 text-xs italic">
-                      Mapping the distance between current state and <span className="text-teal-400 font-bold">{selectedPath?.domain}</span>.
-                    </p>
                   </div>
 
                   <Card className="p-6 md:p-8 bg-teal-500/5 border-teal-500/20 rounded-[2rem] relative overflow-hidden group">
@@ -319,10 +312,10 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
                           </div>
                         </div>
                         
-                        {item.status === 'missing' && (
-                          <button onClick={() => navigate('/library')} className="text-[9px] font-black uppercase text-slate-500 hover:text-teal-400 transition-colors tracking-widest border-b border-transparent hover:border-teal-400/50 pb-1 w-fit">
+                        {item.status === 'missing' && item.url && (
+                          <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase text-slate-500 hover:text-teal-400 transition-colors tracking-widest border-b border-transparent hover:border-teal-400/50 pb-1 w-fit">
                             Link Provision
-                          </button>
+                          </a>
                         )}
                       </div>
                     </Card>
@@ -355,7 +348,7 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
                       className="h-16 px-10 bg-white/[0.03] hover:bg-white/[0.08] text-white font-black rounded-2xl uppercase tracking-widest border border-white/10 flex items-center gap-3 transition-all"
                     >
                       {copied ? <Check size={18} /> : <Copy size={18} />}
-                      {copied ? "Copied" : "Copy to Resume"}
+                      {copied ? "Copied" : "Copy to Clipboard"}
                     </Button>
 
                     <Button 

@@ -67,3 +67,22 @@ html {
   background-color: rgba(57, 215, 184, 0.2);
   color: #39D7B8;
 }
+
+/* --- GLOBAL SCROLLBAR HIDE --- */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Re-enable custom scrollbar only for .embers-scroll */
+.embers-scroll {
+  scrollbar-width: thin;
+  -ms-overflow-style: auto;
+}
+.embers-scroll::-webkit-scrollbar {
+  display: block;
+  width: 5px;
+}

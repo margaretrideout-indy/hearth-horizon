@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   Compass, Map, Trees, FileText, Sparkles, BookOpen, 
-  ChevronRight, Activity, Zap, ShieldCheck, Box
+  ChevronRight, Activity, Zap, ShieldCheck, Box, Upload, Trash2
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function YourHearth({ vault, onResumeSync, onNavigateToLibrary }) {
+export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLibrary }) {
   const [isProtocolOpen, setIsProtocolOpen] = useState(true);
   const [sentiment, setSentiment] = useState(null);
   const [reflection, setReflection] = useState("");
+  const fileInputRef = useRef(null);
   
   // Tier Logic
   const userTier = vault?.tier || 'Seedling';
@@ -210,6 +211,17 @@ export default function YourHearth({ vault, onResumeSync, onNavigateToLibrary })
 
           {/* Alignment Engine */}
           <Card className="p-10 bg-gradient-to-br from-[#110E16] to-[#0A080D] border-zinc-800/50 rounded-[2.5rem] relative overflow-hidden group shadow-2xl">
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept=".pdf,.doc,.docx"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file && onResumeSync) onResumeSync(file);
+                e.target.value = '';
+              }}
+            />
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
               <div className="flex-1 space-y-6 text-center md:text-left">
                 <div className="space-y-2">
@@ -219,16 +231,37 @@ export default function YourHearth({ vault, onResumeSync, onNavigateToLibrary })
                 <p className="text-zinc-500 text-sm leading-relaxed max-w-sm font-light mx-auto md:mx-0">
                   By syncing your resume, we can translate your leadership and educational legacy into the new growth opportunities ahead.
                 </p>
-                <Button 
-                  onClick={onResumeSync}
-                  className={`bg-transparent border-2 font-black rounded-xl h-14 px-10 transition-all uppercase text-[10px] tracking-widest flex items-center gap-3 mx-auto md:mx-0 ${
-                    hasResume 
-                      ? "border-zinc-700 text-zinc-500 cursor-default" 
-                      : "border-teal-500 text-teal-400 hover:bg-teal-500 hover:text-[#0A080D] shadow-[0_0_20px_rgba(20,184,166,0.1)]"
-                  }`}
-                >
-                  <FileText className="w-4 h-4" /> {hasResume ? "Resume Synced" : "Upload Resume for Sync"}
-                </Button>
+                {hasResume ? (
+                  <div className="flex flex-col gap-3 items-center md:items-start">
+                    <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-teal-500/10 border border-teal-500/20">
+                      <FileText className="w-4 h-4 text-teal-400 shrink-0" />
+                      <span className="text-[11px] font-bold text-teal-300 truncate max-w-[180px]">
+                        {vault?.resume?.name || "Synced Resume"}
+                      </span>
+                    </div>
+                    <div className="flex gap-3">
+                      <Button
+                        onClick={() => fileInputRef.current?.click()}
+                        className="bg-transparent border border-zinc-700 text-zinc-400 hover:bg-white/5 hover:text-white font-black rounded-xl h-10 px-5 text-[9px] uppercase tracking-widest flex items-center gap-2"
+                      >
+                        <Upload className="w-3 h-3" /> Replace
+                      </Button>
+                      <Button
+                        onClick={() => onSync && onSync({ isAligned: false, resume: null })}
+                        className="bg-transparent border border-red-900/40 text-red-500/60 hover:bg-red-500/10 hover:text-red-400 font-black rounded-xl h-10 px-5 text-[9px] uppercase tracking-widest flex items-center gap-2"
+                      >
+                        <Trash2 className="w-3 h-3" /> Remove
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <Button 
+                    onClick={() => fileInputRef.current?.click()}
+                    className="bg-transparent border-2 border-teal-500 text-teal-400 hover:bg-teal-500 hover:text-[#0A080D] shadow-[0_0_20px_rgba(20,184,166,0.1)] font-black rounded-xl h-14 px-10 transition-all uppercase text-[10px] tracking-widest flex items-center gap-3 mx-auto md:mx-0"
+                  >
+                    <FileText className="w-4 h-4" /> Upload Resume for Sync
+                  </Button>
+                )}
               </div>
               <div className="w-56 h-56 rounded-[3rem] bg-zinc-950 border border-zinc-900 flex items-center justify-center relative shadow-inner overflow-hidden">
                  <div className={`absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.15),transparent)] ${!hasResume ? "animate-pulse" : ""}`} />
@@ -279,13 +312,13 @@ export default function YourHearth({ vault, onResumeSync, onNavigateToLibrary })
             </div>
           </Card>
 
-          {/* Evening Reflection */}
+          {/* Reflection */}
           <Card className="bg-[#110E16] border-zinc-800/50 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
             <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-teal-500/5 blur-[50px] rounded-full" />
             
             <h3 className="text-white text-[10px] font-black uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
               <Sparkles className="w-3 h-3 text-purple-400" />
-              Evening Reflection
+              Reflection
             </h3>
 
             <div className="space-y-8 relative z-10">
