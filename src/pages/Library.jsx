@@ -320,29 +320,76 @@ const Library = ({ vault, isAdmin }) => {
               )}
 
               {activeTool === 'sponsorship' && (
-                <div className="max-w-3xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                <div className="max-w-3xl mx-auto space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
                   <div className="space-y-4 border-b border-purple-500/10 pb-8">
                     <div className="flex items-center gap-3">
                       <h3 className="text-2xl font-serif italic text-white">The Council of Allies</h3>
                       <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 italic text-[8px]">Strategic Sponsorship Protocol</Badge>
                     </div>
-                    <p className="text-sm text-zinc-400 leading-relaxed font-light">
-                      The Council of Allies is a system to turn "knowing people" into "having advocates" who speak your name in rooms you haven't entered yet. By focusing on providing value and keeping a simple 90-day check-in, you move from someone asking for advice to a peer who earns active support.
+                    <p className="text-sm text-zinc-400 leading-relaxed font-light italic">
+                      The Council of Allies is a system to turn "knowing people" into "having advocates." Focus on providing value and maintaining a simple 90-day cadence.
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-6">
+                  {/* 90-DAY PULSE TIMELINE */}
+                  <div className="relative space-y-12">
+                    <div className="absolute left-[15px] top-4 bottom-4 w-[1px] bg-gradient-to-b from-purple-500/40 via-purple-500/10 to-transparent" />
                     {[
-                      { rule: "Ally vs. Guide", desc: "Guides offer wisdom; Allies offer access. A Guide tells you which path to take; an Ally speaks your name in rooms you haven't entered yet." },
-                      { rule: "The Hearth-Fire Exchange", desc: "Never approach to 'extract' wisdom. Bring fuel to their fire instead. Sharing an industry insight or a resource transforms you from a 'Student' to a 'Peer'." },
-                      { rule: "Seasonal Tending", desc: "Relationships die when ignored but burn out when smothered. Implement a 90-day cadence—one light touchpoint per quarter keeps the connection warm." }
-                    ].map((item, i) => (
-                      <div key={i} className="flex gap-6 p-8 bg-[#110E16] border border-purple-500/10 rounded-[2.5rem] hover:border-purple-500/30 transition-all shadow-xl">
-                        <div className="text-purple-500/20 font-serif text-4xl italic">0{i+1}</div>
-                        <div>
-                          <h4 className="text-[11px] font-black text-purple-400 uppercase tracking-widest mb-3">{item.rule}</h4>
-                          <p className="text-sm text-zinc-400 leading-relaxed font-light">{item.desc}</p>
+                      { 
+                        day: "01", label: "THE KINDLING", task: "Initial Outreach", 
+                        script: "Hi [Name], I saw we are both connected to [Contact]. I'm currently pivoting into [Industry] and would love to hear about your journey at [Company].",
+                        detail: "Establish the bridge based on mutual interest." 
+                      },
+                      { 
+                        day: "30", label: "THE FUEL", task: "The Value Drop", 
+                        script: "Hi [Name], saw this article on [Topic] and thought of our last chat. Hope the project is moving well!",
+                        detail: "No ask. Just fuel for their fire." 
+                      },
+                      { 
+                        day: "60", label: "THE GLOW", task: "Progress Update", 
+                        script: "Quick update: I just finished that [Certification/Project] we discussed. Your advice on [Topic] really helped shape my approach.",
+                        detail: "Show them their 'investment' in you is working." 
+                      },
+                      { 
+                        day: "90", label: "THE TENDING", task: "Low-Stakes Sync", 
+                        script: "Hi [Name], it's been a few months—would love to grab 15 mins for a 'Quarterly Pulse' or share a specific insight I've gathered recently.",
+                        detail: "Keep the connection warm for the next season." 
+                      }
+                    ].map((step, idx) => (
+                      <div key={idx} className="relative pl-12 group">
+                        <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-[#0A080D] border border-purple-500/30 flex items-center justify-center z-10 group-hover:border-purple-500 transition-all shadow-[0_0_15px_rgba(168,85,247,0.1)]">
+                          <span className="text-[9px] font-black text-purple-400">{step.day}</span>
                         </div>
+                        <div className="bg-[#110E16] border border-white/5 p-6 rounded-3xl hover:border-purple-500/20 transition-all shadow-xl">
+                          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                            <div>
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-[8px] font-black text-purple-500 uppercase tracking-widest">{step.label}</span>
+                                <div className="h-[1px] w-4 bg-purple-500/20" />
+                                <span className="text-[10px] font-bold text-zinc-200 uppercase tracking-tighter">{step.task}</span>
+                              </div>
+                              <p className="text-[11px] text-zinc-500 italic font-light">{step.detail}</p>
+                            </div>
+                            <button onClick={() => handleCopy(step.script)} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-500/5 border border-purple-500/10 text-[8px] font-black text-purple-400 uppercase tracking-widest hover:bg-purple-500 hover:text-black transition-all shrink-0">
+                              <Copy size={10} /> {copied ? 'Copied' : 'Copy Script'}
+                            </button>
+                          </div>
+                          <div className="p-4 bg-black/40 rounded-xl border border-white/5 font-serif text-xs italic text-zinc-400 leading-relaxed">"{step.script}"</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* PHILOSOPHY CARDS */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-10">
+                    {[
+                      { rule: "Ally vs. Guide", desc: "Guides offer wisdom; Allies offer access." },
+                      { rule: "Fuel Exchange", desc: "Always bring value before you ask for it." },
+                      { rule: "Consistency", desc: "One touchpoint per quarter is the golden ratio." }
+                    ].map((item, i) => (
+                      <div key={i} className="p-6 bg-[#0A080D] border border-purple-500/10 rounded-2xl text-center">
+                        <h5 className="text-[9px] font-black text-purple-400 uppercase tracking-widest mb-2">{item.rule}</h5>
+                        <p className="text-[10px] text-zinc-500 italic leading-snug">{item.desc}</p>
                       </div>
                     ))}
                   </div>
