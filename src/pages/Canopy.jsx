@@ -105,8 +105,8 @@ export default function Launch({ vault }) {
               <Flame className="w-5 h-5 text-teal-400 animate-pulse" />
             </div>
             <div>
-              <p className="text-sm font-bold text-white uppercase tracking-wider">Join the Embers Community</p>
-              <p className="text-xs text-teal-300/70">Plant a seed to unlock real-time peer networking & exclusive career pulses.</p>
+              <p className="text-sm font-bold text-white uppercase tracking-wider">Join Hearth and Horizon</p>
+              <p className="text-xs text-teal-300/70">Enter the Grove to choose your path and unlock the full community experience.</p>
             </div>
           </div>
           <ArrowUpRight className="w-5 h-5 text-teal-500 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
