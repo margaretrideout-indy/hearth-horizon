@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Library as LibraryIcon, Book, Package, ExternalLink, 
-  ArrowRight, ShoppingBag, Wind, Lock, Mountain, 
-  MessageSquare, Zap, Compass, Layers, 
-  HeartPulse, Search, Copy, Save,
-  Database, FileText, X
+  ArrowRight, Mountain, Lock, MessageSquare, Zap, 
+  Compass, Layers, Search, Copy, Save, FileText, X
 } from 'lucide-react';
 
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/preview";
@@ -140,13 +138,13 @@ const Library = ({ vault, isAdmin }) => {
         {/* SECTION 1: THE STUDY */}
         <section className="mb-16">
           <div className="flex items-center gap-4 mb-8">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Study</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/80 whitespace-nowrap">The Study</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-[#110E16] border border-zinc-800/50 p-8 rounded-[2.5rem] hover:border-teal-500/40 transition-all group flex flex-col shadow-xl">
               <Book className="w-8 h-8 text-teal-400 mb-6" />
-              <h4 className="text-lg text-white font-serif italic mb-3">Indigo Curated List</h4>
+              <h4 className="text-lg text-white font-serif font-black italic mb-3">Indigo Curated List</h4>
               <p className="text-[11px] text-zinc-400 italic mb-8 font-light leading-relaxed">Pivotal literature on career migration, identity, and resilience.</p>
               <a href={INDIGO_LIST_URL} target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-teal-500/5 text-teal-400 border border-teal-500/20 hover:bg-teal-500 hover:text-black">
                 SHOP THE COLLECTION <ExternalLink className="ml-2 w-3 h-3" />
@@ -155,8 +153,8 @@ const Library = ({ vault, isAdmin }) => {
 
             <div className="bg-[#110E16] border border-zinc-800/50 p-8 rounded-[2.5rem] hover:border-teal-500/40 transition-all group flex flex-col shadow-xl">
               <Package className="w-8 h-8 text-teal-400 mb-6" />
-              <h4 className="text-lg text-white font-serif italic mb-2">Amazon Essentials</h4>
-              <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-tighter mb-4 italic">As an Amazon Associate I earn from qualifying purchases.</p>
+              <h4 className="text-lg text-white font-serif font-black italic mb-2">Amazon Essentials</h4>
+              <p className="text-[9px] text-zinc-600 font-black uppercase tracking-tighter mb-4 italic">As an Amazon Associate I earn from qualifying purchases.</p>
               <p className="text-[11px] text-zinc-400 italic mb-8 font-light leading-relaxed">Grounding tools, tech, and workspace gear for your new chapter.</p>
               <a href={AMZ_WISHLIST_URL} target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-teal-500/5 text-teal-400 border border-teal-500/20 hover:bg-teal-500 hover:text-black">
                 EXPLORE THE SHOP <ExternalLink className="ml-2 w-3 h-3" />
@@ -168,7 +166,7 @@ const Library = ({ vault, isAdmin }) => {
         {/* SECTION 2: THE CANOPY HUB */}
         <section className="mb-16">
           <div className="flex items-center gap-4 mb-8">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-500/60 whitespace-nowrap">The Canopy Hub</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-500/80 whitespace-nowrap">The Canopy Hub</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
           </div>
           
@@ -178,7 +176,7 @@ const Library = ({ vault, isAdmin }) => {
                 <Mountain size={180} />
               </div>
               <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 italic mb-6 w-fit">Foundational Gift</Badge>
-              <h4 className="text-xl text-white font-serif italic mb-4">Master Strategy Deck</h4>
+              <h4 className="text-xl text-white font-serif font-black italic mb-4">Master Strategy Deck</h4>
               <p className="text-[11px] text-zinc-300 font-light italic leading-relaxed mb-10">The primary map for your transition and resignation protocol.</p>
               <button onClick={() => window.open(STRATEGY_DECK_URL, '_blank')} className="mt-auto h-14 bg-teal-500 hover:bg-teal-400 text-[#0A080D] font-black rounded-xl flex items-center justify-center gap-3 transition-all uppercase tracking-[0.15em] text-[9px]">
                 Open Blueprint <ExternalLink size={14} />
@@ -189,12 +187,12 @@ const Library = ({ vault, isAdmin }) => {
               {!isHearthkeeper && (
                 <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center">
                   <Lock className="w-5 h-5 text-teal-500/40 mb-3" />
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-teal-500/60 mb-5">Hearthkeeper Required</p>
+                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-teal-500/90 mb-5">Hearthkeeper Required</p>
                   <button onClick={() => setModalType('hearthkeeper')} className="px-6 py-3 bg-teal-500/10 border border-teal-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-teal-400">View Requirements</button>
                 </div>
               )}
               <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 mb-6 w-fit italic tracking-tighter uppercase">Tactical Provisions</Badge>
-              <h4 className="text-xl text-white font-serif italic mb-4">Hearthkeeper Tools</h4>
+              <h4 className="text-xl text-white font-serif font-black italic mb-4">Hearthkeeper Tools</h4>
               <div className="space-y-3 mt-4">
                 <div className={`flex flex-col gap-3 p-4 rounded-xl border transition-all ${activeTool === 'ledger' ? 'bg-teal-500/10 border-teal-500/50' : 'bg-black/40 border-zinc-800'}`}>
                   <div onClick={() => setActiveTool('ledger')} className="flex items-center justify-between cursor-pointer">
@@ -205,10 +203,10 @@ const Library = ({ vault, isAdmin }) => {
                     <ArrowRight size={12} className={activeTool === 'ledger' ? 'text-teal-400' : 'text-zinc-600'} />
                   </div>
                   <div className="pl-7 pt-1 border-t border-white/5 flex flex-col gap-2">
-                    <a href={IDENTITY_LEDGER_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[9px] font-bold text-teal-500/60 hover:text-teal-400 uppercase tracking-widest transition-colors">
+                    <a href={IDENTITY_LEDGER_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[9px] font-black text-teal-500/80 hover:text-teal-400 uppercase tracking-widest transition-colors">
                       <Save size={10} /> View Schematic
                     </a>
-                    <a href={AUTHORITY_WORKSHEET_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[9px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">
+                    <a href={AUTHORITY_WORKSHEET_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[9px] font-black text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">
                       <FileText size={10} /> Authority Worksheet (PDF)
                     </a>
                   </div>
@@ -216,14 +214,14 @@ const Library = ({ vault, isAdmin }) => {
                 <div onClick={() => setActiveTool('reframing')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'reframing' ? 'bg-teal-500/10 border-teal-500/50' : 'bg-black/40 border-zinc-800'}`}>
                   <div className="flex items-center gap-3">
                     <Layers size={14} className="text-teal-400/50" />
-                    <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Reframing Engine</span>
+                    <span className="text-[10px] font-black text-zinc-300 uppercase tracking-tighter">Reframing Engine</span>
                   </div>
                   {activeTool === 'reframing' && <ArrowRight size={12} className="text-teal-400" />}
                 </div>
                 <div onClick={() => setActiveTool('kindling')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'kindling' ? 'bg-teal-500/10 border-teal-500/50' : 'bg-black/40 border-zinc-800'}`}>
                   <div className="flex items-center gap-3">
                     <MessageSquare size={14} className="text-teal-400/50" />
-                    <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Kindling Scripts</span>
+                    <span className="text-[10px] font-black text-zinc-300 uppercase tracking-tighter">Kindling Scripts</span>
                   </div>
                   {activeTool === 'kindling' && <ArrowRight size={12} className="text-teal-400" />}
                 </div>
@@ -234,24 +232,24 @@ const Library = ({ vault, isAdmin }) => {
               {!isSteward && (
                 <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center">
                   <Lock className="w-5 h-5 text-purple-500/40 mb-3" />
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-purple-500/60 mb-5">Steward Required</p>
+                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-purple-500/90 mb-5">Steward Required</p>
                   <button onClick={() => setModalType('steward')} className="px-6 py-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-purple-400">View Requirements</button>
                 </div>
               )}
               <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-6 w-fit italic tracking-tighter uppercase">Strategic Intelligence</Badge>
-              <h4 className="text-xl text-white font-serif italic mb-4">Steward Assets</h4>
+              <h4 className="text-xl text-white font-serif font-black italic mb-4">Steward Assets</h4>
               <div className="space-y-3 mt-4">
                 <div onClick={() => setActiveTool('architect')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'architect' ? 'bg-purple-500/10 border-purple-500/50' : 'bg-black/40 border-zinc-800'}`}>
                   <div className="flex items-center gap-3">
                     <Zap size={14} className="text-purple-500/50" />
-                    <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Cold Bridge Gallery</span>
+                    <span className="text-[10px] font-black text-zinc-300 uppercase tracking-tighter">Cold Bridge Gallery</span>
                   </div>
                   {activeTool === 'architect' && <ArrowRight size={12} className="text-purple-400" />}
                 </div>
                 <div onClick={() => setActiveTool('sponsorship')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'sponsorship' ? 'bg-purple-500/10 border-purple-500/50' : 'bg-black/40 border-zinc-800'}`}>
                   <div className="flex items-center gap-3">
                     <Compass size={14} className="text-purple-500/50" />
-                    <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tighter">Council of Allies</span>
+                    <span className="text-[10px] font-black text-zinc-300 uppercase tracking-tighter">Council of Allies</span>
                   </div>
                   {activeTool === 'sponsorship' && <ArrowRight size={12} className="text-purple-400" />}
                 </div>
@@ -298,7 +296,7 @@ const Library = ({ vault, isAdmin }) => {
                       <div key={i} className="p-6 bg-black/40 border border-white/5 rounded-3xl space-y-4">
                         <div>
                           <span className="text-[8px] font-black text-zinc-600 uppercase tracking-widest block mb-1">Legacy Soil</span>
-                          <div className="text-sm text-white font-serif italic">{item.old}</div>
+                          <div className="text-sm text-white font-serif font-black italic">{item.old}</div>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-[8px] font-black text-zinc-600 uppercase tracking-widest">Core:</span>
@@ -325,7 +323,7 @@ const Library = ({ vault, isAdmin }) => {
                       <tbody>
                         {filteredData.map((item, i) => (
                           <tr key={i} className="group border-b border-white/[0.02] hover:bg-white/[0.01]">
-                            <td className="py-6 pr-4"><div className="text-xs text-white font-serif italic">{item.old}</div></td>
+                            <td className="py-6 pr-4"><div className="text-xs text-white font-serif font-black italic">{item.old}</div></td>
                             <td className="py-6 pr-4"><Badge className="bg-zinc-900 text-zinc-400 border border-zinc-800 italic">{item.root}</Badge></td>
                             <td className="py-6"><div className="text-xs text-teal-400 font-black uppercase tracking-wider group-hover:text-white transition-colors">{item.new}</div></td>
                           </tr>
@@ -340,9 +338,9 @@ const Library = ({ vault, isAdmin }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {KINDLING_SCRIPTS.map((script, i) => (
                     <div key={i} className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2rem] flex flex-col hover:border-teal-500/40 transition-all shadow-xl group">
-                      <h4 className="text-sm font-serif italic text-white mb-2">{script.title}</h4>
+                      <h4 className="text-sm font-serif font-black italic text-white mb-2">{script.title}</h4>
                       <p className="text-[10px] text-zinc-500 mb-6 leading-relaxed italic">{script.desc}</p>
-                      <div className="p-4 bg-black/40 border border-white/5 rounded-xl text-[10px] text-zinc-400 font-serif italic leading-relaxed mb-6">
+                      <div className="p-4 bg-black/40 border border-white/5 rounded-xl text-[10px] text-zinc-400 font-serif font-black italic leading-relaxed mb-6">
                         "{script.text}"
                       </div>
                       <button onClick={() => handleCopy(script.text)} className="mt-auto w-full py-4 rounded-xl bg-teal-500/5 border border-teal-500/20 text-[9px] font-black uppercase tracking-widest text-teal-400 hover:bg-teal-500 hover:text-black transition-all">
@@ -356,8 +354,8 @@ const Library = ({ vault, isAdmin }) => {
               {activeTool === 'architect' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
                   <div className="space-y-4">
-                    <h3 className="text-xl font-serif italic text-white">The Cold Bridge Gallery</h3>
-                    <p className="text-[10px] text-zinc-500 uppercase tracking-[0.2em] font-bold">Executive Outreach Blueprints</p>
+                    <h3 className="text-xl font-serif font-black italic text-white">The Cold Bridge Gallery</h3>
+                    <p className="text-[10px] text-zinc-500 uppercase tracking-[0.2em] font-black">Executive Outreach Blueprints</p>
                   </div>
                   <div className="md:col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {[
@@ -366,7 +364,7 @@ const Library = ({ vault, isAdmin }) => {
                     ].map((item, i) => (
                       <div key={i} className="bg-[#110E16] border border-purple-500/10 p-8 rounded-[2rem] group hover:border-purple-500/40 transition-all">
                         <Badge className="bg-purple-500/10 text-purple-400 mb-4">{item.title}</Badge>
-                        <div className="p-6 bg-black/40 rounded-xl border border-white/5 font-serif text-sm italic text-zinc-300 mb-6 leading-relaxed">"{item.script}"</div>
+                        <div className="p-6 bg-black/40 rounded-xl border border-white/5 font-serif font-black text-sm italic text-zinc-300 mb-6 leading-relaxed">"{item.script}"</div>
                         <button onClick={() => handleCopy(item.script)} className="text-[9px] font-black uppercase tracking-widest text-purple-400 hover:text-white flex items-center gap-2">
                           <Copy size={12} /> {copied ? 'Copied' : 'Copy Script'}
                         </button>
@@ -380,7 +378,7 @@ const Library = ({ vault, isAdmin }) => {
                 <div className="max-w-3xl mx-auto space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
                   <div className="space-y-4 border-b border-purple-500/10 pb-8">
                     <div className="flex items-center gap-3">
-                      <h3 className="text-2xl font-serif italic text-white">The Council of Allies</h3>
+                      <h3 className="text-2xl font-serif font-black italic text-white">The Council of Allies</h3>
                       <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 italic text-[8px]">Strategic Sponsorship Protocol</Badge>
                     </div>
                     <p className="text-sm text-zinc-400 leading-relaxed font-light italic">
@@ -423,7 +421,7 @@ const Library = ({ vault, isAdmin }) => {
                               <div className="flex items-center gap-2 mb-1">
                                 <span className="text-[8px] font-black text-purple-500 uppercase tracking-widest">{step.label}</span>
                                 <div className="h-[1px] w-4 bg-purple-500/20" />
-                                <span className="text-[10px] font-bold text-zinc-200 uppercase tracking-tighter">{step.task}</span>
+                                <span className="text-[10px] font-black text-zinc-200 uppercase tracking-tighter">{step.task}</span>
                               </div>
                               <p className="text-[11px] text-zinc-500 italic font-light">{step.detail}</p>
                             </div>
@@ -431,22 +429,10 @@ const Library = ({ vault, isAdmin }) => {
                               <Copy size={10} /> {copied ? 'Copied' : 'Copy Script'}
                             </button>
                           </div>
-                          <div className="p-4 bg-black/40 rounded-xl border border-white/5 font-serif text-xs italic text-zinc-400 leading-relaxed">"{step.script}"</div>
+                          <div className="p-4 bg-black/40 rounded-xl border border-white/5 font-serif font-black text-xs italic text-zinc-400 leading-relaxed">
+                            "{step.script}"
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* PHILOSOPHY CARDS */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-10">
-                    {[
-                      { rule: "Ally vs. Guide", desc: "Guides offer wisdom; Allies offer access." },
-                      { rule: "Fuel Exchange", desc: "Always bring value before you ask for it." },
-                      { rule: "Consistency", desc: "One touchpoint per quarter is the golden ratio." }
-                    ].map((item, i) => (
-                      <div key={i} className="p-6 bg-[#0A080D] border border-purple-500/10 rounded-2xl text-center">
-                        <h5 className="text-[9px] font-black text-purple-400 uppercase tracking-widest mb-2">{item.rule}</h5>
-                        <p className="text-[10px] text-zinc-500 italic leading-snug">{item.desc}</p>
                       </div>
                     ))}
                   </div>
@@ -454,9 +440,11 @@ const Library = ({ vault, isAdmin }) => {
               )}
             </div>
           ) : (
-            <div className="py-24 text-center border border-dashed border-white/5 rounded-[3rem]">
-              <Database size={24} className="text-zinc-800 mx-auto mb-6" />
-              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-700 italic">Select a Provision to Populate the Stage</p>
+            <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-40">
+              <div className="w-16 h-16 rounded-full border border-dashed border-zinc-700 flex items-center justify-center">
+                <Wind className="w-6 h-6 text-zinc-500" />
+              </div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 italic">Select a provision above to begin the work.</p>
             </div>
           )}
         </section>
@@ -464,45 +452,33 @@ const Library = ({ vault, isAdmin }) => {
         {/* SECTION 3: THE SANCTUARY */}
         <section className="mb-20 pt-10 border-t border-white/5">
           <div className="flex items-center gap-4 mb-8">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 whitespace-nowrap">The Sanctuary</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/80 whitespace-nowrap">The Sanctuary</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2.5rem] flex flex-col items-center justify-center text-center shadow-xl">
-              <p className="text-[8px] font-black text-teal-500 uppercase tracking-[0.2em] mb-3 opacity-60">Crisis Text Line (Canada)</p>
+              <p className="text-[8px] font-black text-teal-500 uppercase tracking-[0.2em] mb-3 opacity-90">Crisis Text Line (Canada)</p>
               <p className="text-3xl font-black text-white tracking-[0.2em] mb-2">686868</p>
-              <p className="text-[9px] text-zinc-500 uppercase tracking-widest font-bold">Text "CONNECT" to start</p>
+              <p className="text-[9px] text-zinc-500 uppercase tracking-widest font-black">Text "CONNECT" to start</p>
             </div>
-            
-            {/* FROM BURNOUT TO BALANCE */}
-            <a 
-              href="https://static1.squarespace.com/static/5d3080f196bac8000148b997/t/664cfc0539541d281b05c587/1716321288694/GKYMH+From+Burnout+to+Balance.pdf" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2.5rem] hover:border-teal-500/30 hover:bg-teal-500/5 transition-all flex flex-col text-left shadow-xl group"
-            >
-              <HeartPulse className="w-8 h-8 text-teal-400 mb-6 group-hover:scale-110 transition-transform" />
-              <h4 className="text-white font-serif italic mb-2">From Burnout to Balance</h4>
-              <p className="text-[10px] text-zinc-400 font-light leading-relaxed italic">Strategic pauses and neurological grounding for the professional pivot.</p>
-            </a>
 
-            {/* YOUR INNER ADVOCATE */}
-            <a 
-              href="https://podcasts.apple.com/ca/podcast/your-inner-advocate/id1722984987" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2.5rem] hover:border-teal-500/30 hover:bg-teal-500/5 transition-all flex flex-col text-left shadow-xl group"
-            >
-              <Wind className="w-8 h-8 text-teal-400 mb-6 group-hover:rotate-12 transition-transform" />
-              <h4 className="text-white font-serif italic mb-2">Your Inner Advocate</h4>
-              <p className="text-[10px] text-zinc-400 font-light leading-relaxed italic">Tools for silencing the 'Imposter' and reframing your worth in new markets.</p>
-            </a>
+            <div className="bg-[#110E16] border border-zinc-800/50 p-8 rounded-[2.5rem] flex flex-col shadow-xl">
+              <h4 className="text-white font-serif font-black italic mb-2">From Burnout to Balance</h4>
+              <p className="text-[10px] text-zinc-500 italic leading-relaxed mb-6">A grounding exercise for the first week of your transition.</p>
+              <button className="mt-auto h-12 bg-white/5 border border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-white hover:bg-white/10 transition-all">
+                Download PDF
+              </button>
+            </div>
+
+            <div className="bg-[#110E16] border border-zinc-800/50 p-8 rounded-[2.5rem] flex flex-col shadow-xl">
+              <h4 className="text-white font-serif font-black italic mb-2">The Quiet Porch</h4>
+              <p className="text-[10px] text-zinc-500 italic leading-relaxed mb-6">A curated focus playlist for deep thinking and planning.</p>
+              <button className="mt-auto h-12 bg-white/5 border border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-white hover:bg-white/10 transition-all">
+                Open Playlist
+              </button>
+            </div>
           </div>
         </section>
-
-        <footer className="pt-10 border-t border-white/5 text-center">
-            <p className="text-[8px] font-black text-zinc-600 uppercase tracking-[0.5em]">Hearth Horizon &copy; 2026</p>
-        </footer>
       </div>
     </div>
   );
