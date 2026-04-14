@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Compass, Map, Trees, FileText, Sparkles, BookOpen, 
-  ChevronRight, Activity, Zap, ShieldCheck, Box, Upload, Trash2
+  Activity, Zap, ShieldCheck, Box, Upload, Trash2, ChevronRight
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,9 +13,8 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
   const [reflection, setReflection] = useState("");
   const fileInputRef = useRef(null);
   
-  // Persistence Logic for manual coding mode
   const [userLogs, setUserLogs] = useState(() => {
-    const saved = localStorage.getItem('hearth_user_logs');
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('hearth_user_logs') : null;
     return saved ? JSON.parse(saved) : [];
   });
 
@@ -23,11 +22,9 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
     localStorage.setItem('hearth_user_logs', JSON.stringify(userLogs));
   }, [userLogs]);
 
-  // Tier Logic
   const userTier = vault?.tier || 'Seedling';
   const canArchitect = userTier === 'Steward' || userTier === 'Sentinel';
   
-  // Logic for dynamic states
   const hasResume = vault?.isAligned || !!vault?.resume;
   const blueprints = canArchitect ? (vault?.blueprints || []) : [];
   const moodStreak = vault?.moodStreak || 3; 
@@ -84,8 +81,14 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
   const handleSealObservation = () => {
     if (!sentiment && !reflection) return;
 
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = String(now.getFullYear()).slice(-2);
+    const formattedDate = `${day}.${month}.${year}`;
+
     const newEntry = {
-      date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '02', year: '2y' }).replace(/\//g, '.'),
+      date: formattedDate,
       event: sentiment ? `${sentiment.emoji} Reflection` : "Quiet Observation",
       desc: reflection || `You checked in feeling ${sentiment?.label || 'contemplative'}.`,
       isPending: false
