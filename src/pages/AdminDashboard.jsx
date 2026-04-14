@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Users, Mail, Activity, Check, X, Clock, Send, Zap, BarChart3, TrendingUp } from 'lucide-react';
 
-const ForestAdmin = () => {
+const ForestAdmin = ({ vault, onSync, isAdmin }) => {
   const queryClient = useQueryClient();
   const [grantEmail, setGrantEmail] = useState('');
 
@@ -45,6 +45,12 @@ const ForestAdmin = () => {
     onSuccess: (data, variables) => {
       setGrantEmail('');
       queryClient.invalidateQueries(['dwellers']);
+      
+      // Update local vault if you are changing your own status or currently acting as admin
+      if (variables.email.toLowerCase() === vault?.name?.toLowerCase() || isAdmin) {
+        onSync({ tier: variables.tier });
+      }
+      
       alert(`Success: ${variables.email} is now a ${variables.tier}.`);
     },
     onError: (err) => alert(err.message)
@@ -82,7 +88,7 @@ const ForestAdmin = () => {
 
   if (dwellersLoading || requestsLoading) {
     return (
-      <div className="min-h-screen bg-[#1A1423] flex items-center justify-center">
+      <div className="min-h-screen bg-[#0A080D] flex items-center justify-center">
         <div className="text-teal-500/50 animate-pulse font-black uppercase text-[10px] tracking-[0.5em]">
           Gathering Forest Data...
         </div>
@@ -102,12 +108,12 @@ const ForestAdmin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1A1423] p-8 font-sans text-slate-200">
+    <div className="min-h-screen bg-[#0A080D] p-4 sm:p-8 font-sans text-slate-200 selection:bg-teal-500/30">
       
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
         <div>
           <div className="text-[10px] font-black text-teal-500 uppercase tracking-[0.3em] mb-2">System Oversight</div>
-          <h1 className="text-5xl font-serif text-white tracking-tight">Forest Admin</h1>
+          <h1 className="text-4xl md:text-5xl font-serif text-white tracking-tight italic">Forest Admin</h1>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
@@ -117,28 +123,28 @@ const ForestAdmin = () => {
               type="email" 
               value={grantEmail}
               onChange={(e) => setGrantEmail(e.target.value)}
-              placeholder="Enter ANY email address..." 
-              className="bg-[#241B2E] border border-white/5 rounded-2xl py-3 pl-12 pr-6 text-sm outline-none focus:border-purple-500/30 transition-all w-full md:w-64 placeholder:text-slate-600"
+              placeholder="Enter email address..." 
+              className="bg-[#16121D] border border-white/5 rounded-2xl py-3 pl-12 pr-6 text-sm outline-none focus:border-teal-500/30 transition-all w-full md:w-64 placeholder:text-slate-600 shadow-inner"
             />
           </div>
           <button 
             onClick={() => manualGrant.mutate({ email: grantEmail, tier: 'Hearthkeeper' })}
             disabled={!grantEmail || manualGrant.isPending}
-            className="px-6 py-3 bg-teal-600/10 text-teal-400 border border-teal-500/20 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-teal-500 hover:text-[#1A1423] transition-all flex items-center gap-2 disabled:opacity-50"
+            className="px-6 py-3 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-teal-500 hover:text-[#0A080D] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
           >
             + Hearthkeeper
           </button>
           <button 
             onClick={() => manualGrant.mutate({ email: grantEmail, tier: 'Steward' })}
             disabled={!grantEmail || manualGrant.isPending}
-            className="px-6 py-3 bg-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-500 transition-all flex items-center gap-2 disabled:opacity-50"
+            className="px-6 py-3 bg-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-500 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
           >
             <Zap className="w-3 h-3" /> + Steward
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
         <StatCard title="Total Dwellers" value={safeDwellers.length} icon={<Users />} />
         <StatCard title="Seat Requests" value={pendingRequests.length} icon={<Mail />} />
         <StatCard title="Active Tiers" value="3 Levels" icon={<Activity />} />
@@ -146,9 +152,9 @@ const ForestAdmin = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-[#241B2E] border border-white/5 rounded-[2.5rem] p-10 shadow-xl">
+        <div className="lg:col-span-2 bg-[#110E16] border border-white/5 rounded-[2.5rem] p-6 md:p-10 shadow-2xl">
           <div className="flex justify-between items-center mb-10">
-            <h3 className="font-bold text-xl text-white flex items-center gap-3">
+            <h3 className="font-bold text-xl text-white font-serif italic flex items-center gap-3">
               <BarChart3 className="w-5 h-5 text-teal-500" />
               Dweller Progress
             </h3>
@@ -160,7 +166,7 @@ const ForestAdmin = () => {
                 <tr className="text-[10px] font-black text-slate-600 uppercase tracking-widest border-b border-white/5">
                   <th className="pb-4 px-2">Dweller Email</th>
                   <th className="pb-4 px-2">Current Tier</th>
-                  <th className="pb-4 px-2 text-center">Progress Status</th>
+                  <th className="pb-4 px-2 text-center">Status</th>
                   <th className="pb-4 px-2 text-right">Last Active</th>
                 </tr>
               </thead>
@@ -169,9 +175,9 @@ const ForestAdmin = () => {
                   const progress = getProgress(dweller);
                   return (
                     <tr key={dweller.id} className="border-b border-white/[0.02] hover:bg-white/[0.01] transition-colors group">
-                      <td className="py-6 px-2 text-slate-300">{dweller.email}</td>
+                      <td className="py-6 px-2 text-slate-300 text-xs md:text-sm">{dweller.email}</td>
                       <td className="py-6 px-2">
-                        <span className={`px-3 py-1 rounded-full text-[10px] uppercase font-black tracking-tighter ${
+                        <span className={`px-3 py-1 rounded-full text-[9px] uppercase font-black tracking-tighter ${
                           dweller.subscription_tier === 'Steward' ? 'bg-purple-500/10 text-purple-400' :
                           dweller.subscription_tier === 'Hearthkeeper' ? 'bg-teal-500/10 text-teal-400' :
                           'bg-white/5 text-slate-500'
@@ -180,7 +186,7 @@ const ForestAdmin = () => {
                         </span>
                       </td>
                       <td className="py-6 px-2 text-center">
-                        <span className="text-[10px] text-slate-400 italic font-light">{progress.status || 'Active'}</span>
+                        <span className="text-[10px] text-slate-500 italic font-light">{progress.status || 'Active'}</span>
                       </td>
                       <td className="py-6 px-2 text-right text-slate-500 text-[10px] font-mono">
                         {progress.last_activity ? new Date(progress.last_activity).toLocaleDateString() : '—'}
@@ -193,7 +199,7 @@ const ForestAdmin = () => {
           </div>
         </div>
 
-        <div className="bg-[#241B2E] border border-white/5 rounded-[2.5rem] p-10 shadow-xl flex flex-col">
+        <div className="bg-[#110E16] border border-white/5 rounded-[2.5rem] p-6 md:p-10 shadow-2xl flex flex-col">
           <div className="flex items-center gap-3 mb-10">
             <Clock className="w-4 h-4 text-purple-400" />
             <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-white">Pending Requests</h3>
@@ -204,7 +210,7 @@ const ForestAdmin = () => {
 
           <div className="space-y-6 overflow-y-auto max-h-[600px] pr-2 custom-scrollbar">
             {pendingRequests.map(request => (
-              <div key={request.id} className="group p-6 bg-black/20 rounded-3xl border border-white/5 hover:border-teal-500/20 transition-all">
+              <div key={request.id} className="group p-6 bg-black/40 rounded-3xl border border-white/5 hover:border-teal-500/20 transition-all shadow-inner">
                 <div className="text-[10px] font-bold text-teal-500/60 mb-2 truncate">{request.claimed_by}</div>
                 <p className="text-xs italic font-light text-slate-400 leading-relaxed mb-6">
                   {request.notes || "Requested a seat in the Sanctuary."}
@@ -212,7 +218,7 @@ const ForestAdmin = () => {
                 <div className="flex gap-2">
                   <button 
                     onClick={() => approveRequest.mutate({ requestId: request.id, email: request.claimed_by })}
-                    className="flex-grow py-3 bg-teal-500/10 text-teal-400 rounded-xl hover:bg-teal-500 hover:text-[#1A1423] transition-all text-[10px] font-black uppercase tracking-widest"
+                    className="flex-grow py-3 bg-teal-500/10 text-teal-400 rounded-xl hover:bg-teal-500 hover:text-[#0A080D] transition-all text-[10px] font-black uppercase tracking-widest"
                   >
                     Grant Seat
                   </button>
@@ -242,12 +248,12 @@ const ForestAdmin = () => {
 };
 
 const StatCard = ({ title, value, icon }) => (
-  <div className="bg-[#241B2E] border border-white/5 rounded-[2.5rem] p-8 flex items-center justify-between group hover:border-teal-500/10 transition-all shadow-lg">
+  <div className="bg-[#110E16] border border-white/5 rounded-[2.5rem] p-8 flex items-center justify-between group hover:border-teal-500/10 transition-all shadow-xl">
     <div>
       <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">{title}</div>
       <div className="text-3xl font-black text-white">{value}</div>
     </div>
-    <div className="p-3 bg-white/5 rounded-2xl text-slate-600 group-hover:text-teal-400 group-hover:bg-teal-400/5 transition-all">
+    <div className="p-4 bg-black/40 rounded-2xl text-slate-600 group-hover:text-teal-400 group-hover:bg-teal-400/5 transition-all shadow-inner">
       {React.cloneElement(icon, { className: 'w-5 h-5' })}
     </div>
   </div>
