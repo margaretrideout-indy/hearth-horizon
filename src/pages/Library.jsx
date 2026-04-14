@@ -173,7 +173,6 @@ const Library = ({ vault, isAdmin }) => {
                     <a href={IDENTITY_LEDGER_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[9px] font-bold text-teal-500/60 hover:text-teal-400 uppercase tracking-widest transition-colors">
                       <Save size={10} /> View Schematic
                     </a>
-                    {/* ADDED: Worksheet Download Link */}
                     <a href={AUTHORITY_WORKSHEET_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[9px] font-bold text-zinc-500 hover:text-white uppercase tracking-widest transition-colors">
                       <FileText size={10} /> Authority Worksheet (PDF)
                     </a>
@@ -286,12 +285,9 @@ const Library = ({ vault, isAdmin }) => {
                     <div key={i} className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2rem] flex flex-col hover:border-teal-500/40 transition-all shadow-xl group">
                       <h4 className="text-sm font-serif italic text-white mb-2">{script.title}</h4>
                       <p className="text-[10px] text-zinc-500 mb-6 leading-relaxed italic">{script.desc}</p>
-                      
-                      {/* DIRECT SCRIPT PREVIEW */}
                       <div className="p-4 bg-black/40 border border-white/5 rounded-xl text-[10px] text-zinc-400 font-serif italic leading-relaxed mb-6">
                         "{script.text}"
                       </div>
-
                       <button onClick={() => handleCopy(script.text)} className="mt-auto w-full py-4 rounded-xl bg-teal-500/5 border border-teal-500/20 text-[9px] font-black uppercase tracking-widest text-teal-400 hover:bg-teal-500 hover:text-black transition-all">
                          {copied ? 'Copied to Clipboard' : 'Copy Script'}
                       </button>
@@ -325,9 +321,14 @@ const Library = ({ vault, isAdmin }) => {
 
               {activeTool === 'sponsorship' && (
                 <div className="max-w-3xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
-                  <div className="text-center space-y-4 border-b border-purple-500/10 pb-8">
-                    <h3 className="text-2xl font-serif italic text-white">The Council of Allies</h3>
-                    <p className="text-[9px] text-purple-400 uppercase tracking-[0.3em] font-black">Strategic Sponsorship Protocol</p>
+                  <div className="space-y-4 border-b border-purple-500/10 pb-8">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-2xl font-serif italic text-white">The Council of Allies</h3>
+                      <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 italic text-[8px]">Strategic Sponsorship Protocol</Badge>
+                    </div>
+                    <p className="text-sm text-zinc-400 leading-relaxed font-light">
+                      The Council of Allies is a system to turn "knowing people" into "having advocates" who speak your name in rooms you haven't entered yet. By focusing on providing value and keeping a simple 90-day check-in, you move from someone asking for advice to a peer who earns active support.
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-1 gap-6">
