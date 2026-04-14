@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Compass, Map, Trees, FileText, Sparkles, BookOpen, 
   ChevronRight, Activity, Zap, ShieldCheck, Box, Upload, Trash2
@@ -13,6 +13,16 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
   const [reflection, setReflection] = useState("");
   const fileInputRef = useRef(null);
   
+  // Persistence Logic for manual coding mode
+  const [userLogs, setUserLogs] = useState(() => {
+    const saved = localStorage.getItem('hearth_user_logs');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('hearth_user_logs', JSON.stringify(userLogs));
+  }, [userLogs]);
+
   // Tier Logic
   const userTier = vault?.tier || 'Seedling';
   const canArchitect = userTier === 'Steward' || userTier === 'Sentinel';
@@ -22,7 +32,6 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
   const blueprints = canArchitect ? (vault?.blueprints || []) : [];
   const moodStreak = vault?.moodStreak || 3; 
   
-  // Progress logic: Base 8 for resume, 2 per blueprint
   const baseMaturity = hasResume ? 8 : 0;
   const maturityPulses = baseMaturity + (blueprints.length * 2); 
   const maturityTarget = 14;
@@ -70,17 +79,30 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
     return logs;
   };
 
-  const activeLogs = getDynamicLogs();
+  const activeLogs = [...userLogs, ...getDynamicLogs()];
+
+  const handleSealObservation = () => {
+    if (!sentiment && !reflection) return;
+
+    const newEntry = {
+      date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '02', year: '2y' }).replace(/\//g, '.'),
+      event: sentiment ? `${sentiment.emoji} Reflection` : "Quiet Observation",
+      desc: reflection || `You checked in feeling ${sentiment?.label || 'contemplative'}.`,
+      isPending: false
+    };
+
+    setUserLogs([newEntry, ...userLogs]);
+    setSentiment(null);
+    setReflection("");
+  };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-12 pb-24 p-6 bg-[#0A080D]">
-      {/* Top Nav: The Path */}
+    <div className="max-w-6xl mx-auto space-y-12 pb-24 p-6 bg-[#0A080D] overflow-x-hidden">
       <header className="relative py-12 text-center space-y-8">
         <div className="space-y-4">
           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60">Operational Base</p>
           <h1 className="text-5xl font-bold text-white font-heading italic tracking-tight">The Hearth</h1>
           
-          {/* Tier Standing Badge */}
           <div className="flex justify-center pt-2">
             <div className="flex items-center gap-3 px-5 py-2 rounded-2xl border border-zinc-800 bg-[#110E16] shadow-xl">
               <div className={`w-2 h-2 rounded-full shadow-[0_0_10px_rgba(20,184,166,0.5)] ${
@@ -125,7 +147,6 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           
-          {/* Pathfinder's Protocol */}
           <Card className="bg-[#110E16] border-zinc-800/50 rounded-[2rem] overflow-hidden shadow-2xl">
             <div 
               className="p-8 flex items-center justify-between cursor-pointer group"
@@ -181,7 +202,6 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
                       ))}
                     </div>
 
-                    {/* Tier-Gated Repository */}
                     {canArchitect && blueprints.length > 0 && (
                       <div className="mt-8 pt-6 border-t border-zinc-900 space-y-4">
                         <div className="flex items-center gap-2 px-2">
@@ -209,7 +229,6 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
             </AnimatePresence>
           </Card>
 
-          {/* Alignment Engine */}
           <Card className="p-10 bg-gradient-to-br from-[#110E16] to-[#0A080D] border-zinc-800/50 rounded-[2.5rem] relative overflow-hidden group shadow-2xl">
             <input
               type="file"
@@ -271,9 +290,7 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
           </Card>
         </div>
 
-        {/* Right Column: Logbook & Reflection */}
         <div className="space-y-8">
-          {/* The Logbook */}
           <Card className="bg-[#110E16] border-zinc-800/50 rounded-[2.5rem] p-8 shadow-2xl">
             <h3 className="text-white text-[10px] font-black uppercase tracking-[0.3em] mb-8 flex items-center gap-3">
               <motion.div 
@@ -283,15 +300,15 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
               />
               The Logbook
             </h3>
-            <div className="space-y-6">
+            <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2 scrollbar-hide">
               <AnimatePresence mode="popLayout">
                 {activeLogs.map((log, i) => (
                   <motion.div 
-                    key={log.event}
+                    key={log.event + log.date + i}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="group cursor-default"
+                    transition={{ delay: i * 0.05 }}
+                    className="group cursor-default mb-6"
                   >
                     <div className="flex justify-between items-end mb-1">
                       <p className={`text-xs font-bold uppercase tracking-tighter transition-colors ${log.isPending ? 'text-zinc-600 italic' : 'text-white group-hover:text-teal-400'}`}>
@@ -312,7 +329,6 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
             </div>
           </Card>
 
-          {/* Reflection */}
           <Card className="bg-[#110E16] border-zinc-800/50 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
             <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-teal-500/5 blur-[50px] rounded-full" />
             
@@ -380,6 +396,7 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
                   className="w-full bg-[#0D0B12] border border-zinc-800/50 rounded-2xl p-5 text-xs text-zinc-300 placeholder:text-zinc-700 focus:outline-none focus:border-teal-500/30 transition-all resize-none h-24 font-light italic"
                 />
                 <Button 
+                  onClick={handleSealObservation}
                   className={`w-full text-[9px] font-black uppercase tracking-[0.3em] h-12 rounded-xl transition-all ${
                     sentiment || reflection 
                       ? 'bg-teal-500/10 border border-teal-500/20 text-teal-400 hover:bg-teal-500/20' 
