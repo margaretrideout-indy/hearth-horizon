@@ -53,9 +53,9 @@ const StandingModal = ({ isOpen, onClose, type }) => {
   
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
-      <div className="absolute inset-0 bg-[#0A080D]/80 backdrop-blur-md" onClick={onClose} />
-      <div className={`relative w-full max-w-lg bg-[#16121D] border ${isSteward ? 'border-purple-500/30' : 'border-teal-500/30'} rounded-[2.5rem] p-8 md:p-12 shadow-2xl animate-in zoom-in-95 duration-200`}>
-        <button onClick={onClose} className="absolute top-8 right-8 text-zinc-500 hover:text-white transition-colors">
+      <div className="absolute inset-0 bg-[#0A080D]/90 backdrop-blur-md" onClick={onClose} />
+      <div className={`relative w-full max-w-lg bg-[#16121D] border ${isSteward ? 'border-purple-500/30' : 'border-teal-500/30'} rounded-[2.5rem] p-8 md:p-12 shadow-2xl animate-in zoom-in-95 duration-200 overflow-hidden`}>
+        <button onClick={onClose} className="absolute top-6 right-6 text-zinc-500 hover:text-white transition-colors z-10">
           <X size={20} />
         </button>
         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-8 ${isSteward ? 'bg-purple-500/10 text-purple-400' : 'bg-teal-500/10 text-teal-400'}`}>
@@ -81,7 +81,7 @@ const StandingModal = ({ isOpen, onClose, type }) => {
 
 const Library = ({ vault, isAdmin }) => {
   const navigate = useNavigate();
-  const [activeTool, setActiveTool] = useState('reframing');
+  const [activeTool, setActiveTool] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSector, setActiveSector] = useState("All");
   const [copied, setCopied] = useState(false);
@@ -108,7 +108,8 @@ const Library = ({ vault, isAdmin }) => {
     <div className="min-h-screen bg-[#0A080D] text-zinc-300 p-4 sm:p-6 md:p-12 font-sans selection:bg-teal-500/30 overflow-x-hidden">
       <StandingModal isOpen={!!modalType} onClose={() => setModalType(null)} type={modalType} />
       
-      <div className="fixed top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-10%,rgba(20,184,166,0.05),transparent_70%)] pointer-events-none" />
+      {/* Background Glow - Contained to prevent bleed */}
+      <div className="fixed top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-10%,rgba(20,184,166,0.05),transparent_70%)] pointer-events-none z-0" />
 
       <div className="max-w-6xl mx-auto relative z-10">
         
@@ -171,6 +172,7 @@ const Library = ({ vault, isAdmin }) => {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Strategy Deck */}
             <div className="bg-gradient-to-br from-[#16121D] to-[#0A080D] border border-teal-500/30 p-8 rounded-[2.5rem] flex flex-col relative overflow-hidden group shadow-2xl">
               <div className="absolute top-0 right-0 p-8 text-teal-500/5 pointer-events-none">
                 <Mountain size={180} />
@@ -183,9 +185,10 @@ const Library = ({ vault, isAdmin }) => {
               </button>
             </div>
 
-            <div className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2.5rem] relative group hover:border-teal-500/30 transition-all flex flex-col shadow-xl">
+            {/* Hearthkeeper Section */}
+            <div className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2.5rem] relative group hover:border-teal-500/30 transition-all flex flex-col shadow-xl overflow-hidden">
               {!isHearthkeeper && (
-                <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center">
+                <div className="absolute inset-0 z-20 bg-[#0A080D]/95 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center">
                   <Lock className="w-5 h-5 text-teal-500/40 mb-3" />
                   <p className="text-[9px] font-black uppercase tracking-[0.2em] text-teal-500/90 mb-5">Hearthkeeper Required</p>
                   <button onClick={() => setModalType('hearthkeeper')} className="px-6 py-3 bg-teal-500/10 border border-teal-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-teal-400">View Requirements</button>
@@ -228,9 +231,10 @@ const Library = ({ vault, isAdmin }) => {
               </div>
             </div>
 
-            <div className="bg-[#110E16] border border-purple-500/10 p-8 rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col shadow-xl">
+            {/* Steward Section */}
+            <div className="bg-[#110E16] border border-purple-500/10 p-8 rounded-[2.5rem] relative group hover:border-purple-500/30 transition-all flex flex-col shadow-xl overflow-hidden">
               {!isSteward && (
-                <div className="absolute inset-0 z-20 bg-[#0A080D]/90 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center">
+                <div className="absolute inset-0 z-20 bg-[#0A080D]/95 backdrop-blur-[6px] rounded-[2.5rem] flex flex-col items-center justify-center p-8 text-center">
                   <Lock className="w-5 h-5 text-purple-500/40 mb-3" />
                   <p className="text-[9px] font-black uppercase tracking-[0.2em] text-purple-500/90 mb-5">Steward Required</p>
                   <button onClick={() => setModalType('steward')} className="px-6 py-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-purple-400">View Requirements</button>
@@ -269,7 +273,7 @@ const Library = ({ vault, isAdmin }) => {
               </div>
 
               {activeTool === 'reframing' && (
-                <div className="bg-[#110E16]/60 border border-teal-500/10 rounded-[2.5rem] p-4 md:p-12 shadow-2xl backdrop-blur-sm">
+                <div className="bg-[#110E16]/60 border border-teal-500/10 rounded-[2.5rem] p-6 md:p-12 shadow-2xl backdrop-blur-sm">
                    <div className="flex flex-col md:flex-row gap-6 mb-12">
                     <div className="relative flex-1">
                       <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4" />
@@ -340,145 +344,53 @@ const Library = ({ vault, isAdmin }) => {
                     <div key={i} className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2rem] flex flex-col hover:border-teal-500/40 transition-all shadow-xl group">
                       <h4 className="text-sm font-serif font-black italic text-white mb-2">{script.title}</h4>
                       <p className="text-[10px] text-zinc-500 mb-6 leading-relaxed italic">{script.desc}</p>
-                      <div className="p-4 bg-black/40 border border-white/5 rounded-xl text-[10px] text-zinc-400 font-serif font-black italic leading-relaxed mb-6">
-                        "{script.text}"
+                      <div className="p-4 bg-black/40 border border-white/5 rounded-xl text-[10px] text-zinc-400 font-serif font-black italic leading-relaxed mb-6 relative group-hover:border-teal-500/20 transition-all">
+                        {script.text}
                       </div>
-                      <button onClick={() => handleCopy(script.text)} className="mt-auto w-full py-4 rounded-xl bg-teal-500/5 border border-teal-500/20 text-[9px] font-black uppercase tracking-widest text-teal-400 hover:bg-teal-500 hover:text-black transition-all">
-                         {copied ? 'Copied to Clipboard' : 'Copy Script'}
+                      <button 
+                        onClick={() => handleCopy(script.text)}
+                        className="mt-auto flex items-center justify-center gap-2 w-full h-12 rounded-xl bg-teal-500/5 border border-teal-500/20 text-[8px] font-black uppercase tracking-widest text-teal-400 hover:bg-teal-500 hover:text-black transition-all"
+                      >
+                        {copied ? 'Copied to Ledger' : (
+                          <>
+                            <Copy size={12} /> Copy Script
+                          </>
+                        )}
                       </button>
                     </div>
                   ))}
                 </div>
               )}
 
-              {activeTool === 'architect' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
-                  <div className="space-y-4">
-                    <h3 className="text-xl font-serif font-black italic text-white">The Cold Bridge Gallery</h3>
-                    <p className="text-[10px] text-zinc-500 uppercase tracking-[0.2em] font-black">Executive Outreach Blueprints</p>
-                  </div>
-                  <div className="md:col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {[
-                      { title: "The Systems Logic", script: "I’ve spent the last decade architecting complex learning systems. I'm now applying that same operational rigor to [Industry] to solve [Specific Pain Point]. Would love to discuss how my 'Systems-First' approach aligns with your current roadmap." },
-                      { title: "The Stakeholder Bridge", script: "High-stakes communication and conflict resolution have been the bedrock of my career in the public sector. I am migrating these skills into the [Target] space to help streamline [Department] goals." }
-                    ].map((item, i) => (
-                      <div key={i} className="bg-[#110E16] border border-purple-500/10 p-8 rounded-[2rem] group hover:border-purple-500/40 transition-all">
-                        <Badge className="bg-purple-500/10 text-purple-400 mb-4">{item.title}</Badge>
-                        <div className="p-6 bg-black/40 rounded-xl border border-white/5 font-serif font-black text-sm italic text-zinc-300 mb-6 leading-relaxed">"{item.script}"</div>
-                        <button onClick={() => handleCopy(item.script)} className="text-[9px] font-black uppercase tracking-widest text-purple-400 hover:text-white flex items-center gap-2">
-                          <Copy size={12} /> {copied ? 'Copied' : 'Copy Script'}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {activeTool === 'sponsorship' && (
-                <div className="max-w-3xl mx-auto space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
-                  <div className="space-y-4 border-b border-purple-500/10 pb-8">
-                    <div className="flex items-center gap-3">
-                      <h3 className="text-2xl font-serif font-black italic text-white">The Council of Allies</h3>
-                      <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 italic text-[8px]">Strategic Sponsorship Protocol</Badge>
-                    </div>
-                    <p className="text-sm text-zinc-400 leading-relaxed font-light italic">
-                      The Council of Allies is a system to turn "knowing people" into "having advocates." Focus on providing value and maintaining a simple 90-day cadence.
-                    </p>
-                  </div>
-
-                  {/* 90-DAY PULSE TIMELINE */}
-                  <div className="relative space-y-12">
-                    <div className="absolute left-[15px] top-4 bottom-4 w-[1px] bg-gradient-to-b from-purple-500/40 via-purple-500/10 to-transparent" />
-                    {[
-                      { 
-                        day: "01", label: "THE KINDLING", task: "Initial Outreach", 
-                        script: "Hi [Name], I saw we are both connected to [Contact]. I'm currently pivoting into [Industry] and would love to hear about your journey at [Company].",
-                        detail: "Establish the bridge based on mutual interest." 
-                      },
-                      { 
-                        day: "30", label: "THE FUEL", task: "The Value Drop", 
-                        script: "Hi [Name], saw this article on [Topic] and thought of our last chat. Hope the project is moving well!",
-                        detail: "No ask. Just fuel for their fire." 
-                      },
-                      { 
-                        day: "60", label: "THE GLOW", task: "Progress Update", 
-                        script: "Quick update: I just finished that [Certification/Project] we discussed. Your advice on [Topic] really helped shape my approach.",
-                        detail: "Show them their 'investment' in you is working." 
-                      },
-                      { 
-                        day: "90", label: "THE TENDING", task: "Low-Stakes Sync", 
-                        script: "Hi [Name], it's been a few months—would love to grab 15 mins for a 'Quarterly Pulse' or share a specific insight I've gathered recently.",
-                        detail: "Keep the connection warm for the next season." 
-                      }
-                    ].map((step, idx) => (
-                      <div key={idx} className="relative pl-12 group">
-                        <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-[#0A080D] border border-purple-500/30 flex items-center justify-center z-10 group-hover:border-purple-500 transition-all shadow-[0_0_15px_rgba(168,85,247,0.1)]">
-                          <span className="text-[9px] font-black text-purple-400">{step.day}</span>
-                        </div>
-                        <div className="bg-[#110E16] border border-white/5 p-6 rounded-3xl hover:border-purple-500/20 transition-all shadow-xl">
-                          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                            <div>
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="text-[8px] font-black text-purple-500 uppercase tracking-widest">{step.label}</span>
-                                <div className="h-[1px] w-4 bg-purple-500/20" />
-                                <span className="text-[10px] font-black text-zinc-200 uppercase tracking-tighter">{step.task}</span>
-                              </div>
-                              <p className="text-[11px] text-zinc-500 italic font-light">{step.detail}</p>
-                            </div>
-                            <button onClick={() => handleCopy(step.script)} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-500/5 border border-purple-500/10 text-[8px] font-black text-purple-400 uppercase tracking-widest hover:bg-purple-500 hover:text-black transition-all shrink-0">
-                              <Copy size={10} /> {copied ? 'Copied' : 'Copy Script'}
-                            </button>
-                          </div>
-                          <div className="p-4 bg-black/40 rounded-xl border border-white/5 font-serif font-black text-xs italic text-zinc-400 leading-relaxed">
-                            "{step.script}"
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+              {(activeTool === 'architect' || activeTool === 'sponsorship') && (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <Zap className="w-12 h-12 text-purple-500/20 mb-6" />
+                  <h4 className="text-xl text-white font-serif font-black italic mb-2">High-Stakes Intelligence</h4>
+                  <p className="text-xs text-zinc-500 font-light italic">These assets are currently being provisioned for your specific migration path.</p>
                 </div>
               )}
             </div>
           ) : (
-            <div className="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-40">
-              <div className="w-16 h-16 rounded-full border border-dashed border-zinc-700 flex items-center justify-center">
-                <Wind className="w-6 h-6 text-zinc-500" />
-              </div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500 italic">Select a provision above to begin the work.</p>
+            <div className="flex flex-col items-center justify-center py-24 border border-dashed border-white/5 rounded-[3rem]">
+              <Compass className="w-12 h-12 text-zinc-800 mb-6" />
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600">Select a tool from the Canopy to begin</p>
             </div>
           )}
         </section>
 
-        {/* SECTION 3: THE SANCTUARY */}
-        <section className="mb-20 pt-10 border-t border-white/5">
-          <div className="flex items-center gap-4 mb-8">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/80 whitespace-nowrap">The Sanctuary</h3>
-            <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
+        {/* FOOTER */}
+        <footer className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-3">
+            <div className="w-6 h-6 rounded-lg bg-teal-500/10 flex items-center justify-center">
+              <Mountain size={12} className="text-teal-500" />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Hearth Horizon © 2026</span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#110E16] border border-teal-500/10 p-8 rounded-[2.5rem] flex flex-col items-center justify-center text-center shadow-xl">
-              <p className="text-[8px] font-black text-teal-500 uppercase tracking-[0.2em] mb-3 opacity-90">Crisis Text Line (Canada)</p>
-              <p className="text-3xl font-black text-white tracking-[0.2em] mb-2">686868</p>
-              <p className="text-[9px] text-zinc-500 uppercase tracking-widest font-black">Text "CONNECT" to start</p>
-            </div>
-
-            <div className="bg-[#110E16] border border-zinc-800/50 p-8 rounded-[2.5rem] flex flex-col shadow-xl">
-              <h4 className="text-white font-serif font-black italic mb-2">From Burnout to Balance</h4>
-              <p className="text-[10px] text-zinc-500 italic leading-relaxed mb-6">A grounding exercise for the first week of your transition.</p>
-              <button className="mt-auto h-12 bg-white/5 border border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-white hover:bg-white/10 transition-all">
-                Download PDF
-              </button>
-            </div>
-
-            <div className="bg-[#110E16] border border-zinc-800/50 p-8 rounded-[2.5rem] flex flex-col shadow-xl">
-              <h4 className="text-white font-serif font-black italic mb-2">The Quiet Porch</h4>
-              <p className="text-[10px] text-zinc-500 italic leading-relaxed mb-6">A curated focus playlist for deep thinking and planning.</p>
-              <button className="mt-auto h-12 bg-white/5 border border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-white hover:bg-white/10 transition-all">
-                Open Playlist
-              </button>
-            </div>
+          <div className="flex gap-8">
+            <button onClick={() => navigate('/grove')} className="text-[9px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 transition-colors">Grove Connect</button>
+            <button onClick={() => navigate('/hearth')} className="text-[9px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 transition-colors">Return Home</button>
           </div>
-        </section>
+        </footer>
       </div>
     </div>
   );
