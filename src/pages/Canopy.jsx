@@ -83,7 +83,7 @@ const Canopy = ({ vault, isAdmin }) => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-teal-500/10 text-teal-400">
-              <Compass size={20} />
+              <Rocket size={20} />
             </div>
             <h1 className="text-3xl font-serif italic text-white">Horizon Job Board</h1>
           </div>
