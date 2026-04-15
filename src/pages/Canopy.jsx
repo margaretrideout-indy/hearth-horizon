@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { 
   Search, MapPin, Briefcase, Filter, ExternalLink, 
-  Sparkles, Compass, ShieldCheck, ArrowRight, Building2,
-  Target, Zap, Rocket
+  Sparkles, Rocket, ShieldCheck, ArrowRight, Building2,
+  Target, Zap
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
