@@ -12,7 +12,8 @@ import Library from './pages/Library';
 import GroveTiers from './pages/GroveTiers';
 import EmbersChat from './pages/EmbersChat'; 
 import AdminDashboard from './pages/AdminDashboard';
-import Contact from './pages/Contact'; // Imported for Volume II Library storage
+import Contact from './pages/Contact'; 
+import Canopy from './pages/Canopy';
 
 const queryClient = new QueryClient();
 const ADMIN_EMAIL = "margaretpardy@gmail.com"; 
@@ -230,6 +231,8 @@ function AppRoutes() {
             </AppLayout>
           </ProtectedRoute>
         } />
+
+        <Route path="/canopy" element={<Canopy />} />
 
         {/* Catch-all Redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />
