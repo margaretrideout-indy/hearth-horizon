@@ -1,39 +1,48 @@
 import React from 'react';
-import { Download, FileText, MessageSquare, Map, ExternalLink, ChevronRight } from 'lucide-react';
+import { Download, FileText, MessageSquare, Map, ChevronRight } from 'lucide-react';
 
-// This exported array resolves the "does not provide an export named 'libraryVolumeII'" error
 export const libraryVolumeII = [
   {
     title: "The Horizon Resume Template",
-    desc: "A clean, ATS-optimized layout designed to strip away academic jargon.",
-    type: "Downloadable Doc",
+    desc: "A clean, ATS-optimized layout. Click to create your own private, editable copy.",
+    type: "Google Doc Template",
     icon: <FileText className="text-purple-400" />,
-    action: "Get Template"
+    action: "Create My Copy",
+    url: "https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy"
   },
   {
     title: "Salary Negotiation Scripts",
     desc: "Exact word-for-word scripts to use during the 'What are your expectations?' talk.",
     type: "Reference Guide",
     icon: <MessageSquare className="text-teal-400" />,
-    action: "Read Scripts"
+    action: "Read Scripts",
+    url: "#"
   },
   {
     title: "The Power Verb Lexicon",
     desc: "100+ corporate verbs to replace 'helped', 'taught', and 'organized'.",
     type: "Glossary",
     icon: <Download className="text-purple-400" />,
-    action: "View List"
+    action: "View List",
+    url: "#"
   },
   {
     title: "Canadian Market Primer",
     desc: "Specific advice for RRSP negotiation and provincial license translation.",
     type: "Static PDF",
     icon: <Map className="text-teal-400" />,
-    action: "Open Guide"
+    action: "Open Guide",
+    url: "#"
   }
 ];
 
 const Provisions = () => {
+  const handleAction = (url) => {
+    if (url && url !== "#") {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#050406] text-slate-300 font-sans p-8 pt-24">
       <div className="max-w-4xl mx-auto">
@@ -51,6 +60,7 @@ const Provisions = () => {
           {libraryVolumeII.map((tool, idx) => (
             <div 
               key={idx}
+              onClick={() => handleAction(tool.url)}
               className="group relative bg-[#0A080D] border border-white/5 p-6 rounded-2xl hover:border-purple-500/30 transition-all cursor-pointer"
             >
               <div className="flex items-center justify-between">
@@ -81,7 +91,10 @@ const Provisions = () => {
         <div className="mt-16 p-8 rounded-3xl bg-gradient-to-br from-purple-900/20 to-teal-900/20 border border-white/5 text-center">
             <h3 className="text-white font-serif italic text-2xl mb-2">Need a custom provision?</h3>
             <p className="text-slate-400 mb-6">If you're looking for a specific template or guide that isn't here, let the Hearthkeepers know.</p>
-            <button className="px-6 py-2 bg-white text-black font-bold rounded-full hover:bg-teal-400 transition-colors">
+            <button 
+              onClick={() => window.location.href = 'mailto:support@hearthandhorizon.com'}
+              className="px-6 py-2 bg-white text-black font-bold rounded-full hover:bg-teal-400 transition-colors"
+            >
                 Contact Archive Support
             </button>
         </div>
