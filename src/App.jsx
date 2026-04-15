@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'r
 import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
-// Pages & Components
 import AppLayout from './components/layout/AppLayout';
 import YourHearth from './pages/YourHearth';
 import CulturalFit from './pages/CulturalFit';
@@ -17,7 +16,6 @@ import Contact from './pages/Contact';
 const queryClient = new QueryClient();
 const ADMIN_EMAIL = "margaretpardy@gmail.com"; 
 
-// --- 1. HEARTH CONTEXT ---
 const HearthContext = createContext();
 
 export function useHearth() {
@@ -29,7 +27,6 @@ export function useHearth() {
 function HearthProvider({ children }) {
   const queryClient = useQueryClient();
 
-  // Global Auth Check
   const { data: user, isLoading: authLoading } = useQuery({
     queryKey: ['me'],
     queryFn: () => base44.auth.me(),
@@ -38,7 +35,6 @@ function HearthProvider({ children }) {
 
   const isAdmin = user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
-  // Vault/Sanctuary State
   const [sanctuaryState, setSanctuaryState] = useState(() => {
     const saved = localStorage.getItem('vault_reset_final');
     const initialState = {
@@ -60,7 +56,6 @@ function HearthProvider({ children }) {
     }
   });
 
-  // Library Persistence State
   const [activeLibraryTool, setActiveLibraryTool] = useState(null);
 
   useEffect(() => {
@@ -95,7 +90,6 @@ function HearthProvider({ children }) {
   return <HearthContext.Provider value={value}>{children}</HearthContext.Provider>;
 }
 
-// --- 2. UTILITY COMPONENTS ---
 function LoadingScreen() {
   return (
     <div className="min-h-screen bg-[#0A080D] flex items-center justify-center">
@@ -106,13 +100,8 @@ function LoadingScreen() {
 
 function AdminRoute({ children }) {
   const { user, isAdmin, authLoading } = useHearth();
-
   if (authLoading) return <LoadingScreen />;
-  
-  if (!user || !isAdmin) {
-    return <Navigate to="/" replace />;
-  }
-
+  if (!user || !isAdmin) return <Navigate to="/" replace />;
   return children;
 }
 
@@ -123,11 +112,9 @@ function ProtectedRoute({ children }) {
   useEffect(() => {
     const checkVipStatus = async () => {
       if (!user || user.subscription_tier === 'Hearthkeeper' || user.subscription_tier === 'Steward') return;
-
       try {
         const vouchers = await window.base44.entities.VoucherPool.list();
         const myVipTicket = vouchers.find(v => v.claimed_by?.toLowerCase() === user.email?.toLowerCase() && v.status === 'available');
-
         if (myVipTicket) {
           await window.base44.entities.User.update(user.id, { subscription_tier: 'Hearthkeeper' });
           await window.base44.entities.VoucherPool.update(myVipTicket.id, { 
@@ -137,20 +124,17 @@ function ProtectedRoute({ children }) {
           queryClient.invalidateQueries(['me']);
         }
       } catch (error) {
-        console.error("Sanctuary VIP check encountered an issue", error);
+        console.error("Sanctuary VIP check issue", error);
       }
     };
-
     if (user) checkVipStatus();
   }, [user, queryClient]);
 
   if (authLoading) return <LoadingScreen />;
   if (!user) return <Navigate to="/grove" replace />;
-  
   return children;
 }
 
-// --- 3. MAIN ROUTING ---
 function AppRoutes() {
   const { isAdmin, vault, onSync, onResumeSync, effectiveTier } = useHearth();
   const navigate = useNavigate();
@@ -158,18 +142,15 @@ function AppRoutes() {
   return (
     <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
       <Routes>
-        {/* Admin Route */}
         <Route path="/admin" element={
           <AdminRoute>
             <AdminDashboard vault={vault} onSync={onSync} />
           </AdminRoute>
         } />
         
-        {/* Public Routes */}
         <Route path="/" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         <Route path="/grove" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         
-        {/* Protected Hearth Route */}
         <Route path="/hearth" element={
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
@@ -186,7 +167,6 @@ function AppRoutes() {
           </ProtectedRoute>
         } />
 
-        {/* Embers Chat Route */}
         <Route path="/embers" element={
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
@@ -195,7 +175,6 @@ function AppRoutes() {
           </ProtectedRoute>
         } />
         
-        {/* Alignment Route */}
         <Route path="/alignment" element={
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
@@ -204,7 +183,6 @@ function AppRoutes() {
           </ProtectedRoute>
         } />
         
-        {/* Launch Route */}
         <Route path="/launch" element={
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
@@ -213,7 +191,6 @@ function AppRoutes() {
           </ProtectedRoute>
         } />
         
-        {/* Library Route */}
         <Route path="/library" element={
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
@@ -222,7 +199,6 @@ function AppRoutes() {
           </ProtectedRoute>
         } />
 
-        {/* Contact Route (Hijacked for Volume II Content Storage) */}
         <Route path="/contact" element={
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
@@ -231,10 +207,14 @@ function AppRoutes() {
           </ProtectedRoute>
         } />
 
-        {/* Preview Route for Canopy */}
-        <Route path="/canopy" element={<Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
+        <Route path="/canopy" element={
+           <ProtectedRoute>
+             <AppLayout currentTier={effectiveTier}>
+               <Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} />
+             </AppLayout>
+           </ProtectedRoute>
+        } />
 
-        {/* Catch-all Redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
