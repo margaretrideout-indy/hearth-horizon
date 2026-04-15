@@ -1,35 +1,9 @@
 import React, { useState } from 'react';
 import { Download, FileText, MessageSquare, Map, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
 
-export const libraryVolumeII = [
-  {
-    title: "The Horizon Resume Template",
-    desc: "A clean, ATS-optimized layout. Click to create your own private, editable copy.",
-    type: "Google Doc Template",
-    icon: <FileText className="text-purple-400" />,
-    action: "Create My Copy",
-    url: "https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy"
-  },
-  {
-    title: "The Power Verb Lexicon",
-    desc: "100+ corporate verbs to replace 'helped', 'taught', and 'organized'.",
-    type: "Glossary",
-    icon: <Download className="text-purple-400" />,
-    action: "View List",
-    url: "#"
-  },
-  {
-    title: "Canadian Market Primer",
-    desc: "Specific advice for RRSP negotiation and provincial license translation.",
-    type: "Static PDF",
-    icon: <Map className="text-teal-400" />,
-    action: "Open Guide",
-    url: "#"
-  }
-];
-
 const Provisions = () => {
-  const [openScript, setOpenScript] = useState(null);
+  const [openScriptId, setOpenScriptId] = useState(null);
+  const [expandedCard, setExpandedCard] = useState(null);
 
   const negotiationScripts = [
     {
@@ -52,16 +26,57 @@ const Provisions = () => {
     }
   ];
 
-  const handleAction = (url) => {
-    if (url && url !== "#") {
-      window.open(url, '_blank', 'noopener,noreferrer');
+  const libraryVolumeII = [
+    {
+      id: 'resume',
+      title: "The Horizon Resume Template",
+      desc: "A clean, ATS-optimized layout. Click to create your own private, editable copy.",
+      type: "Google Doc Template",
+      icon: <FileText className="text-purple-400" />,
+      action: "Create My Copy",
+      url: "https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy"
+    },
+    {
+      id: 'scripts',
+      title: "Salary Negotiation Scripts",
+      desc: "Interactive word-for-word scripts for the 'expectations' talk. Click to expand.",
+      type: "Interactive Tool",
+      icon: <MessageSquare className="text-teal-400" />,
+      action: "View Scripts",
+      isAccordion: true
+    },
+    {
+      id: 'verbs',
+      title: "The Power Verb Lexicon",
+      desc: "100+ corporate verbs to replace 'helped', 'taught', and 'organized'.",
+      type: "Glossary",
+      icon: <Download className="text-purple-400" />,
+      action: "View List",
+      url: "#"
+    },
+    {
+      id: 'market',
+      title: "Canadian Market Primer",
+      desc: "Specific advice for RRSP negotiation and provincial license translation.",
+      type: "Static PDF",
+      icon: <Map className="text-teal-400" />,
+      action: "Open Guide",
+      url: "#"
+    }
+  ];
+
+  const handleCardClick = (tool) => {
+    if (tool.isAccordion) {
+      setExpandedCard(expandedCard === tool.id ? null : tool.id);
+    } else if (tool.url && tool.url !== "#") {
+      window.open(tool.url, '_blank', 'noopener,noreferrer');
     }
   };
 
   return (
     <div className="min-h-screen bg-[#050406] text-slate-300 font-sans p-8 pt-24">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-12 text-center md:text-left">
+        <div className="mb-12">
           <h1 className="text-4xl md:text-5xl font-serif italic text-white mb-4">Wayfarer's Provisions</h1>
           <p className="text-lg text-slate-400 max-w-2xl">
             If the first page of the library is your <span className="text-teal-400 italic">Strategy</span>, 
@@ -69,76 +84,63 @@ const Provisions = () => {
           </p>
         </div>
 
-        {/* Interactive Accordion Section for Scripts */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-serif italic text-white mb-6 flex items-center gap-3">
-            <MessageSquare className="text-teal-400" size={24} />
-            Salary Negotiation Scripts
-          </h2>
-          <div className="space-y-3">
-            {negotiationScripts.map((item) => (
-              <div key={item.id} className="bg-[#0A080D] border border-white/5 rounded-2xl overflow-hidden transition-all duration-300">
-                <button 
-                  onClick={() => setOpenScript(openScript === item.id ? null : item.id)}
-                  className="w-full p-5 flex items-center justify-between hover:bg-white/5 transition-colors text-left"
-                >
-                  <span className="font-semibold text-white">{item.situation}</span>
-                  <div className="text-slate-500">
-                    {openScript === item.id ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                  </div>
-                </button>
-                {openScript === item.id && (
-                  <div className="p-6 pt-0 border-t border-white/5 bg-black/20 animate-in fade-in slide-in-from-top-2 duration-300">
-                    <div className="mt-4">
-                      <p className="text-xs font-bold uppercase tracking-widest text-teal-500 mb-2">The Situation:</p>
-                      <p className="text-slate-400 mb-4 italic text-sm">{item.context}</p>
-                      <p className="text-xs font-bold uppercase tracking-widest text-purple-500 mb-2">The Script:</p>
-                      <div className="bg-[#110E16] p-4 rounded-xl border border-purple-500/20 text-white font-mono text-sm leading-relaxed relative group">
-                        "{item.script}"
-                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                           <span className="text-[10px] text-slate-500 uppercase font-sans">Copyable</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <h2 className="text-2xl font-serif italic text-white mb-6 flex items-center gap-3">
-          <Download className="text-purple-400" size={24} />
-          Resource Library
-        </h2>
         <div className="grid gap-4">
-          {libraryVolumeII.map((tool, idx) => (
-            <div 
-              key={idx}
-              onClick={() => handleAction(tool.url)}
-              className="group relative bg-[#0A080D] border border-white/5 p-6 rounded-2xl hover:border-purple-500/30 transition-all cursor-pointer overflow-hidden"
-            >
-              <div className="flex items-center justify-between relative z-10">
-                <div className="flex items-center gap-6">
-                  <div className="p-3 bg-white/5 rounded-xl group-hover:scale-110 transition-transform">
-                    {tool.icon}
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">
-                      {tool.type}
+          {libraryVolumeII.map((tool) => (
+            <div key={tool.id} className="flex flex-col gap-0">
+              <div 
+                onClick={() => handleCardClick(tool)}
+                className={`group relative bg-[#0A080D] border border-white/5 p-6 transition-all cursor-pointer overflow-hidden ${
+                  expandedCard === tool.id ? 'rounded-t-2xl border-b-0 border-teal-500/30' : 'rounded-2xl hover:border-purple-500/30'
+                }`}
+              >
+                <div className="flex items-center justify-between relative z-10">
+                  <div className="flex items-center gap-6">
+                    <div className="p-3 bg-white/5 rounded-xl group-hover:scale-110 transition-transform">
+                      {tool.icon}
                     </div>
-                    <h3 className="text-xl font-semibold text-white group-hover:text-teal-400 transition-colors">
-                      {tool.title}
-                    </h3>
-                    <p className="text-slate-400 mt-1 max-w-md text-sm">{tool.desc}</p>
+                    <div>
+                      <div className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">
+                        {tool.type}
+                      </div>
+                      <h3 className="text-xl font-semibold text-white group-hover:text-teal-400 transition-colors">
+                        {tool.title}
+                      </h3>
+                      <p className="text-slate-400 mt-1 max-w-md text-sm">{tool.desc}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="hidden md:flex items-center gap-2 text-sm font-bold text-white/40 group-hover:text-white transition-colors">
-                  {tool.action}
-                  <ChevronRight size={16} />
+                  <div className="hidden md:flex items-center gap-2 text-sm font-bold text-white/40 group-hover:text-white transition-colors">
+                    {tool.action}
+                    {expandedCard === tool.id ? <ChevronUp size={16} /> : <ChevronRight size={16} />}
+                  </div>
                 </div>
               </div>
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/0 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+
+              {/* Nested Salary Accordion */}
+              {tool.isAccordion && expandedCard === tool.id && (
+                <div className="bg-[#0A080D] border-x border-b border-white/5 rounded-b-2xl p-6 pt-0 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className="h-px bg-white/5 mb-6 w-full" />
+                  {negotiationScripts.map((item) => (
+                    <div key={item.id} className="bg-black/40 border border-white/5 rounded-xl overflow-hidden">
+                      <button 
+                        onClick={() => setOpenScriptId(openScriptId === item.id ? null : item.id)}
+                        className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors text-left"
+                      >
+                        <span className="text-sm font-semibold text-white">{item.situation}</span>
+                        {openScriptId === item.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                      </button>
+                      {openScriptId === item.id && (
+                        <div className="p-4 pt-0 border-t border-white/5">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-teal-500 mt-4 mb-1">The Situation:</p>
+                          <p className="text-slate-400 mb-3 italic text-xs">{item.context}</p>
+                          <div className="bg-[#110E16] p-4 rounded-lg border border-purple-500/20 text-white font-mono text-xs leading-relaxed">
+                            "{item.script}"
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -154,7 +156,6 @@ const Provisions = () => {
                   Contact Archive Support
               </button>
             </div>
-            {/* Subtle background glow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-500/10 blur-[100px] pointer-events-none" />
         </div>
       </div>
