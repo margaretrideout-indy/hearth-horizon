@@ -1,315 +1,235 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
-  LayoutDashboard, 
+  ShieldCheck, 
   MessageSquare, 
-  Settings, 
   Users, 
-  Search, 
+  UserPlus, 
   Trash2, 
-  RefreshCw, 
-  ExternalLink, 
-  Mail, 
-  Calendar,
-  Filter,
-  CheckCircle,
-  AlertCircle
+  Search,
+  RefreshCw,
+  AlertCircle,
+  Compass,
+  Tent,
+  Mountain
 } from 'lucide-react';
 
-const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('messages');
-  const [loading, setLoading] = useState(false);
-  const [messages, setMessages] = useState([]);
+export default function App() {
+  const [activeTab, setActiveTab] = useState('inbox');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [status, setStatus] = useState({ type: null, message: '' });
+  
+  const [messages, setMessages] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [vouchers, setVouchers] = useState([]);
 
-  const [config, setConfig] = useState({
-    projectId: 'b44-proj-88219',
-    apiKey: '',
-    collection: 'contact_entries'
-  });
-
-  const fetchMessages = async () => {
+  const loadBase44Data = async () => {
     setLoading(true);
+    setError(null);
     try {
-      await new Promise(r => setTimeout(r, 800));
-      const mockData = [
-        { id: '1', name: 'Sarah Chen', email: 'sarah@tech.co', message: 'Interested in enterprise pricing for our team.', date: '2023-10-24T14:22:00Z', status: 'new' },
-        { id: '2', name: 'Marcus Miller', email: 'm.miller@gmail.com', message: 'Do you offer custom integrations for Base44 backends?', date: '2023-10-23T09:15:00Z', status: 'replied' },
-        { id: '3', name: 'Elena Rodriguez', email: 'elena@startup.io', message: 'Bug report regarding the API response headers.', date: '2023-10-22T18:45:00Z', status: 'urgent' },
-      ];
-      setMessages(mockData);
-      showStatus('success', 'Data synced');
+      const b44ProjectId = 'YOUR_PROJECT_ID';
+      const b44Token = 'YOUR_API_TOKEN';
+
+      const response = await fetch(`https://api.base44.io/v1/projects/${b44ProjectId}/collections/messages/documents`, {
+        headers: { 'Authorization': `Bearer ${b44Token}` }
+      });
+      
+      if (!response.ok) throw new Error('Sanctuary node unreachable');
+      
+      const data = await response.json();
+      setMessages(data.documents || []);
+      setLoading(false);
     } catch (err) {
-      showStatus('error', 'Connection failed');
-    } finally {
+      setError("The mist is too thick. Connection lost.");
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchMessages();
-  }, [config.projectId]);
+    loadBase44Data();
+  }, []);
 
-  const showStatus = (type, message) => {
-    setStatus({ type, message });
-    setTimeout(() => setStatus({ type: null, message: '' }), 3000);
-  };
-
-  const filteredMessages = useMemo(() => {
-    return messages.filter(m => 
-      m.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      m.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      m.message.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredData = useMemo(() => {
+    const term = searchTerm.toLowerCase();
+    const currentData = activeTab === 'inbox' ? messages : activeTab === 'users' ? users : vouchers;
+    return currentData.filter(item => 
+      item.name?.toLowerCase().includes(term) || 
+      item.email?.toLowerCase().includes(term) ||
+      item.message?.toLowerCase().includes(term) ||
+      item.content?.toLowerCase().includes(term)
     );
-  }, [messages, searchTerm]);
+  }, [activeTab, messages, users, vouchers, searchTerm]);
 
   return (
-    <div className="flex min-h-screen bg-[#F8FAFC]">
-      <aside className="w-64 bg-slate-900 text-white flex flex-col fixed h-full">
-        <div className="p-6 flex items-center gap-3 border-b border-slate-800">
-          <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center font-bold">B4</div>
-          <span className="font-bold text-lg tracking-tight">Base44 Admin</span>
-        </div>
+    <div className="min-h-screen bg-[#120F1A] text-slate-300 font-sans p-4 md:p-8 selection:bg-teal-500/30 selection:text-white">
+      <div className="max-w-6xl mx-auto">
         
-        <nav className="flex-1 p-4 space-y-2 mt-4">
-          <SidebarItem 
-            icon={<LayoutDashboard size={20} />} 
-            label="Overview" 
-            active={activeTab === 'overview'} 
-            onClick={() => setActiveTab('overview')} 
-          />
-          <SidebarItem 
-            icon={<MessageSquare size={20} />} 
-            label="Inbound Messages" 
-            active={activeTab === 'messages'} 
-            onClick={() => setActiveTab('messages')} 
-            badge={messages.length}
-          />
-          <SidebarItem 
-            icon={<Users size={20} />} 
-            label="Customers" 
-            active={activeTab === 'customers'} 
-            onClick={() => setActiveTab('customers')} 
-          />
-          <div className="pt-4 mt-4 border-t border-slate-800">
-            <SidebarItem 
-              icon={<Settings size={20} />} 
-              label="B44 Settings" 
-              active={activeTab === 'settings'} 
-              onClick={() => setActiveTab('settings')} 
-            />
-          </div>
-        </nav>
-
-        <div className="p-4 bg-slate-800/50 m-4 rounded-xl">
-          <p className="text-xs text-slate-400 mb-1 font-medium">PROJECT STATUS</p>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-            <span className="text-sm font-semibold">Active Node</span>
-          </div>
-        </div>
-      </aside>
-
-      <main className="flex-1 ml-64 flex flex-col">
-        <header className="h-16 bg-white border-b flex items-center justify-between px-8 sticky top-0 z-10">
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-slate-800 capitalize">{activeTab.replace('-', ' ')}</h2>
-            {status.message && (
-              <span className={`ml-4 text-xs font-medium px-2 py-1 rounded-full flex items-center gap-1 ${
-                status.type === 'success' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
-              }`}>
-                {status.type === 'success' ? <CheckCircle size={12} /> : <AlertCircle size={12} />}
-                {status.message}
-              </span>
-            )}
-          </div>
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
           <div className="flex items-center gap-4">
-            <button 
-              onClick={fetchMessages}
-              className="p-2 hover:bg-slate-100 rounded-lg text-slate-500 transition-colors"
-            >
-              <RefreshCw size={20} className={loading ? 'animate-spin' : ''} />
-            </button>
-            <div className="h-8 w-[1px] bg-slate-200" />
-            <div className="flex items-center gap-3">
-              <div className="text-right">
-                <p className="text-xs font-bold text-slate-800">Admin User</p>
-                <p className="text-[10px] text-slate-400">ID: {config.projectId}</p>
-              </div>
-              <div className="w-9 h-9 bg-slate-200 rounded-full overflow-hidden border border-white shadow-sm" />
+            <div className="p-3 bg-gradient-to-br from-purple-900/40 to-teal-900/40 border border-purple-500/20 rounded-2xl shadow-inner">
+              <Mountain className="text-teal-400" size={32} />
             </div>
+            <div>
+              <h1 className="text-3xl font-serif italic text-slate-100 tracking-tight">Sanctuary Oversight</h1>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
+                <p className="text-purple-300/50 text-[10px] font-black uppercase tracking-[0.3em]">
+                  Encrypted Base44 Node
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <div className="relative flex-1 md:w-72">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400/40" size={16} />
+              <input 
+                type="text"
+                placeholder="Search the archives..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-purple-950/20 border border-purple-500/10 rounded-2xl py-3 pl-12 pr-4 text-xs focus:outline-none focus:border-teal-500/40 focus:bg-purple-900/10 transition-all placeholder:text-purple-300/20"
+              />
+            </div>
+            <button 
+              onClick={loadBase44Data}
+              className="p-3 bg-purple-950/30 border border-purple-500/10 rounded-2xl hover:bg-teal-500/10 hover:border-teal-500/20 transition-all text-purple-400 hover:text-teal-400 shadow-lg"
+            >
+              <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
+            </button>
           </div>
         </header>
 
-        <div className="p-8">
-          {activeTab === 'messages' && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <StatCard label="Total Submissions" value={messages.length} color="blue" />
-                <StatCard label="Recent (24h)" value="12" color="indigo" />
-                <StatCard label="Pending Response" value="4" color="amber" />
-              </div>
+        <nav className="flex flex-wrap gap-3 mb-8 bg-black/20 p-2 rounded-[2rem] border border-white/5 shadow-2xl backdrop-blur-sm">
+          {[
+            { id: 'inbox', label: 'Transmissions', icon: <MessageSquare size={16} /> },
+            { id: 'users', label: 'Wayfarers', icon: <Compass size={16} /> },
+            { id: 'vouchers', label: 'Invitations', icon: <Tent size={16} /> }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest transition-all duration-500 ${
+                activeTab === tab.id 
+                ? 'bg-gradient-to-r from-purple-600/20 to-teal-600/20 text-teal-300 border border-teal-500/30 shadow-[0_0_30px_rgba(20,184,166,0.1)]' 
+                : 'text-slate-500 hover:text-purple-300 hover:bg-white/5'
+              }`}
+            >
+              {tab.icon} {tab.label}
+            </button>
+          ))}
+        </nav>
 
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-4 items-center justify-between">
-                <div className="relative flex-1 max-w-md">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input 
-                    type="text" 
-                    placeholder="Search messages..."
-                    className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <div className="flex gap-2">
-                  <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 border border-slate-200 rounded-lg transition-colors">
-                    <Filter size={16} /> Filter
-                  </button>
-                  <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm shadow-blue-200 transition-colors">
-                    Export CSV
-                  </button>
-                </div>
+        <main className="bg-gradient-to-b from-purple-950/20 to-black/40 backdrop-blur-3xl border border-white/5 rounded-[3rem] overflow-hidden min-h-[550px] shadow-2xl relative">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
+          
+          {error ? (
+            <div className="h-full flex flex-col items-center justify-center py-40 text-center">
+              <div className="p-6 bg-red-500/5 rounded-full mb-6">
+                <AlertCircle size={48} className="text-red-500/40" />
               </div>
+              <h3 className="text-slate-100 font-serif italic text-2xl mb-2">Signal Blocked</h3>
+              <p className="text-purple-300/40 text-sm max-w-xs font-medium">{error}</p>
+            </div>
+          ) : loading ? (
+            <div className="flex flex-col items-center justify-center py-40 space-y-6">
+              <div className="relative">
+                <div className="w-16 h-16 border-2 border-teal-500/10 rounded-full" />
+                <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-teal-400 rounded-full animate-spin" />
+              </div>
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400/40">Consulting the Registry</p>
+            </div>
+          ) : (
+            <div className="p-8 md:p-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+              
+              {activeTab === 'inbox' && (
+                <div className="space-y-6">
+                  <header className="flex justify-between items-end mb-10">
+                    <div>
+                      <h2 className="text-slate-100 font-serif italic text-3xl">Inbound Whispers</h2>
+                      <p className="text-purple-300/30 text-[10px] font-bold uppercase tracking-widest mt-1">Logs stored on Base44</p>
+                    </div>
+                  </header>
+                  
+                  {filteredData.length === 0 ? (
+                    <div className="py-20 text-center text-slate-600 font-serif italic">The silence is absolute.</div>
+                  ) : (
+                    <div className="grid gap-4">
+                      {filteredData.map(msg => (
+                        <div key={msg.id} className="group relative p-8 rounded-[2rem] bg-purple-900/5 border border-white/5 hover:border-teal-500/20 transition-all hover:bg-purple-900/10">
+                          <div className="flex justify-between items-start">
+                            <div className="flex gap-6">
+                              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500/10 to-teal-500/10 flex items-center justify-center text-teal-300 font-serif italic text-xl border border-white/5">
+                                {msg.name?.[0]}
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-3 mb-1">
+                                  <span className="text-slate-100 font-bold text-base">{msg.name}</span>
+                                  <span className="text-[10px] bg-teal-500/10 text-teal-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Verified</span>
+                                </div>
+                                <span className="text-xs text-purple-300/40 block mb-4">{msg.email}</span>
+                                <p className="text-sm text-slate-400 leading-relaxed font-light max-w-2xl">{msg.content || msg.message}</p>
+                              </div>
+                            </div>
+                            <button className="opacity-0 group-hover:opacity-100 p-3 rounded-xl bg-red-500/5 text-red-400/40 hover:text-red-400 hover:bg-red-500/10 transition-all">
+                              <Trash2 size={18} />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
 
-              <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <table className="w-full text-left border-collapse">
-                  <thead className="bg-slate-50 border-b border-slate-200">
-                    <tr>
-                      <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Sender</th>
-                      <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Message Preview</th>
-                      <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
-                      <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {filteredMessages.map((msg) => (
-                      <tr key={msg.id} className="hover:bg-slate-50/50 transition-colors group">
-                        <td className="px-6 py-4">
-                          <div className="flex flex-col">
-                            <span className="text-sm font-bold text-slate-800">{msg.name}</span>
-                            <span className="text-xs text-slate-400 flex items-center gap-1"><Mail size={12}/> {msg.email}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 max-w-xs">
-                          <p className="text-sm text-slate-600 truncate">{msg.message}</p>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="text-xs text-slate-500 flex items-center gap-1">
-                            <Calendar size={12} /> {new Date(msg.date).toLocaleDateString()}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded-md ${
-                            msg.status === 'urgent' ? 'bg-rose-100 text-rose-600' :
-                            msg.status === 'replied' ? 'bg-emerald-100 text-emerald-600' :
-                            'bg-blue-100 text-blue-600'
-                          }`}>
-                            {msg.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <div className="flex justify-end items-center gap-2">
-                            <button className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
-                              <ExternalLink size={16} />
-                            </button>
-                            <button className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all">
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              {activeTab === 'users' && (
+                <div>
+                  <h2 className="text-slate-100 font-serif italic text-3xl mb-10">Wayfarer Registry</h2>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                      <thead>
+                        <tr className="border-b border-white/5">
+                          <th className="pb-8 text-[10px] font-black text-purple-300/20 uppercase tracking-[0.2em]">Traveler</th>
+                          <th className="pb-8 text-[10px] font-black text-purple-300/20 uppercase tracking-[0.2em] text-center">Spirit</th>
+                          <th className="pb-8 text-[10px] font-black text-purple-300/20 uppercase tracking-[0.2em] text-right">Removal</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/5">
+                        {filteredData.map(u => (
+                          <tr key={u.id} className="group hover:bg-white/[0.02] transition-colors">
+                            <td className="py-8">
+                              <p className="text-base font-bold text-slate-100">{u.name}</p>
+                              <p className="text-xs text-purple-300/40 mt-1">{u.email}</p>
+                            </td>
+                            <td className="py-8 text-center text-3xl grayscale group-hover:grayscale-0 transition-all opacity-40 group-hover:opacity-100">{u.emoji || '🌲'}</td>
+                            <td className="py-8 text-right">
+                              <button className="p-3 text-purple-300/10 hover:text-red-400 transition-colors">
+                                <Trash2 size={18} />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
             </div>
           )}
+        </main>
 
-          {activeTab === 'settings' && (
-            <div className="max-w-2xl mx-auto space-y-6">
-              <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-                <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                  <Settings className="text-blue-500" /> Infrastructure Config
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">Project ID</label>
-                    <input 
-                      type="text" 
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white transition-all outline-none focus:ring-2 focus:ring-blue-500/20"
-                      value={config.projectId}
-                      onChange={(e) => setConfig({...config, projectId: e.target.value})}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">API Secret Key</label>
-                    <input 
-                      type="password" 
-                      placeholder="sk_b44_••••••••••••"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white transition-all outline-none focus:ring-2 focus:ring-blue-500/20"
-                      value={config.apiKey}
-                      onChange={(e) => setConfig({...config, apiKey: e.target.value})}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">Target Collection</label>
-                    <input 
-                      type="text" 
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white transition-all outline-none focus:ring-2 focus:ring-blue-500/20"
-                      value={config.collection}
-                      onChange={(e) => setConfig({...config, collection: e.target.value})}
-                    />
-                  </div>
-                  <div className="pt-4">
-                    <button 
-                      onClick={() => showStatus('success', 'Configuration updated')}
-                      className="w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
-                    >
-                      Save & Test Connectivity
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </main>
+        <footer className="mt-12 text-center">
+          <div className="flex items-center justify-center gap-4 mb-4 opacity-10">
+             <div className="h-[1px] w-12 bg-teal-500" />
+             <Tent size={12} className="text-teal-500" />
+             <div className="h-[1px] w-12 bg-teal-500" />
+          </div>
+          <p className="text-[9px] font-black uppercase tracking-[0.6em] text-purple-300/20">
+            Sanctuary Management • Deep Wood Protocol
+          </p>
+        </footer>
+      </div>
     </div>
   );
-};
-
-const SidebarItem = ({ icon, label, active, onClick, badge }) => (
-  <button 
-    onClick={onClick}
-    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all ${
-      active ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-    }`}
-  >
-    <div className="flex items-center gap-3">
-      {icon}
-      <span className="text-sm font-semibold">{label}</span>
-    </div>
-    {badge && (
-      <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${active ? 'bg-white text-blue-600' : 'bg-slate-700 text-slate-300'}`}>
-        {badge}
-      </span>
-    )}
-  </button>
-);
-
-const StatCard = ({ label, value, color }) => {
-  const colors = {
-    blue: 'bg-blue-50 border-blue-100 text-blue-600',
-    indigo: 'bg-indigo-50 border-indigo-100 text-indigo-600',
-    amber: 'bg-amber-50 border-amber-100 text-amber-600',
-  };
-  return (
-    <div className={`p-6 rounded-2xl border ${colors[color]} shadow-sm`}>
-      <p className="text-sm font-semibold opacity-80 uppercase tracking-wider">{label}</p>
-      <p className="text-4xl font-black mt-1">{value}</p>
-    </div>
-  );
-};
-
-export default AdminDashboard;
+}
