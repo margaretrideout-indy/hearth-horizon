@@ -1,69 +1,70 @@
 import React, { useState } from 'react';
 import { Download, FileText, MessageSquare, Map, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
 
+// Explicitly exporting this to resolve the SyntaxError
+export const libraryVolumeII = [
+  {
+    id: 'resume',
+    title: "The Horizon Resume Template",
+    desc: "A clean, ATS-optimized layout. Click to create your own private, editable copy.",
+    type: "Google Doc Template",
+    icon: <FileText className="text-purple-400" />,
+    action: "Create My Copy",
+    url: "https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy"
+  },
+  {
+    id: 'scripts',
+    title: "Salary Negotiation Scripts",
+    desc: "Interactive word-for-word scripts for the 'expectations' talk. Click to expand.",
+    type: "Interactive Tool",
+    icon: <MessageSquare className="text-teal-400" />,
+    action: "View Scripts",
+    isAccordion: true
+  },
+  {
+    id: 'verbs',
+    title: "The Power Verb Lexicon",
+    desc: "100+ corporate verbs to replace 'helped', 'taught', and 'organized'.",
+    type: "Glossary",
+    icon: <Download className="text-purple-400" />,
+    action: "View List",
+    url: "#"
+  },
+  {
+    id: 'market',
+    title: "Canadian Market Primer",
+    desc: "Specific advice for RRSP negotiation and provincial license translation.",
+    type: "Static PDF",
+    icon: <Map className="text-teal-400" />,
+    action: "Open Guide",
+    url: "#"
+  }
+];
+
+const negotiationScripts = [
+  {
+    id: 'anchor',
+    situation: "The Early Inquiry (The 'Anchor')",
+    context: "A recruiter asks in the first screening call: 'What are your salary expectations?'",
+    script: "I’m quite flexible depending on the total compensation package and the growth opportunities. Based on my research for similar roles in the Canadian market, I’m looking for a range between $[Lower] and $[Upper]. Does that align with your budget for this position?"
+  },
+  {
+    id: 'pivot',
+    situation: "The Pivot (Transferable Value)",
+    context: "They offer a low number because they see you as 'entry-level' in a new sector.",
+    script: "I appreciate the offer. While I am transitioning sectors, I bring over a decade of high-stakes experience in leadership and project management. My ability to lead teams from day one will save significant onboarding time. Given that impact, I was hoping for a base closer to $[Target]."
+  },
+  {
+    id: 'bridge',
+    situation: "The Benefits Bridge",
+    context: "They hit their hard limit on base salary. Use this to find value elsewhere.",
+    script: "I understand the base salary is capped. If we can't move the needle there, would you be open to discussing a signing bonus, a higher RRSP matching percentage, or an additional week of vacation to bridge the gap?"
+  }
+];
+
 const Provisions = () => {
   const [openScriptId, setOpenScriptId] = useState(null);
   const [expandedCard, setExpandedCard] = useState(null);
-
-  const negotiationScripts = [
-    {
-      id: 'anchor',
-      situation: "The Early Inquiry (The 'Anchor')",
-      context: "A recruiter asks in the first screening call: 'What are your salary expectations?'",
-      script: "I’m quite flexible depending on the total compensation package and the growth opportunities. Based on my research for similar roles in the Canadian market, I’m looking for a range between $[Lower] and $[Upper]. Does that align with your budget for this position?"
-    },
-    {
-      id: 'pivot',
-      situation: "The Pivot (Transferable Value)",
-      context: "They offer a low number because they see you as 'entry-level' in a new sector.",
-      script: "I appreciate the offer. While I am transitioning sectors, I bring over a decade of high-stakes experience in leadership and project management. My ability to lead teams from day one will save significant onboarding time. Given that impact, I was hoping for a base closer to $[Target]."
-    },
-    {
-      id: 'bridge',
-      situation: "The Benefits Bridge",
-      context: "They hit their hard limit on base salary. Use this to find value elsewhere.",
-      script: "I understand the base salary is capped. If we can't move the needle there, would you be open to discussing a signing bonus, a higher RRSP matching percentage, or an additional week of vacation to bridge the gap?"
-    }
-  ];
-
-  const libraryVolumeII = [
-    {
-      id: 'resume',
-      title: "The Horizon Resume Template",
-      desc: "A clean, ATS-optimized layout. Click to create your own private, editable copy.",
-      type: "Google Doc Template",
-      icon: <FileText className="text-purple-400" />,
-      action: "Create My Copy",
-      url: "https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy"
-    },
-    {
-      id: 'scripts',
-      title: "Salary Negotiation Scripts",
-      desc: "Interactive word-for-word scripts for the 'expectations' talk. Click to expand.",
-      type: "Interactive Tool",
-      icon: <MessageSquare className="text-teal-400" />,
-      action: "View Scripts",
-      isAccordion: true
-    },
-    {
-      id: 'verbs',
-      title: "The Power Verb Lexicon",
-      desc: "100+ corporate verbs to replace 'helped', 'taught', and 'organized'.",
-      type: "Glossary",
-      icon: <Download className="text-purple-400" />,
-      action: "View List",
-      url: "#"
-    },
-    {
-      id: 'market',
-      title: "Canadian Market Primer",
-      desc: "Specific advice for RRSP negotiation and provincial license translation.",
-      type: "Static PDF",
-      icon: <Map className="text-teal-400" />,
-      action: "Open Guide",
-      url: "#"
-    }
-  ];
 
   const handleCardClick = (tool) => {
     if (tool.isAccordion) {
@@ -115,9 +116,8 @@ const Provisions = () => {
                 </div>
               </div>
 
-              {/* Nested Salary Accordion */}
               {tool.isAccordion && expandedCard === tool.id && (
-                <div className="bg-[#0A080D] border-x border-b border-white/5 rounded-b-2xl p-6 pt-0 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="bg-[#0A080D] border-x border-b border-white/5 rounded-b-2xl p-6 pt-0 space-y-3">
                   <div className="h-px bg-white/5 mb-6 w-full" />
                   {negotiationScripts.map((item) => (
                     <div key={item.id} className="bg-black/40 border border-white/5 rounded-xl overflow-hidden">
