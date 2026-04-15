@@ -1,38 +1,39 @@
 import React from 'react';
 import { Download, FileText, MessageSquare, Map, ExternalLink, ChevronRight } from 'lucide-react';
 
-const Provisions = () => {
-  const tools = [
-    {
-      title: "The Horizon Resume Template",
-      desc: "A clean, ATS-optimized layout designed to strip away academic jargon.",
-      type: "Downloadable Doc",
-      icon: <FileText className="text-purple-400" />,
-      action: "Get Template"
-    },
-    {
-      title: "Salary Negotiation Scripts",
-      desc: "Exact word-for-word scripts to use during the 'What are your expectations?' talk.",
-      type: "Reference Guide",
-      icon: <MessageSquare className="text-teal-400" />,
-      action: "Read Scripts"
-    },
-    {
-      title: "The Power Verb Lexicon",
-      desc: "100+ corporate verbs to replace 'helped', 'taught', and 'organized'.",
-      type: "Glossary",
-      icon: <Download className="text-purple-400" />,
-      action: "View List"
-    },
-    {
-      title: "Canadian Market Primer",
-      desc: "Specific advice for RRSP negotiation and provincial license translation.",
-      type: "Static PDF",
-      icon: <Map className="text-teal-400" />,
-      action: "Open Guide"
-    }
-  ];
+// This exported array resolves the "does not provide an export named 'libraryVolumeII'" error
+export const libraryVolumeII = [
+  {
+    title: "The Horizon Resume Template",
+    desc: "A clean, ATS-optimized layout designed to strip away academic jargon.",
+    type: "Downloadable Doc",
+    icon: <FileText className="text-purple-400" />,
+    action: "Get Template"
+  },
+  {
+    title: "Salary Negotiation Scripts",
+    desc: "Exact word-for-word scripts to use during the 'What are your expectations?' talk.",
+    type: "Reference Guide",
+    icon: <MessageSquare className="text-teal-400" />,
+    action: "Read Scripts"
+  },
+  {
+    title: "The Power Verb Lexicon",
+    desc: "100+ corporate verbs to replace 'helped', 'taught', and 'organized'.",
+    type: "Glossary",
+    icon: <Download className="text-purple-400" />,
+    action: "View List"
+  },
+  {
+    title: "Canadian Market Primer",
+    desc: "Specific advice for RRSP negotiation and provincial license translation.",
+    type: "Static PDF",
+    icon: <Map className="text-teal-400" />,
+    action: "Open Guide"
+  }
+];
 
+const Provisions = () => {
   return (
     <div className="min-h-screen bg-[#050406] text-slate-300 font-sans p-8 pt-24">
       <div className="max-w-4xl mx-auto">
@@ -47,7 +48,7 @@ const Provisions = () => {
 
         {/* The Tools Grid */}
         <div className="grid gap-4">
-          {tools.map((tool, idx) => (
+          {libraryVolumeII.map((tool, idx) => (
             <div 
               key={idx}
               className="group relative bg-[#0A080D] border border-white/5 p-6 rounded-2xl hover:border-purple-500/30 transition-all cursor-pointer"
