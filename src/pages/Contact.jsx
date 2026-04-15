@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, FileText, MessageSquare, Map, ChevronRight, ChevronDown, ChevronUp, Zap } from 'lucide-react';
+import { Download, FileText, MessageSquare, Map, ChevronRight, ChevronDown, ChevronUp, Zap, ShieldCheck } from 'lucide-react';
 
 export const libraryVolumeII = [
   {
@@ -32,11 +32,11 @@ export const libraryVolumeII = [
   {
     id: 'market',
     title: "Canadian Market Primer",
-    desc: "Specific advice for RRSP negotiation and provincial license translation.",
-    type: "Static PDF",
+    desc: "The truth about RRSPs, vacation time, and provincial credential 'translation'.",
+    type: "Interactive Guide",
     icon: <Map className="text-teal-400" />,
-    action: "Open Guide",
-    url: "#"
+    action: "Read Primer",
+    isAccordion: true
   }
 ];
 
@@ -48,13 +48,11 @@ const negotiationScripts = [
 
 const powerVerbs = [
   { legacy: "Led/Managed", horizon: "Spearheaded", use: "For projects you initiated." },
-  { legacy: "Taught/Explained", horizon: "Facilitated", use: "For high-level workshops/training." },
-  { legacy: "Improved/Fixed", horizon: "Optimized", use: "For making systems more efficient." },
+  { legacy: "Taught", horizon: "Facilitated", use: "For high-level workshops/training." },
+  { legacy: "Improved", horizon: "Optimized", use: "For making systems more efficient." },
   { legacy: "Organized", horizon: "Orchestrated", use: "For complex, multi-part logistics." },
-  { legacy: "Talked to", horizon: "Consulted", use: "For expert advice provided to stakeholders." },
-  { legacy: "Looked at", horizon: "Analyzed", use: "For data-driven decision making." },
-  { legacy: "Helped", horizon: "Empowered", use: "For mentorship and leadership roles." },
-  { legacy: "Made", horizon: "Architected", use: "For building new frameworks or tools." }
+  { legacy: "Talked to", horizon: "Consulted", use: "For expert advice to stakeholders." },
+  { legacy: "Made", horizon: "Architected", use: "For building new frameworks." }
 ];
 
 const Provisions = () => {
@@ -107,7 +105,7 @@ const Provisions = () => {
                 </div>
               </div>
 
-              {/* Accordion Content for Salary Scripts */}
+              {/* Salary Scripts Accordion */}
               {tool.id === 'scripts' && expandedCard === 'scripts' && (
                 <div className="bg-[#0A080D] border-x border-b border-white/5 rounded-b-2xl p-6 pt-0 space-y-3 shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
                   <div className="h-px bg-white/5 mb-6 w-full" />
@@ -129,23 +127,45 @@ const Provisions = () => {
                 </div>
               )}
 
-              {/* Accordion Content for Power Verbs */}
+              {/* Power Verbs Accordion */}
               {tool.id === 'verbs' && expandedCard === 'verbs' && (
                 <div className="bg-[#0A080D] border-x border-b border-white/5 rounded-b-2xl p-6 pt-0 shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
                   <div className="h-px bg-white/5 mb-6 w-full" />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-4">
                     {powerVerbs.map((verb, idx) => (
                       <div key={idx} className="bg-black/30 border border-white/5 p-4 rounded-xl flex flex-col">
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-xs text-slate-500 line-through">{verb.legacy}</span>
-                          <span className="text-sm font-bold text-purple-400 uppercase tracking-tighter">Flip to</span>
+                          <span className="text-sm font-bold text-purple-400 uppercase tracking-tighter italic">Flip to</span>
                         </div>
                         <div className="text-lg font-bold text-teal-400 mb-1">{verb.horizon}</div>
                         <p className="text-[11px] text-slate-500 leading-tight">{verb.use}</p>
                       </div>
                     ))}
                   </div>
-                  <p className="text-center text-[10px] text-slate-600 mt-6 uppercase tracking-widest italic">Use these to replace passive duty-based language with outcome-based actions.</p>
+                </div>
+              )}
+
+              {/* Canadian Market Primer Accordion */}
+              {tool.id === 'market' && expandedCard === 'market' && (
+                <div className="bg-[#0A080D] border-x border-b border-white/5 rounded-b-2xl p-6 pt-0 shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+                  <div className="h-px bg-white/5 mb-6 w-full" />
+                  <div className="space-y-6 pb-4">
+                    <div className="flex gap-4">
+                      <div className="mt-1"><ShieldCheck className="text-teal-400" size={20}/></div>
+                      <div>
+                        <h4 className="text-white font-bold mb-1">The "Golden Handcuffs" Bridge</h4>
+                        <p className="text-xs text-slate-400 leading-relaxed">Public pensions are high-value. If a private role doesn't offer RRSP matching, you must negotiate a **5-8% higher base salary** to stay financially neutral.</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-4">
+                      <div className="mt-1"><Map className="text-purple-400" size={20}/></div>
+                      <div>
+                        <h4 className="text-white font-bold mb-1">Provincial Credential Translation</h4>
+                        <p className="text-xs text-slate-400 leading-relaxed">Don't list provincial licenses as "Teaching Certificates." List them as **"Provincial Regulatory Compliance & Standards Certification"** to appeal to corporate HR scanners.</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -155,7 +175,7 @@ const Provisions = () => {
         <div className="mt-16 p-8 rounded-3xl bg-gradient-to-br from-purple-900/20 to-teal-900/20 border border-white/5 text-center relative overflow-hidden">
             <div className="relative z-10">
               <h3 className="text-white font-serif italic text-2xl mb-2">Need a custom provision?</h3>
-              <p className="text-slate-400 mb-6 max-w-lg mx-auto text-sm md:text-base">If you're looking for a specific template or guide that isn't here, let the Hearthkeepers know.</p>
+              <p className="text-slate-400 mb-6 max-w-lg mx-auto text-sm">If you're looking for a specific template or guide that isn't here, let the Hearthkeepers know.</p>
               <button onClick={() => window.location.href = 'mailto:support@hearthandhorizon.com'} className="px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-teal-400 hover:scale-105 active:scale-95 transition-all">
                   Contact Archive Support
               </button>
