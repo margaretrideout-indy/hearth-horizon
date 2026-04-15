@@ -112,12 +112,9 @@ const App = ({ vault, isAdmin = true }) => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-2xl bg-teal-500/10 text-teal-400 border border-teal-500/20">
-              <Globe size={28} />
+              <Rocket size={28} />
             </div>
-            <div>
-              <h1 className="text-4xl font-serif italic text-white tracking-tight">Canopy</h1>
-              <p className="text-[10px] text-teal-500/60 font-black uppercase tracking-[0.3em]">Opportunity Launchpad</p>
-            </div>
+            <h1 className="text-3xl font-serif italic text-white tracking-tight">Horizon Job Board</h1>
           </div>
           
           <div className="flex items-center gap-4">
@@ -139,16 +136,16 @@ const App = ({ vault, isAdmin = true }) => {
             {vault?.lastSync && (
               <div className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#110E16]/60 border border-white/10">
                 <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
-                <span className="text-[10px] text-zinc-400 uppercase tracking-widest font-black">Synced</span>
+                <span className="text-[10px] text-zinc-400 uppercase tracking-widest font-black">Hearth Synced</span>
               </div>
             )}
           </div>
         </div>
         
-        <p className="text-zinc-400 text-sm font-light max-w-2xl leading-relaxed">
-          {vault?.userName ? `Welcome back, ${vault.userName.split(' ')[0]}. ` : "Welcome to the Canopy. "}
-          We have aggregated high-impact public-to-private pivot opportunities. 
-          {vault?.pivotTarget ? ` Filtering roles for ${vault.pivotTarget}.` : " Search global territories or toggle Remote Only to start."}
+        <p className="text-zinc-400 text-sm font-light max-w-2xl leading-relaxed text-left">
+          {vault?.userName ? `Welcome back, ${vault.userName.split(' ')[0]}. ` : ""}
+          Welcome to the Launchpad! The Horizon Board curates roles where your public-sector background is an advantage. 
+          {vault?.pivotTarget ? ` We've highlighted roles matching your path in ${vault.pivotTarget}.` : ""}
         </p>
       </header>
 
@@ -157,7 +154,7 @@ const App = ({ vault, isAdmin = true }) => {
           <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-teal-500 transition-colors" size={20} />
           <input 
             type="text"
-            placeholder="Search roles, companies, or keywords..."
+            placeholder="Search roles, companies, or expertise..."
             className="w-full bg-[#110E16]/40 border border-zinc-800/80 rounded-[1.8rem] py-5 pl-16 pr-6 text-sm text-white focus:border-teal-500/30 outline-none transition-all placeholder:text-zinc-700 shadow-2xl"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -205,19 +202,19 @@ const App = ({ vault, isAdmin = true }) => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   className={`group p-8 rounded-[2.5rem] bg-[#110E16]/30 border ${isMatch ? 'border-teal-500/20 shadow-[0_0_50px_rgba(20,184,166,0.03)]' : 'border-zinc-800/40'} hover:border-teal-500/40 transition-all duration-500 relative overflow-hidden`}
                 >
-                  <div className="flex justify-between items-start mb-8">
+                  <div className="flex justify-between items-start mb-8 text-left">
                     <div className="flex gap-4">
                       <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-zinc-500 group-hover:text-teal-400 group-hover:bg-teal-500/10 transition-all duration-500 border border-white/5 shrink-0">
                         <Building2 size={26} />
                       </div>
-                      <div className="text-left">
+                      <div>
                         <h3 className="text-white font-bold text-lg leading-tight group-hover:text-teal-200 transition-colors mb-1">{job.title}</h3>
                         <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">{job.company}</p>
                       </div>
                     </div>
                     {isMatch && (
                       <div className="flex items-center gap-1.5 px-3 py-1 bg-teal-500/10 border border-teal-500/20 rounded-full text-teal-400 text-[9px] font-black uppercase tracking-tighter">
-                        <Zap size={10} fill="currentColor" /> Pivot Match
+                        <Zap size={10} fill="currentColor" /> Top Match
                       </div>
                     )}
                   </div>
@@ -245,7 +242,7 @@ const App = ({ vault, isAdmin = true }) => {
                       {job.location}
                     </div>
                     <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-teal-400 hover:text-white transition-all transform group-hover:translate-x-1">
-                      View Position <ArrowRight size={14} />
+                      View Posting <ArrowRight size={14} />
                     </button>
                   </div>
                 </motion.div>
@@ -260,7 +257,7 @@ const App = ({ vault, isAdmin = true }) => {
                 </div>
               </div>
               <h3 className="text-zinc-500 font-serif italic text-2xl">Signal Lost</h3>
-              <p className="text-zinc-700 text-sm mt-3 max-w-xs mx-auto leading-relaxed">Adjust your search parameters or location to re-establish the connection to new opportunities.</p>
+              <p className="text-zinc-700 text-sm mt-3 max-w-xs mx-auto leading-relaxed text-center">No paths found in this direction. Adjust your search parameters or toggle filters to find more leads.</p>
             </div>
           )}
         </AnimatePresence>
@@ -268,10 +265,10 @@ const App = ({ vault, isAdmin = true }) => {
 
       {isAdmin && (
         <div className="mt-20 p-16 rounded-[4rem] bg-gradient-to-br from-teal-500/[0.04] to-purple-500/[0.04] border border-white/5 text-center shadow-3xl">
-          <p className="text-teal-400 text-[10px] font-black uppercase tracking-[0.5em] mb-6">Founder's Console</p>
-          <h4 className="text-white font-serif italic text-3xl mb-8">Found a new opening?</h4>
-          <button className="px-14 py-5 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-white hover:scale-105 transition-all shadow-[0_0_40px_rgba(20,184,166,0.3)]">
-            Log Opportunity
+          <p className="text-teal-400 text-[10px] font-black uppercase tracking-[0.5em] mb-6 text-center">Founder's Console</p>
+          <h4 className="text-white font-serif italic text-3xl mb-8 text-center">Found a new lead for the community?</h4>
+          <button className="px-14 py-5 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-white hover:scale-105 transition-all shadow-[0_0_40px_rgba(20,184,166,0.3)] mx-auto block">
+            Add New Job Lead
           </button>
         </div>
       )}
