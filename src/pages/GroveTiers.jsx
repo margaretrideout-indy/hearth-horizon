@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Flame, Heart, Sprout, Globe, ShieldCheck, Check, Leaf, Mountain, UserPlus,
-  Smartphone, Share2, PlusSquare, Sparkles, Send, Mail, MessageSquare 
+  Smartphone, Share2, PlusSquare, Sparkles, Send, Zap, FileText, Map, ChevronRight 
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -75,7 +75,7 @@ const GroveTiers = ({ vault, onSync }) => {
       features: [
         "Foundational Badge", 
         "Community Resources", 
-        "Access to Library (Basic)",
+        "Wayfarer's Provisions",
         "Standard Alignment Preview"
       ],
       button: "GET STARTED",
@@ -160,7 +160,7 @@ const GroveTiers = ({ vault, onSync }) => {
 
           <div className="max-w-5xl mx-auto p-8 md:p-12 rounded-[3rem] bg-[#110E16]/60 backdrop-blur-xl border border-zinc-800/50 shadow-2xl relative overflow-hidden mb-16">
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-purple-500/5 rounded-full blur-[60px]" />
-            <p className="relative z-10 text-base md:text-lg text-zinc-300 font-light leading-relaxed mb-8 italic">
+            <p className="relative z-10 text-base md:text-lg text-zinc-300 font-light leading-relaxed mb-8 italic text-center">
               "As an Indigenous educator with 13 years in the classroom and a Master of Education in Indigenous Studies, 
               my approach is rooted in the Psychology and Sociology of belonging. I have spent my career 
               learning how we anchor ourselves in community and identity during times of upheaval. 
@@ -172,48 +172,97 @@ const GroveTiers = ({ vault, onSync }) => {
               <span className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-600">Hearth & Horizon</span>
             </div>
           </div>
+        </header>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto mb-24 p-1 border-t border-b border-teal-500/10"
-          >
-            <div className="py-12 px-6 space-y-8 bg-gradient-to-b from-transparent via-teal-500/5 to-transparent">
-              <div className="space-y-3 text-center">
-                <div className="flex justify-center gap-6 text-teal-500/40 mb-4">
-                  <Sprout size={18} />
-                  <Heart size={18} />
-                  <Globe size={18} />
-                </div>
-                <h3 className="text-white font-serif italic text-3xl">The Reciprocity Model</h3>
-                <p className="text-zinc-400 text-sm max-w-xl mx-auto font-light leading-relaxed italic">
-                  Hearth & Horizon is nourished by the principle of reciprocity. Your contribution directly funds scholarship seats for those in transition. 
-                </p>
-                <div className="pt-4 space-y-2">
-                  <div className="inline-flex items-center gap-2 text-teal-400 font-black uppercase tracking-[0.2em] text-[10px] py-2 px-4 rounded-full bg-teal-500/10 border border-teal-500/20">
-                    <Sparkles className="w-3 h-3" /> Lightkeeper Gift Included
-                  </div>
-                  <p className="text-[11px] text-zinc-500 font-medium italic">
-                    Donators receive immediate access to the <strong>Embers Chat</strong> and the <strong>Lightkeeper</strong> badge.
-                  </p>
-                </div>
+        {/* --- THE OFFERINGS SECTION --- */}
+        <section className="mb-24 md:mb-48">
+          <div className="text-center mb-16">
+            <h2 className="text-white font-serif italic text-4xl mb-4">Inside the Supply Room</h2>
+            <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">Tools for the Migration of Self</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="group p-8 rounded-[2.5rem] bg-[#110E16]/40 border border-zinc-800/50 hover:border-teal-500/30 transition-all duration-500"
+            >
+              <div className="w-12 h-12 bg-teal-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Zap className="text-teal-400" size={24} />
               </div>
+              <h3 className="text-xl font-bold text-white mb-4">The Reframing Engine</h3>
+              <p className="text-sm text-zinc-400 leading-relaxed font-light">
+                Stop fighting the "Translation Wall." We help you flip public-sector jargon into the corporate-ready impact statements recruiters crave.
+              </p>
+            </motion.div>
 
-              <div className="flex flex-col items-center gap-6">
-                <button 
-                  onClick={() => window.open(LINK_DONATION, '_blank')}
-                  className="px-10 py-5 rounded-2xl bg-teal-500 text-[#0A080D] text-[11px] font-black uppercase tracking-[0.3em] hover:bg-[#4df7d5] hover:scale-105 transition-all shadow-[0_0_30px_rgba(20,184,166,0.3)] flex items-center gap-3 group"
-                >
-                  <Heart size={16} className="group-hover:fill-current" /> Plant A Seed
-                </button>
-                <div className="flex items-center gap-2 text-[9px] font-black text-zinc-600 uppercase tracking-widest">
-                  <ShieldCheck size={14} className="text-teal-900" /> Secure Reciprocity via Stripe
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="group p-8 rounded-[2.5rem] bg-[#110E16]/40 border border-zinc-800/50 hover:border-purple-500/30 transition-all duration-500"
+            >
+              <div className="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <FileText className="text-purple-400" size={24} />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4">Provision Library</h3>
+              <p className="text-sm text-zinc-400 leading-relaxed font-light">
+                Direct access to ATS-optimized resume templates, salary negotiation scripts, and custom word-for-word guides for the Canadian market.
+              </p>
+            </motion.div>
+
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="group p-8 rounded-[2.5rem] bg-[#110E16]/40 border border-zinc-800/50 hover:border-teal-500/30 transition-all duration-500"
+            >
+              <div className="w-12 h-12 bg-teal-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Map className="text-teal-400" size={24} />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4">Market Topography</h3>
+              <p className="text-sm text-zinc-400 leading-relaxed font-light">
+                Master the nuances of the private sector, from RRSP matching and vacation negotiation to provincial credential translation.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-3xl mx-auto mb-24 p-1 border-t border-b border-teal-500/10"
+        >
+          <div className="py-12 px-6 space-y-8 bg-gradient-to-b from-transparent via-teal-500/5 to-transparent">
+            <div className="space-y-3 text-center">
+              <div className="flex justify-center gap-6 text-teal-500/40 mb-4">
+                <Sprout size={18} />
+                <Heart size={18} />
+                <Globe size={18} />
+              </div>
+              <h3 className="text-white font-serif italic text-3xl">The Reciprocity Model</h3>
+              <p className="text-zinc-400 text-sm max-w-xl mx-auto font-light leading-relaxed italic">
+                Hearth & Horizon is nourished by the principle of reciprocity. Your contribution directly funds scholarship seats for those in transition. 
+              </p>
+              <div className="pt-4 space-y-2">
+                <div className="inline-flex items-center gap-2 text-teal-400 font-black uppercase tracking-[0.2em] text-[10px] py-2 px-4 rounded-full bg-teal-500/10 border border-teal-500/20">
+                  <Sparkles className="w-3 h-3" /> Lightkeeper Gift Included
                 </div>
+                <p className="text-[11px] text-zinc-500 font-medium italic">
+                  Donators receive immediate access to the <strong>Embers Chat</strong> and the <strong>Lightkeeper</strong> badge.
+                </p>
               </div>
             </div>
-          </motion.div>
-        </header>
+
+            <div className="flex flex-col items-center gap-6">
+              <button 
+                onClick={() => window.open(LINK_DONATION, '_blank')}
+                className="px-10 py-5 rounded-2xl bg-teal-500 text-[#0A080D] text-[11px] font-black uppercase tracking-[0.3em] hover:bg-[#4df7d5] hover:scale-105 transition-all shadow-[0_0_30px_rgba(20,184,166,0.3)] flex items-center gap-3 group"
+              >
+                <Heart size={16} className="group-hover:fill-current" /> Plant A Seed
+              </button>
+              <div className="flex items-center gap-2 text-[9px] font-black text-zinc-600 uppercase tracking-widest">
+                <ShieldCheck size={14} className="text-teal-900" /> Secure Reciprocity via Stripe
+              </div>
+            </div>
+          </div>
+        </motion.div>
 
         <section className="mb-24 md:mb-48">
           <div className="text-center mb-16 space-y-4">
