@@ -47,15 +47,15 @@ export default function App() {
 
     const unsubMessages = onSnapshot(messagesQuery, (snapshot) => {
       setMessages(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    }, (err) => console.error(err));
+    }, (err) => console.error("Firestore messages error:", err));
 
     const unsubUsers = onSnapshot(usersQuery, (snapshot) => {
       setUsers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    }, (err) => console.error(err));
+    }, (err) => console.error("Firestore users error:", err));
 
     const unsubVouchers = onSnapshot(vouchersQuery, (snapshot) => {
       setVouchers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    }, (err) => console.error(err));
+    }, (err) => console.error("Firestore vouchers error:", err));
 
     return () => {
       unsubMessages();
@@ -66,7 +66,7 @@ export default function App() {
 
   const toggleVoucherStatus = async (id, currentStatus) => {
     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'vouchers', id);
-    await updateDoc(docRef, { status: currentStatus === 'pending' ? 'approved' : 'pending' });
+    await updateDoc(docRef, { status: currentStatus === 'approved' ? 'pending' : 'approved' });
   };
 
   const deleteEntry = async (collectionName, id) => {
