@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Download, FileText, MessageSquare, Map, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
+import { Download, FileText, MessageSquare, Map, ChevronRight, ChevronDown, ChevronUp, Zap } from 'lucide-react';
 
-// Explicitly exporting this to resolve the SyntaxError
 export const libraryVolumeII = [
   {
     id: 'resume',
@@ -24,11 +23,11 @@ export const libraryVolumeII = [
   {
     id: 'verbs',
     title: "The Power Verb Lexicon",
-    desc: "100+ corporate verbs to replace 'helped', 'taught', and 'organized'.",
-    type: "Glossary",
-    icon: <Download className="text-purple-400" />,
-    action: "View List",
-    url: "#"
+    desc: "The 'Flip' dictionary. 50+ corporate verbs to replace legacy language.",
+    type: "Interactive Glossary",
+    icon: <Zap className="text-purple-400" />,
+    action: "Open Lexicon",
+    isAccordion: true
   },
   {
     id: 'market',
@@ -42,24 +41,20 @@ export const libraryVolumeII = [
 ];
 
 const negotiationScripts = [
-  {
-    id: 'anchor',
-    situation: "The Early Inquiry (The 'Anchor')",
-    context: "A recruiter asks in the first screening call: 'What are your salary expectations?'",
-    script: "I’m quite flexible depending on the total compensation package and the growth opportunities. Based on my research for similar roles in the Canadian market, I’m looking for a range between $[Lower] and $[Upper]. Does that align with your budget for this position?"
-  },
-  {
-    id: 'pivot',
-    situation: "The Pivot (Transferable Value)",
-    context: "They offer a low number because they see you as 'entry-level' in a new sector.",
-    script: "I appreciate the offer. While I am transitioning sectors, I bring over a decade of high-stakes experience in leadership and project management. My ability to lead teams from day one will save significant onboarding time. Given that impact, I was hoping for a base closer to $[Target]."
-  },
-  {
-    id: 'bridge',
-    situation: "The Benefits Bridge",
-    context: "They hit their hard limit on base salary. Use this to find value elsewhere.",
-    script: "I understand the base salary is capped. If we can't move the needle there, would you be open to discussing a signing bonus, a higher RRSP matching percentage, or an additional week of vacation to bridge the gap?"
-  }
+  { id: 'anchor', situation: "The Early Inquiry (The 'Anchor')", context: "A recruiter asks: 'What are your salary expectations?'", script: "I’m quite flexible depending on the total compensation package. Based on my research for similar roles in Canada, I’m looking for a range between $[Lower] and $[Upper]." },
+  { id: 'pivot', situation: "The Pivot (Transferable Value)", context: "They offer a low number because they see you as 'entry-level'.", script: "While I am transitioning sectors, I bring a decade of high-stakes leadership. My ability to lead from day one saves significant onboarding time. I was hoping for a base closer to $[Target]." },
+  { id: 'bridge', situation: "The Benefits Bridge", context: "Base salary is capped. Use this to find value elsewhere.", script: "I understand the base is capped. Would you be open to discussing a signing bonus, higher RRSP matching, or an additional week of vacation to bridge the gap?" }
+];
+
+const powerVerbs = [
+  { legacy: "Led/Managed", horizon: "Spearheaded", use: "For projects you initiated." },
+  { legacy: "Taught/Explained", horizon: "Facilitated", use: "For high-level workshops/training." },
+  { legacy: "Improved/Fixed", horizon: "Optimized", use: "For making systems more efficient." },
+  { legacy: "Organized", horizon: "Orchestrated", use: "For complex, multi-part logistics." },
+  { legacy: "Talked to", horizon: "Consulted", use: "For expert advice provided to stakeholders." },
+  { legacy: "Looked at", horizon: "Analyzed", use: "For data-driven decision making." },
+  { legacy: "Helped", horizon: "Empowered", use: "For mentorship and leadership roles." },
+  { legacy: "Made", horizon: "Architected", use: "For building new frameworks or tools." }
 ];
 
 const Provisions = () => {
@@ -91,7 +86,7 @@ const Provisions = () => {
               <div 
                 onClick={() => handleCardClick(tool)}
                 className={`group relative bg-[#0A080D] border border-white/5 p-6 transition-all cursor-pointer overflow-hidden ${
-                  expandedCard === tool.id ? 'rounded-t-2xl border-b-0 border-teal-500/30' : 'rounded-2xl hover:border-purple-500/30'
+                  expandedCard === tool.id ? 'rounded-t-2xl border-b-0 border-teal-500/30 shadow-[0_-10px_40px_rgba(20,184,166,0.1)]' : 'rounded-2xl hover:border-purple-500/30'
                 }`}
               >
                 <div className="flex items-center justify-between relative z-10">
@@ -100,12 +95,8 @@ const Provisions = () => {
                       {tool.icon}
                     </div>
                     <div>
-                      <div className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">
-                        {tool.type}
-                      </div>
-                      <h3 className="text-xl font-semibold text-white group-hover:text-teal-400 transition-colors">
-                        {tool.title}
-                      </h3>
+                      <div className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">{tool.type}</div>
+                      <h3 className="text-xl font-semibold text-white group-hover:text-teal-400 transition-colors">{tool.title}</h3>
                       <p className="text-slate-400 mt-1 max-w-md text-sm">{tool.desc}</p>
                     </div>
                   </div>
@@ -116,29 +107,45 @@ const Provisions = () => {
                 </div>
               </div>
 
-              {tool.isAccordion && expandedCard === tool.id && (
-                <div className="bg-[#0A080D] border-x border-b border-white/5 rounded-b-2xl p-6 pt-0 space-y-3">
+              {/* Accordion Content for Salary Scripts */}
+              {tool.id === 'scripts' && expandedCard === 'scripts' && (
+                <div className="bg-[#0A080D] border-x border-b border-white/5 rounded-b-2xl p-6 pt-0 space-y-3 shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
                   <div className="h-px bg-white/5 mb-6 w-full" />
                   {negotiationScripts.map((item) => (
                     <div key={item.id} className="bg-black/40 border border-white/5 rounded-xl overflow-hidden">
-                      <button 
-                        onClick={() => setOpenScriptId(openScriptId === item.id ? null : item.id)}
-                        className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors text-left"
-                      >
+                      <button onClick={() => setOpenScriptId(openScriptId === item.id ? null : item.id)} className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors text-left">
                         <span className="text-sm font-semibold text-white">{item.situation}</span>
                         {openScriptId === item.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                       </button>
                       {openScriptId === item.id && (
-                        <div className="p-4 pt-0 border-t border-white/5">
+                        <div className="p-4 pt-0 border-t border-white/5 bg-black/20">
                           <p className="text-[10px] font-bold uppercase tracking-widest text-teal-500 mt-4 mb-1">The Situation:</p>
                           <p className="text-slate-400 mb-3 italic text-xs">{item.context}</p>
-                          <div className="bg-[#110E16] p-4 rounded-lg border border-purple-500/20 text-white font-mono text-xs leading-relaxed">
-                            "{item.script}"
-                          </div>
+                          <div className="bg-[#110E16] p-4 rounded-lg border border-purple-500/20 text-white font-mono text-xs leading-relaxed italic">"{item.script}"</div>
                         </div>
                       )}
                     </div>
                   ))}
+                </div>
+              )}
+
+              {/* Accordion Content for Power Verbs */}
+              {tool.id === 'verbs' && expandedCard === 'verbs' && (
+                <div className="bg-[#0A080D] border-x border-b border-white/5 rounded-b-2xl p-6 pt-0 shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+                  <div className="h-px bg-white/5 mb-6 w-full" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {powerVerbs.map((verb, idx) => (
+                      <div key={idx} className="bg-black/30 border border-white/5 p-4 rounded-xl flex flex-col">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs text-slate-500 line-through">{verb.legacy}</span>
+                          <span className="text-sm font-bold text-purple-400 uppercase tracking-tighter">Flip to</span>
+                        </div>
+                        <div className="text-lg font-bold text-teal-400 mb-1">{verb.horizon}</div>
+                        <p className="text-[11px] text-slate-500 leading-tight">{verb.use}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-center text-[10px] text-slate-600 mt-6 uppercase tracking-widest italic">Use these to replace passive duty-based language with outcome-based actions.</p>
                 </div>
               )}
             </div>
@@ -148,11 +155,8 @@ const Provisions = () => {
         <div className="mt-16 p-8 rounded-3xl bg-gradient-to-br from-purple-900/20 to-teal-900/20 border border-white/5 text-center relative overflow-hidden">
             <div className="relative z-10">
               <h3 className="text-white font-serif italic text-2xl mb-2">Need a custom provision?</h3>
-              <p className="text-slate-400 mb-6 max-w-lg mx-auto">If you're looking for a specific template or guide that isn't here, let the Hearthkeepers know.</p>
-              <button 
-                onClick={() => window.location.href = 'mailto:support@hearthandhorizon.com'}
-                className="px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-teal-400 hover:scale-105 active:scale-95 transition-all"
-              >
+              <p className="text-slate-400 mb-6 max-w-lg mx-auto text-sm md:text-base">If you're looking for a specific template or guide that isn't here, let the Hearthkeepers know.</p>
+              <button onClick={() => window.location.href = 'mailto:support@hearthandhorizon.com'} className="px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-teal-400 hover:scale-105 active:scale-95 transition-all">
                   Contact Archive Support
               </button>
             </div>
