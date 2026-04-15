@@ -12,6 +12,7 @@ import Library from './pages/Library';
 import GroveTiers from './pages/GroveTiers';
 import EmbersChat from './pages/EmbersChat'; 
 import AdminDashboard from './pages/AdminDashboard';
+import Contact from './pages/Contact'; // Imported for Volume II Library storage
 
 const queryClient = new QueryClient();
 const ADMIN_EMAIL = "margaretpardy@gmail.com"; 
@@ -217,6 +218,15 @@ function AppRoutes() {
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
               <Library vault={vault} onSync={onSync} isAdmin={isAdmin} />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+
+        {/* Contact Route (Hijacked for Volume II Content Storage) */}
+        <Route path="/contact" element={
+          <ProtectedRoute>
+            <AppLayout currentTier={effectiveTier}>
+              <Contact />
             </AppLayout>
           </ProtectedRoute>
         } />
