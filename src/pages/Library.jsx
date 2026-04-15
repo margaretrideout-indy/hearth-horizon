@@ -6,7 +6,7 @@ import {
   Compass, Layers, Search, Copy, Save, FileText, X,
   ChevronRight
 } from 'lucide-react';
-import { libraryVolumeII } from './Contact'; // Volume II Data Store
+import { libraryVolumeII } from './Contact';
 
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/preview";
 const IDENTITY_LEDGER_URL = "https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link";
@@ -120,7 +120,6 @@ const Library = ({ vault, isAdmin }) => {
 
       <div className="max-w-6xl mx-auto relative z-10">
         
-        {/* HEADER */}
         <header className="mb-12 md:mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-8 border-b border-white/5 pb-10">
           <div className="space-y-4">
             <div className="flex items-center gap-4">
@@ -149,7 +148,6 @@ const Library = ({ vault, isAdmin }) => {
 
         {currentVolume === 1 ? (
           <div className="animate-in fade-in duration-700">
-            {/* SECTION 1: THE STUDY */}
             <section className="mb-16">
               <div className="flex items-center gap-4 mb-8">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/80 whitespace-nowrap">The Study</h3>
@@ -160,9 +158,12 @@ const Library = ({ vault, isAdmin }) => {
                   <Book className="w-8 h-8 text-teal-400 mb-6" />
                   <h4 className="text-lg text-white font-serif font-black italic mb-3">Indigo Curated List</h4>
                   <p className="text-[11px] text-zinc-400 italic mb-8 font-light leading-relaxed">Pivotal literature on career migration, identity, and resilience.</p>
-                  <a href={INDIGO_LIST_URL} target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-teal-500/5 text-teal-400 border border-teal-500/20 hover:bg-teal-500 hover:text-black">
-                    SHOP THE COLLECTION <ExternalLink className="ml-2 w-3 h-3" />
-                  </a>
+                  <button 
+                    disabled
+                    className="mt-auto inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-zinc-900/50 text-zinc-600 border border-zinc-800 cursor-not-allowed"
+                  >
+                    ARRIVING IN THE GROVE SOON <Lock className="ml-2 w-3 h-3" />
+                  </button>
                 </div>
 
                 <div className="bg-[#110E16] border border-zinc-800/50 p-8 rounded-[2.5rem] hover:border-teal-500/40 transition-all group flex flex-col shadow-xl">
@@ -177,7 +178,6 @@ const Library = ({ vault, isAdmin }) => {
               </div>
             </section>
 
-            {/* SECTION 2: THE CANOPY HUB */}
             <section className="mb-16">
               <div className="flex items-center gap-4 mb-8">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-500/80 whitespace-nowrap">The Canopy Hub</h3>
@@ -225,12 +225,12 @@ const Library = ({ vault, isAdmin }) => {
                         </a>
                       </div>
                     </div>
-                    <div onClick={() => setActiveTool('reframing')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'reframing' ? 'bg-teal-500/10 border-teal-500/50' : 'bg-black/40 border-zinc-800'}`}>
+                    <div onClick={() => setActiveTool('alignment')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'alignment' ? 'bg-teal-500/10 border-teal-500/50' : 'bg-black/40 border-zinc-800'}`}>
                       <div className="flex items-center gap-3">
                         <Layers size={14} className="text-teal-400/50" />
-                        <span className="text-[10px] font-black text-zinc-300 uppercase tracking-tighter">Reframing Engine</span>
+                        <span className="text-[10px] font-black text-zinc-300 uppercase tracking-tighter">Alignment Engine</span>
                       </div>
-                      {activeTool === 'reframing' && <ArrowRight size={12} className="text-teal-400" />}
+                      {activeTool === 'alignment' && <ArrowRight size={12} className="text-teal-400" />}
                     </div>
                     <div onClick={() => setActiveTool('kindling')} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${activeTool === 'kindling' ? 'bg-teal-500/10 border-teal-500/50' : 'bg-black/40 border-zinc-800'}`}>
                       <div className="flex items-center gap-3">
@@ -272,7 +272,6 @@ const Library = ({ vault, isAdmin }) => {
               </div>
             </section>
 
-            {/* ACTIVE TOOL STAGE */}
             <section className="mb-20 min-h-[400px]">
               {activeTool ? (
                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -282,7 +281,7 @@ const Library = ({ vault, isAdmin }) => {
                     </button>
                   </div>
 
-                  {activeTool === 'reframing' && (
+                  {activeTool === 'alignment' && (
                     <div className="bg-[#110E16]/60 border border-teal-500/10 rounded-[2.5rem] p-6 md:p-12 shadow-2xl backdrop-blur-sm">
                        <div className="flex flex-col md:flex-row gap-6 mb-12">
                         <div className="relative flex-1">
@@ -364,7 +363,6 @@ const Library = ({ vault, isAdmin }) => {
             </section>
           </div>
         ) : (
-          /* VOLUME II VIEW */
           <div className="animate-in fade-in slide-in-from-right-4 duration-700 pb-20">
             <div className="flex items-center gap-4 mb-12">
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/80 whitespace-nowrap">Expansion Archives</h3>
@@ -401,7 +399,6 @@ const Library = ({ vault, isAdmin }) => {
           </div>
         )}
 
-        {/* SHARED VOLUME SWITCHER */}
         <div className="mt-12 pt-12 border-t border-white/5 flex flex-col items-center gap-8">
           <div className="flex items-center gap-3 p-1.5 bg-[#16121D] rounded-2xl border border-white/5 shadow-2xl">
             <button 
@@ -419,7 +416,6 @@ const Library = ({ vault, isAdmin }) => {
           </div>
         </div>
 
-        {/* FOOTER */}
         <footer className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-3">
             <div className="w-6 h-6 rounded-lg bg-teal-500/10 flex items-center justify-center">
