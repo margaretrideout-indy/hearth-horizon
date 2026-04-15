@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Flame, Heart, Sprout, Globe, ShieldCheck, Check, Leaf, Mountain, UserPlus,
-  Smartphone, Share2, PlusSquare, Sparkles, Send, Zap, FileText, Map, ChevronRight 
+  Smartphone, Share2, PlusSquare, Sparkles, Send, Zap, FileText, Map, MessageSquare, Briefcase
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -174,51 +174,72 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </header>
 
-        {/* --- THE OFFERINGS SECTION --- */}
+        {/* --- PROVISIONS FROM THE HEARTH --- */}
         <section className="mb-24 md:mb-48">
           <div className="text-center mb-16">
-            <h2 className="text-white font-serif italic text-4xl mb-4">Inside the Supply Room</h2>
-            <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">Tools for the Migration of Self</p>
+            <h2 className="text-white font-serif italic text-4xl mb-4">Provisions from the Hearth</h2>
+            <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">Essential Resources for your Journey</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="group p-8 rounded-[2.5rem] bg-[#110E16]/40 border border-zinc-800/50 hover:border-teal-500/30 transition-all duration-500"
-            >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <motion.div whileHover={{ y: -5 }} className="group p-8 rounded-[2.5rem] bg-[#110E16]/40 border border-zinc-800/50 hover:border-teal-500/30 transition-all duration-500">
               <div className="w-12 h-12 bg-teal-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Zap className="text-teal-400" size={24} />
               </div>
               <h3 className="text-xl font-bold text-white mb-4">The Reframing Engine</h3>
               <p className="text-sm text-zinc-400 leading-relaxed font-light">
-                Stop fighting the "Translation Wall." We help you flip public-sector jargon into the corporate-ready impact statements recruiters crave.
+                Flip public-sector jargon into the outcome-based language corporate recruiters value most.
               </p>
             </motion.div>
 
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="group p-8 rounded-[2.5rem] bg-[#110E16]/40 border border-zinc-800/50 hover:border-purple-500/30 transition-all duration-500"
-            >
+            <motion.div whileHover={{ y: -5 }} className="group p-8 rounded-[2.5rem] bg-[#110E16]/40 border border-zinc-800/50 hover:border-purple-500/30 transition-all duration-500">
               <div className="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <FileText className="text-purple-400" size={24} />
               </div>
-              <h3 className="text-xl font-bold text-white mb-4">Provision Library</h3>
+              <h3 className="text-xl font-bold text-white mb-4">Wayfarer's Tools</h3>
               <p className="text-sm text-zinc-400 leading-relaxed font-light">
-                Direct access to ATS-optimized resume templates, salary negotiation scripts, and custom word-for-word guides for the Canadian market.
+                ATS-optimized resume templates and word-for-word salary negotiation scripts designed for the Canadian market.
               </p>
             </motion.div>
 
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="group p-8 rounded-[2.5rem] bg-[#110E16]/40 border border-zinc-800/50 hover:border-teal-500/30 transition-all duration-500"
-            >
+            <motion.div whileHover={{ y: -5 }} className="group p-8 rounded-[2.5rem] bg-[#110E16]/40 border border-zinc-800/50 hover:border-teal-500/30 transition-all duration-500">
               <div className="w-12 h-12 bg-teal-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Map className="text-teal-400" size={24} />
               </div>
               <h3 className="text-xl font-bold text-white mb-4">Market Topography</h3>
               <p className="text-sm text-zinc-400 leading-relaxed font-light">
-                Master the nuances of the private sector, from RRSP matching and vacation negotiation to provincial credential translation.
+                Navigate RRSP matching, vacation negotiation, and provincial credential translation with confidence.
               </p>
+            </motion.div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <motion.div whileHover={{ y: -5 }} className="group p-8 rounded-[2.5rem] bg-[#110E16]/40 border border-zinc-800/50 hover:border-purple-500/30 transition-all duration-500">
+              <div className="flex items-center gap-6">
+                <div className="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Briefcase className="text-purple-400" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-1">Horizon Job Board</h3>
+                  <p className="text-sm text-zinc-400 leading-relaxed font-light">
+                    Location-specific career leads curated for those pivoting from the public sector.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div whileHover={{ y: -5 }} className="group p-8 rounded-[2.5rem] bg-[#110E16]/40 border border-zinc-800/50 hover:border-teal-500/30 transition-all duration-500">
+              <div className="flex items-center gap-6">
+                <div className="w-12 h-12 bg-teal-500/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <MessageSquare className="text-teal-400" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-1">Embers Chat</h3>
+                  <p className="text-sm text-zinc-400 leading-relaxed font-light">
+                    A private sanctuary for real-time strategy, peer support, and collective wisdom.
+                  </p>
+                </div>
+              </div>
             </motion.div>
           </div>
         </section>
