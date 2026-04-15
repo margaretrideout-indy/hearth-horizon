@@ -1,46 +1,34 @@
-import React from 'react';
-import { 
-  BookOpen, Compass, Shield, Sparkles, 
-  Target, Zap, Coffee, Map 
-} from 'lucide-react';
-
-// This file now serves as Volume II of your Digital Library
 export const libraryVolumeII = [
   {
-    title: "The Emotional Landscape",
-    desc: "Mapping the psychological shifts that occur when leaving a long-term career.",
-    category: "Mindset",
-    icon: <Compass className="w-5 h-5" />,
-    link: "#",
+    title: "The Reframing Engine",
+    desc: "A deep-dive spreadsheet for translating academic pedagogy into corporate strategy and operations.",
+    category: "Tools",
+    icon: <Zap className="w-5 h-5" />,
+    url: "https://docs.google.com/spreadsheets/d/your-id-here/edit", // Replace with your link
     tier: "Seedling"
   },
   {
-    title: "Identity Decoupling",
-    desc: "Exercises to separate your self-worth from your previous job title.",
-    category: "Philosophy",
-    icon: <Shield className="w-5 h-5" />,
-    link: "#",
-    tier: "Hearthkeeper"
+    title: "Resume Migration Guide",
+    desc: "Step-by-step walkthrough for stripping jargon and optimizing for private-sector ATS systems.",
+    category: "Guides",
+    icon: <BookOpen className="w-5 h-5" />,
+    url: "https://docs.google.com/document/d/your-id-here/view", // Replace with your link
+    tier: "Seedling"
   },
   {
-    title: "Market Topography",
-    desc: "A high-level view of how public sector skills translate to private sector needs.",
+    title: "The LinkedIn Ecosystem",
+    desc: "Strategies for rebuilding your digital presence to attract recruiters outside of education.",
     category: "Strategy",
-    icon: <Map className="w-5 h-5" />,
-    link: "#",
+    icon: <Target className="w-5 h-5" />,
+    url: "https://www.linkedin.com/pulse/your-article-link", // Replace with your link
     tier: "Hearthkeeper"
   },
   {
-    title: "The Quiet Pivot",
-    desc: "How to network and explore new paths without triggering alarm bells in your current role.",
-    category: "Tactics",
-    icon: <Zap className="w-5 h-5" />,
-    link: "#",
+    title: "Salary Negotiation Protocols",
+    desc: "Moving from set pay scales to open-market negotiation. Knowing your worth in the private sector.",
+    category: "Financial",
+    icon: <Shield className="w-5 h-5" />,
+    url: "https://docs.google.com/presentation/d/your-id-here/preview", // Replace with your link
     tier: "Steward"
   }
 ];
-
-// We keep a default export so the app doesn't break if a route still points here
-export default function VolumeII() {
-  return null; 
-}
