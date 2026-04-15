@@ -99,7 +99,7 @@ const Canopy = ({ vault, isAdmin }) => {
         
         <p className="text-zinc-400 text-sm font-light max-w-2xl leading-relaxed">
           {vault?.userName ? `Welcome back, ${vault.userName.split(' ')[0]}. ` : ""}
-          The Horizon Board curates roles where your public-sector background is an advantage. 
+          Welcome to the Launchpad! The Horizon Board curates roles where your public-sector background is an advantage. 
           {vault?.pivotTarget ? ` We've highlighted roles matching your path in ${vault.pivotTarget}.` : ""}
         </p>
       </header>
