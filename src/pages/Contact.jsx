@@ -8,7 +8,9 @@ import {
   ChevronUp, 
   Zap, 
   ShieldCheck,
-  Mail
+  Mail,
+  BookOpen,
+  ArrowLeft
 } from 'lucide-react';
 
 export const libraryVolumeII = [
@@ -194,16 +196,42 @@ const Provisions = () => {
               <h3 className="text-white font-serif italic text-3xl mb-3">Looking for a specific provision?</h3>
               <p className="text-slate-400 mb-8 max-w-lg mx-auto text-sm leading-relaxed">
                 If there is a script, template, or guide you need for your unique path, 
-                reach out. The Hearthkeepers are constantly expanding the archives.
+                reach out. The Librarians are constantly expanding the archives.
               </p>
               <button 
                 onClick={() => window.location.href = 'mailto:support@hearthandhorizon.com'} 
                 className="px-10 py-4 bg-white text-black font-bold rounded-full hover:bg-teal-400 hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl shadow-white/5"
               >
-                  Message the Hearthkeepers
+                  Message the Librarians
               </button>
             </div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/5 blur-[120px] pointer-events-none" />
+        </div>
+
+        {/* VOLUME NAVIGATION TOGGLE */}
+        <div className="mt-12 grid grid-cols-2 gap-4">
+          <button 
+            onClick={() => window.location.href = '/library'} 
+            className="group p-6 bg-[#0A080D] border border-teal-500/20 rounded-2xl flex flex-col items-center gap-3 hover:border-teal-400 transition-all active:scale-95"
+          >
+            <div className="p-3 bg-teal-500/10 rounded-full text-teal-400 group-hover:bg-teal-400 group-hover:text-black transition-colors">
+              <ArrowLeft size={20} />
+            </div>
+            <div className="text-center">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Back to</div>
+              <div className="text-white font-serif italic text-lg">Library Vol. I</div>
+            </div>
+          </button>
+
+          <div className="p-6 bg-[#0A080D] border border-white/5 rounded-2xl flex flex-col items-center gap-3 opacity-50 cursor-default">
+            <div className="p-3 bg-purple-500/10 rounded-full text-purple-400">
+              <BookOpen size={20} />
+            </div>
+            <div className="text-center">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Currently Reading</div>
+              <div className="text-white font-serif italic text-lg">Library Vol. II</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
