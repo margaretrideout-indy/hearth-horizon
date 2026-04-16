@@ -235,7 +235,7 @@ const GroveTiers = ({ vault, onSync }) => {
                 <div className="mt-16 pt-12 border-t border-white/5 space-y-4 text-center max-w-xl mx-auto mb-10">
                   <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Luminary Registry Fund</h4>
                   <p className="text-xs text-zinc-400 leading-relaxed font-light italic">
-                    Contributions to the Registry are directly reinvested into the growth of the Grove—fueling new tool development, app optimizations, and the expansion of our resource archives.
+                    Contributions to the Registry are directly reinvested into the growth of the Grove- fueling new tool development, app optimizations, and the expansion of our resource archives.
                   </p>
                 </div>
 
@@ -244,7 +244,7 @@ const GroveTiers = ({ vault, onSync }) => {
                       onClick={() => window.location.href = LINK_DONATION}
                       className="px-10 py-4 bg-[#39D7B8] text-[#0A080D] rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-xl shadow-teal-500/20 hover:scale-105"
                     >
-                        Invest in the Registry
+                        Invest in the Hearth
                     </button>
                 </div>
               </div>
