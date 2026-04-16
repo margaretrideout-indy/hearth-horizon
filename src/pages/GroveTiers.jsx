@@ -18,8 +18,8 @@ const GroveTiers = ({ vault, onSync }) => {
   const [contactStatus, setContactStatus] = useState(null);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
-  // For the Luminary Registry
-  const luminaries = ["Josh"]; 
+  // Updated Luminary Registry
+  const luminaries = ["Matthew"]; 
 
   const hasSession = vault?.isAligned || !!localStorage.getItem('base44_auth_session');
 
@@ -212,11 +212,10 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        {/* LUMINARY REGISTRY (DONATOR'S WALL) */}
+        {/* LUMINARY REGISTRY */}
         <section className="mb-24 md:mb-48 max-w-4xl mx-auto">
           <div className="relative p-1 bg-gradient-to-r from-teal-500/20 via-purple-500/20 to-teal-500/20 rounded-[3rem]">
             <div className="bg-[#0A080D] rounded-[2.9rem] px-8 py-12 text-center relative overflow-hidden">
-              {/* Twinkling background element */}
               <motion.div 
                 animate={{ opacity: [0.2, 0.5, 0.2] }} 
                 transition={{ duration: 3, repeat: Infinity }}
@@ -229,9 +228,16 @@ const GroveTiers = ({ vault, onSync }) => {
                   <h2 className="text-white font-serif italic text-3xl">Luminary Registry</h2>
                   <Star className="text-teal-400 fill-teal-400/20" size={16} />
                 </div>
-                <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em] mb-10">
-                  Honoring those who light the way for others
-                </p>
+                
+                <div className="mb-10 flex flex-col items-center">
+                  <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em] mb-4">
+                    Honoring those who light the way
+                  </p>
+                  {/* Husband/Founder Message */}
+                  <p className="text-slate-400 text-sm italic font-light max-w-sm leading-relaxed border-l border-teal-500/30 pl-4 py-1">
+                    "To Matthew—thank you for keeping the coffee hot, the fire burning, and for believing in this sanctuary before the first stone was even laid."
+                  </p>
+                </div>
 
                 <div className="flex flex-wrap justify-center gap-6">
                   {luminaries.map((name, i) => (
@@ -241,17 +247,16 @@ const GroveTiers = ({ vault, onSync }) => {
                       whileInView={{ opacity: 1, y: 0 }}
                       className="group relative"
                     >
-                      <div className="px-6 py-2 rounded-full border border-zinc-800 bg-white/5 text-white font-serif italic text-lg hover:border-teal-500/50 transition-all duration-500">
+                      <div className="px-6 py-2 rounded-full border border-teal-500/30 bg-teal-500/5 text-white font-serif italic text-lg hover:border-teal-400 transition-all duration-500 shadow-[0_0_20px_rgba(20,184,166,0.1)]">
                         {name}
                       </div>
-                      {/* Founding Wayfarer Glow */}
                       <div className="absolute -inset-1 bg-teal-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-full pointer-events-none" />
                     </motion.div>
                   ))}
                 </div>
 
                 <p className="mt-12 text-zinc-500 text-[11px] italic font-light max-w-md mx-auto leading-relaxed">
-                  Thank you to our founding donors. Your contributions directly fund scholarship seats for those in deep transition.
+                  Every contribution to the Registry directly funds scholarship seats for those navigating deep transitions.
                 </p>
                 
                 <button 
