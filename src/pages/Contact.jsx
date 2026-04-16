@@ -10,7 +10,7 @@ const trailKitProvisions = [
   {
     id: 'verbs',
     title: "The Power Verb Lexicon",
-    desc: "The 'Flip' dictionary. 50+ corporate verbs to replace legacy educational language.",
+    desc: "The 'Flip' dictionary. Strategic verbs to replace legacy public-sector language.",
     type: "Interactive Glossary",
     tier: "Seedling",
     icon: <Zap className="text-purple-400" />,
@@ -72,7 +72,49 @@ const powerVerbs = [
   { legacy: "Talked to", horizon: "Consulted", use: "Providing expert advisory to cross-functional teams." },
   { legacy: "Organized", horizon: "Orchestrated", use: "Handling complex, multi-layered logistics." },
   { legacy: "Helper", horizon: "Enabler", use: "Removing friction for technical teams." },
-  { legacy: "Wrote", horizon: "Authored", use: "Producing high-impact documentation." }
+  { legacy: "Wrote", horizon: "Authored", use: "Producing high-impact documentation." },
+  { legacy: "Planned", horizon: "Strategized", use: "Aligning project milestones with business goals." },
+  { legacy: "Used", horizon: "Leveraged", use: "Utilizing internal assets to drive results." },
+  { legacy: "Fixed", horizon: "Remediated", use: "Identifying and resolving systemic bottlenecks." },
+  { legacy: "Checked", horizon: "Audited", use: "Ensuring strict adherence to compliance protocols." },
+  { legacy: "Supported", horizon: "Advocated", use: "Driving alignment across internal departments." },
+  { legacy: "Started", horizon: "Pioneered", use: "Launching first-of-kind service models." },
+  { legacy: "Changed", horizon: "Transformed", use: "Reimagining legacy systems for modern scale." },
+  { legacy: "Met with", horizon: "Collaborated", use: "Synergizing with vendors to meet deadlines." },
+  { legacy: "Led", horizon: "Mobilized", use: "Unifying teams around a shared vision." },
+  { legacy: "Trained", horizon: "Upskilled", use: "Bridging the competency gap for new hires." },
+  { legacy: "Looked at", horizon: "Analyzed", use: "Evaluating data sets for actionable insights." },
+  { legacy: "Kept", horizon: "Maintained", use: "Upholding operational excellence in high-volume environments." },
+  { legacy: "Met goals", horizon: "Surpassed", use: "Exceeding KPIs for three consecutive quarters." },
+  { legacy: "Worked on", horizon: "Executed", use: "Delivering end-to-end solutions for clients." },
+  { legacy: "Shared", horizon: "Disseminated", use: "Circulating critical information to stakeholders." },
+  { legacy: "Asked", horizon: "Queried", use: "Investigating user needs to inform design." },
+  { legacy: "Solved", horizon: "Resolved", use: "Mitigating conflict within cross-functional teams." },
+  { legacy: "Ran", horizon: "Directed", use: "Overseeing the lifecycle of major projects." },
+  { legacy: "Cut costs", horizon: "Consolidated", use: "Reducing overhead through resource grouping." },
+  { legacy: "Hired", horizon: "Acquired", use: "Sourcing top-tier talent for specialized roles." },
+  { legacy: "Watched", horizon: "Monitored", use: "Tracking performance metrics in real-time." },
+  { legacy: "Followed", horizon: "Complied", use: "Aligning with federal and provincial regulations." },
+  { legacy: "Updated", horizon: "Iterated", use: "Refining product features based on feedback." },
+  { legacy: "Simplified", horizon: "Streamlined", use: "Removing redundant steps in the intake process." },
+  { legacy: "Sold", horizon: "Negotiated", use: "Securing favorable terms for service contracts." },
+  { legacy: "Gave", horizon: "Provisioned", use: "Allocating assets to meet project demands." },
+  { legacy: "Stayed", horizon: "Retained", use: "Preserving client relationships through value." },
+  { legacy: "Grew", horizon: "Scaled", use: "Expanding service reach across multiple regions." },
+  { legacy: "Handled", horizon: "Navigated", use: "Managing complex political and social dynamics." },
+  { legacy: "Explained", horizon: "Articulated", use: "Defining project scope for non-technical audiences." },
+  { legacy: "Built", horizon: "Constructed", use: "Developing durable systems for data management." },
+  { legacy: "Gathered", horizon: "Aggregated", use: "Synthesizing disparate data points for reporting." },
+  { legacy: "Prevented", horizon: "Mitigated", use: "Reducing risk through proactive planning." },
+  { legacy: "Promoted", horizon: "Championed", use: "Advocating for ethical standards in data use." },
+  { legacy: "Finished", horizon: "Finalized", use: "Closing out project phases ahead of schedule." },
+  { legacy: "Helped people", horizon: "Empowered", use: "Fostering autonomy within junior staff." },
+  { legacy: "Focused on", horizon: "Prioritized", use: "Allocating focus to high-impact objectives." },
+  { legacy: "Calculated", horizon: "Quantified", use: "Measuring the ROI of program initiatives." },
+  { legacy: "Cleaned", horizon: "Standardized", use: "Ensuring data integrity across all platforms." },
+  { legacy: "Thought of", horizon: "Conceptualized", use: "Ideating new solutions for client pain points." },
+  { legacy: "Tested", horizon: "Validated", use: "Verifying system stability prior to launch." },
+  { legacy: "Presented", horizon: "Demonstrated", use: "Showcasing project value to executive leadership." }
 ];
 
 const negotiationScripts = [
@@ -85,8 +127,8 @@ const negotiationScripts = [
   { 
       id: 'pivot', 
       situation: "The 'Experience' Pivot", 
-      context: "They offer a lower number because they view you as 'transitioning' or 'new' to the sector.", 
-      script: "While I am transitioning industries, I am not an entry-level professional. I bring 13 years of high-stakes program management and curriculum design, which directly translates to [Specific Job Goal]. I'm looking for a base salary that reflects that seniority. Can we move the offer to $[Target]?" 
+      context: "They offer a lower number because they view you as transitioning or new to the sector.", 
+      script: "While I am transitioning industries, I am not an entry-level professional. I bring [Number] years of high-stakes program management and specialized design, which directly translates to [Specific Job Goal]. I'm looking for a base salary that reflects that seniority. Can we move the offer to $[Target]?" 
   },
   { 
       id: 'pension', 
@@ -101,12 +143,12 @@ const outreachPhases = [
       id: 'p1',
       title: "Phase 1: The 'Soft' Curiosity",
       goal: "Low stakes engagement. No ask, just visibility.",
-      script: "Subject: Insight on [Company Name]'s approach to [Topic]\n\nHi [Name], I've been following your team's work on [Project] and was particularly struck by how you handled [Detail]. As someone coming from a heavy curriculum development background, I’d love to know—do you find that [Topic] is a major focus for your team this quarter?"
+      script: "Subject: Insight on [Company Name]'s approach to [Topic]\n\nHi [Name], I've been following your team's work on [Project] and was particularly struck by how you handled [Detail]. As someone coming from a background in [Your Field], I’d love to know—do you find that [Topic] is a major focus for your team this quarter?"
   },
   {
       id: 'p2',
       title: "Phase 2: The Value Exchange",
-      goal: "Offer a perspective based on your 'Teacher-to-Tech' flip.",
+      goal: "Offer a perspective based on your 'Public-to-Private' flip.",
       script: "Hi [Name], following up on our last note—I actually just finished a project on [Related Topic] and thought this resource might be useful for your team's current initiative. No response needed, just wanted to share!"
   },
   {
@@ -127,6 +169,7 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
   const [openScriptId, setOpenScriptId] = useState(null);
   const [expandedCard, setExpandedCard] = useState(null);
   const [openPhaseId, setOpenPhaseId] = useState(null);
+  const [showAllVerbs, setShowAllVerbs] = useState(false);
 
   const devOverride = true; 
   const isAdmin = propIsAdmin || devOverride;
@@ -204,17 +247,27 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
                     <div className="h-[1px] bg-white/5 mb-8 w-full" />
                     
                     {tool.id === 'verbs' && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {powerVerbs.map((verb, idx) => (
-                          <div key={idx} className="bg-black/40 border border-white/5 p-5 rounded-2xl flex flex-col hover:border-purple-500/30 transition-all group/verb">
-                            <div className="flex items-center justify-between mb-3">
-                              <span className="text-[10px] text-zinc-600 line-through uppercase tracking-tighter">{verb.legacy}</span>
-                              <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/10 text-[8px]">FLIP</Badge>
+                      <div className="space-y-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          {(showAllVerbs ? powerVerbs : powerVerbs.slice(0, 8)).map((verb, idx) => (
+                            <div key={idx} className="bg-black/40 border border-white/5 p-5 rounded-2xl flex flex-col hover:border-purple-500/30 transition-all group/verb">
+                              <div className="flex items-center justify-between mb-3">
+                                <span className="text-[10px] text-zinc-600 line-through uppercase tracking-tighter">{verb.legacy}</span>
+                                <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/10 text-[8px]">FLIP</Badge>
+                              </div>
+                              <div className="text-lg font-serif italic font-black text-teal-400 mb-2 group-hover/verb:text-white transition-colors">{verb.horizon}</div>
+                              <p className="text-[10px] text-zinc-500 leading-tight italic font-light">{verb.use}</p>
                             </div>
-                            <div className="text-lg font-serif italic font-black text-teal-400 mb-2 group-hover/verb:text-white transition-colors">{verb.horizon}</div>
-                            <p className="text-[10px] text-zinc-500 leading-tight italic font-light">{verb.use}</p>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
+                        <button 
+                          onClick={() => setShowAllVerbs(!showAllVerbs)}
+                          className="w-full p-6 border border-dashed border-white/10 rounded-2xl text-center group/more hover:border-teal-500/30 transition-colors"
+                        >
+                          <p className="text-[10px] text-zinc-500 group-hover/more:text-teal-400 font-black uppercase tracking-widest transition-colors">
+                            {showAllVerbs ? "Close Archive" : "View 50+ Additional Verbs in the Extended Archive"}
+                          </p>
+                        </button>
                       </div>
                     )}
 
@@ -239,7 +292,7 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
                             {!isHearthkeeper && <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-20"><Lock size={16} className="text-zinc-600"/></div>}
                             <Landmark className="text-purple-400" size={20}/>
                             <h4 className="text-[10px] font-black uppercase text-white tracking-widest">Credential Translation</h4>
-                            <p className="text-[11px] text-zinc-400 italic leading-relaxed">Label provincial teaching licenses as <strong className="text-purple-400">"Provincial Regulatory Compliance & Standards Certification"</strong> for corporate compliance matches.</p>
+                            <p className="text-[11px] text-zinc-400 italic leading-relaxed">Label regulatory licenses as <strong className="text-purple-400">"Regulatory Compliance & Standards Certification"</strong> for corporate compliance matches.</p>
                           </div>
                           <div className="p-6 bg-black/40 border border-white/5 rounded-2xl flex flex-col gap-4 relative overflow-hidden">
                             {!isSteward && <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-20"><Lock size={16} className="text-zinc-600"/></div>}
