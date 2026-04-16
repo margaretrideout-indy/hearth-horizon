@@ -75,11 +75,7 @@ const powerVerbs = [
   { legacy: "Planned", horizon: "Strategized", use: "Aligning project milestones with business goals." },
   { legacy: "Used", horizon: "Leveraged", use: "Utilizing internal assets to drive results." },
   { legacy: "Fixed", horizon: "Remediated", use: "Identifying and resolving systemic bottlenecks." },
-  { legacy: "Checked", horizon: "Audited", use: "Ensuring compliance protocols." },
-  { legacy: "Solved", horizon: "Resolved", use: "Mitigating conflict within cross-functional teams." },
-  { legacy: "Hired", horizon: "Acquired", use: "Sourcing top-tier talent for specialized roles." },
-  { legacy: "Updated", horizon: "Iterated", use: "Refining product features based on feedback." },
-  { legacy: "Simplified", horizon: "Streamlined", use: "Removing redundant steps in the process." }
+  { legacy: "Checked", horizon: "Audited", use: "Ensuring compliance protocols." }
 ];
 
 const marketComparison = [
@@ -94,19 +90,13 @@ const negotiationScripts = [
       id: 'anchor', 
       situation: "The Early Inquiry (The Anchor)", 
       context: "A recruiter asks: 'What are your salary expectations?' before an offer is made.", 
-      script: "I'm looking for a total compensation package in the range of $[X] to $[Y]. However, my main priority is finding the right cultural fit, and I'm open to discussing the full range of benefits—including performance bonuses and professional development—once we've determined I'm the right match for the team." 
+      script: "I'm looking for a total compensation package in the range of $[X] to $[Y]. However, my main priority is finding the right cultural fit, and I'm open to discussing the full range of benefits once we've determined I'm the right match." 
   },
   { 
       id: 'pivot', 
       situation: "The 'Experience' Pivot", 
-      context: "They offer a lower number because they view you as transitioning or new to the sector.", 
-      script: "While I am transitioning industries, I am not an entry-level professional. I bring 13 years of high-stakes management and specialized design, which directly translates to [Specific Job Goal]. I'm looking for a base salary that reflects that seniority. Can we move the offer to $[Target]?" 
-  },
-  { 
-      id: 'pension', 
-      situation: "The Pension Offset", 
-      context: "When moving from a high-value public pension to a private RRSP model.", 
-      script: "In my previous sector, my total compensation included a significant pension contribution. To maintain financial neutrality and match the market rate for this role, I’m looking for $[Amount] to account for the shift in retirement benefit structures." 
+      context: "Addressing the 'transitioning' label to maintain seniority levels.", 
+      script: "While I am transitioning industries, I bring 13 years of high-stakes management. I'm looking for a base salary that reflects that seniority. Can we move the offer to $[Target]?" 
   }
 ];
 
@@ -115,31 +105,19 @@ const outreachPhases = [
       id: 'p1',
       title: "Phase 1: The 'Soft' Curiosity",
       goal: "Low stakes engagement. No ask, just visibility.",
-      script: "Subject: Insight on [Company Name]'s approach to [Topic]\n\nHi [Name], I've been following your team's work on [Project] and was particularly struck by how you handled [Detail]. As someone coming from a background in [Your Field], I’d love to know—do you find that [Topic] is a major focus for your team this quarter?"
+      script: "Subject: Insight on [Company Name]'s approach to [Topic]\n\nHi [Name], I've been following your team's work on [Project] and was struck by [Detail]. As someone from [Your Field], do you find that [Topic] is a major focus this quarter?"
   },
   {
       id: 'p2',
       title: "Phase 2: The Value Exchange",
       goal: "Offer a perspective based on your 'Public-to-Private' flip.",
-      script: "Hi [Name], following up on our last note—I actually just finished a project on [Related Topic] and thought this resource might be useful for your team's current initiative. No response needed, just wanted to share!"
-  },
-  {
-      id: 'p3',
-      title: "Phase 3: The Request for Sponsorship",
-      goal: "Asking for a 15-minute 'Bridge' call.",
-      script: "Hi [Name], I'm currently architecting my transition into [Industry] and deeply admire your path. Would you be open to a 15-minute 'Bridge' call next Tuesday? I’m specifically looking for your perspective on how [Company] values [Your Skillset]—I'd love to learn from your expertise."
-  },
-  {
-      id: 'p4',
-      title: "Phase 4: The Closing Circle",
-      goal: "The 'Thank You' that keeps the door open for referrals.",
-      script: "Thank you for the time today, [Name]. Your insight on [Topic] was a game-changer for my strategy. If you happen to hear of any roles where a 'safe and contextually accurate' language expert is needed, I’d be honored if you kept me in mind."
+      script: "Hi [Name], I actually just finished a project on [Related Topic] and thought this resource might be useful for your team's initiative. No response needed, just wanted to share!"
   }
 ];
 
-const Contact = ({ vault, isAdmin: propIsAdmin }) => {
-  const [openScriptId, setOpenScriptId] = useState(null);
+const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
   const [expandedCard, setExpandedCard] = useState(null);
+  const [openScriptId, setOpenScriptId] = useState(null);
   const [openPhaseId, setOpenPhaseId] = useState(null);
   const [showAllVerbs, setShowAllVerbs] = useState(false);
 
@@ -160,10 +138,28 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto pb-24">
+    <div className="max-w-6xl mx-auto pb-24 px-4 sm:px-6">
+      {/* VOLUME TOGGLE HEADER */}
+      <div className="flex flex-col items-center mb-16 space-y-6">
+        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-500 italic">Navigate the Archives</h2>
+        <div className="inline-flex p-1.5 bg-zinc-900/50 backdrop-blur-md rounded-[2rem] border border-white/5 shadow-2xl">
+          <button 
+            onClick={() => onNavigate('library')}
+            className="px-10 py-4 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest transition-all duration-300 text-zinc-500 hover:text-white"
+          >
+            Volume I: Basecamp
+          </button>
+          <button 
+            className="px-10 py-4 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest transition-all duration-300 bg-teal-500 text-black shadow-lg shadow-teal-500/20"
+          >
+            Volume II: Trail Kit
+          </button>
+        </div>
+      </div>
+
       <section className="mb-16">
         <div className="flex items-center gap-4 mb-8">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400/80">The Trail Kit</h3>
+          <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400/80">Active Provisions</h3>
           <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
         </div>
 
@@ -206,19 +202,12 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
                               </div>
                               <h5 className="text-2xl font-serif italic text-white mb-3">Auditing Your Functional Legacy</h5>
                               <p className="text-sm text-zinc-300 italic leading-relaxed mb-8">This two-part toolkit is your baseline for sector transition. Map your career history against corporate Strategic Pillars before you begin your outreach.</p>
-                              
                               <div className="flex flex-col sm:flex-row gap-4">
-                                <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link", "_blank")} className="px-8 h-14 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all flex items-center justify-center gap-2 group/btn">
-                                  1. Launch Strategy Deck <ExternalLink size={12} className="group-hover/btn:translate-x-1 transition-transform" />
-                                </button>
-                                <button onClick={() => window.open("https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link", "_blank")} className="px-8 h-14 bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2 group/btn">
-                                  2. Download Worksheet <FileDown size={14} className="group-hover/btn:translate-y-1 transition-transform text-teal-400" />
-                                </button>
+                                <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link", "_blank")} className="px-8 h-14 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all flex items-center justify-center gap-2 group/btn">1. Launch Strategy Deck <ExternalLink size={12} /></button>
+                                <button onClick={() => window.open("https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link", "_blank")} className="px-8 h-14 bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2 group/btn">2. Download Worksheet <FileDown size={14} className="text-teal-400" /></button>
                               </div>
                            </div>
-                           <div className="absolute right-0 bottom-0 p-10 opacity-5 pointer-events-none">
-                              <Target size={200} className="text-teal-400" />
-                           </div>
+                           <div className="absolute right-0 bottom-0 p-10 opacity-5 pointer-events-none"><Target size={200} className="text-teal-400" /></div>
                         </div>
 
                         <div className="grid grid-cols-1 gap-4">
@@ -246,20 +235,6 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
                               </div>
                            </div>
                         </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="p-6 bg-black/40 border border-white/5 rounded-2xl flex flex-col gap-4">
-                            <ShieldCheck className="text-teal-400" size={20}/>
-                            <h4 className="text-[10px] font-black uppercase text-white tracking-widest">Financial Neutrality</h4>
-                            <p className="text-[11px] text-zinc-400 italic leading-relaxed">Public pensions are a massive hidden asset. Negotiate for a <strong className="text-teal-400">20-25% salary increase</strong> in the private sector to account for the loss of a defined-benefit plan.</p>
-                          </div>
-                          <div className="p-6 bg-black/40 border border-white/5 rounded-2xl flex flex-col gap-4 relative overflow-hidden">
-                            {!isHearthkeeper && <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-20"><Lock size={16} className="text-zinc-600"/></div>}
-                            <Landmark className="text-purple-400" size={20}/>
-                            <h4 className="text-[10px] font-black uppercase text-white tracking-widest">Compliance Keywords</h4>
-                            <p className="text-[11px] text-zinc-400 italic leading-relaxed">Ensure regulatory licenses are listed as <strong className="text-purple-400">"Regulatory Compliance & Standards Certification"</strong> to trigger automated recruiter searches.</p>
-                          </div>
-                        </div>
                       </div>
                     )}
 
@@ -274,7 +249,7 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
                             </div>
                           ))}
                         </div>
-                        <button onClick={() => setShowAllVerbs(!showAllVerbs)} className="w-full p-6 border border-dashed border-white/10 rounded-2xl text-center group/more hover:border-teal-500/30 transition-colors"><p className="text-[10px] text-zinc-500 group-hover/more:text-teal-400 font-black uppercase tracking-widest">{showAllVerbs ? "Close Archive" : "View Extended Lexicon"}</p></button>
+                        <button onClick={() => setShowAllVerbs(!showAllVerbs)} className="w-full p-6 border border-dashed border-white/10 rounded-2xl text-center hover:border-teal-500/30 transition-colors"><p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">{showAllVerbs ? "Close Archive" : "View Extended Lexicon"}</p></button>
                       </div>
                     )}
 
@@ -294,17 +269,10 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
                           {outreachPhases.map((phase) => (
                               <div key={phase.id} className="bg-black/40 border border-white/5 rounded-2xl overflow-hidden">
                                   <button onClick={() => setOpenPhaseId(openPhaseId === phase.id ? null : phase.id)} className="w-full p-5 flex items-center justify-between hover:bg-white/5 transition-colors text-left">
-                                      <div className="flex flex-col">
-                                          <span className="text-[10px] font-black uppercase tracking-widest text-white">{phase.title}</span>
-                                          <span className="text-sm text-zinc-300 italic mt-1 font-normal leading-relaxed">{phase.goal}</span>
-                                      </div>
+                                      <div className="flex flex-col text-[10px] font-black uppercase tracking-widest text-white">{phase.title}<span className="text-sm text-zinc-300 italic mt-1 font-normal leading-relaxed">{phase.goal}</span></div>
                                       {openPhaseId === phase.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                                   </button>
-                                  {openPhaseId === phase.id && (
-                                      <div className="p-6 pt-0 border-t border-white/5 bg-black/20 font-mono text-xs text-zinc-300 leading-relaxed whitespace-pre-wrap italic">
-                                          {phase.script}
-                                      </div>
-                                  )}
+                                  {openPhaseId === phase.id && <div className="p-6 pt-0 border-t border-white/5 bg-black/20 font-mono text-xs text-zinc-300 leading-relaxed whitespace-pre-wrap italic">{phase.script}</div>}
                               </div>
                           ))}
                       </div>
