@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { 
   FileText, MessageSquare, Map, ChevronDown, ChevronUp, Zap, ShieldCheck,
   Mail, ExternalLink, Save, Lock, Crown, Info, Clock, Landmark, Compass, Target,
-  FileDown, ArrowLeft
+  FileDown
 } from 'lucide-react';
 
-// ... (powerVerbs, marketComparison, negotiationScripts, outreachPhases arrays)
 const trailKitProvisions = [
   {
     id: 'verbs',
@@ -77,16 +76,16 @@ const powerVerbs = [
     { legacy: "Used", horizon: "Leveraged", use: "Utilizing internal assets to drive results." },
     { legacy: "Fixed", horizon: "Remediated", use: "Identifying and resolving systemic bottlenecks." },
     { legacy: "Checked", horizon: "Audited", use: "Ensuring compliance protocols." }
-  ];
-  
-  const marketComparison = [
+];
+
+const marketComparison = [
     { public: "The Pay Grid", private: "Total Compensation", how: "Negotiate for base + bonus + RRSP match." },
     { public: "Collective Agreement", private: "Employment Standards", how: "Review your own contract for termination clauses." },
     { public: "Tenure/Seniority", private: "Impact/ROI", how: "Focus on results achieved, not years in seat." },
     { public: "Consensus-Driven", private: "Direct/Explicit", how: "Adopt concise, value-first communication styles." }
-  ];
-  
-  const negotiationScripts = [
+];
+
+const negotiationScripts = [
     { 
         id: 'anchor', 
         situation: "The Early Inquiry (The Anchor)", 
@@ -99,9 +98,9 @@ const powerVerbs = [
         context: "Addressing the 'transitioning' label to maintain seniority levels.", 
         script: "While I am transitioning industries, I bring 13 years of high-stakes management. I'm looking for a base salary that reflects that seniority. Can we move the offer to $[Target]?" 
     }
-  ];
-  
-  const outreachPhases = [
+];
+
+const outreachPhases = [
     {
         id: 'p1',
         title: "Phase 1: The 'Soft' Curiosity",
@@ -114,23 +113,28 @@ const powerVerbs = [
         goal: "Offer a perspective based on your 'Public-to-Private' flip.",
         script: "Hi [Name], I actually just finished a project on [Related Topic] and thought this resource might be useful for your team's initiative. No response needed, just wanted to share!"
     }
-  ];
+];
 
-const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
+const Contact = ({ vault, isAdmin: propIsAdmin }) => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [openScriptId, setOpenScriptId] = useState(null);
   const [openPhaseId, setOpenPhaseId] = useState(null);
   const [showAllVerbs, setShowAllVerbs] = useState(false);
 
-  const devOverride = true; 
-  const isAdmin = propIsAdmin || devOverride;
-  const userTier = isAdmin ? 'Steward' : (vault?.tier || 'Seedling');
-  const isHearthkeeper = isAdmin || userTier === 'Hearthkeeper' || userTier === 'Steward';
-  const isSteward = isAdmin || userTier === 'Steward';
+  // Use props passed from Library.jsx
+  const userTier = propIsAdmin ? 'Steward' : (vault?.tier || 'Seedling');
+  const isHearthkeeper = propIsAdmin || userTier === 'Hearthkeeper' || userTier === 'Steward';
+  const isSteward = propIsAdmin || userTier === 'Steward';
 
   const handleCardClick = (tool) => {
-    const isAllowed = tool.id === 'verbs' || tool.id === 'market' || (tool.id === 'resume' && isHearthkeeper) || ((tool.id === 'scripts' || tool.id === 'outreach') && isSteward);
+    const isAllowed = 
+        tool.id === 'verbs' || 
+        tool.id === 'market' || 
+        (tool.id === 'resume' && isHearthkeeper) || 
+        ((tool.id === 'scripts' || tool.id === 'outreach') && isSteward);
+    
     if (!isAllowed) return; 
+
     if (tool.isAccordion) {
       setExpandedCard(expandedCard === tool.id ? null : tool.id);
     } else if (tool.url) {
@@ -139,8 +143,10 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto pb-24 px-4 sm:px-6">
-      <section className="mb-16">
+    <div className="max-w-6xl mx-auto pb-12 px-4 sm:px-6">
+      
+      {/* SECTION HEADER */}
+      <section className="mb-8">
         <div className="flex items-center gap-4 mb-8">
           <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400/80">Active Provisions</h3>
           <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
@@ -148,19 +154,41 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
 
         <div className="grid grid-cols-1 gap-6">
           {trailKitProvisions.map((tool) => {
-            const isAllowed = tool.id === 'verbs' || tool.id === 'market' || (tool.id === 'resume' && isHearthkeeper) || ((tool.id === 'scripts' || tool.id === 'outreach') && isSteward);
+            const isAllowed = 
+                tool.id === 'verbs' || 
+                tool.id === 'market' || 
+                (tool.id === 'resume' && isHearthkeeper) || 
+                ((tool.id === 'scripts' || tool.id === 'outreach') && isSteward);
+            
             return (
               <div key={tool.id} className="flex flex-col gap-0 group">
-                <div onClick={() => handleCardClick(tool)} className={`relative bg-[#110E16] border p-8 transition-all duration-300 overflow-hidden shadow-xl ${!isAllowed ? 'opacity-40 cursor-not-allowed border-zinc-900' : expandedCard === tool.id ? 'rounded-t-[2.5rem] border-teal-500/30 bg-teal-500/[0.02] cursor-pointer' : 'rounded-[2.5rem] border-zinc-800/50 hover:border-purple-500/30 cursor-pointer'}`}>
+                <div 
+                  onClick={() => handleCardClick(tool)} 
+                  className={`relative bg-[#110E16] border p-8 transition-all duration-300 overflow-hidden shadow-xl ${
+                    !isAllowed ? 'opacity-40 cursor-not-allowed border-zinc-900' : 
+                    expandedCard === tool.id ? 'rounded-t-[2.5rem] border-teal-500/30 bg-teal-500/[0.02] cursor-pointer' : 
+                    'rounded-[2.5rem] border-zinc-800/50 hover:border-purple-500/30 cursor-pointer'
+                  }`}
+                >
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
                     <div className="flex items-center gap-6">
-                      <div className="p-4 rounded-2xl bg-white/5 border border-white/5">{isAllowed ? tool.icon : <Lock className="text-zinc-600" />}</div>
+                      <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
+                        {isAllowed ? tool.icon : <Lock className="text-zinc-600" />}
+                      </div>
                       <div>
                         <div className="flex items-center gap-3 mb-2">
-                          <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest bg-zinc-800/50 text-zinc-500">{tool.type}</span>
-                          {!isAllowed && <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest bg-purple-500/10 text-purple-500 border border-purple-500/10 flex gap-1"><Crown size={10}/> {tool.tier}</span>}
+                          <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest bg-zinc-800/50 text-zinc-500">
+                            {tool.type}
+                          </span>
+                          {!isAllowed && (
+                            <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest bg-purple-500/10 text-purple-500 border border-purple-500/10 flex gap-1">
+                                <Crown size={10}/> {tool.tier}
+                            </span>
+                          )}
                         </div>
-                        <h3 className="text-xl font-serif italic font-black text-white group-hover:text-teal-400 transition-colors">{tool.title}</h3>
+                        <h3 className="text-xl font-serif italic font-black text-white group-hover:text-teal-400 transition-colors">
+                            {tool.title}
+                        </h3>
                         <p className="text-zinc-400 mt-1 max-w-md text-xs font-light italic">{tool.desc}</p>
                       </div>
                     </div>
@@ -171,9 +199,11 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
                   </div>
                 </div>
 
+                {/* ACCORDION CONTENT */}
                 {expandedCard === tool.id && tool.isAccordion && isAllowed && (
                   <div className="bg-[#110E16]/50 border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4 animate-in slide-in-from-top-4">
                     <div className="h-[1px] bg-white/5 mb-8 w-full" />
+                    
                     {tool.id === 'market' && (
                       <div className="space-y-10">
                         <div className="relative group/workshop overflow-hidden p-10 bg-gradient-to-br from-teal-500/10 to-transparent border border-teal-500/20 rounded-[2.5rem] flex flex-col items-start gap-8">
@@ -185,8 +215,8 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
                               <h5 className="text-2xl font-serif italic text-white mb-3">Auditing Your Functional Legacy</h5>
                               <p className="text-sm text-zinc-300 italic leading-relaxed mb-8">This two-part toolkit is your baseline for sector transition. Map your career history against corporate Strategic Pillars before you begin your outreach.</p>
                               <div className="flex flex-col sm:flex-row gap-4">
-                                <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link", "_blank")} className="px-8 h-14 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all flex items-center justify-center gap-2 group/btn">1. Launch Strategy Deck <ExternalLink size={12} /></button>
-                                <button onClick={() => window.open("https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link", "_blank")} className="px-8 h-14 bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2 group/btn">2. Download Worksheet <FileDown size={14} className="text-teal-400" /></button>
+                                <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link", "_blank")} className="px-8 h-14 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all flex items-center justify-center gap-2">1. Launch Strategy Deck <ExternalLink size={12} /></button>
+                                <button onClick={() => window.open("https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link", "_blank")} className="px-8 h-14 bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2">2. Download Worksheet <FileDown size={14} className="text-teal-400" /></button>
                               </div>
                            </div>
                            <div className="absolute right-0 bottom-0 p-10 opacity-5 pointer-events-none"><Target size={200} className="text-teal-400" /></div>
@@ -218,36 +248,55 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
                         </div>
                       </div>
                     )}
+
                     {tool.id === 'verbs' && (
                       <div className="space-y-8">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                           {(showAllVerbs ? powerVerbs : powerVerbs.slice(0, 8)).map((verb, idx) => (
                             <div key={idx} className="bg-black/40 border border-white/5 p-5 rounded-2xl flex flex-col hover:border-purple-500/30 transition-all group/verb">
-                              <div className="flex items-center justify-between mb-3"><span className="text-[10px] text-zinc-600 line-through uppercase">{verb.legacy}</span><span className="bg-purple-500/10 text-purple-400 border border-purple-500/10 text-[8px] px-2 py-0.5 rounded-full uppercase font-black">FLIP</span></div>
+                              <div className="flex items-center justify-between mb-3">
+                                  <span className="text-[10px] text-zinc-600 line-through uppercase">{verb.legacy}</span>
+                                  <span className="bg-purple-500/10 text-purple-400 border border-purple-500/10 text-[8px] px-2 py-0.5 rounded-full uppercase font-black">FLIP</span>
+                              </div>
                               <div className="text-lg font-serif italic font-black text-teal-400 mb-2 group-hover/verb:text-white transition-colors">{verb.horizon}</div>
                               <p className="text-[10px] text-zinc-500 leading-tight italic font-light">{verb.use}</p>
                             </div>
                           ))}
                         </div>
-                        <button onClick={() => setShowAllVerbs(!showAllVerbs)} className="w-full p-6 border border-dashed border-white/10 rounded-2xl text-center hover:border-teal-500/30 transition-colors"><p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">{showAllVerbs ? "Close Archive" : "View Extended Lexicon"}</p></button>
+                        <button onClick={() => setShowAllVerbs(!showAllVerbs)} className="w-full p-6 border border-dashed border-white/10 rounded-2xl text-center hover:border-teal-500/30 transition-colors">
+                            <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">{showAllVerbs ? "Close Archive" : "View Extended Lexicon"}</p>
+                        </button>
                       </div>
                     )}
+
                     {tool.id === 'scripts' && (
                       <div className="space-y-4">
                         {negotiationScripts.map((item) => (
                           <div key={item.id} className="bg-black/40 border border-white/5 rounded-2xl overflow-hidden">
-                            <button onClick={() => setOpenScriptId(openScriptId === item.id ? null : item.id)} className="w-full p-5 flex items-center justify-between hover:bg-white/5 text-left text-[10px] font-black uppercase tracking-widest text-white">{item.situation}{openScriptId === item.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</button>
-                            {openScriptId === item.id && <div className="p-6 pt-0 border-t border-white/5 bg-black/20"><p className="text-[9px] font-black uppercase tracking-widest text-teal-500 mt-6 mb-2 italic">The Strategy:</p><p className="text-zinc-400 mb-4 italic text-xs font-light">{item.context}</p><div className="bg-[#16121D] p-5 rounded-xl border border-teal-500/20 text-zinc-200 font-mono text-xs leading-relaxed italic relative">"{item.script}"</div></div>}
+                            <button onClick={() => setOpenScriptId(openScriptId === item.id ? null : item.id)} className="w-full p-5 flex items-center justify-between hover:bg-white/5 text-left text-[10px] font-black uppercase tracking-widest text-white">
+                                {item.situation}{openScriptId === item.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                            </button>
+                            {openScriptId === item.id && (
+                                <div className="p-6 pt-0 border-t border-white/5 bg-black/20">
+                                    <p className="text-[9px] font-black uppercase tracking-widest text-teal-500 mt-6 mb-2 italic">The Strategy:</p>
+                                    <p className="text-zinc-400 mb-4 italic text-xs font-light">{item.context}</p>
+                                    <div className="bg-[#16121D] p-5 rounded-xl border border-teal-500/20 text-zinc-200 font-mono text-xs leading-relaxed italic">"{item.script}"</div>
+                                </div>
+                            )}
                           </div>
                         ))}
                       </div>
                     )}
+
                     {tool.id === 'outreach' && (
                       <div className="space-y-4">
                           {outreachPhases.map((phase) => (
                               <div key={phase.id} className="bg-black/40 border border-white/5 rounded-2xl overflow-hidden">
                                   <button onClick={() => setOpenPhaseId(openPhaseId === phase.id ? null : phase.id)} className="w-full p-5 flex items-center justify-between hover:bg-white/5 transition-colors text-left">
-                                      <div className="flex flex-col text-[10px] font-black uppercase tracking-widest text-white">{phase.title}<span className="text-sm text-zinc-300 italic mt-1 font-normal leading-relaxed">{phase.goal}</span></div>
+                                      <div className="flex flex-col text-[10px] font-black uppercase tracking-widest text-white">
+                                          {phase.title}
+                                          <span className="text-sm text-zinc-300 italic mt-1 font-normal leading-relaxed">{phase.goal}</span>
+                                      </div>
                                       {openPhaseId === phase.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                                   </button>
                                   {openPhaseId === phase.id && <div className="p-6 pt-0 border-t border-white/5 bg-black/20 font-mono text-xs text-zinc-300 leading-relaxed whitespace-pre-wrap italic">{phase.script}</div>}
@@ -262,32 +311,6 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
           })}
         </div>
       </section>
-
-      {/* FOOTER NAVIGATION */}
-      <div className="mt-24 pt-12 border-t border-white/5 flex flex-col items-center space-y-8">
-        <div className="flex flex-col items-center space-y-4 text-center">
-          <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-500 italic">Navigate the Archives</h2>
-          <p className="text-xs text-zinc-600 italic font-light">Switch between foundational curriculum and active tools</p>
-        </div>
-
-        <div className="inline-flex p-1.5 bg-zinc-900/50 backdrop-blur-md rounded-[2.5rem] border border-white/5 shadow-2xl overflow-hidden">
-          <button 
-            onClick={() => {
-                console.log("Navigating to Library...");
-                if (onNavigate) onNavigate('library');
-            }}
-            className="group flex items-center gap-3 px-8 py-5 rounded-[2rem] text-[10px] font-black uppercase tracking-widest transition-all duration-300 text-zinc-500 hover:text-white hover:bg-white/5"
-          >
-            <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-            Volume I: Basecamp
-          </button>
-          <button 
-            className="px-8 py-5 rounded-[2rem] text-[10px] font-black uppercase tracking-widest transition-all duration-300 bg-teal-500 text-black shadow-xl shadow-teal-500/20"
-          >
-            Volume II: Trail Kit
-          </button>
-        </div>
-      </div>
     </div>
   );
 };
