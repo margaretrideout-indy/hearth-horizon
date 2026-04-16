@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { 
   FileText, MessageSquare, Map, ChevronDown, ChevronUp, Zap, ShieldCheck,
-  Mail, ExternalLink, Save, Lock, Crown, Info, Clock, Landmark, Compass, Target
+  Mail, ExternalLink, Save, Lock, Crown, Info, Clock, Landmark, Compass, Target,
+  FileDown
 } from 'lucide-react';
 
 const trailKitProvisions = [
@@ -154,18 +155,26 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
                     
                     {tool.id === 'market' && (
                       <div className="space-y-10">
-                        <div className="relative group/workshop overflow-hidden p-10 bg-gradient-to-br from-teal-500/10 to-transparent border border-teal-500/20 rounded-[2.5rem] flex flex-col md:flex-row items-center justify-between gap-8">
-                           <div className="max-w-lg">
+                        <div className="relative group/workshop overflow-hidden p-10 bg-gradient-to-br from-teal-500/10 to-transparent border border-teal-500/20 rounded-[2.5rem] flex flex-col items-start gap-8">
+                           <div className="max-w-2xl relative z-10">
                               <div className="flex items-center gap-3 mb-4">
-                                <Compass className="text-teal-400 animate-spin-slow" size={24} />
-                                <h4 className="text-[10px] font-black uppercase text-white tracking-[0.3em]">Phase 1: The Horizon Workshop</h4>
+                                <Compass className="text-teal-400" size={24} />
+                                <h4 className="text-[10px] font-black uppercase text-white tracking-[0.3em]">The Horizon Workshop</h4>
                               </div>
-                              <h5 className="text-2xl font-serif italic text-white mb-3">Define Your Strategic Pillars</h5>
-                              <p className="text-xs text-zinc-400 italic leading-relaxed mb-6">Before navigating the external market, you must audit your functional legacy. Use this interactive workshop to translate your background into corporate-ready pillars.</p>
-                              <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link", "_blank")} className="px-8 h-12 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all flex items-center gap-2">Launch Workshop <ExternalLink size={12} /></button>
+                              <h5 className="text-2xl font-serif italic text-white mb-3">Auditing Your Functional Legacy</h5>
+                              <p className="text-xs text-zinc-400 italic leading-relaxed mb-8">This two-part toolkit is your baseline for sector transition. Map your career history against corporate Strategic Pillars before you begin your outreach.</p>
+                              
+                              <div className="flex flex-col sm:flex-row gap-4">
+                                <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link", "_blank")} className="px-8 h-14 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all flex items-center justify-center gap-2 group/btn">
+                                  1. Launch Strategy Deck <ExternalLink size={12} className="group-hover/btn:translate-x-1 transition-transform" />
+                                </button>
+                                <button onClick={() => window.open("https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link", "_blank")} className="px-8 h-14 bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2 group/btn">
+                                  2. Download Worksheet <FileDown size={14} className="group-hover/btn:translate-y-1 transition-transform text-teal-400" />
+                                </button>
+                              </div>
                            </div>
-                           <div className="hidden lg:block opacity-20 group-hover:opacity-40 transition-opacity">
-                              <Target size={120} className="text-teal-400" />
+                           <div className="absolute right-0 bottom-0 p-10 opacity-5 pointer-events-none">
+                              <Target size={200} className="text-teal-400" />
                            </div>
                         </div>
 
@@ -178,7 +187,7 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
                                     <tr className="text-[9px] text-teal-500 uppercase font-black tracking-tighter italic">
                                       <th className="pb-4 pr-4">Legacy Concept</th>
                                       <th className="pb-4 pr-4">Market Flip</th>
-                                      <th className="pb-4">The "How-To" Action</th>
+                                      <th className="pb-4">Strategic Action</th>
                                     </tr>
                                   </thead>
                                   <tbody className="text-xs text-zinc-300 font-light italic">
@@ -198,14 +207,14 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="p-6 bg-black/40 border border-white/5 rounded-2xl flex flex-col gap-4">
                             <ShieldCheck className="text-teal-400" size={20}/>
-                            <h4 className="text-[10px] font-black uppercase text-white tracking-widest">RRSP vs Pension</h4>
-                            <p className="text-[11px] text-zinc-400 italic leading-relaxed">Public pensions are a massive asset. When negotiating, aim for a <strong className="text-teal-400">20-25% higher base</strong> than your current public salary to account for total reward parity.</p>
+                            <h4 className="text-[10px] font-black uppercase text-white tracking-widest">Financial Neutrality</h4>
+                            <p className="text-[11px] text-zinc-400 italic leading-relaxed">Public pensions are a massive hidden asset. Negotiate for a <strong className="text-teal-400">20-25% salary increase</strong> in the private sector to account for the loss of a defined-benefit plan.</p>
                           </div>
                           <div className="p-6 bg-black/40 border border-white/5 rounded-2xl flex flex-col gap-4 relative overflow-hidden">
                             {!isHearthkeeper && <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-20"><Lock size={16} className="text-zinc-600"/></div>}
                             <Landmark className="text-purple-400" size={20}/>
-                            <h4 className="text-[10px] font-black uppercase text-white tracking-widest">Credential Translation</h4>
-                            <p className="text-[11px] text-zinc-400 italic leading-relaxed">Map regulatory certifications to <strong className="text-purple-400">"Regulatory Compliance & Standards Certification"</strong> on LinkedIn to catch recruiter search filters.</p>
+                            <h4 className="text-[10px] font-black uppercase text-white tracking-widest">Compliance Keywords</h4>
+                            <p className="text-[11px] text-zinc-400 italic leading-relaxed">Ensure regulatory licenses are listed as <strong className="text-purple-400">"Regulatory Compliance & Standards Certification"</strong> to trigger automated recruiter searches.</p>
                           </div>
                         </div>
                       </div>
@@ -222,7 +231,7 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
                             </div>
                           ))}
                         </div>
-                        <button onClick={() => setShowAllVerbs(!showAllVerbs)} className="w-full p-6 border border-dashed border-white/10 rounded-2xl text-center group/more hover:border-teal-500/30 transition-colors"><p className="text-[10px] text-zinc-500 group-hover/more:text-teal-400 font-black uppercase tracking-widest">{showAllVerbs ? "Close Archive" : "View 50+ Additional Verbs in the Extended Archive"}</p></button>
+                        <button onClick={() => setShowAllVerbs(!showAllVerbs)} className="w-full p-6 border border-dashed border-white/10 rounded-2xl text-center group/more hover:border-teal-500/30 transition-colors"><p className="text-[10px] text-zinc-500 group-hover/more:text-teal-400 font-black uppercase tracking-widest">{showAllVerbs ? "Close Archive" : "View Extended Lexicon"}</p></button>
                       </div>
                     )}
 
