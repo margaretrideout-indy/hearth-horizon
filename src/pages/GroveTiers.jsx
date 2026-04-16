@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Flame, Heart, Sprout, Globe, ShieldCheck, Check, Leaf, Mountain, UserPlus,
-  Smartphone, Share2, PlusSquare, Sparkles, Send, Zap, FileText, Map, MessageSquare, Briefcase
+  Smartphone, Share2, PlusSquare, Sparkles, Send, Zap, FileText, Map, MessageSquare, Briefcase,
+  MoreVertical
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -207,7 +208,7 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        <section className="mb-24 md:mb-48 max-w-4xl mx-auto">
+        <section className="mb-24 md:mb-32 max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-white font-serif italic text-4xl mb-4">Questions?</h2>
             <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">Reach out to the Hearth</p>
@@ -240,6 +241,52 @@ const GroveTiers = ({ vault, onSync }) => {
                 </div>
               </form>
             )}
+          </div>
+        </section>
+
+        <section className="max-w-4xl mx-auto pb-24">
+          <div className="bg-[#110E16]/40 border border-zinc-800/50 rounded-[2.5rem] p-8 md:p-10 shadow-xl overflow-hidden relative">
+            <div className="absolute top-0 right-0 p-8 text-teal-500/5">
+              <Smartphone size={120} />
+            </div>
+            
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-12">
+              <div className="flex-1 space-y-4 text-center md:text-left">
+                <h3 className="text-xl font-serif italic text-white leading-none">Bring the Sanctuary Home</h3>
+                <p className="text-[11px] text-zinc-500 uppercase tracking-widest font-black">Add Hearth & Horizon to your mobile homescreen</p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                <div className="flex-1 bg-black/40 border border-white/5 rounded-2xl p-5 flex flex-col items-center text-center gap-3 group hover:border-teal-500/20 transition-all">
+                  <div className="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-400 mb-1">
+                    <Share2 size={16} />
+                  </div>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-white">iOS / Safari</h4>
+                  <p className="text-[9px] text-zinc-500 leading-relaxed font-light italic px-2">
+                    Tap the Share button below, then select <span className="text-zinc-300 italic">'Add to Home Screen'</span> from the menu.
+                  </p>
+                </div>
+
+                <div className="flex-1 bg-black/40 border border-white/5 rounded-2xl p-5 flex flex-col items-center text-center gap-3 group hover:border-purple-500/20 transition-all">
+                  <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 mb-1">
+                    <MoreVertical size={16} />
+                  </div>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-white">Android / Chrome</h4>
+                  <p className="text-[9px] text-zinc-500 leading-relaxed font-light italic px-2">
+                    Tap the three dots in the corner, then select <span className="text-zinc-300 italic">'Install App'</span> or <span className="text-zinc-300 italic">'Add to Home Screen'</span>.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-12 text-center opacity-30 group">
+             <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="h-[1px] w-8 bg-zinc-800 group-hover:w-12 transition-all" />
+                <Mountain size={14} className="text-zinc-500" />
+                <div className="h-[1px] w-8 bg-zinc-800 group-hover:w-12 transition-all" />
+             </div>
+             <p className="text-[8px] font-black uppercase tracking-[0.5em] text-zinc-500 leading-none">Hearth & Horizon © 2026</p>
           </div>
         </section>
       </div>
