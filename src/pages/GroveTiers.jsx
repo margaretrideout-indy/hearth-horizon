@@ -235,7 +235,7 @@ const GroveTiers = ({ vault, onSync }) => {
                   </p>
                   {/* Husband/Founder Message */}
                   <p className="text-slate-400 text-sm italic font-light max-w-sm leading-relaxed border-l border-teal-500/30 pl-4 py-1">
-                    "To Matthew—thank you for keeping the coffee hot, the fire burning, and for believing in this sanctuary before the first stone was even laid."
+                    "To Matthew: Thank you for holding the map while I figured out which way my horizon was shifting, and for believing in my dream before the first stone was even laid."
                   </p>
                 </div>
 
