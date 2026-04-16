@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   FileText, MessageSquare, Map, ChevronDown, ChevronUp, Zap, 
-  Mail, ExternalLink, Compass, FileDown
+  Mail, ExternalLink, Compass, Target, FileDown
 } from 'lucide-react';
 
 const trailKitProvisions = [
@@ -52,6 +52,13 @@ const trailKitProvisions = [
   }
 ];
 
+const powerVerbs = [
+    { legacy: "Taught", horizon: "Facilitated", use: "Standardized delivery for stakeholders." },
+    { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
+    { legacy: "Managed", horizon: "Spearheaded", use: "Leading high-stakes initiatives." },
+    { legacy: "Talked to", horizon: "Consulted", use: "Providing expert advisory to cross-functional teams." }
+];
+
 const outreachPhases = [
     { id: 'p1', title: "Phase 1: The 'Soft' Curiosity", goal: "Low stakes engagement.", script: "Subject: Insight on [Company Name]...\n\nHi [Name], I've been following your team's work..." },
     { id: 'p2', title: "Phase 2: The Value Exchange", goal: "Offer a perspective.", script: "Hi [Name], I thought this resource might be useful..." },
@@ -66,11 +73,11 @@ const Contact = () => {
   return (
     <div className="max-w-6xl mx-auto pb-24 px-4 animate-in fade-in duration-500">
       
-      {/* RESTORED PAGE TITLE & DESCRIPTION */}
+      {/* 1. PAGE TITLE & INTRO */}
       <div className="mb-16 text-center">
-        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-400 mb-4 text-center">The Library Archives</h2>
-        <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6 text-center">Provisions for the Path</h1>
-        <p className="max-w-2xl mx-auto text-zinc-400 text-sm font-light italic leading-relaxed text-center">
+        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-400 mb-4">The Library Archives</h2>
+        <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6">Provisions for the Path</h1>
+        <p className="max-w-2xl mx-auto text-zinc-400 text-sm font-light italic leading-relaxed">
           This is your tactical toolkit—a collection of frameworks, scripts, and blueprints designed 
           to translate your legacy experience into private-sector impact.
         </p>
@@ -81,7 +88,7 @@ const Contact = () => {
         <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
       </div>
 
-      {/* TOOLKIT GRID */}
+      {/* 2. RESOURCE CARDS (All 5 included) */}
       <div className="grid grid-cols-1 gap-6 mb-20">
         {trailKitProvisions.map((tool) => {
           const isOpen = expandedCard === tool.id;
@@ -116,8 +123,20 @@ const Contact = () => {
                 </div>
               </div>
 
+              {/* 3. ACCORDION CONTENT */}
               {isOpen && (
                 <div className="bg-[#110E16]/50 border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4">
+                  {tool.id === 'verbs' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {powerVerbs.map((v, i) => (
+                        <div key={i} className="bg-black/40 border border-white/5 p-4 rounded-xl">
+                          <div className="text-[10px] text-zinc-600 line-through uppercase mb-1">{v.legacy}</div>
+                          <div className="text-lg font-serif italic text-teal-400">{v.horizon}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   {tool.id === 'outreach' && (
                     <div className="space-y-4">
                         {outreachPhases.map((phase) => (
@@ -125,7 +144,7 @@ const Contact = () => {
                                 <button onClick={() => setOpenPhaseId(openPhaseId === phase.id ? null : phase.id)} className="w-full p-5 flex items-center justify-between text-left hover:bg-white/5 transition-colors">
                                     <div className="flex flex-col text-[10px] font-black uppercase tracking-widest text-white">
                                         {phase.title}
-                                        <span className="text-xs text-zinc-400 italic mt-1 font-normal leading-relaxed">{phase.goal}</span>
+                                        <span className="text-xs text-zinc-400 italic mt-1 font-normal">{phase.goal}</span>
                                     </div>
                                     {openPhaseId === phase.id ? <ChevronUp size={14} className="text-teal-400" /> : <ChevronDown size={14} />}
                                 </button>
@@ -141,7 +160,7 @@ const Contact = () => {
         })}
       </div>
 
-      {/* RESTORED VOLUME TOGGLE AT BOTTOM */}
+      {/* 4. VOLUME TOGGLE */}
       <div className="mt-12 flex flex-col items-center gap-6">
         <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600">Navigate the Archives</h4>
         <div className="flex p-1.5 bg-[#110E16] border border-zinc-800/50 rounded-full shadow-2xl">
