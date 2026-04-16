@@ -142,7 +142,7 @@ const Library = ({ vault, isAdmin }) => {
                   </button>
                   <button onClick={() => setStudyTab('indigo')} className={`w-full p-6 rounded-2xl border text-left transition-all ${studyTab === 'indigo' ? 'bg-teal-500/10 border-teal-500/50 shadow-lg' : 'bg-[#110E16] border-zinc-800 opacity-60'}`}>
                     <Book className={`w-5 h-5 mb-4 ${studyTab === 'indigo' ? 'text-teal-400' : 'text-zinc-600'}`} />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-white block">Indigo Literature</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white block">Literature</span>
                     <span className="text-[9px] text-zinc-500 italic">Identity & Resilience texts.</span>
                   </button>
                 </div>
@@ -159,11 +159,33 @@ const Library = ({ vault, isAdmin }) => {
                         </>
                       ) : (
                         <>
-                          <h4 className="text-xl text-white font-serif font-black italic mb-6">Foundational Reading</h4>
-                          <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 max-w-xl italic">Pivotal literature on career migration and resilience. Mental provisions for your journey.</p>
-                          <button disabled className="inline-flex items-center justify-center px-10 h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-zinc-800 text-zinc-500 border border-zinc-700 cursor-not-allowed">
-                            COLLECTION ARRIVING SOON <Lock className="ml-2 w-3 h-3" />
-                          </button>
+                          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                            <div>
+                              <h4 className="text-xl text-white font-serif font-black italic mb-2">Foundational Reading</h4>
+                              <p className="text-sm text-zinc-400 font-light leading-relaxed max-w-md italic">Pivotal literature on career migration and resilience. Mental provisions for your journey.</p>
+                            </div>
+                            <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/10 h-fit lowercase">Multinational Links</Badge>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Indigo - Primary */}
+                            <a href={INDIGO_LIST_URL} target="_blank" rel="noopener noreferrer" className="p-6 rounded-[2rem] bg-black/40 border border-white/5 hover:border-teal-500/30 transition-all flex flex-col gap-3 group">
+                              <span className="text-[10px] font-black text-teal-400 uppercase tracking-[0.2em]">For our Canadians</span>
+                              <h5 className="text-white font-serif italic text-lg">Shop Indigo</h5>
+                              <p className="text-[10px] text-zinc-500 leading-relaxed font-light italic">Support our local bookstores and ship anywhere in Canada.</p>
+                            </a>
+
+                            {/* Bookshop - International Coming Soon */}
+                            <div className="p-6 rounded-[2rem] bg-black/40 border border-white/5 flex flex-col gap-3 opacity-60">
+                              <span className="text-[10px] font-black text-purple-400 uppercase tracking-[0.2em]">For Non-Canadian Friends</span>
+                              <div className="flex items-center justify-between">
+                                <h5 className="text-white font-serif italic text-lg">Shop Bookshop.org</h5>
+                                <Lock size={14} className="text-zinc-600" />
+                              </div>
+                              <p className="text-[10px] text-zinc-500 leading-relaxed font-light italic">Support independent US/UK shops while building your library. (Linking soon!)</p>
+                            </div>
+                          </div>
+                          <p className="text-[8px] text-zinc-600 uppercase tracking-widest mt-6 italic">*International users can also find these titles on our Amazon Book List.</p>
                         </>
                       )}
                    </div>
