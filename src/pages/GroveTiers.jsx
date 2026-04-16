@@ -16,7 +16,6 @@ const GroveTiers = ({ vault, onSync }) => {
   const navigate = useNavigate();
   const [requestStatus, setRequestStatus] = useState(null);
   const [contactStatus, setContactStatus] = useState(null);
-  
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
   const hasSession = vault?.isAligned || !!localStorage.getItem('base44_auth_session');
@@ -244,44 +243,44 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        <section className="max-w-4xl mx-auto pb-24">
-          <div className="bg-[#110E16]/40 border border-zinc-800/50 rounded-[2.5rem] p-8 md:p-10 shadow-xl overflow-hidden relative">
+        <section className="max-w-4xl mx-auto pb-24 selection:bg-teal-500/30">
+          <div className="bg-[#110E16]/40 border border-zinc-800/50 rounded-[2.5rem] p-10 md:p-12 shadow-xl overflow-hidden relative">
             <div className="absolute top-0 right-0 p-8 text-teal-500/5">
-              <Smartphone size={120} />
+              <Smartphone size={160} />
             </div>
             
-            <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-12">
-              <div className="flex-1 space-y-4 text-center md:text-left">
-                <h3 className="text-xl font-serif italic text-white leading-none">Bring the Sanctuary Home</h3>
-                <p className="text-[11px] text-zinc-500 uppercase tracking-widest font-black">Add Hearth & Horizon to your mobile homescreen</p>
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-16">
+              <div className="flex-1 space-y-5 text-center md:text-left">
+                <h3 className="text-2xl font-serif italic text-white leading-tight">Bring the Sanctuary Home</h3>
+                <p className="text-[12px] text-zinc-500 uppercase tracking-widest font-black max-w-[280px]">Add Hearth & Horizon to your mobile homescreen</p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-                <div className="flex-1 bg-black/40 border border-white/5 rounded-2xl p-5 flex flex-col items-center text-center gap-3 group hover:border-teal-500/20 transition-all">
-                  <div className="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-400 mb-1">
-                    <Share2 size={16} />
+              <div className="flex flex-col sm:flex-row gap-6 w-full md:w-auto">
+                <div className="flex-1 bg-black/40 border border-white/5 rounded-3xl p-8 flex flex-col items-center text-center gap-4 group hover:border-teal-500/20 transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400 mb-2 border border-teal-500/20">
+                    <Share2 size={20} />
                   </div>
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-white">iOS / Safari</h4>
-                  <p className="text-[9px] text-zinc-500 leading-relaxed font-light italic px-2">
-                    Tap the Share button below, then select <span className="text-zinc-300 italic">'Add to Home Screen'</span> from the menu.
+                  <h4 className="text-[12px] font-black uppercase tracking-widest text-white">iOS / Safari</h4>
+                  <p className="text-[10px] text-zinc-300 leading-relaxed font-light italic px-2">
+                    Tap the Share button below, then select <span className="text-white italic">'Add to Home Screen'</span>.
                   </p>
                 </div>
 
-                <div className="flex-1 bg-black/40 border border-white/5 rounded-2xl p-5 flex flex-col items-center text-center gap-3 group hover:border-purple-500/20 transition-all">
-                  <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 mb-1">
-                    <MoreVertical size={16} />
+                <div className="flex-1 bg-black/40 border border-white/5 rounded-3xl p-8 flex flex-col items-center text-center gap-4 group hover:border-purple-500/20 transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-2 border border-purple-500/20">
+                    <MoreVertical size={20} />
                   </div>
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-white">Android / Chrome</h4>
-                  <p className="text-[9px] text-zinc-500 leading-relaxed font-light italic px-2">
-                    Tap the three dots in the corner, then select <span className="text-zinc-300 italic">'Install App'</span> or <span className="text-zinc-300 italic">'Add to Home Screen'</span>.
+                  <h4 className="text-[12px] font-black uppercase tracking-widest text-white">Android / Chrome</h4>
+                  <p className="text-[10px] text-zinc-300 leading-relaxed font-light italic px-2">
+                    Tap the three dots in the corner, then select <span className="text-white italic">'Install App'</span> or <span className="text-white italic">'Add to Home Screen'</span>.
                   </p>
                 </div>
               </div>
             </div>
           </div>
           
-          <div className="mt-12 text-center opacity-30 group">
-             <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="mt-16 text-center opacity-30 group">
+             <div className="flex items-center justify-center gap-3 mb-5">
                 <div className="h-[1px] w-8 bg-zinc-800 group-hover:w-12 transition-all" />
                 <Mountain size={14} className="text-zinc-500" />
                 <div className="h-[1px] w-8 bg-zinc-800 group-hover:w-12 transition-all" />
