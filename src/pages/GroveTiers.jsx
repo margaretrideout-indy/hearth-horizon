@@ -261,7 +261,7 @@ const GroveTiers = ({ vault, onSync }) => {
                     <Share2 size={20} />
                   </div>
                   <h4 className="text-[12px] font-black uppercase tracking-widest text-white">iOS / Safari</h4>
-                  <p className="text-[10px] text-zinc-300 leading-relaxed font-light italic px-2">
+                  <p className="text-[12px] text-zinc-300 leading-relaxed font-light italic px-2">
                     Tap the Share button below, then select <span className="text-white italic">'Add to Home Screen'</span>.
                   </p>
                 </div>
@@ -271,7 +271,7 @@ const GroveTiers = ({ vault, onSync }) => {
                     <MoreVertical size={20} />
                   </div>
                   <h4 className="text-[12px] font-black uppercase tracking-widest text-white">Android / Chrome</h4>
-                  <p className="text-[10px] text-zinc-300 leading-relaxed font-light italic px-2">
+                  <p className="text-[12px] text-zinc-300 leading-relaxed font-light italic px-2">
                     Tap the three dots in the corner, then select <span className="text-white italic">'Install App'</span> or <span className="text-white italic">'Add to Home Screen'</span>.
                   </p>
                 </div>
