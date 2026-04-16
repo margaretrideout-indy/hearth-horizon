@@ -5,6 +5,7 @@ import {
   FileDown, ArrowLeft
 } from 'lucide-react';
 
+// ... (powerVerbs, marketComparison, negotiationScripts, outreachPhases arrays)
 const trailKitProvisions = [
   {
     id: 'verbs',
@@ -63,7 +64,6 @@ const trailKitProvisions = [
   }
 ];
 
-// ... (powerVerbs, marketComparison, negotiationScripts, outreachPhases arrays remain the same as previous)
 const powerVerbs = [
     { legacy: "Taught", horizon: "Facilitated", use: "Standardized delivery for stakeholders." },
     { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
@@ -140,8 +140,6 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
 
   return (
     <div className="max-w-6xl mx-auto pb-24 px-4 sm:px-6">
-      
-      {/* SECTION HEADER */}
       <section className="mb-16">
         <div className="flex items-center gap-4 mb-8">
           <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400/80">Active Provisions</h3>
@@ -173,11 +171,9 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
                   </div>
                 </div>
 
-                {/* ... Accordion Content (Market, Verbs, Scripts, Outreach) remains the same ... */}
                 {expandedCard === tool.id && tool.isAccordion && isAllowed && (
                   <div className="bg-[#110E16]/50 border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4 animate-in slide-in-from-top-4">
                     <div className="h-[1px] bg-white/5 mb-8 w-full" />
-                    
                     {tool.id === 'market' && (
                       <div className="space-y-10">
                         <div className="relative group/workshop overflow-hidden p-10 bg-gradient-to-br from-teal-500/10 to-transparent border border-teal-500/20 rounded-[2.5rem] flex flex-col items-start gap-8">
@@ -267,7 +263,7 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
         </div>
       </section>
 
-      {/* LOWER VOLUME TOGGLE (FOOTER) */}
+      {/* FOOTER NAVIGATION */}
       <div className="mt-24 pt-12 border-t border-white/5 flex flex-col items-center space-y-8">
         <div className="flex flex-col items-center space-y-4 text-center">
           <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-500 italic">Navigate the Archives</h2>
@@ -276,7 +272,10 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
 
         <div className="inline-flex p-1.5 bg-zinc-900/50 backdrop-blur-md rounded-[2.5rem] border border-white/5 shadow-2xl overflow-hidden">
           <button 
-            onClick={() => onNavigate?.('library')}
+            onClick={() => {
+                console.log("Navigating to Library...");
+                if (onNavigate) onNavigate('library');
+            }}
             className="group flex items-center gap-3 px-8 py-5 rounded-[2rem] text-[10px] font-black uppercase tracking-widest transition-all duration-300 text-zinc-500 hover:text-white hover:bg-white/5"
           >
             <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
