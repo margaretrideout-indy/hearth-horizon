@@ -263,6 +263,43 @@ const Library = ({ vault, isAdmin }) => {
                   )}
                   <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-6 w-fit uppercase">Strategic Intelligence</Badge>
                   <h4 className="text-xl text-white font-serif font-black italic mb-4">Steward Assets</h4>
+                  <div className="space-y-3">
+                    <div className="rounded-2xl border border-zinc-800 bg-black/40 overflow-hidden transition-all">
+                      <button 
+                        onClick={() => setActiveTool(activeTool === 'outreach' ? null : 'outreach')}
+                        className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <Zap size={14} className="text-purple-400" />
+                          <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest">Sponsorship Protocol</span>
+                        </div>
+                        <ArrowRight size={12} className={`transition-transform duration-300 ${activeTool === 'outreach' ? 'rotate-90 text-purple-400' : 'text-zinc-600'}`} />
+                      </button>
+                      {activeTool === 'outreach' && (
+                        <div className="p-4 pt-0 border-t border-white/5 space-y-4 animate-in slide-in-from-top-2">
+                          <div>
+                            <span className="text-[8px] font-black text-purple-400/60 uppercase tracking-tighter block mb-2">Phase 1: The Early Inquiry</span>
+                            <p className="text-[10px] text-zinc-400 italic leading-relaxed mb-3">"I'm currently exploring the landscape of [Industry] and noticed your trajectory..."</p>
+                          </div>
+                          <div className="h-[1px] bg-white/5" />
+                          <div>
+                            <span className="text-[8px] font-black text-purple-400/60 uppercase tracking-tighter block mb-2">Phase 2: The Pivot</span>
+                            <p className="text-[10px] text-zinc-400 italic leading-relaxed">"Given our last conversation, I've refined my focus to [Specific Role]. I'd value your lens on..."</p>
+                          </div>
+                          <button className="w-full py-2 mt-2 bg-purple-500/10 rounded-lg text-[8px] font-black text-purple-400 uppercase tracking-widest hover:bg-purple-500/20 transition-all">
+                            Download 90-Day Cadence
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4 rounded-xl border border-zinc-800 bg-black/40 flex items-center justify-between group-hover:border-purple-500/20 transition-all">
+                      <div className="flex items-center gap-3">
+                        <MessageSquare size={14} className="text-zinc-600" />
+                        <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Negotiation Scripts</span>
+                      </div>
+                      <Lock size={10} className="text-zinc-800" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </section>
