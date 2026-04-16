@@ -1,6 +1,17 @@
 import React, { useState } from 'react';
-import { Download, FileText, MessageSquare, Map, ChevronRight, ChevronDown, ChevronUp, Zap, ShieldCheck } from 'lucide-react';
+import { 
+  FileText, 
+  MessageSquare, 
+  Map, 
+  ChevronRight, 
+  ChevronDown, 
+  ChevronUp, 
+  Zap, 
+  ShieldCheck,
+  Mail
+} from 'lucide-react';
 
+// Data for the provisions
 export const libraryVolumeII = [
   {
     id: 'resume',
@@ -72,9 +83,9 @@ const Provisions = () => {
       <div className="max-w-4xl mx-auto">
         <div className="mb-12">
           <h1 className="text-4xl md:text-5xl font-serif italic text-white mb-4">Wayfarer's Provisions</h1>
-          <p className="text-lg text-slate-400 max-w-2xl">
-            If the first page of the library is your <span className="text-teal-400 italic">Strategy</span>, 
-            this page is your <span className="text-purple-400 italic">Gear</span>. Take what you need for the road ahead.
+          <p className="text-lg text-slate-400 max-w-2xl leading-relaxed">
+            If the first volume of the library is your <span className="text-teal-400 italic">Strategy</span>, 
+            this volume is your <span className="text-purple-400 italic">Gear</span>. Take what you need for the road ahead.
           </p>
         </div>
 
@@ -83,8 +94,10 @@ const Provisions = () => {
             <div key={tool.id} className="flex flex-col gap-0">
               <div 
                 onClick={() => handleCardClick(tool)}
-                className={`group relative bg-[#0A080D] border border-white/5 p-6 transition-all cursor-pointer overflow-hidden ${
-                  expandedCard === tool.id ? 'rounded-t-2xl border-b-0 border-teal-500/30 shadow-[0_-10px_40px_rgba(20,184,166,0.1)]' : 'rounded-2xl hover:border-purple-500/30'
+                className={`group relative bg-[#0A080D] border border-white/5 p-6 transition-all duration-300 cursor-pointer overflow-hidden ${
+                  expandedCard === tool.id 
+                    ? 'rounded-t-2xl border-b-0 border-teal-500/30 shadow-[0_-10px_40px_rgba(20,184,166,0.1)]' 
+                    : 'rounded-2xl hover:border-purple-500/30'
                 }`}
               >
                 <div className="flex items-center justify-between relative z-10">
@@ -93,7 +106,7 @@ const Provisions = () => {
                       {tool.icon}
                     </div>
                     <div>
-                      <div className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">{tool.type}</div>
+                      <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1">{tool.type}</div>
                       <h3 className="text-xl font-semibold text-white group-hover:text-teal-400 transition-colors">{tool.title}</h3>
                       <p className="text-slate-400 mt-1 max-w-md text-sm">{tool.desc}</p>
                     </div>
@@ -136,7 +149,7 @@ const Provisions = () => {
                       <div key={idx} className="bg-black/30 border border-white/5 p-4 rounded-xl flex flex-col">
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-xs text-slate-500 line-through">{verb.legacy}</span>
-                          <span className="text-sm font-bold text-purple-400 uppercase tracking-tighter italic">Flip to</span>
+                          <span className="text-[10px] font-bold text-purple-400 uppercase tracking-tighter italic">Flip to</span>
                         </div>
                         <div className="text-lg font-bold text-teal-400 mb-1">{verb.horizon}</div>
                         <p className="text-[11px] text-slate-500 leading-tight">{verb.use}</p>
@@ -152,14 +165,14 @@ const Provisions = () => {
                   <div className="h-px bg-white/5 mb-6 w-full" />
                   <div className="space-y-6 pb-4">
                     <div className="flex gap-4">
-                      <div className="mt-1"><ShieldCheck className="text-teal-400" size={20}/></div>
+                      <div className="mt-1 p-2 bg-teal-500/10 rounded-lg"><ShieldCheck className="text-teal-400" size={20}/></div>
                       <div>
                         <h4 className="text-white font-bold mb-1">The "Golden Handcuffs" Bridge</h4>
                         <p className="text-xs text-slate-400 leading-relaxed">Public pensions are high-value. If a private role doesn't offer RRSP matching, you must negotiate a **5-8% higher base salary** to stay financially neutral.</p>
                       </div>
                     </div>
                     <div className="flex gap-4">
-                      <div className="mt-1"><Map className="text-purple-400" size={20}/></div>
+                      <div className="mt-1 p-2 bg-purple-500/10 rounded-lg"><Map className="text-purple-400" size={20}/></div>
                       <div>
                         <h4 className="text-white font-bold mb-1">Provincial Credential Translation</h4>
                         <p className="text-xs text-slate-400 leading-relaxed">Don't list provincial licenses as "Teaching Certificates." List them as **"Provincial Regulatory Compliance & Standards Certification"** to appeal to corporate HR scanners.</p>
@@ -172,15 +185,26 @@ const Provisions = () => {
           ))}
         </div>
 
-        <div className="mt-16 p-8 rounded-3xl bg-gradient-to-br from-purple-900/20 to-teal-900/20 border border-white/5 text-center relative overflow-hidden">
-            <div className="relative z-10">
-              <h3 className="text-white font-serif italic text-2xl mb-2">Need a custom provision?</h3>
-              <p className="text-slate-400 mb-6 max-w-lg mx-auto text-sm">If you're looking for a specific template or guide that isn't here, let the Hearthkeepers know.</p>
-              <button onClick={() => window.location.href = 'mailto:support@hearthandhorizon.com'} className="px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-teal-400 hover:scale-105 active:scale-95 transition-all">
+        {/* Support Section */}
+        <div className="mt-16 p-12 rounded-[2.5rem] bg-gradient-to-br from-purple-900/10 via-[#0A080D] to-teal-900/10 border border-white/5 text-center relative overflow-hidden">
+            <div className="relative z-10 flex flex-col items-center">
+              <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-6">
+                <Mail className="text-teal-400" size={24} />
+              </div>
+              <h3 className="text-white font-serif italic text-3xl mb-3">Need a custom provision?</h3>
+              <p className="text-slate-400 mb-8 max-w-lg mx-auto text-sm leading-relaxed">
+                If you're looking for a specific template, guide, or script that isn't here, 
+                reach out to the Hearthkeepers. We build what you need.
+              </p>
+              <button 
+                onClick={() => window.location.href = 'mailto:support@hearthandhorizon.com'} 
+                className="px-10 py-4 bg-white text-black font-bold rounded-full hover:bg-teal-400 hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl shadow-white/5"
+              >
                   Contact Archive Support
               </button>
             </div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-500/10 blur-[100px] pointer-events-none" />
+            {/* Ambient Background Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/5 blur-[120px] pointer-events-none" />
         </div>
       </div>
     </div>
