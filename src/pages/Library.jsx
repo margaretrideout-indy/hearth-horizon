@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Library as LibraryIcon, ExternalLink, ArrowRight, Lock, 
+  Library as LibraryIcon, ExternalLink, Lock, 
   MessageSquare, Zap, Heart, Phone, Headphones, 
-  Package, Book, X, Check, Copy, Layers, Mountain
+  Package, Book, Check, Copy, Layers, Mountain
 } from 'lucide-react';
 
 import Provisions from './Contact';
@@ -47,14 +47,20 @@ const Library = ({ vault, isAdmin }) => {
       <div className="max-w-7xl mx-auto relative z-10">
         
         {/* HEADER */}
-        <header className="mb-16 border-b border-white/5 pb-10">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20">
-              <LibraryIcon size={20} />
+        <header className="mb-16 border-b border-white/5 pb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20">
+                <LibraryIcon size={20} />
+              </div>
+              <h1 className="text-2xl md:text-3xl font-serif italic text-white tracking-tight">The Library: Vol. I</h1>
             </div>
-            <h1 className="text-2xl md:text-3xl font-serif italic text-white tracking-tight">The Library: Vol. I</h1>
+            <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.3em] italic">Sanctuary, Study & Strategic Provisions</p>
           </div>
-          <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.3em] italic">Sanctuary, Study & Strategic Provisions</p>
+          <div className="px-5 py-2 rounded-2xl border border-zinc-800 bg-[#16121D] flex items-center gap-3">
+             <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
+             <span className="text-[10px] font-black uppercase tracking-widest text-white">{userTier} Standing</span>
+          </div>
         </header>
 
         {currentVolume === 1 ? (
@@ -66,23 +72,23 @@ const Library = ({ vault, isAdmin }) => {
               <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
             </div>
             <section className="mb-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-               <div className="bg-[#16121D] border border-zinc-800 p-8 rounded-[2.5rem] flex flex-col hover:border-purple-500/20 transition-all">
+               <div className="bg-[#16121D] border border-zinc-800 p-8 rounded-[2.5rem] flex flex-col">
                   <Heart className="text-purple-400 mb-6" />
                   <h4 className="text-lg text-white font-serif italic mb-2">Burnout to Balance</h4>
                   <p className="text-[11px] text-zinc-500 italic mb-6 leading-relaxed">A guided roadmap for recovering energy during transition.</p>
                   <a href="https://static1.squarespace.com/static/5d3080f196bac8000148b997/t/664cfc0539541d281b05c587/1716321288694/GKYMH+From+Burnout+to+Balance.pdf" target="_blank" className="mt-auto py-3 bg-purple-500/10 text-purple-400 rounded-xl text-[9px] font-black uppercase text-center border border-purple-500/20">View PDF Resource</a>
                </div>
-               <div className="bg-[#16121D] border border-zinc-800 p-8 rounded-[2.5rem] flex flex-col hover:border-purple-500/20 transition-all">
+               <div className="bg-[#16121D] border border-zinc-800 p-8 rounded-[2.5rem] flex flex-col">
                   <Headphones className="text-purple-400 mb-6" />
                   <h4 className="text-lg text-white font-serif italic mb-2">Inner Advocate</h4>
-                  <p className="text-[11px] text-zinc-500 italic mb-6 leading-relaxed">Podcast: Navigating professional upheaval.</p>
+                  <p className="text-[11px] text-zinc-500 italic mb-6 leading-relaxed">Podcast series: Navigating professional upheaval.</p>
                   <a href="https://podcasts.apple.com/ca/podcast/your-inner-advocate/id1722984987" target="_blank" className="mt-auto py-3 bg-purple-500/10 text-purple-400 rounded-xl text-[9px] font-black uppercase text-center border border-purple-500/20">Listen on Apple</a>
                </div>
                <div className="bg-[#16121D] border border-zinc-800 p-8 rounded-[2.5rem] flex flex-col">
                   <Phone className="text-purple-400 mb-6" />
                   <h4 className="text-lg text-white font-serif italic mb-2">Crisis Support</h4>
                   <p className="text-[11px] text-zinc-500 italic mb-6 leading-relaxed">Confidential text-based support 24/7.</p>
-                  <div className="mt-auto py-3 bg-black/40 rounded-xl text-[10px] font-black text-center text-zinc-500 border border-white/5">TEXT 686868</div>
+                  <div className="mt-auto py-4 bg-black/40 rounded-xl text-[10px] font-black text-center text-zinc-500 border border-white/5 tracking-[0.2em]">TEXT 686868</div>
                </div>
             </section>
 
@@ -91,7 +97,7 @@ const Library = ({ vault, isAdmin }) => {
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500 whitespace-nowrap">The Study</h3>
               <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
             </div>
-            <section className="mb-16 grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <section className="mb-16 grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
                 <div className="space-y-3">
                   <button onClick={() => setStudyTab('amazon')} className={`w-full p-6 rounded-2xl border text-left transition-all ${studyTab === 'amazon' ? 'bg-teal-500/10 border-teal-500/50' : 'bg-[#16121D] border-zinc-800 opacity-60'}`}>
                     <Package className="w-5 h-5 mb-4 text-teal-400" />
@@ -102,18 +108,39 @@ const Library = ({ vault, isAdmin }) => {
                     <span className="text-[10px] font-black uppercase tracking-widest text-white block">Reading List</span>
                   </button>
                 </div>
-                <div className="lg:col-span-3 bg-[#110E16] border border-zinc-800 p-10 rounded-[2.5rem] shadow-2xl">
+                <div className="lg:col-span-3 bg-[#110E16] border border-zinc-800 p-10 md:p-14 rounded-[2.5rem] shadow-2xl min-h-[300px]">
                   {studyTab === 'amazon' ? (
                     <div>
-                      <h4 className="text-2xl text-white font-serif italic mb-4">Wayfarer’s Provisions</h4>
-                      <p className="text-sm text-zinc-400 font-light leading-relaxed mb-8 italic">Curated ergonomic tools selected to support professional migration.</p>
-                      <a href={AMZ_PROVISIONS_URL} target="_blank" className="inline-flex items-center px-10 h-14 rounded-xl text-[9px] font-black uppercase tracking-widest bg-teal-500 text-black hover:bg-teal-400 transition-all">BROWSE STOREFRONT <ExternalLink className="ml-2 w-3 h-3" /></a>
+                      <h4 className="text-3xl text-white font-serif italic mb-4">Wayfarer’s Provisions</h4>
+                      <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 italic">Curated ergonomic and analog tools selected to support the mental demands of professional migration.</p>
+                      <a href={AMZ_PROVISIONS_URL} target="_blank" rel="noreferrer" className="inline-flex items-center px-10 h-16 rounded-xl text-[10px] font-black uppercase tracking-widest bg-teal-500 text-black hover:bg-teal-400 transition-all">BROWSE STOREFRONT <ExternalLink className="ml-2 w-4 h-4" /></a>
                     </div>
                   ) : (
                     <div>
-                      <h4 className="text-2xl text-white font-serif italic mb-4">Foundational Literature</h4>
-                      <p className="text-sm text-zinc-400 font-light italic mb-6">Curating a library for the modern transition. Indigo/Bookshop pending.</p>
-                      <div className="p-5 rounded-xl border border-dashed border-white/10 text-[9px] font-black uppercase text-zinc-600 tracking-widest">Archive Updating Soon</div>
+                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                        <div>
+                          <h4 className="text-3xl text-white font-serif italic">Foundational Reading</h4>
+                          <p className="text-sm text-zinc-500 italic mt-2">Pivotal literature on career migration, resilience, and identity.</p>
+                        </div>
+                        <span className="bg-purple-500/10 text-purple-400 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border border-purple-500/20">multinational access</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="p-8 rounded-[2rem] bg-[#16121D] border border-zinc-800/50 relative overflow-hidden group">
+                           <div className="absolute top-6 right-8 text-zinc-700"><Lock size={16}/></div>
+                           <h5 className="text-[9px] font-black text-teal-500 uppercase tracking-widest mb-4">For our Canadians</h5>
+                           <p className="text-xl text-white font-serif italic mb-2">Indigo Collection</p>
+                           <p className="text-[11px] text-zinc-500 leading-relaxed italic">Curating the best in domestic Canadian literature. Arriving shortly.</p>
+                           <div className="mt-6 w-12 h-1 bg-zinc-800 rounded-full" />
+                        </div>
+                        <div className="p-8 rounded-[2rem] bg-[#16121D] border border-zinc-800/50 relative overflow-hidden group">
+                           <div className="absolute top-6 right-8 text-zinc-700"><Lock size={16}/></div>
+                           <h5 className="text-[9px] font-black text-purple-500 uppercase tracking-widest mb-4">Non-Canadian Friends</h5>
+                           <p className="text-xl text-white font-serif italic mb-2">Bookshop.org Storefront</p>
+                           <p className="text-[11px] text-zinc-500 leading-relaxed italic">Supporting independent US/UK shops. Finalizing the shelves.</p>
+                           <div className="mt-6 w-12 h-1 bg-zinc-800 rounded-full" />
+                        </div>
+                      </div>
+                      <p className="text-[8px] text-zinc-600 font-black uppercase tracking-[0.2em] mt-10 text-center italic">*International users can find these titles on our Amazon list in the interim.</p>
                     </div>
                   )}
                 </div>
@@ -124,14 +151,16 @@ const Library = ({ vault, isAdmin }) => {
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500 whitespace-nowrap">The Canopy Hub</h3>
               <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
             </div>
-            <section className="flex flex-col lg:flex-row gap-6 items-stretch mb-20">
-                <div className="w-full lg:w-[300px] bg-[#16121D] border border-teal-500/30 p-8 rounded-[2.5rem] flex flex-col shadow-2xl shrink-0">
+            <section className="flex flex-col lg:flex-row gap-6 items-start mb-20">
+                {/* Fixed Master Strategy Deck - items-start on parent keeps it from stretching */}
+                <div className="w-full lg:w-[320px] bg-[#16121D] border border-teal-500/30 p-8 rounded-[2.5rem] flex flex-col shadow-2xl shrink-0">
                   <div className="bg-teal-500/10 text-teal-400 px-3 py-1 rounded-full text-[9px] font-black uppercase w-fit mb-6 italic">Member Gift</div>
                   <h4 className="text-2xl text-white font-serif italic mb-4 leading-tight">Master Strategy Deck</h4>
                   <p className="text-[12px] text-zinc-400 italic mb-8 leading-relaxed">The primary blueprint for your career migration and resignation protocol.</p>
-                  <button onClick={() => window.open(STRATEGY_DECK_URL, '_blank')} className="mt-auto h-14 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-xl flex items-center justify-center gap-3 transition-all uppercase text-[9px] tracking-widest shadow-lg">Open Blueprint <ExternalLink size={14} /></button>
+                  <button onClick={() => window.open(STRATEGY_DECK_URL, '_blank')} className="mt-auto h-14 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-xl flex items-center justify-center gap-3 transition-all uppercase text-[9px] tracking-widest shadow-lg shadow-teal-500/20">Open Blueprint <ExternalLink size={14} /></button>
                 </div>
 
+                {/* Migration Protocols */}
                 <div className="flex-1 bg-[#16121D] border border-zinc-800 p-8 md:p-10 rounded-[2.5rem] relative shadow-xl overflow-hidden">
                   {!isSteward && (
                     <div className="absolute inset-0 z-20 bg-[#0A080D]/95 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center">
@@ -140,7 +169,10 @@ const Library = ({ vault, isAdmin }) => {
                     </div>
                   )}
                   <div className="flex justify-between items-center mb-10 border-b border-white/5 pb-6">
-                    <h4 className="text-2xl text-white font-serif italic leading-none">Migration Protocols</h4>
+                    <div className="space-y-1">
+                      <span className="text-[9px] font-black uppercase tracking-widest text-purple-500 italic">Advanced Sequence</span>
+                      <h4 className="text-2xl text-white font-serif italic mt-2">Strategic Migration Protocols</h4>
+                    </div>
                     <Layers className="text-zinc-800 hidden sm:block" size={32} />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
