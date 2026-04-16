@@ -4,7 +4,6 @@ import {
   Mail, ExternalLink, Lock, Crown, Compass, Target, FileDown
 } from 'lucide-react';
 
-// --- FULL DATA STRUCTURE RESTORED ---
 const trailKitProvisions = [
   {
     id: 'verbs',
@@ -58,6 +57,7 @@ const trailKitProvisions = [
   }
 ];
 
+// ... (Sub-data for verbs, market, outreach phases remains same)
 const powerVerbs = [
     { legacy: "Taught", horizon: "Facilitated", use: "Standardized delivery for stakeholders." },
     { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
@@ -74,40 +74,17 @@ const marketComparison = [
 ];
 
 const outreachPhases = [
-    {
-        id: 'p1',
-        title: "Phase 1: The 'Soft' Curiosity",
-        goal: "Low stakes engagement. No ask, just visibility.",
-        script: "Subject: Insight on [Company Name]'s approach to [Topic]\n\nHi [Name], I've been following your team's work on [Project]..."
-    },
-    {
-        id: 'p2',
-        title: "Phase 2: The Value Exchange",
-        goal: "Offer a perspective based on your 'Public-to-Private' flip.",
-        script: "Hi [Name], I actually just finished a project on [Related Topic] and thought this resource might be useful..."
-    },
-    {
-        id: 'p3',
-        title: "Phase 3: The Request for Sponsorship",
-        goal: "Asking for a 15-minute 'Bridge' call.",
-        script: "Hi [Name], I'm currently architecting a transition into the private sector. Given your expertise in [Industry]..."
-    }
+    { id: 'p1', title: "Phase 1: The 'Soft' Curiosity", goal: "Low stakes engagement.", script: "Subject: Insight on [Company Name]..." },
+    { id: 'p2', title: "Phase 2: The Value Exchange", goal: "Offer a perspective.", script: "Hi [Name], I thought this resource might be useful..." },
+    { id: 'p3', title: "Phase 3: The Request for Sponsorship", goal: "15-minute call.", script: "Hi [Name], I'm currently architecting a transition..." }
 ];
 
 const Contact = ({ vault, isAdmin }) => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [openPhaseId, setOpenPhaseId] = useState(null);
 
+  // RE-WIRING THE TIER CHECK
   const userTier = isAdmin ? 'Steward' : (vault?.tier || 'Seedling');
-  const isHearthkeeper = isAdmin || userTier === 'Hearthkeeper' || userTier === 'Steward';
-  const isSteward = isAdmin || userTier === 'Steward';
-
-  const checkAccess = (id) => {
-    if (id === 'verbs' || id === 'market') return true;
-    if (id === 'resume') return isHearthkeeper;
-    if (id === 'scripts' || id === 'outreach') return isSteward;
-    return false;
-  };
 
   return (
     <div className="max-w-6xl mx-auto pb-12 px-4 animate-in fade-in duration-500">
@@ -118,7 +95,13 @@ const Contact = ({ vault, isAdmin }) => {
 
       <div className="grid grid-cols-1 gap-6">
         {trailKitProvisions.map((tool) => {
-          const isAllowed = checkAccess(tool.id);
+          // EXPLICIT CHECK: If isAdmin is true, isAllowed is ALWAYS true.
+          const isAllowed = isAdmin || (
+            (tool.tier === "Seedling") ||
+            (tool.tier === "Hearthkeeper" && (userTier === "Hearthkeeper" || userTier === "Steward")) ||
+            (tool.tier === "Steward" && userTier === "Steward")
+          );
+
           const isOpen = expandedCard === tool.id;
           
           return (
@@ -164,7 +147,6 @@ const Contact = ({ vault, isAdmin }) => {
                 </div>
               </div>
 
-              {/* RESTORED ACCORDION CONTENT */}
               {isOpen && isAllowed && (
                 <div className="bg-[#110E16]/50 border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4 animate-in slide-in-from-top-4">
                   <div className="h-[1px] bg-white/5 mb-8 w-full" />
