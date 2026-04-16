@@ -14,6 +14,8 @@ const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9G
 const IDENTITY_LEDGER_URL = "https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link";
 const AUTHORITY_WORKSHEET_URL = "https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link";
 const AMZ_PROVISIONS_URL = "https://www.amazon.ca/hz/wishlist/ls/2BZUUE2ZJL0EL?ref_=list_d_wl_lfu_nav_4";
+const CADENCE_90_DAY_URL = "#"; // Replace with your actual download link
+const NEGOTIATION_SCRIPTS_URL = "#"; // Replace with your actual link
 
 const Badge = ({ children, className }) => (
   <span className={`inline-flex items-center rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest transition-all ${className}`}>
@@ -263,42 +265,57 @@ const Library = ({ vault, isAdmin }) => {
                   )}
                   <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-6 w-fit uppercase">Strategic Intelligence</Badge>
                   <h4 className="text-xl text-white font-serif font-black italic mb-4">Steward Assets</h4>
-                  <div className="space-y-3">
-                    <div className="rounded-2xl border border-zinc-800 bg-black/40 overflow-hidden transition-all">
+                  
+                  <div className="space-y-4">
+                    {/* Sponsorship Protocol Accordion */}
+                    <div className="rounded-2xl border border-zinc-800 bg-black/60 overflow-hidden transition-all shadow-lg">
                       <button 
                         onClick={() => setActiveTool(activeTool === 'outreach' ? null : 'outreach')}
-                        className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
+                        className="w-full p-5 flex items-center justify-between hover:bg-white/5 transition-colors group/btn"
                       >
-                        <div className="flex items-center gap-3">
-                          <Zap size={14} className="text-purple-400" />
-                          <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest">Sponsorship Protocol</span>
+                        <div className="flex items-center gap-4">
+                          <Zap size={18} className="text-purple-400 group-hover/btn:scale-110 transition-transform" />
+                          <span className="text-[12px] font-black text-zinc-100 uppercase tracking-widest">Sponsorship Protocol</span>
                         </div>
-                        <ArrowRight size={12} className={`transition-transform duration-300 ${activeTool === 'outreach' ? 'rotate-90 text-purple-400' : 'text-zinc-600'}`} />
+                        <ArrowRight size={14} className={`transition-transform duration-300 ${activeTool === 'outreach' ? 'rotate-90 text-purple-400' : 'text-zinc-600'}`} />
                       </button>
+                      
                       {activeTool === 'outreach' && (
-                        <div className="p-4 pt-0 border-t border-white/5 space-y-4 animate-in slide-in-from-top-2">
+                        <div className="p-5 pt-2 border-t border-white/5 space-y-5 animate-in slide-in-from-top-2">
                           <div>
-                            <span className="text-[8px] font-black text-purple-400/60 uppercase tracking-tighter block mb-2">Phase 1: The Early Inquiry</span>
-                            <p className="text-[10px] text-zinc-400 italic leading-relaxed mb-3">"I'm currently exploring the landscape of [Industry] and noticed your trajectory..."</p>
+                            <span className="text-[9px] font-black text-purple-400 uppercase tracking-tighter block mb-2 opacity-80">Phase 1: The Early Inquiry</span>
+                            <p className="text-[11px] text-zinc-300 italic leading-relaxed mb-3">"I'm currently exploring the landscape of [Industry] and noticed your trajectory..."</p>
                           </div>
-                          <div className="h-[1px] bg-white/5" />
+                          <div className="h-[1px] bg-white/10" />
                           <div>
-                            <span className="text-[8px] font-black text-purple-400/60 uppercase tracking-tighter block mb-2">Phase 2: The Pivot</span>
-                            <p className="text-[10px] text-zinc-400 italic leading-relaxed">"Given our last conversation, I've refined my focus to [Specific Role]. I'd value your lens on..."</p>
+                            <span className="text-[9px] font-black text-purple-400 uppercase tracking-tighter block mb-2 opacity-80">Phase 2: The Pivot</span>
+                            <p className="text-[11px] text-zinc-300 italic leading-relaxed">"Given our last conversation, I've refined my focus to [Specific Role]. I'd value your lens on..."</p>
                           </div>
-                          <button className="w-full py-2 mt-2 bg-purple-500/10 rounded-lg text-[8px] font-black text-purple-400 uppercase tracking-widest hover:bg-purple-500/20 transition-all">
-                            Download 90-Day Cadence
-                          </button>
+                          <a 
+                            href={CADENCE_90_DAY_URL} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 w-full py-3 mt-2 bg-purple-500/20 border border-purple-500/30 rounded-xl text-[10px] font-black text-white uppercase tracking-widest hover:bg-purple-500 transition-all shadow-inner"
+                          >
+                            DOWNLOAD 90-DAY CADENCE <FileText size={12} />
+                          </a>
                         </div>
                       )}
                     </div>
-                    <div className="p-4 rounded-xl border border-zinc-800 bg-black/40 flex items-center justify-between group-hover:border-purple-500/20 transition-all">
-                      <div className="flex items-center gap-3">
-                        <MessageSquare size={14} className="text-zinc-600" />
-                        <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Negotiation Scripts</span>
+
+                    {/* Negotiation Scripts Asset */}
+                    <a 
+                      href={NEGOTIATION_SCRIPTS_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-5 rounded-2xl border border-zinc-800 bg-black/40 flex items-center justify-between hover:border-purple-500/40 hover:bg-white/5 transition-all group/asset"
+                    >
+                      <div className="flex items-center gap-4">
+                        <MessageSquare size={18} className="text-zinc-400 group-hover/asset:text-purple-400 transition-colors" />
+                        <span className="text-[12px] font-black text-zinc-400 group-hover/asset:text-zinc-100 uppercase tracking-widest transition-colors">Negotiation Scripts</span>
                       </div>
-                      <Lock size={10} className="text-zinc-800" />
-                    </div>
+                      <ExternalLink size={14} className="text-zinc-600 group-hover/asset:text-purple-400" />
+                    </a>
                   </div>
                 </div>
               </div>
