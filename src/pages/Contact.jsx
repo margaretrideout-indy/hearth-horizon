@@ -205,7 +205,7 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
                                 <h4 className="text-[10px] font-black uppercase text-white tracking-[0.3em]">The Horizon Workshop</h4>
                               </div>
                               <h5 className="text-2xl font-serif italic text-white mb-3">Auditing Your Functional Legacy</h5>
-                              <p className="text-xs text-zinc-400 italic leading-relaxed mb-8">This two-part toolkit is your baseline for sector transition. Map your career history against corporate Strategic Pillars before you begin your outreach.</p>
+                              <p className="text-sm text-zinc-300 italic leading-relaxed mb-8">This two-part toolkit is your baseline for sector transition. Map your career history against corporate Strategic Pillars before you begin your outreach.</p>
                               
                               <div className="flex flex-col sm:flex-row gap-4">
                                 <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link", "_blank")} className="px-8 h-14 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all flex items-center justify-center gap-2 group/btn">
@@ -246,6 +246,20 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
                               </div>
                            </div>
                         </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="p-6 bg-black/40 border border-white/5 rounded-2xl flex flex-col gap-4">
+                            <ShieldCheck className="text-teal-400" size={20}/>
+                            <h4 className="text-[10px] font-black uppercase text-white tracking-widest">Financial Neutrality</h4>
+                            <p className="text-[11px] text-zinc-400 italic leading-relaxed">Public pensions are a massive hidden asset. Negotiate for a <strong className="text-teal-400">20-25% salary increase</strong> in the private sector to account for the loss of a defined-benefit plan.</p>
+                          </div>
+                          <div className="p-6 bg-black/40 border border-white/5 rounded-2xl flex flex-col gap-4 relative overflow-hidden">
+                            {!isHearthkeeper && <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-20"><Lock size={16} className="text-zinc-600"/></div>}
+                            <Landmark className="text-purple-400" size={20}/>
+                            <h4 className="text-[10px] font-black uppercase text-white tracking-widest">Compliance Keywords</h4>
+                            <p className="text-[11px] text-zinc-400 italic leading-relaxed">Ensure regulatory licenses are listed as <strong className="text-purple-400">"Regulatory Compliance & Standards Certification"</strong> to trigger automated recruiter searches.</p>
+                          </div>
+                        </div>
                       </div>
                     )}
 
@@ -282,7 +296,7 @@ const Contact = ({ vault, isAdmin: propIsAdmin }) => {
                                   <button onClick={() => setOpenPhaseId(openPhaseId === phase.id ? null : phase.id)} className="w-full p-5 flex items-center justify-between hover:bg-white/5 transition-colors text-left">
                                       <div className="flex flex-col">
                                           <span className="text-[10px] font-black uppercase tracking-widest text-white">{phase.title}</span>
-                                          <span className="text-[9px] text-zinc-500 italic mt-1 font-light">{phase.goal}</span>
+                                          <span className="text-sm text-zinc-300 italic mt-1 font-normal leading-relaxed">{phase.goal}</span>
                                       </div>
                                       {openPhaseId === phase.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                                   </button>
