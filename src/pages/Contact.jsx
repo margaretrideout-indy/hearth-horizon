@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   FileText, MessageSquare, Map, ChevronDown, ChevronUp, Zap, 
-  Mail, ExternalLink, Compass, Target, FileDown
+  Mail, ExternalLink, Compass, DollarSign, FileDown, Target
 } from 'lucide-react';
 
 const trailKitProvisions = [
@@ -35,7 +35,7 @@ const trailKitProvisions = [
   {
     id: 'scripts',
     title: "Salary Negotiation Scripts",
-    desc: "Interactive word-for-word scripts for the 'expectations' talk and counter-offers.",
+    desc: "High-leverage word-for-word scripts for the 'expectations' talk and high-stakes counter-offers.",
     type: "Interactive Tool",
     icon: <MessageSquare className="text-teal-400" />,
     action: "View Scripts",
@@ -62,9 +62,21 @@ const powerVerbs = [
 ];
 
 const salaryScripts = [
-    { label: "The Initial Inquiry", script: "My research for this role in the Canadian market indicates a range of [X] to [Y]. Does that align with your current budget for this position?" },
-    { label: "The Pivot (If too low)", script: "I understand the budget is fixed at [X]. Given my 13 years of expertise in curriculum management, can we discuss a signing bonus or an accelerated performance review?" },
-    { label: "Closing the Gap", script: "I’m very excited about the mission at [Company]. If we can get the base to [Z], I’m prepared to sign today." }
+    { 
+        label: "The 'Anchor' Avoidance", 
+        context: "When a recruiter asks for your current salary (which is often lower than private market).",
+        script: "I'm looking for a total compensation package that reflects the current market value for this level of responsibility in Canada. Given my 13 years of expertise in curriculum architecture and project leadership, I’m focusing on roles in the $[X] to $[Y] range. Does that align with your budget for this position?" 
+    },
+    { 
+        label: "The 'Total Rewards' Pivot", 
+        context: "When the base salary is lower than target but you want to bridge the gap via other levers.",
+        script: "I understand the budget for the base is fixed at $[X]. Given my specialized background in [Skill], can we discuss other components such as a signing bonus, an accelerated performance review at 6 months, or an additional week of PTO to align the package with my seniority?" 
+    },
+    { 
+        label: "The 'Competing Offer' Closer", 
+        context: "Using external leverage to finalize a decision on your top choice.",
+        script: "I’ve just received another offer that is very competitive regarding the base salary. However, [Company] remains my first choice. If you can get the base to $[Target], I’m prepared to sign the offer today and withdraw from the other process immediately." 
+    }
 ];
 
 const outreachPhases = [
@@ -72,25 +84,25 @@ const outreachPhases = [
         id: 'p1', 
         title: "Phase 1: The 'Soft' Curiosity", 
         goal: "LOW STAKES ENGAGEMENT", 
-        script: "Subject: Insight on [Company Name] growth\n\nHi [Name], I've been following [Company]'s recent move into [Industry Sector]. As someone pivoting from a decade in public-sector program management, I'm curious about how your team handles [Specific Challenge]. Would you be open to a 5-minute email exchange or a quick coffee?" 
+        script: "Subject: Question from a fellow [Industry Sector] lead\n\nHi [Name], I've been closely following how [Company] is scaling its [Department]. As I transition my decade of experience in public sector curriculum management toward the private sector, I'm curious: what is the one 'unwritten' skill your team values most? No need for a long reply—just looking for a professional pulse-check." 
     },
     { 
         id: 'p2', 
         title: "Phase 2: The Value Exchange", 
         goal: "OFFER A PERSPECTIVE", 
-        script: "Hi [Name], I noticed you mentioned [Challenge] in our last chat. I actually just finished a brief audit of [Related Topic] and thought this framework might be useful for your team. Happy to discuss if it resonates!" 
+        script: "Hi [Name], following up on our exchange—I actually just drafted a brief analysis on [Relevant Topic] that addresses that 'unwritten' skill we discussed. I thought your team might find the public-to-private perspective useful. Here’s the link (no gates). Hope it helps!" 
     },
     { 
         id: 'p3', 
         title: "Phase 3: The Request for Sponsorship", 
-        goal: "THE 15-MINUTE CALL", 
-        script: "Hi [Name], I'm currently architecting my transition into [Specific Private Sector Role]. Given your experience, I'd value your 'internal' lens on whether my background in [Skill] translates well to your current roadmap. Do you have 15 minutes next Tuesday?" 
+        goal: "THE 15-MINUTE VIRTUAL COFFEE", 
+        script: "Hi [Name], your insights have been instrumental in how I'm framing my transition. I'm currently architecting my move into [Specific Role] and would value 15 minutes of your time to ask 3 specific questions about the roadmap at [Company]. I promise to be brief. Does next Thursday work?" 
     },
     { 
         id: 'p4', 
         title: "Phase 4: The Closing Circle", 
-        goal: "REFERRAL & GRATITUDE", 
-        script: "Thank you for the insight today, [Name]. Based on our talk, it sounds like [Department] is the place to be. If you're comfortable, I'd love to stay on your radar for any upcoming 'Stealth' roles that might fit this profile." 
+        goal: "THE STEALTH REFERRAL", 
+        script: "Thank you for the talk, [Name]. Based on our discussion, it's clear my background in [Skill] would solve a few of the bottlenecks we discussed. If you're comfortable, I'd love to stay on your radar for any upcoming roles—even those not yet public. I've attached my Horizon-formatted resume for your records." 
     }
 ];
 
@@ -99,23 +111,12 @@ const Contact = () => {
   const [openPhaseId, setOpenPhaseId] = useState(null);
 
   return (
-    <div className="max-w-6xl mx-auto pb-24 px-4 animate-in fade-in duration-500">
-      
-      {/* 1. PAGE TITLE & INTRO SECTION */}
+    <div className="max-w-6xl mx-auto pb-24 px-4">
       <div className="mb-16 text-center">
         <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-400 mb-4">The Library Archives</h2>
-        <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6 text-center">Provisions for the Path</h1>
-        <p className="max-w-2xl mx-auto text-zinc-400 text-sm font-light italic leading-relaxed text-center">
-          Tactical tools designed to help Hearth & Horizon members translate public-sector skills into private-sector impact.
-        </p>
+        <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6">Provisions for the Path</h1>
       </div>
 
-      <div className="flex items-center gap-4 mb-10">
-        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400/80">Active Provisions</h3>
-        <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
-      </div>
-
-      {/* 2. RESOURCE CARDS GRID */}
       <div className="grid grid-cols-1 gap-6 mb-20">
         {trailKitProvisions.map((tool) => {
           const isOpen = expandedCard === tool.id;
@@ -126,13 +127,13 @@ const Contact = () => {
                   if (tool.isAccordion) setExpandedCard(isOpen ? null : tool.id);
                   else if (tool.url) window.open(tool.url, '_blank');
                 }}
-                className={`relative bg-[#110E16] border p-8 transition-all duration-300 overflow-hidden shadow-xl ${
-                  isOpen ? 'rounded-t-[2.5rem] border-teal-500/30 bg-teal-500/[0.02]' : 'rounded-[2.5rem] border-zinc-800/50 hover:border-teal-500/30'
+                className={`relative bg-[#110E16] border p-8 transition-all duration-300 ${
+                  isOpen ? 'rounded-t-[2.5rem] border-teal-500/30' : 'rounded-[2.5rem] border-zinc-800/50 hover:border-teal-500/30'
                 } cursor-pointer`}
               >
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
                   <div className="flex items-center gap-6">
-                    <div className="p-4 rounded-2xl bg-white/5 border border-white/5 group-hover:bg-teal-500/10 transition-colors">
+                    <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
                       {tool.icon}
                     </div>
                     <div>
@@ -152,72 +153,88 @@ const Contact = () => {
 
               {isOpen && (
                 <div className="bg-[#110E16]/50 border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4">
-                  
-                  {/* LEXICON SUB-CONTENT */}
+                  {/* LEXICON SECTION */}
                   {tool.id === 'verbs' && (
-                    <div className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {powerVerbs.map((v, i) => (
                             <div key={i} className="bg-black/40 border border-white/5 p-4 rounded-xl">
-                            <div className="text-[10px] text-zinc-600 line-through uppercase mb-1">{v.legacy}</div>
-                            <div className="text-lg font-serif italic text-teal-400">{v.horizon}</div>
-                            <p className="text-[10px] text-zinc-500 italic mt-1">{v.use}</p>
+                                <div className="text-[10px] text-zinc-600 line-through uppercase mb-1">{v.legacy}</div>
+                                <div className="text-lg font-serif italic text-teal-400">{v.horizon}</div>
+                                <p className="text-[10px] text-zinc-500 italic mt-1">{v.use}</p>
                             </div>
                         ))}
-                        </div>
-                        <button className="w-full py-4 border border-dashed border-zinc-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 hover:border-teal-400/30 transition-all">
-                            Open Full List (50+ Verbs)
-                        </button>
                     </div>
                   )}
 
-                  {/* MARKET PRIMER / WORKSHEET SUB-CONTENT */}
+                  {/* MARKET PRIMER - RESTORED WORKSHEET PDF */}
                   {tool.id === 'market' && (
-                    <div className="bg-teal-500/5 border border-teal-500/20 p-8 rounded-[2rem]">
-                        <div className="flex items-start justify-between gap-6">
-                            <div>
-                                <h4 className="text-[10px] font-black uppercase tracking-widest text-teal-400 mb-2">Horizon Workshop</h4>
-                                <h5 className="text-2xl font-serif italic text-white mb-4">Auditing Your Functional Legacy</h5>
-                                <p className="text-xs text-zinc-400 leading-relaxed mb-6 max-w-lg">
-                                    Use this worksheet to identify which 20% of your current duties generate 80% of your market value.
-                                </p>
-                                <button 
-                                    onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit", "_blank")}
-                                    className="bg-teal-500 text-black px-8 py-3 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-white transition-colors"
-                                >
-                                    Launch Strategy
-                                </button>
+                    <div className="space-y-6">
+                        <div className="bg-teal-500/5 border border-teal-500/20 p-8 rounded-[2rem]">
+                            <div className="flex items-start justify-between gap-6">
+                                <div>
+                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-teal-400 mb-2">Horizon Workshop</h4>
+                                    <h5 className="text-2xl font-serif italic text-white mb-4">Auditing Your Functional Legacy</h5>
+                                    <p className="text-xs text-zinc-400 leading-relaxed mb-6 max-w-lg">
+                                        Use this worksheet to identify which 20% of your current duties generate 80% of your market value.
+                                    </p>
+                                    <div className="flex flex-col sm:flex-row gap-4">
+                                        <button 
+                                            onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit", "_blank")}
+                                            className="bg-teal-500 text-black px-8 py-3 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-white transition-colors"
+                                        >
+                                            Launch Slide Deck
+                                        </button>
+                                        <button className="flex items-center justify-center gap-2 border border-teal-500/30 px-8 py-3 rounded-lg text-[10px] font-black uppercase tracking-widest text-teal-400 hover:bg-teal-500/10 transition-colors">
+                                            <FileDown size={14} /> Download PDF Worksheet
+                                        </button>
+                                    </div>
+                                </div>
+                                <Compass className="text-teal-500/20 hidden md:block" size={80} />
                             </div>
-                            <Compass className="text-teal-500/20 hidden md:block" size={80} />
                         </div>
                     </div>
                   )}
 
-                  {/* SALARY SCRIPTS SUB-CONTENT */}
+                  {/* BEEFED UP NEGOTIATION SCRIPTS */}
                   {tool.id === 'scripts' && (
                     <div className="space-y-4">
                         {salaryScripts.map((s, i) => (
                             <div key={i} className="bg-black/40 border border-white/5 p-5 rounded-xl">
-                                <h4 className="text-[9px] font-black uppercase tracking-widest text-teal-400 mb-3">{s.label}</h4>
-                                <p className="font-mono text-[11px] text-zinc-300 leading-relaxed italic">"{s.script}"</p>
+                                <div className="flex items-center gap-2 mb-3">
+                                    <DollarSign size={12} className="text-teal-400" />
+                                    <h4 className="text-[9px] font-black uppercase tracking-widest text-white">{s.label}</h4>
+                                </div>
+                                <p className="text-[10px] text-zinc-500 italic mb-3">{s.context}</p>
+                                <div className="p-4 bg-black/60 rounded-lg border border-white/5 font-mono text-[11px] text-zinc-300 leading-relaxed italic">
+                                    "{s.script}"
+                                </div>
                             </div>
                         ))}
                     </div>
                   )}
 
-                  {/* OUTREACH SUB-CONTENT */}
+                  {/* BEEFED UP OUTREACH SEQUENCE */}
                   {tool.id === 'outreach' && (
                     <div className="space-y-4">
                         {outreachPhases.map((phase) => (
                             <div key={phase.id} className="bg-black/40 border border-white/5 rounded-2xl overflow-hidden">
-                                <button onClick={() => setOpenPhaseId(openPhaseId === phase.id ? null : phase.id)} className="w-full p-5 flex items-center justify-between text-left hover:bg-white/5 transition-colors">
+                                <button 
+                                    onClick={() => setOpenPhaseId(openPhaseId === phase.id ? null : phase.id)}
+                                    className="w-full p-5 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
+                                >
                                     <div className="flex flex-col">
                                         <span className="text-[10px] font-black uppercase tracking-widest text-white">{phase.title}</span>
                                         <span className="text-[9px] text-zinc-500 uppercase font-bold tracking-tighter mt-1">{phase.goal}</span>
                                     </div>
                                     {openPhaseId === phase.id ? <ChevronUp size={14} className="text-teal-400" /> : <ChevronDown size={14} />}
                                 </button>
-                                {openPhaseId === phase.id && <div className="p-6 pt-0 border-t border-white/5 bg-black/20 font-mono text-[11px] text-zinc-300 italic whitespace-pre-wrap leading-relaxed">{phase.script}</div>}
+                                {openPhaseId === phase.id && (
+                                    <div className="p-6 pt-0 border-t border-white/5 bg-black/20">
+                                        <div className="p-4 bg-black/40 rounded-xl mt-4 font-mono text-[11px] text-zinc-300 italic whitespace-pre-wrap leading-relaxed border border-white/5">
+                                            {phase.script}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -228,20 +245,6 @@ const Contact = () => {
           );
         })}
       </div>
-
-      {/* 3. PERSISTENT VOLUME TOGGLE */}
-      <div className="mt-12 flex flex-col items-center gap-6">
-        <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600">Navigate the Archives</h4>
-        <div className="flex p-1.5 bg-[#110E16] border border-zinc-800/50 rounded-full shadow-2xl">
-          <button className="px-10 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all text-zinc-500 hover:text-white">
-            Volume I: Basecamp
-          </button>
-          <button className="px-10 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all bg-teal-500 text-black shadow-lg shadow-teal-500/20">
-            Volume II: Trail Kit
-          </button>
-        </div>
-      </div>
-
     </div>
   );
 };
