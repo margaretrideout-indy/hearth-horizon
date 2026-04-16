@@ -64,7 +64,7 @@ const powerVerbs = [
 const salaryScripts = [
     { 
         label: "The 'Anchor' Avoidance", 
-        context: "When a recruiter asks for your current salary (which is often lower than private market).",
+        context: "When a recruiter asks for your current salary (often lower than private market).",
         script: "I'm looking for a total compensation package that reflects the current market value for this level of responsibility in Canada. Given my 13 years of expertise in curriculum architecture and project leadership, I’m focusing on roles in the $[X] to $[Y] range. Does that align with your budget for this position?" 
     },
     { 
@@ -112,11 +112,13 @@ const Contact = () => {
 
   return (
     <div className="max-w-6xl mx-auto pb-24 px-4">
+      {/* HEADER SECTION */}
       <div className="mb-16 text-center">
-        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-400 mb-4">The Library Archives</h2>
-        <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6">Provisions for the Path</h1>
+        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-400 mb-4 text-center">The Library Archives</h2>
+        <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6 text-center">Provisions for the Path</h1>
       </div>
 
+      {/* PROVISIONS GRID */}
       <div className="grid grid-cols-1 gap-6 mb-20">
         {trailKitProvisions.map((tool) => {
           const isOpen = expandedCard === tool.id;
@@ -153,20 +155,26 @@ const Contact = () => {
 
               {isOpen && (
                 <div className="bg-[#110E16]/50 border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4">
+                  
                   {/* LEXICON SECTION */}
                   {tool.id === 'verbs' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {powerVerbs.map((v, i) => (
-                            <div key={i} className="bg-black/40 border border-white/5 p-4 rounded-xl">
-                                <div className="text-[10px] text-zinc-600 line-through uppercase mb-1">{v.legacy}</div>
-                                <div className="text-lg font-serif italic text-teal-400">{v.horizon}</div>
-                                <p className="text-[10px] text-zinc-500 italic mt-1">{v.use}</p>
-                            </div>
-                        ))}
+                    <div className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {powerVerbs.map((v, i) => (
+                                <div key={i} className="bg-black/40 border border-white/5 p-4 rounded-xl">
+                                    <div className="text-[10px] text-zinc-600 line-through uppercase mb-1">{v.legacy}</div>
+                                    <div className="text-lg font-serif italic text-teal-400">{v.horizon}</div>
+                                    <p className="text-[10px] text-zinc-500 italic mt-1">{v.use}</p>
+                                </div>
+                            ))}
+                        </div>
+                        <button className="w-full py-4 border border-dashed border-zinc-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 hover:border-teal-400/30 transition-all">
+                            View Full List (50+ Verbs)
+                        </button>
                     </div>
                   )}
 
-                  {/* MARKET PRIMER - RESTORED WORKSHEET PDF */}
+                  {/* MARKET PRIMER */}
                   {tool.id === 'market' && (
                     <div className="space-y-6">
                         <div className="bg-teal-500/5 border border-teal-500/20 p-8 rounded-[2rem]">
@@ -184,7 +192,10 @@ const Contact = () => {
                                         >
                                             Launch Slide Deck
                                         </button>
-                                        <button className="flex items-center justify-center gap-2 border border-teal-500/30 px-8 py-3 rounded-lg text-[10px] font-black uppercase tracking-widest text-teal-400 hover:bg-teal-500/10 transition-colors">
+                                        <button 
+                                            onClick={() => window.open("https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link", "_blank")}
+                                            className="flex items-center justify-center gap-2 border border-teal-500/30 px-8 py-3 rounded-lg text-[10px] font-black uppercase tracking-widest text-teal-400 hover:bg-teal-500/10 transition-colors"
+                                        >
                                             <FileDown size={14} /> Download PDF Worksheet
                                         </button>
                                     </div>
@@ -195,7 +206,7 @@ const Contact = () => {
                     </div>
                   )}
 
-                  {/* BEEFED UP NEGOTIATION SCRIPTS */}
+                  {/* NEGOTIATION SCRIPTS */}
                   {tool.id === 'scripts' && (
                     <div className="space-y-4">
                         {salaryScripts.map((s, i) => (
@@ -213,7 +224,7 @@ const Contact = () => {
                     </div>
                   )}
 
-                  {/* BEEFED UP OUTREACH SEQUENCE */}
+                  {/* OUTREACH SEQUENCE */}
                   {tool.id === 'outreach' && (
                     <div className="space-y-4">
                         {outreachPhases.map((phase) => (
@@ -245,6 +256,20 @@ const Contact = () => {
           );
         })}
       </div>
+
+      {/* PERSISTENT VOLUME TOGGLE */}
+      <div className="mt-12 flex flex-col items-center gap-6">
+        <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600">Navigate the Archives</h4>
+        <div className="flex p-1.5 bg-[#110E16] border border-zinc-800/50 rounded-full shadow-2xl">
+          <button className="px-10 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all text-zinc-500 hover:text-white">
+            Volume I: Basecamp
+          </button>
+          <button className="px-10 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all bg-teal-500 text-black shadow-lg shadow-teal-500/20">
+            Volume II: Trail Kit
+          </button>
+        </div>
+      </div>
+
     </div>
   );
 };
