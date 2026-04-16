@@ -256,7 +256,7 @@ const GroveTiers = ({ vault, onSync }) => {
                 </div>
 
                 <p className="mt-12 text-zinc-500 text-[11px] italic font-light max-w-md mx-auto leading-relaxed">
-                  Every contribution to the Registry directly funds scholarship seats for those navigating deep transitions.
+                  Gifts to the Registry fund the future of this platform. Your support helps us build better tools for those navigating the climb.
                 </p>
                 
                 <button 
