@@ -164,10 +164,11 @@ const Library = ({ vault, isAdmin }) => {
                    <button onClick={() => navigate('/upgrade')} className="px-8 py-4 bg-purple-500 text-white rounded-2xl font-black uppercase text-[10px] tracking-widest">Upgrade to Steward</button>
                 </div>
              )}
+             {/* Note: Injected currentVolume here to ensure Contact.jsx (Provisions) stays in sync */}
              <Provisions 
                vault={vault} 
                isAdmin={isAdmin} 
-               onNavigate={(target) => setCurrentVolume(target === 'library' ? 1 : 2)} 
+               currentVolume={currentVolume}
              />
           </div>
         )}
