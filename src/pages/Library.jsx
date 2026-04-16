@@ -91,6 +91,7 @@ const Library = ({ vault, isAdmin }) => {
           </div>
         </header>
 
+        {/* VOLUME CONTENT AREA */}
         {currentVolume === 1 ? (
           <div className="animate-in fade-in duration-700">
             <section className="mb-16">
@@ -110,7 +111,7 @@ const Library = ({ vault, isAdmin }) => {
                 <div className="bg-[#110E16] border border-zinc-800/50 p-8 rounded-[2.5rem] hover:border-purple-500/30 transition-all flex flex-col shadow-xl">
                   <Headphones className="w-8 h-8 text-purple-400 mb-6" />
                   <h4 className="text-lg text-white font-serif font-black italic mb-3">Your Inner Advocate</h4>
-                  <p className="text-[11px] text-zinc-400 italic mb-8 font-light leading-relaxed italic">Shifting your internal narrative during professional upheaval.</p>
+                  <p className="text-[11px] text-zinc-400 italic mb-8 font-light leading-relaxed">Shifting your internal narrative during professional upheaval.</p>
                   <a href="https://podcasts.apple.com/ca/podcast/your-inner-advocate/id1722984987" target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center w-full h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-purple-500/5 text-purple-400 border border-purple-500/20 hover:bg-purple-500 hover:text-black">
                     LISTEN TO PODCAST <ExternalLink className="ml-2 w-3 h-3" />
                   </a>
@@ -118,7 +119,7 @@ const Library = ({ vault, isAdmin }) => {
                 <div className="bg-[#110E16] border border-zinc-800/50 p-8 rounded-[2.5rem] hover:border-purple-500/30 transition-all flex flex-col shadow-xl">
                   <Phone className="w-8 h-8 text-purple-400 mb-6" />
                   <h4 className="text-lg text-white font-serif font-black italic mb-3">Crisis Support</h4>
-                  <p className="text-[11px] text-zinc-400 italic mb-8 font-light leading-relaxed italic">Immediate, confidential text-based support whenever you need it.</p>
+                  <p className="text-[11px] text-zinc-400 italic mb-8 font-light leading-relaxed">Immediate, confidential text-based support whenever you need it.</p>
                   <div className="mt-auto p-4 rounded-xl bg-black/40 border border-white/5 text-center">
                     <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 block mb-2">Text 686868</span>
                     <p className="text-[9px] text-purple-400 font-bold tracking-widest uppercase">24/7 Availability</p>
@@ -137,12 +138,12 @@ const Library = ({ vault, isAdmin }) => {
                   <button onClick={() => setStudyTab('amazon')} className={`w-full p-6 rounded-2xl border text-left transition-all ${studyTab === 'amazon' ? 'bg-teal-500/10 border-teal-500/50 shadow-lg' : 'bg-[#110E16] border-zinc-800 opacity-60'}`}>
                     <Package className={`w-5 h-5 mb-4 ${studyTab === 'amazon' ? 'text-teal-400' : 'text-zinc-600'}`} />
                     <span className="text-[10px] font-black uppercase tracking-widest text-white block">Amazon Provisions</span>
-                    <span className="text-[9px] text-zinc-500 italic italic">Workspace, Tech & Sanctuary.</span>
+                    <span className="text-[9px] text-zinc-500 italic">Workspace, Tech & Sanctuary.</span>
                   </button>
                   <button onClick={() => setStudyTab('indigo')} className={`w-full p-6 rounded-2xl border text-left transition-all ${studyTab === 'indigo' ? 'bg-teal-500/10 border-teal-500/50 shadow-lg' : 'bg-[#110E16] border-zinc-800 opacity-60'}`}>
                     <Book className={`w-5 h-5 mb-4 ${studyTab === 'indigo' ? 'text-teal-400' : 'text-zinc-600'}`} />
                     <span className="text-[10px] font-black uppercase tracking-widest text-white block">Indigo Literature</span>
-                    <span className="text-[9px] text-zinc-500 italic italic">Identity & Resilience texts.</span>
+                    <span className="text-[9px] text-zinc-500 italic">Identity & Resilience texts.</span>
                   </button>
                 </div>
                 <div className="lg:col-span-3 bg-[#110E16] border border-zinc-800/50 p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden">
@@ -150,8 +151,8 @@ const Library = ({ vault, isAdmin }) => {
                       {studyTab === 'amazon' ? (
                         <>
                           <h4 className="text-xl text-white font-serif font-black italic mb-2">The Wayfarer’s Provisions</h4>
-                          <p className="text-[9px] text-zinc-600 font-black uppercase tracking-tighter mb-6 italic italic">As an Amazon Associate I earn from qualifying purchases.</p>
-                          <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 max-w-xl italic italic">A curated ecosystem of digital, analog, and ergonomic tools selected for the professional migration.</p>
+                          <p className="text-[9px] text-zinc-600 font-black uppercase tracking-tighter mb-6 italic">As an Amazon Associate I earn from qualifying purchases.</p>
+                          <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 max-w-xl italic">A curated ecosystem of digital, analog, and ergonomic tools selected for the professional migration.</p>
                           <a href={AMZ_PROVISIONS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-teal-500 text-black hover:bg-teal-400">
                             BROWSE THE COLLECTIONS <ExternalLink className="ml-2 w-3 h-3" />
                           </a>
@@ -159,7 +160,7 @@ const Library = ({ vault, isAdmin }) => {
                       ) : (
                         <>
                           <h4 className="text-xl text-white font-serif font-black italic mb-6">Foundational Reading</h4>
-                          <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 max-w-xl italic italic">Pivotal literature on career migration and resilience. Mental provisions for your journey.</p>
+                          <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 max-w-xl italic">Pivotal literature on career migration and resilience. Mental provisions for your journey.</p>
                           <button disabled className="inline-flex items-center justify-center px-10 h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-zinc-800 text-zinc-500 border border-zinc-700 cursor-not-allowed">
                             COLLECTION ARRIVING SOON <Lock className="ml-2 w-3 h-3" />
                           </button>
@@ -177,9 +178,9 @@ const Library = ({ vault, isAdmin }) => {
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="bg-gradient-to-br from-[#16121D] to-[#0A080D] border border-teal-500/30 p-8 rounded-[2.5rem] flex flex-col relative overflow-hidden shadow-2xl">
-                  <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 italic mb-6 w-fit italic">Foundational Gift</Badge>
+                  <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 mb-6 w-fit italic">Foundational Gift</Badge>
                   <h4 className="text-xl text-white font-serif font-black italic mb-4">Master Strategy Deck</h4>
-                  <p className="text-[11px] text-zinc-300 font-light italic italic leading-relaxed mb-10">The primary map for your transition and resignation protocol.</p>
+                  <p className="text-[11px] text-zinc-300 font-light italic leading-relaxed mb-10">The primary map for your transition and resignation protocol.</p>
                   <button onClick={() => window.open(STRATEGY_DECK_URL, '_blank')} className="mt-auto h-14 bg-teal-500 hover:bg-teal-400 text-[#0A080D] font-black rounded-xl flex items-center justify-center gap-3 transition-all uppercase tracking-[0.15em] text-[9px]">
                     Open Blueprint <ExternalLink size={14} />
                   </button>
@@ -192,7 +193,7 @@ const Library = ({ vault, isAdmin }) => {
                       <button onClick={() => setModalType('hearthkeeper')} className="px-6 py-3 bg-teal-500/10 border border-teal-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-teal-400">View Requirements</button>
                     </div>
                   )}
-                  <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 mb-6 w-fit italic uppercase">Tactical Provisions</Badge>
+                  <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 mb-6 w-fit uppercase">Tactical Provisions</Badge>
                   <h4 className="text-xl text-white font-serif font-black italic mb-4">Hearthkeeper Tools</h4>
                   <div className={`flex flex-col gap-3 p-4 rounded-xl border transition-all ${activeTool === 'ledger' ? 'bg-teal-500/10 border-teal-500/50' : 'bg-black/40 border-zinc-800'}`}>
                     <div onClick={() => setActiveTool('ledger')} className="flex items-center justify-between cursor-pointer">
@@ -216,7 +217,7 @@ const Library = ({ vault, isAdmin }) => {
                       <button onClick={() => setModalType('steward')} className="px-6 py-3 bg-purple-500/10 border border-purple-500/20 rounded-xl text-[8px] font-black uppercase tracking-widest text-purple-400">View Requirements</button>
                     </div>
                   )}
-                  <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-6 w-fit italic uppercase">Strategic Intelligence</Badge>
+                  <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-6 w-fit uppercase">Strategic Intelligence</Badge>
                   <h4 className="text-xl text-white font-serif font-black italic mb-4">Steward Assets</h4>
                 </div>
               </div>
@@ -224,17 +225,25 @@ const Library = ({ vault, isAdmin }) => {
           </div>
         ) : (
           <div className="animate-in fade-in slide-in-from-right-4 duration-700 pb-20">
-            {/* This displays the component from Contact.jsx. 
-                Ensure Contact.jsx has 'export default Provisions;' at the bottom.
-            */}
             <Provisions /> 
           </div>
         )}
 
+        {/* PERSISTENT VOLUME NAVIGATION TOGGLE (Shows on both pages) */}
         <div className="mt-12 pt-12 border-t border-white/5 flex flex-col items-center gap-8">
           <div className="flex items-center gap-3 p-1.5 bg-[#16121D] rounded-2xl border border-white/5 shadow-2xl">
-            <button onClick={() => { setCurrentVolume(1); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 1 ? 'bg-teal-500 text-black shadow-lg' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}>Volume I</button>
-            <button onClick={() => { setCurrentVolume(2); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}>Volume II</button>
+            <button 
+              onClick={() => { setCurrentVolume(1); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
+              className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 1 ? 'bg-teal-500 text-black shadow-lg' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
+            >
+              Volume I
+            </button>
+            <button 
+              onClick={() => { setCurrentVolume(2); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
+              className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg' : 'text-zinc-500 hover:text-white hover:bg-white/5'}`}
+            >
+              Volume II
+            </button>
           </div>
         </div>
 
