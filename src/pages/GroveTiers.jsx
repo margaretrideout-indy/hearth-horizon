@@ -18,9 +18,6 @@ const GroveTiers = ({ vault, onSync }) => {
   const [contactStatus, setContactStatus] = useState(null);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
-  // Updated Luminary Registry
-  const luminaries = ["Matthew"]; 
-
   const hasSession = vault?.isAligned || !!localStorage.getItem('base44_auth_session');
 
   const handleMemberLogin = () => {
@@ -157,7 +154,6 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </header>
 
-        {/* PROVISIONS SECTION */}
         <section className="mb-24 md:mb-48">
           <div className="text-center mb-16">
             <h2 className="text-white font-serif italic text-4xl mb-4">Provisions from the Hearth</h2>
@@ -182,7 +178,6 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        {/* TIERS SECTION */}
         <section className="mb-24">
           <div className="text-center mb-16 space-y-4">
              <h2 className="text-white font-serif italic text-4xl">Choose Your Path</h2>
@@ -212,59 +207,51 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        {/* LUMINARY REGISTRY */}
-        {/* LUMINARY REGISTRY (DONATOR'S WALL) - REFINED */}
-<section className="mb-24 md:mb-48 max-w-4xl mx-auto">
-  <div className="relative p-1 bg-gradient-to-r from-teal-500/20 via-purple-500/20 to-teal-500/20 rounded-[3rem]">
-    <div className="bg-[#0A080D] rounded-[2.9rem] px-8 py-12 md:p-16 text-center relative overflow-hidden">
-      {/* Twinkling background element */}
-      <motion.div 
-        animate={{ opacity: [0.2, 0.5, 0.2] }} 
-        transition={{ duration: 3, repeat: Infinity }}
-        className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,184,166,0.05),transparent_70%)] pointer-events-none" 
-      />
-      
-      <div className="relative z-10">
-        {/* Registry Header */}
-        <div className="flex items-center justify-center gap-3 mb-6">
-          <Star className="text-teal-400 fill-teal-400/20" size={16} />
-          <h2 className="text-white font-serif italic text-3xl">Luminary Registry</h2>
-          <Star className="text-teal-400 fill-teal-400/20" size={16} />
-        </div>
-        
-        {/* Distinguished Founder's Gratitude Note */}
-        <div className="mb-16 md:mb-20 flex flex-col items-center">
-          <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 italic mb-4 w-fit flex gap-2 items-center">
-            <Star size={10} className="fill-teal-400"/> FOUNDER’S GRATITUDE
-          </Badge>
-          <p className="text-slate-400 text-sm md:text-base italic font-light max-w-lg leading-relaxed border-l border-white/10 pl-5 py-2">
-            "To Matthew—thank you for holding the map while I figured out which way my horizon was shifting, and for believing in this dream before the first stone was even laid."
-          </p>
-        </div>
+        <section className="mb-24 md:mb-48 max-w-4xl mx-auto">
+          <div className="relative p-1 bg-gradient-to-r from-teal-500/20 via-purple-500/20 to-teal-500/20 rounded-[3rem]">
+            <div className="bg-[#0A080D] rounded-[2.9rem] px-8 py-12 md:p-16 text-center relative overflow-hidden">
+              <motion.div 
+                animate={{ opacity: [0.2, 0.5, 0.2] }} 
+                transition={{ duration: 3, repeat: Infinity }}
+                className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,184,166,0.05),transparent_70%)] pointer-events-none" 
+              />
+              
+              <div className="relative z-10">
+                <div className="flex items-center justify-center gap-3 mb-6">
+                  <Star className="text-teal-400 fill-teal-400/20" size={16} />
+                  <h2 className="text-white font-serif italic text-3xl">Luminary Registry</h2>
+                  <Star className="text-teal-400 fill-teal-400/20" size={16} />
+                </div>
+                
+                <div className="mb-16 md:mb-20 flex flex-col items-center">
+                  <div className="px-3 py-1 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/20 italic mb-6 w-fit flex gap-2 items-center text-[10px] font-black uppercase tracking-widest">
+                    <Star size={10} className="fill-teal-400"/> Founder's Gratitude
+                  </div>
+                  <p className="text-slate-400 text-sm md:text-base italic font-light max-w-lg leading-relaxed border-l border-white/10 pl-5 py-2">
+                    "To Matthew—thank you for holding the map while I figured out which way my horizon was shifting, and for believing in this sanctuary before the first stone was even laid."
+                  </p>
+                </div>
 
-        {/* Clear Development Fund Description */}
-        <div className="mt-16 pt-12 border-t border-white/5 space-y-4 text-center max-w-xl mx-auto mb-10">
-          <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Fund Description</h4>
-          <p className="text-xs text-zinc-400 leading-relaxed font-light italic">
-            Gifts to the Hearth directly fund the ongoing architectural development of the Hearth & Horizon platform. Your support helps us build better tools for those navigating the climb.
-          </p>
-        </div>
+                <div className="mt-16 pt-12 border-t border-white/5 space-y-4 text-center max-w-xl mx-auto mb-10">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Luminary Registry Fund</h4>
+                  <p className="text-xs text-zinc-400 leading-relaxed font-light italic">
+                    Contributions to the Registry are directly reinvested into the growth of the Grove—fueling new tool development, app optimizations, and the expansion of our resource archives.
+                  </p>
+                </div>
 
-        {/* Main CTA Button - Matching Plan Style */}
-        <div className="flex justify-center">
-            <button 
-              onClick={() => window.location.href = LINK_DONATION}
-              className="px-10 py-4 bg-[#39D7B8] text-[#0A080D] font-black rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-xl shadow-teal-500/20 hover:scale-105"
-            >
-                INVEST IN THE HEARTH
-            </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+                <div className="flex justify-center">
+                    <button 
+                      onClick={() => window.location.href = LINK_DONATION}
+                      className="px-10 py-4 bg-[#39D7B8] text-[#0A080D] rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-xl shadow-teal-500/20 hover:scale-105"
+                    >
+                        Invest in the Registry
+                    </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        {/* CONTACT SECTION */}
         <section className="mb-24 md:mb-32 max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-white font-serif italic text-4xl mb-4">Questions?</h2>
@@ -301,7 +288,6 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        {/* MOBILE APP SECTION */}
         <section className="max-w-4xl mx-auto pb-24 selection:bg-teal-500/30">
           <div className="bg-[#110E16]/40 border border-zinc-800/50 rounded-[2.5rem] p-10 md:p-12 shadow-xl overflow-hidden relative">
             <div className="absolute top-0 right-0 p-8 text-teal-500/5">
