@@ -6,13 +6,13 @@ import {
   Compass, Layers, Search, Copy, Save, FileText, X,
   ChevronRight, Heart, Phone, Headphones
 } from 'lucide-react';
-import { libraryVolumeII } from './Contact';
 
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/preview";
 const IDENTITY_LEDGER_URL = "https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link";
 const AUTHORITY_WORKSHEET_URL = "https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link";
-const AMZ_WISHLIST_URL = "https://www.amazon.ca/hz/wishlist/ls/5VU3W7XP4CZD";
-const INDIGO_LIST_URL = "https://www.indigo.ca"; // Update this with your specific list later!
+const AMZ_PROVISIONS_URL = "https://www.amazon.ca/hz/wishlist/ls/2BZUUE2ZJL0EL?ref_=list_d_wl_lfu_nav_4";
+const INDIGO_COLLECTION_READY = false;
+const INDIGO_LIST_URL = "https://www.indigo.ca"; 
 
 const DICTIONARY_DATA = [
   { sector: "Education", old: "Classroom Management", root: "Operational Flow", new: "Agile Project Oversight" },
@@ -108,11 +108,6 @@ const Library = ({ vault, isAdmin }) => {
     return matchesSearch && matchesSector;
   });
 
-  const isResourceLocked = (itemTier) => {
-    const weights = { "Seedling": 1, "Hearthkeeper": 2, "Steward": 3 };
-    return weights[itemTier] > weights[userTier];
-  };
-
   return (
     <div className="min-h-screen bg-[#0A080D] text-zinc-300 p-4 sm:p-6 md:p-12 font-sans selection:bg-teal-500/30 overflow-x-hidden">
       <StandingModal isOpen={!!modalType} onClose={() => setModalType(null)} type={modalType} />
@@ -150,7 +145,6 @@ const Library = ({ vault, isAdmin }) => {
         {currentVolume === 1 ? (
           <div className="animate-in fade-in duration-700">
             
-            {/* THE SANCTUARY - Mental Health Resources */}
             <section className="mb-16">
               <div className="flex items-center gap-4 mb-8">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400/80 whitespace-nowrap">The Sanctuary</h3>
@@ -187,7 +181,6 @@ const Library = ({ vault, isAdmin }) => {
               </div>
             </section>
 
-            {/* THE STUDY - Curated Shopping Lists */}
             <section className="mb-16">
               <div className="flex items-center gap-4 mb-8">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/80 whitespace-nowrap">The Study</h3>
@@ -198,8 +191,8 @@ const Library = ({ vault, isAdmin }) => {
                 <div className="lg:col-span-1 space-y-3">
                   <button onClick={() => setStudyTab('amazon')} className={`w-full p-6 rounded-2xl border text-left transition-all ${studyTab === 'amazon' ? 'bg-teal-500/10 border-teal-500/50 shadow-lg' : 'bg-[#110E16] border-zinc-800 opacity-60'}`}>
                     <Package className={`w-5 h-5 mb-4 ${studyTab === 'amazon' ? 'text-teal-400' : 'text-zinc-600'}`} />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-white block">Amazon Essentials</span>
-                    <span className="text-[9px] text-zinc-500 italic">Workspace & Tech gear.</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white block">Amazon Provisions</span>
+                    <span className="text-[9px] text-zinc-500 italic">Workspace, Tech & Sanctuary.</span>
                   </button>
                   <button onClick={() => setStudyTab('indigo')} className={`w-full p-6 rounded-2xl border text-left transition-all ${studyTab === 'indigo' ? 'bg-teal-500/10 border-teal-500/50 shadow-lg' : 'bg-[#110E16] border-zinc-800 opacity-60'}`}>
                     <Book className={`w-5 h-5 mb-4 ${studyTab === 'indigo' ? 'text-teal-400' : 'text-zinc-600'}`} />
@@ -216,13 +209,13 @@ const Library = ({ vault, isAdmin }) => {
                    <div className="relative z-10">
                       {studyTab === 'amazon' ? (
                         <>
-                          <h4 className="text-xl text-white font-serif font-black italic mb-2">The Starter Kit</h4>
+                          <h4 className="text-xl text-white font-serif font-black italic mb-2">The Wayfarer’s Provisions</h4>
                           <p className="text-[9px] text-zinc-600 font-black uppercase tracking-tighter mb-6 italic">As an Amazon Associate I earn from qualifying purchases.</p>
                           <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 max-w-xl italic">
-                            A curated selection of ergonomic workspace essentials, grounding tech, and the physical tools needed to anchor your new home-office or mobile workstation.
+                            A curated ecosystem of digital, analog, and ergonomic tools. Whether you are building your Digital Hearth or seeking a Sanctuary for your workspace, these provisions are selected for the professional migration.
                           </p>
-                          <a href={AMZ_WISHLIST_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-teal-500 text-black hover:bg-teal-400">
-                            SHOP THE WISHLIST <ExternalLink className="ml-2 w-3 h-3" />
+                          <a href={AMZ_PROVISIONS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-teal-500 text-black hover:bg-teal-400">
+                            BROWSE THE COLLECTIONS <ExternalLink className="ml-2 w-3 h-3" />
                           </a>
                         </>
                       ) : (
@@ -231,9 +224,15 @@ const Library = ({ vault, isAdmin }) => {
                           <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 max-w-xl italic">
                             Pivotal literature on career migration, Indigenous perspectives on belonging, and the sociology of resilience. These texts are the "Mental Provisions" for your journey.
                           </p>
-                          <a href={INDIGO_LIST_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-teal-500 text-black hover:bg-teal-400">
-                            VIEW INDIGO COLLECTION <ExternalLink className="ml-2 w-3 h-3" />
-                          </a>
+                          {INDIGO_COLLECTION_READY ? (
+                            <a href={INDIGO_LIST_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-teal-500 text-black hover:bg-teal-400">
+                              VIEW INDIGO COLLECTION <ExternalLink className="ml-2 w-3 h-3" />
+                            </a>
+                          ) : (
+                            <button disabled className="inline-flex items-center justify-center px-10 h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-zinc-800 text-zinc-500 border border-zinc-700 cursor-not-allowed">
+                              COLLECTION ARRIVING SOON <Lock className="ml-2 w-3 h-3" />
+                            </button>
+                          )}
                         </>
                       )}
                    </div>
@@ -241,7 +240,6 @@ const Library = ({ vault, isAdmin }) => {
               </div>
             </section>
 
-            {/* THE CANOPY HUB - Strategic Assets */}
             <section className="mb-16">
               <div className="flex items-center gap-4 mb-8">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500 whitespace-nowrap">The Canopy Hub</h3>
@@ -289,7 +287,6 @@ const Library = ({ vault, isAdmin }) => {
                         </a>
                       </div>
                     </div>
-                    {/* ... other tools stay same ... */}
                   </div>
                 </div>
 
@@ -304,16 +301,13 @@ const Library = ({ vault, isAdmin }) => {
                   <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-6 w-fit italic tracking-tighter uppercase">Strategic Intelligence</Badge>
                   <h4 className="text-xl text-white font-serif font-black italic mb-4">Steward Assets</h4>
                   <div className="space-y-3 mt-4">
-                    {/* ... same as existing assets ... */}
                   </div>
                 </div>
               </div>
             </section>
           </div>
         ) : (
-          /* VOLUME II / PAGE 2 CODE ... existing archives ... */
           <div className="animate-in fade-in slide-in-from-right-4 duration-700 pb-20">
-            {/* Same as your existing Volume II section */}
           </div>
         )}
 
