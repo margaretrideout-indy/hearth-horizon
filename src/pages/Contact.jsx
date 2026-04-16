@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   FileText, MessageSquare, Map, ChevronDown, ChevronUp, Zap, ShieldCheck,
   Mail, ExternalLink, Save, Lock, Crown, Info, Clock, Landmark, Compass, Target,
-  FileDown
+  FileDown, ArrowLeft
 } from 'lucide-react';
 
 const trailKitProvisions = [
@@ -63,57 +63,58 @@ const trailKitProvisions = [
   }
 ];
 
+// ... (powerVerbs, marketComparison, negotiationScripts, outreachPhases arrays remain the same as previous)
 const powerVerbs = [
-  { legacy: "Taught", horizon: "Facilitated", use: "Standardized delivery for stakeholders." },
-  { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
-  { legacy: "Made", horizon: "Architected", use: "Building frameworks from the ground up." },
-  { legacy: "Managed", horizon: "Spearheaded", use: "Leading high-stakes initiatives." },
-  { legacy: "Talked to", horizon: "Consulted", use: "Providing expert advisory to cross-functional teams." },
-  { legacy: "Organized", horizon: "Orchestrated", use: "Handling complex, multi-layered logistics." },
-  { legacy: "Helper", horizon: "Enabler", use: "Removing friction for technical teams." },
-  { legacy: "Wrote", horizon: "Authored", use: "Producing high-impact documentation." },
-  { legacy: "Planned", horizon: "Strategized", use: "Aligning project milestones with business goals." },
-  { legacy: "Used", horizon: "Leveraged", use: "Utilizing internal assets to drive results." },
-  { legacy: "Fixed", horizon: "Remediated", use: "Identifying and resolving systemic bottlenecks." },
-  { legacy: "Checked", horizon: "Audited", use: "Ensuring compliance protocols." }
-];
-
-const marketComparison = [
-  { public: "The Pay Grid", private: "Total Compensation", how: "Negotiate for base + bonus + RRSP match." },
-  { public: "Collective Agreement", private: "Employment Standards", how: "Review your own contract for termination clauses." },
-  { public: "Tenure/Seniority", private: "Impact/ROI", how: "Focus on results achieved, not years in seat." },
-  { public: "Consensus-Driven", private: "Direct/Explicit", how: "Adopt concise, value-first communication styles." }
-];
-
-const negotiationScripts = [
-  { 
-      id: 'anchor', 
-      situation: "The Early Inquiry (The Anchor)", 
-      context: "A recruiter asks: 'What are your salary expectations?' before an offer is made.", 
-      script: "I'm looking for a total compensation package in the range of $[X] to $[Y]. However, my main priority is finding the right cultural fit, and I'm open to discussing the full range of benefits once we've determined I'm the right match." 
-  },
-  { 
-      id: 'pivot', 
-      situation: "The 'Experience' Pivot", 
-      context: "Addressing the 'transitioning' label to maintain seniority levels.", 
-      script: "While I am transitioning industries, I bring 13 years of high-stakes management. I'm looking for a base salary that reflects that seniority. Can we move the offer to $[Target]?" 
-  }
-];
-
-const outreachPhases = [
-  {
-      id: 'p1',
-      title: "Phase 1: The 'Soft' Curiosity",
-      goal: "Low stakes engagement. No ask, just visibility.",
-      script: "Subject: Insight on [Company Name]'s approach to [Topic]\n\nHi [Name], I've been following your team's work on [Project] and was struck by [Detail]. As someone from [Your Field], do you find that [Topic] is a major focus this quarter?"
-  },
-  {
-      id: 'p2',
-      title: "Phase 2: The Value Exchange",
-      goal: "Offer a perspective based on your 'Public-to-Private' flip.",
-      script: "Hi [Name], I actually just finished a project on [Related Topic] and thought this resource might be useful for your team's initiative. No response needed, just wanted to share!"
-  }
-];
+    { legacy: "Taught", horizon: "Facilitated", use: "Standardized delivery for stakeholders." },
+    { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
+    { legacy: "Made", horizon: "Architected", use: "Building frameworks from the ground up." },
+    { legacy: "Managed", horizon: "Spearheaded", use: "Leading high-stakes initiatives." },
+    { legacy: "Talked to", horizon: "Consulted", use: "Providing expert advisory to cross-functional teams." },
+    { legacy: "Organized", horizon: "Orchestrated", use: "Handling complex, multi-layered logistics." },
+    { legacy: "Helper", horizon: "Enabler", use: "Removing friction for technical teams." },
+    { legacy: "Wrote", horizon: "Authored", use: "Producing high-impact documentation." },
+    { legacy: "Planned", horizon: "Strategized", use: "Aligning project milestones with business goals." },
+    { legacy: "Used", horizon: "Leveraged", use: "Utilizing internal assets to drive results." },
+    { legacy: "Fixed", horizon: "Remediated", use: "Identifying and resolving systemic bottlenecks." },
+    { legacy: "Checked", horizon: "Audited", use: "Ensuring compliance protocols." }
+  ];
+  
+  const marketComparison = [
+    { public: "The Pay Grid", private: "Total Compensation", how: "Negotiate for base + bonus + RRSP match." },
+    { public: "Collective Agreement", private: "Employment Standards", how: "Review your own contract for termination clauses." },
+    { public: "Tenure/Seniority", private: "Impact/ROI", how: "Focus on results achieved, not years in seat." },
+    { public: "Consensus-Driven", private: "Direct/Explicit", how: "Adopt concise, value-first communication styles." }
+  ];
+  
+  const negotiationScripts = [
+    { 
+        id: 'anchor', 
+        situation: "The Early Inquiry (The Anchor)", 
+        context: "A recruiter asks: 'What are your salary expectations?' before an offer is made.", 
+        script: "I'm looking for a total compensation package in the range of $[X] to $[Y]. However, my main priority is finding the right cultural fit, and I'm open to discussing the full range of benefits once we've determined I'm the right match." 
+    },
+    { 
+        id: 'pivot', 
+        situation: "The 'Experience' Pivot", 
+        context: "Addressing the 'transitioning' label to maintain seniority levels.", 
+        script: "While I am transitioning industries, I bring 13 years of high-stakes management. I'm looking for a base salary that reflects that seniority. Can we move the offer to $[Target]?" 
+    }
+  ];
+  
+  const outreachPhases = [
+    {
+        id: 'p1',
+        title: "Phase 1: The 'Soft' Curiosity",
+        goal: "Low stakes engagement. No ask, just visibility.",
+        script: "Subject: Insight on [Company Name]'s approach to [Topic]\n\nHi [Name], I've been following your team's work on [Project] and was struck by [Detail]. As someone from [Your Field], do you find that [Topic] is a major focus for your team this quarter?"
+    },
+    {
+        id: 'p2',
+        title: "Phase 2: The Value Exchange",
+        goal: "Offer a perspective based on your 'Public-to-Private' flip.",
+        script: "Hi [Name], I actually just finished a project on [Related Topic] and thought this resource might be useful for your team's initiative. No response needed, just wanted to share!"
+    }
+  ];
 
 const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
   const [expandedCard, setExpandedCard] = useState(null);
@@ -139,24 +140,8 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
 
   return (
     <div className="max-w-6xl mx-auto pb-24 px-4 sm:px-6">
-      {/* VOLUME TOGGLE HEADER */}
-      <div className="flex flex-col items-center mb-16 space-y-6">
-        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-500 italic">Navigate the Archives</h2>
-        <div className="inline-flex p-1.5 bg-zinc-900/50 backdrop-blur-md rounded-[2rem] border border-white/5 shadow-2xl">
-          <button 
-            onClick={() => onNavigate('library')}
-            className="px-10 py-4 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest transition-all duration-300 text-zinc-500 hover:text-white"
-          >
-            Volume I: Basecamp
-          </button>
-          <button 
-            className="px-10 py-4 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest transition-all duration-300 bg-teal-500 text-black shadow-lg shadow-teal-500/20"
-          >
-            Volume II: Trail Kit
-          </button>
-        </div>
-      </div>
-
+      
+      {/* SECTION HEADER */}
       <section className="mb-16">
         <div className="flex items-center gap-4 mb-8">
           <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400/80">Active Provisions</h3>
@@ -188,6 +173,7 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
                   </div>
                 </div>
 
+                {/* ... Accordion Content (Market, Verbs, Scripts, Outreach) remains the same ... */}
                 {expandedCard === tool.id && tool.isAccordion && isAllowed && (
                   <div className="bg-[#110E16]/50 border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4 animate-in slide-in-from-top-4">
                     <div className="h-[1px] bg-white/5 mb-8 w-full" />
@@ -209,7 +195,6 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
                            </div>
                            <div className="absolute right-0 bottom-0 p-10 opacity-5 pointer-events-none"><Target size={200} className="text-teal-400" /></div>
                         </div>
-
                         <div className="grid grid-cols-1 gap-4">
                            <div className="bg-black/40 border border-white/5 p-8 rounded-[2rem]">
                               <h4 className="text-[10px] font-black uppercase text-zinc-500 tracking-widest mb-6 border-b border-white/5 pb-4">Market Comparison & Strategy</h4>
@@ -237,7 +222,6 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
                         </div>
                       </div>
                     )}
-
                     {tool.id === 'verbs' && (
                       <div className="space-y-8">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -252,7 +236,6 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
                         <button onClick={() => setShowAllVerbs(!showAllVerbs)} className="w-full p-6 border border-dashed border-white/10 rounded-2xl text-center hover:border-teal-500/30 transition-colors"><p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">{showAllVerbs ? "Close Archive" : "View Extended Lexicon"}</p></button>
                       </div>
                     )}
-
                     {tool.id === 'scripts' && (
                       <div className="space-y-4">
                         {negotiationScripts.map((item) => (
@@ -263,7 +246,6 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
                         ))}
                       </div>
                     )}
-
                     {tool.id === 'outreach' && (
                       <div className="space-y-4">
                           {outreachPhases.map((phase) => (
@@ -284,6 +266,29 @@ const Contact = ({ vault, isAdmin: propIsAdmin, onNavigate }) => {
           })}
         </div>
       </section>
+
+      {/* LOWER VOLUME TOGGLE (FOOTER) */}
+      <div className="mt-24 pt-12 border-t border-white/5 flex flex-col items-center space-y-8">
+        <div className="flex flex-col items-center space-y-4 text-center">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-500 italic">Navigate the Archives</h2>
+          <p className="text-xs text-zinc-600 italic font-light">Switch between foundational curriculum and active tools</p>
+        </div>
+
+        <div className="inline-flex p-1.5 bg-zinc-900/50 backdrop-blur-md rounded-[2.5rem] border border-white/5 shadow-2xl overflow-hidden">
+          <button 
+            onClick={() => onNavigate?.('library')}
+            className="group flex items-center gap-3 px-8 py-5 rounded-[2rem] text-[10px] font-black uppercase tracking-widest transition-all duration-300 text-zinc-500 hover:text-white hover:bg-white/5"
+          >
+            <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+            Volume I: Basecamp
+          </button>
+          <button 
+            className="px-8 py-5 rounded-[2rem] text-[10px] font-black uppercase tracking-widest transition-all duration-300 bg-teal-500 text-black shadow-xl shadow-teal-500/20"
+          >
+            Volume II: Trail Kit
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
