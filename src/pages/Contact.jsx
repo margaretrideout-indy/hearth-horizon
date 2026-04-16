@@ -56,14 +56,22 @@ const powerVerbs = [
     { legacy: "Taught", horizon: "Facilitated", use: "Standardized delivery for stakeholders." },
     { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
     { legacy: "Managed", horizon: "Spearheaded", use: "Leading high-stakes initiatives." },
-    { legacy: "Talked to", horizon: "Consulted", use: "Providing expert advisory to cross-functional teams." }
+    { legacy: "Talked to", horizon: "Consulted", use: "Providing expert advisory to cross-functional teams." },
+    { legacy: "Organized", horizon: "Orchestrated", use: "Handling complex, multi-layered logistics." },
+    { legacy: "Fixed", horizon: "Remediated", use: "Identifying and resolving systemic bottlenecks." }
+];
+
+const marketComparison = [
+    { public: "The Pay Grid", private: "Total Compensation", how: "Negotiate for base + bonus + RRSP match." },
+    { public: "Collective Agreement", private: "Employment Standards", how: "Review your own contract for termination clauses." },
+    { public: "Tenure/Seniority", private: "Impact/ROI", how: "Focus on results achieved, not years in seat." }
 ];
 
 const outreachPhases = [
-    { id: 'p1', title: "Phase 1: The 'Soft' Curiosity", goal: "Low stakes engagement.", script: "Subject: Insight on [Company Name]...\n\nHi [Name], I've been following your team's work..." },
-    { id: 'p2', title: "Phase 2: The Value Exchange", goal: "Offer a perspective.", script: "Hi [Name], I thought this resource might be useful..." },
-    { id: 'p3', title: "Phase 3: The Request for Sponsorship", goal: "15-minute call.", script: "Hi [Name], I'm currently architecting a transition..." },
-    { id: 'p4', title: "Phase 4: The Closing Circle", goal: "The 'Thank You' for referrals.", script: "Thank you for the insight today, [Name]..." }
+    { id: 'p1', title: "Phase 1: The 'Soft' Curiosity", goal: "LOW STAKES ENGAGEMENT.", script: "Subject: Insight on [Company Name]...\n\nHi [Name], I've been following your team's work..." },
+    { id: 'p2', title: "Phase 2: The Value Exchange", goal: "OFFER A PERSPECTIVE.", script: "Hi [Name], I thought this resource might be useful..." },
+    { id: 'p3', title: "Phase 3: The Request for Sponsorship", goal: "15-MINUTE CALL.", script: "Hi [Name], I'm currently architecting a transition..." },
+    { id: 'p4', title: "Phase 4: The Closing Circle", goal: "THE 'THANK YOU' FOR REFERRALS.", script: "Thank you for the insight today, [Name]..." }
 ];
 
 const Contact = () => {
@@ -73,11 +81,11 @@ const Contact = () => {
   return (
     <div className="max-w-6xl mx-auto pb-24 px-4 animate-in fade-in duration-500">
       
-      {/* 1. PAGE TITLE & INTRO */}
+      {/* 1. RESTORED PAGE TITLE & INTRO */}
       <div className="mb-16 text-center">
-        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-400 mb-4">The Library Archives</h2>
-        <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6">Provisions for the Path</h1>
-        <p className="max-w-2xl mx-auto text-zinc-400 text-sm font-light italic leading-relaxed">
+        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-400 mb-4 text-center">The Library Archives</h2>
+        <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6 text-center">Provisions for the Path</h1>
+        <p className="max-w-2xl mx-auto text-zinc-400 text-sm font-light italic leading-relaxed text-center">
           This is your tactical toolkit—a collection of frameworks, scripts, and blueprints designed 
           to translate your legacy experience into private-sector impact.
         </p>
@@ -88,7 +96,7 @@ const Contact = () => {
         <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
       </div>
 
-      {/* 2. RESOURCE CARDS (All 5 included) */}
+      {/* 2. RESOURCE CARDS (All 5 verified present and unlocked) */}
       <div className="grid grid-cols-1 gap-6 mb-20">
         {trailKitProvisions.map((tool) => {
           const isOpen = expandedCard === tool.id;
@@ -123,20 +131,52 @@ const Contact = () => {
                 </div>
               </div>
 
-              {/* 3. ACCORDION CONTENT */}
+              {/* 3. ACCORDION SUB-CONTENT */}
               {isOpen && (
-                <div className="bg-[#110E16]/50 border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4">
+                <div className="bg-[#110E16]/50 border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4 animate-in slide-in-from-top-4">
+                  <div className="h-[1px] bg-white/5 mb-8 w-full" />
+                  
+                  {/* Market Primer Content */}
+                  {tool.id === 'market' && (
+                    <div className="space-y-10">
+                      <div className="relative p-10 bg-teal-500/5 border border-teal-500/20 rounded-[2.5rem]">
+                        <div className="flex items-center gap-3 mb-4 text-teal-400"><Compass size={20} /><h4 className="text-[10px] font-black uppercase tracking-widest">Horizon Workshop</h4></div>
+                        <h5 className="text-2xl font-serif italic text-white mb-3">Auditing Your Functional Legacy</h5>
+                        <p className="text-sm text-zinc-300 italic mb-8">Download your baseline for sector transition.</p>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit", "_blank")} className="px-8 h-14 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white transition-all">Launch Strategy</button>
+                        </div>
+                      </div>
+                      <div className="bg-black/40 border border-white/5 p-8 rounded-[2rem]">
+                        <table className="w-full text-left text-xs italic">
+                          <tbody className="text-zinc-300">
+                            {marketComparison.map((row, i) => (
+                              <tr key={i} className="border-t border-white/5 first:border-0">
+                                <td className="py-4 pr-4 text-zinc-500 line-through">{row.public}</td>
+                                <td className="py-4 pr-4 text-teal-400 font-black uppercase text-[10px] tracking-widest">{row.private}</td>
+                                <td className="py-4 text-zinc-400 leading-relaxed">{row.how}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Lexicon Content */}
                   {tool.id === 'verbs' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {powerVerbs.map((v, i) => (
-                        <div key={i} className="bg-black/40 border border-white/5 p-4 rounded-xl">
-                          <div className="text-[10px] text-zinc-600 line-through uppercase mb-1">{v.legacy}</div>
-                          <div className="text-lg font-serif italic text-teal-400">{v.horizon}</div>
+                        <div key={i} className="bg-black/40 border border-white/5 p-5 rounded-2xl">
+                          <div className="text-[10px] text-zinc-600 line-through uppercase mb-2">{v.legacy}</div>
+                          <div className="text-lg font-serif italic font-black text-teal-400 mb-2">{v.horizon}</div>
+                          <p className="text-[10px] text-zinc-500 leading-tight">{v.use}</p>
                         </div>
                       ))}
                     </div>
                   )}
 
+                  {/* Outreach Content */}
                   {tool.id === 'outreach' && (
                     <div className="space-y-4">
                         {outreachPhases.map((phase) => (
@@ -144,7 +184,7 @@ const Contact = () => {
                                 <button onClick={() => setOpenPhaseId(openPhaseId === phase.id ? null : phase.id)} className="w-full p-5 flex items-center justify-between text-left hover:bg-white/5 transition-colors">
                                     <div className="flex flex-col text-[10px] font-black uppercase tracking-widest text-white">
                                         {phase.title}
-                                        <span className="text-xs text-zinc-400 italic mt-1 font-normal">{phase.goal}</span>
+                                        <span className="text-xs text-zinc-400 italic mt-1 font-normal uppercase tracking-tighter">{phase.goal}</span>
                                     </div>
                                     {openPhaseId === phase.id ? <ChevronUp size={14} className="text-teal-400" /> : <ChevronDown size={14} />}
                                 </button>
@@ -160,7 +200,7 @@ const Contact = () => {
         })}
       </div>
 
-      {/* 4. VOLUME TOGGLE */}
+      {/* 4. VOLUME TOGGLE (RESTORED) */}
       <div className="mt-12 flex flex-col items-center gap-6">
         <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600">Navigate the Archives</h4>
         <div className="flex p-1.5 bg-[#110E16] border border-zinc-800/50 rounded-full shadow-2xl">
