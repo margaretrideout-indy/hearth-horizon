@@ -14,8 +14,6 @@ const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9G
 const IDENTITY_LEDGER_URL = "https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link";
 const AUTHORITY_WORKSHEET_URL = "https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link";
 const AMZ_PROVISIONS_URL = "https://www.amazon.ca/hz/wishlist/ls/2BZUUE2ZJL0EL?ref_=list_d_wl_lfu_nav_4";
-const INDIGO_COLLECTION_READY = false;
-const INDIGO_LIST_URL = "https://www.indigo.ca"; 
 
 const Badge = ({ children, className }) => (
   <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest transition-all ${className}`}>
@@ -91,7 +89,6 @@ const Library = ({ vault, isAdmin }) => {
           </div>
         </header>
 
-        {/* VOLUME CONTENT AREA */}
         {currentVolume === 1 ? (
           <div className="animate-in fade-in duration-700">
             <section className="mb-16">
@@ -140,53 +137,78 @@ const Library = ({ vault, isAdmin }) => {
                     <span className="text-[10px] font-black uppercase tracking-widest text-white block">Amazon Provisions</span>
                     <span className="text-[9px] text-zinc-500 italic">Workspace, Tech & Sanctuary.</span>
                   </button>
-                  <button onClick={() => setStudyTab('indigo')} className={`w-full p-6 rounded-2xl border text-left transition-all ${studyTab === 'indigo' ? 'bg-teal-500/10 border-teal-500/50 shadow-lg' : 'bg-[#110E16] border-zinc-800 opacity-60'}`}>
-                    <Book className={`w-5 h-5 mb-4 ${studyTab === 'indigo' ? 'text-teal-400' : 'text-zinc-600'}`} />
+                  <button onClick={() => setStudyTab('reading')} className={`w-full p-6 rounded-2xl border text-left transition-all ${studyTab === 'reading' ? 'bg-teal-500/10 border-teal-500/50 shadow-lg' : 'bg-[#110E16] border-zinc-800 opacity-60'}`}>
+                    <Book className={`w-5 h-5 mb-4 ${studyTab === 'reading' ? 'text-teal-400' : 'text-zinc-600'}`} />
                     <span className="text-[10px] font-black uppercase tracking-widest text-white block">Literature</span>
                     <span className="text-[9px] text-zinc-500 italic">Identity & Resilience texts.</span>
                   </button>
                 </div>
-                <div className="lg:col-span-3 bg-[#110E16] border border-zinc-800/50 p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden">
+                <div className="lg:col-span-3 bg-[#110E16] border border-zinc-800/50 p-8 md:p-12 rounded-[2.5rem] shadow-xl relative overflow-hidden">
                    <div className="relative z-10">
                       {studyTab === 'amazon' ? (
-                        <>
-                          <h4 className="text-xl text-white font-serif font-black italic mb-2">The Wayfarer’s Provisions</h4>
-                          <p className="text-[9px] text-zinc-600 font-black uppercase tracking-tighter mb-6 italic">As an Amazon Associate I earn from qualifying purchases.</p>
-                          <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 max-w-xl italic">A curated ecosystem of digital, analog, and ergonomic tools selected for the professional migration.</p>
-                          <a href={AMZ_PROVISIONS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-10 h-14 rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] transition-all bg-teal-500 text-black hover:bg-teal-400">
+                        <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                          <h4 className="text-2xl text-white font-serif italic mb-3">The Wayfarer’s Provisions</h4>
+                          <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-6 italic opacity-70">
+                            As an Amazon Associate I earn from qualifying purchases.
+                          </p>
+                          <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 max-w-xl">
+                            A curated ecosystem of digital, analog, and ergonomic tools selected to support the physical and mental demands of a professional migration.
+                          </p>
+                          <a href={AMZ_PROVISIONS_URL} target="_blank" rel="noopener noreferrer" 
+                             className="inline-flex items-center justify-center px-10 h-14 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all bg-teal-500 text-black hover:bg-teal-400 hover:scale-[1.02] active:scale-95 shadow-lg shadow-teal-500/10">
                             BROWSE THE COLLECTIONS <ExternalLink className="ml-2 w-3 h-3" />
                           </a>
-                        </>
+                        </div>
                       ) : (
-                        <>
-                          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-                            <div>
-                              <h4 className="text-xl text-white font-serif font-black italic mb-2">Foundational Reading</h4>
-                              <p className="text-sm text-zinc-400 font-light leading-relaxed max-w-md italic">Pivotal literature on career migration and resilience. Mental provisions for your journey.</p>
+                        <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                          <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10">
+                            <div className="max-w-md">
+                              <h4 className="text-2xl text-white font-serif italic mb-3">Foundational Reading</h4>
+                              <p className="text-sm text-zinc-400 font-light leading-relaxed">
+                                Pivotal literature on career migration, resilience, and identity. Essential mental provisions for the journey ahead.
+                              </p>
                             </div>
-                            <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/10 h-fit lowercase">Multinational Links</Badge>
+                            <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/20 h-fit lowercase py-1 px-4">
+                              Multinational Access
+                            </Badge>
                           </div>
                           
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Indigo - Primary */}
-                            <a href={INDIGO_LIST_URL} target="_blank" rel="noopener noreferrer" className="p-6 rounded-[2rem] bg-black/40 border border-white/5 hover:border-teal-500/30 transition-all flex flex-col gap-3 group">
-                              <span className="text-[10px] font-black text-teal-400 uppercase tracking-[0.2em]">For our Canadians</span>
-                              <h5 className="text-white font-serif italic text-lg">Shop Indigo</h5>
-                              <p className="text-[10px] text-zinc-500 leading-relaxed font-light italic">Support our local bookstores and ship anywhere in Canada.</p>
-                            </a>
-
-                            {/* Bookshop - International Coming Soon */}
-                            <div className="p-6 rounded-[2rem] bg-black/40 border border-white/5 flex flex-col gap-3 opacity-60">
-                              <span className="text-[10px] font-black text-purple-400 uppercase tracking-[0.2em]">For Non-Canadian Friends</span>
-                              <div className="flex items-center justify-between">
-                                <h5 className="text-white font-serif italic text-lg">Shop Bookshop.org</h5>
-                                <Lock size={14} className="text-zinc-600" />
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            {/* Indigo - Coming Soon */}
+                            <div className="p-8 rounded-[2rem] bg-black/20 border border-white/5 flex flex-col gap-4 group relative overflow-hidden">
+                              <div className="flex justify-between items-start">
+                                <span className="text-[10px] font-black text-teal-500/40 uppercase tracking-[0.2em]">For our Canadians</span>
+                                <Lock size={14} className="text-zinc-700 opacity-50" />
                               </div>
-                              <p className="text-[10px] text-zinc-500 leading-relaxed font-light italic">Support independent US/UK shops while building your library. (Linking soon!)</p>
+                              <div>
+                                <h5 className="text-zinc-500 font-serif italic text-lg mb-1">Indigo Collection</h5>
+                                <p className="text-[11px] text-zinc-600 leading-relaxed italic font-light">
+                                  Curating the best in domestic Canadian literature. Arriving shortly.
+                                </p>
+                              </div>
+                              <div className="mt-2 h-1 w-12 bg-zinc-800/50 rounded-full" />
+                            </div>
+
+                            {/* Bookshop - Coming Soon */}
+                            <div className="p-8 rounded-[2rem] bg-black/20 border border-white/5 flex flex-col gap-4 group relative overflow-hidden">
+                              <div className="flex justify-between items-start">
+                                <span className="text-[10px] font-black text-purple-500/40 uppercase tracking-[0.2em]">Non-Canadian Friends</span>
+                                <Lock size={14} className="text-zinc-700 opacity-50" />
+                              </div>
+                              <div>
+                                <h5 className="text-zinc-500 font-serif italic text-lg mb-1">Bookshop.org Storefront</h5>
+                                <p className="text-[11px] text-zinc-600 leading-relaxed italic font-light">
+                                  Supporting independent US/UK shops. Finalizing the shelves.
+                                </p>
+                              </div>
+                              <div className="mt-2 h-1 w-12 bg-zinc-800/50 rounded-full" />
                             </div>
                           </div>
-                          <p className="text-[8px] text-zinc-600 uppercase tracking-widest mt-6 italic">*International users can also find these titles on our Amazon Book List.</p>
-                        </>
+                          
+                          <p className="text-[9px] text-zinc-700 uppercase tracking-[0.2em] mt-10 text-center italic">
+                            *International users can find these titles on our Amazon List in the interim.
+                          </p>
+                        </div>
                       )}
                    </div>
                 </div>
@@ -251,7 +273,6 @@ const Library = ({ vault, isAdmin }) => {
           </div>
         )}
 
-        {/* PERSISTENT VOLUME NAVIGATION TOGGLE (Shows on both pages) */}
         <div className="mt-12 pt-12 border-t border-white/5 flex flex-col items-center gap-8">
           <div className="flex items-center gap-3 p-1.5 bg-[#16121D] rounded-2xl border border-white/5 shadow-2xl">
             <button 
