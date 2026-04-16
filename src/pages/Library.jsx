@@ -11,6 +11,7 @@ import Provisions from './Contact';
 // --- CONFIGURATION ---
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/preview";
 const AMZ_PROVISIONS_URL = "https://www.amazon.ca/hz/wishlist/ls/2BZUUE2ZJL0EL?ref_=list_d_wl_lfu_nav_4";
+const AMZ_LEGAL = "As an Amazon Associate I earn from qualifying purchases.";
 
 const Library = ({ vault, isAdmin }) => {
   const navigate = useNavigate();
@@ -108,12 +109,13 @@ const Library = ({ vault, isAdmin }) => {
                     <span className="text-[10px] font-black uppercase tracking-widest text-white block">Reading List</span>
                   </button>
                 </div>
-                <div className="lg:col-span-3 bg-[#110E16] border border-zinc-800 p-10 md:p-14 rounded-[2.5rem] shadow-2xl min-h-[300px]">
+                <div className="lg:col-span-3 bg-[#110E16] border border-zinc-800 p-10 md:p-14 rounded-[2.5rem] shadow-2xl min-h-[300px] flex flex-col">
                   {studyTab === 'amazon' ? (
-                    <div>
+                    <div className="flex-1 flex flex-col">
                       <h4 className="text-3xl text-white font-serif italic mb-4">Wayfarer’s Provisions</h4>
                       <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 italic">Curated ergonomic and analog tools selected to support the mental demands of professional migration.</p>
-                      <a href={AMZ_PROVISIONS_URL} target="_blank" rel="noreferrer" className="inline-flex items-center px-10 h-16 rounded-xl text-[10px] font-black uppercase tracking-widest bg-teal-500 text-black hover:bg-teal-400 transition-all">BROWSE STOREFRONT <ExternalLink className="ml-2 w-4 h-4" /></a>
+                      <a href={AMZ_PROVISIONS_URL} target="_blank" rel="noreferrer" className="inline-flex items-center px-10 h-16 rounded-xl text-[10px] font-black uppercase tracking-widest bg-teal-500 text-black hover:bg-teal-400 transition-all w-fit">BROWSE STOREFRONT <ExternalLink className="ml-2 w-4 h-4" /></a>
+                      <p className="mt-auto pt-10 text-[9px] text-zinc-600 font-medium italic uppercase tracking-tighter">{AMZ_LEGAL}</p>
                     </div>
                   ) : (
                     <div>
@@ -152,12 +154,12 @@ const Library = ({ vault, isAdmin }) => {
               <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
             </div>
             <section className="flex flex-col lg:flex-row gap-6 items-start mb-20">
-                {/* Fixed Master Strategy Deck - items-start on parent keeps it from stretching */}
-                <div className="w-full lg:w-[320px] bg-[#16121D] border border-teal-500/30 p-8 rounded-[2.5rem] flex flex-col shadow-2xl shrink-0">
+                {/* Fixed Strategy Deck Width & Height */}
+                <div className="w-full lg:w-[320px] max-w-md bg-[#16121D] border border-teal-500/30 p-8 rounded-[2.5rem] flex flex-col shadow-2xl shrink-0 self-start">
                   <div className="bg-teal-500/10 text-teal-400 px-3 py-1 rounded-full text-[9px] font-black uppercase w-fit mb-6 italic">Member Gift</div>
                   <h4 className="text-2xl text-white font-serif italic mb-4 leading-tight">Master Strategy Deck</h4>
                   <p className="text-[12px] text-zinc-400 italic mb-8 leading-relaxed">The primary blueprint for your career migration and resignation protocol.</p>
-                  <button onClick={() => window.open(STRATEGY_DECK_URL, '_blank')} className="mt-auto h-14 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-xl flex items-center justify-center gap-3 transition-all uppercase text-[9px] tracking-widest shadow-lg shadow-teal-500/20">Open Blueprint <ExternalLink size={14} /></button>
+                  <button onClick={() => window.open(STRATEGY_DECK_URL, '_blank')} className="h-14 bg-teal-500 hover:bg-teal-400 text-black font-black rounded-xl flex items-center justify-center gap-3 transition-all uppercase text-[9px] tracking-widest shadow-lg shadow-teal-500/20">Open Blueprint <ExternalLink size={14} /></button>
                 </div>
 
                 {/* Migration Protocols */}
