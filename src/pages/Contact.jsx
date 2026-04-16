@@ -11,13 +11,12 @@ import {
   Mail
 } from 'lucide-react';
 
-// Data for the provisions
 export const libraryVolumeII = [
   {
     id: 'resume',
     title: "The Horizon Resume Template",
     desc: "A clean, ATS-optimized layout. Click to create your own private, editable copy.",
-    type: "Google Doc Template",
+    type: "Digital Blueprint",
     icon: <FileText className="text-purple-400" />,
     action: "Create My Copy",
     url: "https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy"
@@ -84,8 +83,9 @@ const Provisions = () => {
         <div className="mb-12">
           <h1 className="text-4xl md:text-5xl font-serif italic text-white mb-4">Wayfarer's Provisions</h1>
           <p className="text-lg text-slate-400 max-w-2xl leading-relaxed">
-            If the first volume of the library is your <span className="text-teal-400 italic">Strategy</span>, 
-            this volume is your <span className="text-purple-400 italic">Gear</span>. Take what you need for the road ahead.
+            If Volume I is your <span className="text-teal-400 italic font-medium">Foundation</span>, 
+            this volume is your <span className="text-purple-400 italic font-medium">Momentum</span>. 
+            Specialized assets designed for the active climb.
           </p>
         </div>
 
@@ -191,19 +191,18 @@ const Provisions = () => {
               <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-6">
                 <Mail className="text-teal-400" size={24} />
               </div>
-              <h3 className="text-white font-serif italic text-3xl mb-3">Need a custom provision?</h3>
+              <h3 className="text-white font-serif italic text-3xl mb-3">Looking for a specific provision?</h3>
               <p className="text-slate-400 mb-8 max-w-lg mx-auto text-sm leading-relaxed">
-                If you're looking for a specific template, guide, or script that isn't here, 
-                reach out to the Hearthkeepers. We build what you need.
+                If there is a script, template, or guide you need for your unique path, 
+                reach out. The Hearthkeepers are constantly expanding the archives.
               </p>
               <button 
                 onClick={() => window.location.href = 'mailto:support@hearthandhorizon.com'} 
                 className="px-10 py-4 bg-white text-black font-bold rounded-full hover:bg-teal-400 hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl shadow-white/5"
               >
-                  Contact Archive Support
+                  Message the Hearthkeepers
               </button>
             </div>
-            {/* Ambient Background Glow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/5 blur-[120px] pointer-events-none" />
         </div>
       </div>
