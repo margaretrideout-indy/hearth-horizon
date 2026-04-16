@@ -9,11 +9,11 @@ import {
   Zap, 
   ShieldCheck,
   Mail,
-  BookOpen,
-  ArrowLeft
+  ExternalLink,
+  Save
 } from 'lucide-react';
 
-export const libraryVolumeII = [
+const libraryVolumeII = [
   {
     id: 'resume',
     title: "The Horizon Resume Template",
@@ -67,6 +67,12 @@ const powerVerbs = [
   { legacy: "Made", horizon: "Architected", use: "For building new frameworks." }
 ];
 
+const Badge = ({ children, className }) => (
+  <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest transition-all ${className}`}>
+    {children}
+  </span>
+);
+
 const Provisions = () => {
   const [openScriptId, setOpenScriptId] = useState(null);
   const [expandedCard, setExpandedCard] = useState(null);
@@ -80,160 +86,161 @@ const Provisions = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050406] text-slate-300 font-sans p-8 pt-24">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-serif italic text-white mb-4">Wayfarer's Provisions</h1>
-          <p className="text-lg text-slate-400 max-w-2xl leading-relaxed">
-            If Volume I is your <span className="text-teal-400 italic font-medium">Foundation</span>, 
-            this volume is your <span className="text-purple-400 italic font-medium">Momentum</span>. 
-            Specialized assets designed for the active climb.
+    <div className="max-w-6xl mx-auto">
+      {/* Header Section */}
+      <section className="mb-16">
+        <div className="flex items-center gap-4 mb-8">
+          <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400/80 whitespace-nowrap">Wayfarer's Provisions</h3>
+          <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
+        </div>
+        
+        <div className="mb-12 max-w-2xl">
+          <p className="text-sm text-zinc-400 leading-relaxed italic font-light">
+            If Volume I is your <span className="text-white font-serif italic">Foundation</span>, 
+            this volume is your <span className="text-white font-serif italic">Momentum</span>. 
+            Specialized tactical assets designed for the active professional climb.
           </p>
         </div>
 
-        <div className="grid gap-4">
+        {/* Tools Grid */}
+        <div className="grid grid-cols-1 gap-6">
           {libraryVolumeII.map((tool) => (
-            <div key={tool.id} className="flex flex-col gap-0">
+            <div key={tool.id} className="flex flex-col gap-0 group">
               <div 
                 onClick={() => handleCardClick(tool)}
-                className={`group relative bg-[#0A080D] border border-white/5 p-6 transition-all duration-300 cursor-pointer overflow-hidden ${
+                className={`relative bg-[#110E16] border border-zinc-800/50 p-8 transition-all duration-300 cursor-pointer overflow-hidden shadow-xl ${
                   expandedCard === tool.id 
-                    ? 'rounded-t-2xl border-b-0 border-teal-500/30 shadow-[0_-10px_40px_rgba(20,184,166,0.1)]' 
-                    : 'rounded-2xl hover:border-purple-500/30'
+                    ? 'rounded-t-[2.5rem] border-teal-500/30 bg-teal-500/[0.02]' 
+                    : 'rounded-[2.5rem] hover:border-purple-500/30'
                 }`}
               >
-                <div className="flex items-center justify-between relative z-10">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
                   <div className="flex items-center gap-6">
-                    <div className="p-3 bg-white/5 rounded-xl group-hover:scale-110 transition-transform">
+                    <div className={`p-4 rounded-2xl bg-white/5 border border-white/5 transition-transform group-hover:scale-105`}>
                       {tool.icon}
                     </div>
                     <div>
-                      <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1">{tool.type}</div>
-                      <h3 className="text-xl font-semibold text-white group-hover:text-teal-400 transition-colors">{tool.title}</h3>
-                      <p className="text-slate-400 mt-1 max-w-md text-sm">{tool.desc}</p>
+                      <Badge className="bg-zinc-800/50 text-zinc-500 mb-2">{tool.type}</Badge>
+                      <h3 className="text-xl font-serif italic font-black text-white group-hover:text-teal-400 transition-colors">{tool.title}</h3>
+                      <p className="text-zinc-400 mt-1 max-w-md text-xs font-light italic">{tool.desc}</p>
                     </div>
                   </div>
-                  <div className="hidden md:flex items-center gap-2 text-sm font-bold text-white/40 group-hover:text-white transition-colors">
+                  
+                  <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-widest text-zinc-500 group-hover:text-white transition-all">
                     {tool.action}
-                    {expandedCard === tool.id ? <ChevronUp size={16} /> : <ChevronRight size={16} />}
+                    {tool.isAccordion ? (
+                      expandedCard === tool.id ? <ChevronUp size={14} className="text-teal-400" /> : <ChevronDown size={14} />
+                    ) : (
+                      <ExternalLink size={14} />
+                    )}
                   </div>
                 </div>
               </div>
 
-              {/* Salary Scripts Accordion */}
-              {tool.id === 'scripts' && expandedCard === 'scripts' && (
-                <div className="bg-[#0A080D] border-x border-b border-white/5 rounded-b-2xl p-6 pt-0 space-y-3 shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
-                  <div className="h-px bg-white/5 mb-6 w-full" />
-                  {negotiationScripts.map((item) => (
-                    <div key={item.id} className="bg-black/40 border border-white/5 rounded-xl overflow-hidden">
-                      <button onClick={() => setOpenScriptId(openScriptId === item.id ? null : item.id)} className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors text-left">
-                        <span className="text-sm font-semibold text-white">{item.situation}</span>
-                        {openScriptId === item.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                      </button>
-                      {openScriptId === item.id && (
-                        <div className="p-4 pt-0 border-t border-white/5 bg-black/20">
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-teal-500 mt-4 mb-1">The Situation:</p>
-                          <p className="text-slate-400 mb-3 italic text-xs">{item.context}</p>
-                          <div className="bg-[#110E16] p-4 rounded-lg border border-purple-500/20 text-white font-mono text-xs leading-relaxed italic">"{item.script}"</div>
+              {/* Accordion Content Areas */}
+              {expandedCard === tool.id && tool.isAccordion && (
+                <div className="bg-[#110E16]/50 border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4 animate-in slide-in-from-top-4 duration-300">
+                  <div className="h-[1px] bg-white/5 mb-8 w-full" />
+                  
+                  {/* Salary Scripts Content */}
+                  {tool.id === 'scripts' && (
+                    <div className="space-y-4">
+                      {negotiationScripts.map((item) => (
+                        <div key={item.id} className="bg-black/40 border border-white/5 rounded-2xl overflow-hidden transition-all">
+                          <button 
+                            onClick={() => setOpenScriptId(openScriptId === item.id ? null : item.id)} 
+                            className="w-full p-5 flex items-center justify-between hover:bg-white/5 transition-colors text-left"
+                          >
+                            <span className="text-[10px] font-black uppercase tracking-widest text-white">{item.situation}</span>
+                            {openScriptId === item.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                          </button>
+                          {openScriptId === item.id && (
+                            <div className="p-6 pt-0 border-t border-white/5 bg-black/20">
+                              <p className="text-[9px] font-black uppercase tracking-widest text-teal-500 mt-6 mb-2 italic">The Situation:</p>
+                              <p className="text-zinc-400 mb-4 italic text-xs font-light">{item.context}</p>
+                              <div className="bg-[#16121D] p-5 rounded-xl border border-teal-500/20 text-zinc-200 font-mono text-xs leading-relaxed italic relative">
+                                <div className="absolute top-2 right-3 opacity-20"><MessageSquare size={12}/></div>
+                                "{item.script}"
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      )}
+                      ))}
                     </div>
-                  ))}
-                </div>
-              )}
+                  )}
 
-              {/* Power Verbs Accordion */}
-              {tool.id === 'verbs' && expandedCard === 'verbs' && (
-                <div className="bg-[#0A080D] border-x border-b border-white/5 rounded-b-2xl p-6 pt-0 shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
-                  <div className="h-px bg-white/5 mb-6 w-full" />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-4">
-                    {powerVerbs.map((verb, idx) => (
-                      <div key={idx} className="bg-black/30 border border-white/5 p-4 rounded-xl flex flex-col">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs text-slate-500 line-through">{verb.legacy}</span>
-                          <span className="text-[10px] font-bold text-purple-400 uppercase tracking-tighter italic">Flip to</span>
+                  {/* Power Verbs Content */}
+                  {tool.id === 'verbs' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {powerVerbs.map((verb, idx) => (
+                        <div key={idx} className="bg-black/40 border border-white/5 p-5 rounded-2xl flex flex-col group/verb hover:border-purple-500/30 transition-all">
+                          <div className="flex items-center justify-between mb-3">
+                            <span className="text-[10px] text-zinc-600 line-through uppercase tracking-tighter">{verb.legacy}</span>
+                            <Badge className="bg-purple-500/10 text-purple-400 border border-purple-500/10">FLIP TO</Badge>
+                          </div>
+                          <div className="text-lg font-serif italic font-black text-teal-400 mb-2">{verb.horizon}</div>
+                          <p className="text-[10px] text-zinc-500 leading-tight italic font-light">{verb.use}</p>
                         </div>
-                        <div className="text-lg font-bold text-teal-400 mb-1">{verb.horizon}</div>
-                        <p className="text-[11px] text-slate-500 leading-tight">{verb.use}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                      ))}
+                    </div>
+                  )}
 
-              {/* Canadian Market Primer Accordion */}
-              {tool.id === 'market' && expandedCard === 'market' && (
-                <div className="bg-[#0A080D] border-x border-b border-white/5 rounded-b-2xl p-6 pt-0 shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
-                  <div className="h-px bg-white/5 mb-6 w-full" />
-                  <div className="space-y-6 pb-4">
-                    <div className="flex gap-4">
-                      <div className="mt-1 p-2 bg-teal-500/10 rounded-lg"><ShieldCheck className="text-teal-400" size={20}/></div>
-                      <div>
-                        <h4 className="text-white font-bold mb-1">The "Golden Handcuffs" Bridge</h4>
-                        <p className="text-xs text-slate-400 leading-relaxed">Public pensions are high-value. If a private role doesn't offer RRSP matching, you must negotiate a **5-8% higher base salary** to stay financially neutral.</p>
+                  {/* Canadian Market Content */}
+                  {tool.id === 'market' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="p-6 bg-black/40 border border-white/5 rounded-2xl flex flex-col gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400">
+                          <ShieldCheck size={20}/>
+                        </div>
+                        <div>
+                          <h4 className="text-[10px] font-black uppercase tracking-widest text-white mb-2">The "Golden Handcuffs" Bridge</h4>
+                          <p className="text-xs text-zinc-400 leading-relaxed font-light italic">
+                            Public pensions are high-value. If a private role doesn't offer RRSP matching, you must negotiate a <strong className="text-teal-500">5-8% higher base salary</strong> to stay financially neutral.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="p-6 bg-black/40 border border-white/5 rounded-2xl flex flex-col gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">
+                          <Save size={20}/>
+                        </div>
+                        <div>
+                          <h4 className="text-[10px] font-black uppercase tracking-widest text-white mb-2">Provincial Credential Translation</h4>
+                          <p className="text-xs text-zinc-400 leading-relaxed font-light italic">
+                            Don't list provincial licenses as "Teaching Certificates." List them as <strong className="text-purple-400">"Provincial Regulatory Compliance & Standards Certification"</strong> to appeal to corporate HR scanners.
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex gap-4">
-                      <div className="mt-1 p-2 bg-purple-500/10 rounded-lg"><Map className="text-purple-400" size={20}/></div>
-                      <div>
-                        <h4 className="text-white font-bold mb-1">Provincial Credential Translation</h4>
-                        <p className="text-xs text-slate-400 leading-relaxed">Don't list provincial licenses as "Teaching Certificates." List them as **"Provincial Regulatory Compliance & Standards Certification"** to appeal to corporate HR scanners.</p>
-                      </div>
-                    </div>
-                  </div>
+                  )}
                 </div>
               )}
             </div>
           ))}
         </div>
+      </section>
 
-        {/* Support Section */}
-        <div className="mt-16 p-12 rounded-[2.5rem] bg-gradient-to-br from-purple-900/10 via-[#0A080D] to-teal-900/10 border border-white/5 text-center relative overflow-hidden">
+      {/* Support Section */}
+      <section className="mt-20">
+        <div className="p-12 md:p-16 rounded-[3rem] bg-gradient-to-br from-[#16121D] to-[#0A080D] border border-white/5 text-center relative overflow-hidden shadow-2xl">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,184,166,0.05),transparent_70%)]" />
             <div className="relative z-10 flex flex-col items-center">
-              <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-6">
+              <div className="w-14 h-14 bg-teal-500/10 border border-teal-500/20 rounded-2xl flex items-center justify-center mb-8">
                 <Mail className="text-teal-400" size={24} />
               </div>
-              <h3 className="text-white font-serif italic text-3xl mb-3">Looking for a specific provision?</h3>
-              <p className="text-slate-400 mb-8 max-w-lg mx-auto text-sm leading-relaxed">
-                If there is a script, template, or guide you need for your unique path, 
+              <h3 className="text-2xl md:text-3xl font-serif italic text-white mb-4">Request a Specific Provision</h3>
+              <p className="text-sm text-zinc-400 mb-10 max-w-lg mx-auto leading-relaxed font-light italic">
+                If there is a script, template, or guide you need for your unique migration path, 
                 reach out. The Librarians are constantly expanding the archives.
               </p>
               <button 
                 onClick={() => window.location.href = 'mailto:support@hearthandhorizon.com'} 
-                className="px-10 py-4 bg-white text-black font-bold rounded-full hover:bg-teal-400 hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl shadow-white/5"
+                className="h-14 px-12 bg-white text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-teal-400 hover:scale-105 transition-all duration-300 shadow-xl shadow-white/5"
               >
-                  Message the Librarians
+                Message the Librarians
               </button>
             </div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/5 blur-[120px] pointer-events-none" />
         </div>
-
-        {/* VOLUME NAVIGATION TOGGLE */}
-        <div className="mt-12 grid grid-cols-2 gap-4">
-          <button 
-            onClick={() => window.location.href = '/library'} 
-            className="group p-6 bg-[#0A080D] border border-teal-500/20 rounded-2xl flex flex-col items-center gap-3 hover:border-teal-400 transition-all active:scale-95"
-          >
-            <div className="p-3 bg-teal-500/10 rounded-full text-teal-400 group-hover:bg-teal-400 group-hover:text-black transition-colors">
-              <ArrowLeft size={20} />
-            </div>
-            <div className="text-center">
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Back to</div>
-              <div className="text-white font-serif italic text-lg">Library Vol. I</div>
-            </div>
-          </button>
-
-          <div className="p-6 bg-[#0A080D] border border-white/5 rounded-2xl flex flex-col items-center gap-3 opacity-50 cursor-default">
-            <div className="p-3 bg-purple-500/10 rounded-full text-purple-400">
-              <BookOpen size={20} />
-            </div>
-            <div className="text-center">
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Currently Reading</div>
-              <div className="text-white font-serif italic text-lg">Library Vol. II</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   );
 };
