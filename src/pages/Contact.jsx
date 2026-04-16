@@ -55,6 +55,7 @@ const Contact = ({ currentVolume }) => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [openPhaseId, setOpenPhaseId] = useState(null);
 
+  // Sync resources based on the currentVolume passed from Library.jsx
   const activeResources = currentVolume === 1 ? basecampProvisions : trailKitProvisions;
 
   return (
