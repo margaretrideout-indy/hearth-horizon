@@ -57,7 +57,6 @@ const trailKitProvisions = [
   }
 ];
 
-// ... (Sub-data for verbs, market, outreach phases remains same)
 const powerVerbs = [
     { legacy: "Taught", horizon: "Facilitated", use: "Standardized delivery for stakeholders." },
     { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
@@ -74,17 +73,45 @@ const marketComparison = [
 ];
 
 const outreachPhases = [
-    { id: 'p1', title: "Phase 1: The 'Soft' Curiosity", goal: "Low stakes engagement.", script: "Subject: Insight on [Company Name]..." },
-    { id: 'p2', title: "Phase 2: The Value Exchange", goal: "Offer a perspective.", script: "Hi [Name], I thought this resource might be useful..." },
-    { id: 'p3', title: "Phase 3: The Request for Sponsorship", goal: "15-minute call.", script: "Hi [Name], I'm currently architecting a transition..." }
+    {
+        id: 'p1',
+        title: "Phase 1: The 'Soft' Curiosity",
+        goal: "Low stakes engagement. No ask, just visibility.",
+        script: "Subject: Insight on [Company Name]'s approach to [Topic]\n\nHi [Name], I've been following your team's work on [Project]..."
+    },
+    {
+        id: 'p2',
+        title: "Phase 2: The Value Exchange",
+        goal: "Offer a perspective based on your 'Public-to-Private' flip.",
+        script: "Hi [Name], I actually just finished a project on [Related Topic] and thought this resource might be useful..."
+    },
+    {
+        id: 'p3',
+        title: "Phase 3: The Request for Sponsorship",
+        goal: "Asking for a 15-minute 'Bridge' call.",
+        script: "Hi [Name], I'm currently architecting a transition into the private sector..."
+    },
+    {
+        id: 'p4',
+        title: "Phase 4: The Closing Circle",
+        goal: "The 'Thank You' that keeps the door open for referrals.",
+        script: "Thank you for the insight today, [Name]. Our conversation regarding [Topic] was incredibly helpful..."
+    }
 ];
 
 const Contact = ({ vault, isAdmin }) => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [openPhaseId, setOpenPhaseId] = useState(null);
 
-  // RE-WIRING THE TIER CHECK
-  const userTier = isAdmin ? 'Steward' : (vault?.tier || 'Seedling');
+  // SIMPLIFIED: If you are an admin, you have access to everything. Period.
+  const checkIsAllowed = (toolTier) => {
+    if (isAdmin) return true;
+    const userTier = vault?.tier || 'Seedling';
+    if (toolTier === 'Seedling') return true;
+    if (toolTier === 'Hearthkeeper') return userTier === 'Hearthkeeper' || userTier === 'Steward';
+    if (toolTier === 'Steward') return userTier === 'Steward';
+    return false;
+  };
 
   return (
     <div className="max-w-6xl mx-auto pb-12 px-4 animate-in fade-in duration-500">
@@ -95,13 +122,7 @@ const Contact = ({ vault, isAdmin }) => {
 
       <div className="grid grid-cols-1 gap-6">
         {trailKitProvisions.map((tool) => {
-          // EXPLICIT CHECK: If isAdmin is true, isAllowed is ALWAYS true.
-          const isAllowed = isAdmin || (
-            (tool.tier === "Seedling") ||
-            (tool.tier === "Hearthkeeper" && (userTier === "Hearthkeeper" || userTier === "Steward")) ||
-            (tool.tier === "Steward" && userTier === "Steward")
-          );
-
+          const isAllowed = checkIsAllowed(tool.tier);
           const isOpen = expandedCard === tool.id;
           
           return (
@@ -160,23 +181,27 @@ const Contact = ({ vault, isAdmin }) => {
                               <h4 className="text-[10px] font-black uppercase text-white tracking-[0.3em]">The Horizon Workshop</h4>
                             </div>
                             <h5 className="text-2xl font-serif italic text-white mb-3">Auditing Your Functional Legacy</h5>
-                            <p className="text-sm text-zinc-300 italic leading-relaxed mb-8">This two-part toolkit is your baseline for sector transition.</p>
-                            <div className="flex flex-col sm:flex-row gap-4">
+                            <p className="text-sm text-zinc-300 italic leading-relaxed mb-8">Download the worksheet to begin your translation process.</p>
+                            <div className="flex flex-col sm:row gap-4">
                               <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit", "_blank")} className="px-8 h-14 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center gap-2">1. Launch Strategy <ExternalLink size={12} /></button>
                               <button onClick={() => window.open("https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view", "_blank")} className="px-8 h-14 bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center gap-2">2. Download Worksheet <FileDown size={14} className="text-teal-400" /></button>
                             </div>
                          </div>
                       </div>
                       <div className="bg-black/40 border border-white/5 p-8 rounded-[2rem]">
-                        <table className="w-full text-left">
+                        <table className="w-full text-left text-xs font-light italic">
                           <thead>
-                            <tr className="text-[9px] text-teal-500 uppercase font-black tracking-tighter italic"><th className="pb-4">Legacy</th><th className="pb-4">Market Flip</th><th className="pb-4">Strategy</th></tr>
+                            <tr className="text-[9px] text-teal-500 uppercase font-black tracking-tighter italic">
+                                <th className="pb-4 pr-4">Legacy (Public)</th>
+                                <th className="pb-4 pr-4">Market Flip (Private)</th>
+                                <th className="pb-4">Strategy</th>
+                            </tr>
                           </thead>
-                          <tbody className="text-xs text-zinc-300 font-light italic">
+                          <tbody className="text-zinc-300">
                             {marketComparison.map((row, i) => (
                               <tr key={i} className="border-t border-white/5">
-                                <td className="py-4 text-zinc-500 line-through">{row.public}</td>
-                                <td className="py-4 text-teal-400 font-black tracking-widest uppercase text-[10px]">{row.private}</td>
+                                <td className="py-4 pr-4 text-zinc-500 line-through">{row.public}</td>
+                                <td className="py-4 pr-4 text-teal-400 font-black tracking-widest uppercase text-[10px]">{row.private}</td>
                                 <td className="py-4 text-zinc-400 leading-relaxed">{row.how}</td>
                               </tr>
                             ))}
@@ -189,9 +214,9 @@ const Contact = ({ vault, isAdmin }) => {
                   {tool.id === 'verbs' && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {powerVerbs.map((verb, idx) => (
-                        <div key={idx} className="bg-black/40 border border-white/5 p-5 rounded-2xl flex flex-col group/verb hover:border-purple-500/30 transition-all">
+                        <div key={idx} className="bg-black/40 border border-white/5 p-5 rounded-2xl flex flex-col hover:border-purple-500/30 transition-all">
                           <div className="flex items-center justify-between mb-3 text-[10px] text-zinc-600 line-through uppercase">{verb.legacy}</div>
-                          <div className="text-lg font-serif italic font-black text-teal-400 mb-2 group-hover/verb:text-white transition-colors">{verb.horizon}</div>
+                          <div className="text-lg font-serif italic font-black text-teal-400 mb-2">{verb.horizon}</div>
                           <p className="text-[10px] text-zinc-500 italic leading-tight">{verb.use}</p>
                         </div>
                       ))}
@@ -205,9 +230,9 @@ const Contact = ({ vault, isAdmin }) => {
                                 <button onClick={() => setOpenPhaseId(openPhaseId === phase.id ? null : phase.id)} className="w-full p-5 flex items-center justify-between hover:bg-white/5 transition-colors text-left">
                                     <div className="flex flex-col text-[10px] font-black uppercase tracking-widest text-white">
                                         {phase.title}
-                                        <span className="text-xs text-zinc-400 italic mt-1 font-normal">{phase.goal}</span>
+                                        <span className="text-xs text-zinc-400 italic mt-1 font-normal leading-relaxed">{phase.goal}</span>
                                     </div>
-                                    {openPhaseId === phase.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                                    {openPhaseId === phase.id ? <ChevronUp size={14} className="text-teal-400" /> : <ChevronDown size={14} />}
                                 </button>
                                 {openPhaseId === phase.id && <div className="p-6 pt-0 border-t border-white/5 bg-black/20 font-mono text-[11px] text-zinc-300 leading-relaxed whitespace-pre-wrap italic">{phase.script}</div>}
                             </div>
