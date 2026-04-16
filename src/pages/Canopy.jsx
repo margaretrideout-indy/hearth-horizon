@@ -1,279 +1,280 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { 
-  Search, MapPin, Briefcase, Filter, ExternalLink, 
-  Sparkles, Rocket, ShieldCheck, ArrowRight, Building2,
-  Target, Zap, Globe, Navigation, Wifi, Home
+  FileText, MessageSquare, Map, ChevronDown, ChevronUp, Zap, 
+  Mail, ExternalLink, Compass, Target, FileDown, DollarSign, TrendingUp
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
-const App = ({ vault, isAdmin = true }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [locationSearch, setLocationSearch] = useState('');
-  const [selectedRegion, setSelectedRegion] = useState('Global (All)');
-  const [remoteOnly, setRemoteOnly] = useState(false);
+const trailKitProvisions = [
+  {
+    id: 'verbs',
+    title: "The Power Verb Lexicon",
+    desc: "The 'Flip' dictionary. Strategic verbs to replace legacy public-sector language.",
+    type: "Interactive Glossary",
+    icon: <Zap className="text-purple-400" />,
+    action: "Open Lexicon",
+    isAccordion: true,
+  },
+  {
+    id: 'market',
+    title: "Canadian Market Primer",
+    desc: "The 'How-To' guide for sector translation, including the Horizon Workshop.",
+    type: "Interactive Guide",
+    icon: <Map className="text-teal-400" />,
+    action: "Read Primer",
+    isAccordion: true,
+  },
+  {
+    id: 'resume',
+    title: "The Horizon Resume Template",
+    desc: "A clean, ATS-optimized layout. Click to create your own private, editable copy.",
+    type: "Digital Blueprint",
+    icon: <FileText className="text-purple-400" />,
+    action: "Create My Copy",
+    url: "https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy",
+  },
+  {
+    id: 'scripts',
+    title: "Salary Negotiation Scripts",
+    desc: "Tactical word-for-word scripts for the 'expectations' talk and high-stakes counter-offers.",
+    type: "Interactive Tool",
+    icon: <MessageSquare className="text-teal-400" />,
+    action: "View Scripts",
+    isAccordion: true,
+  },
+  {
+      id: 'outreach',
+      title: "Sponsorship Outreach",
+      desc: "The 4-phase sequence for turning cold contacts into professional advocates.",
+      type: "Communication Sequence",
+      icon: <Mail className="text-purple-400" />,
+      action: "View Protocols",
+      isAccordion: true,
+  }
+];
 
-  const regions = [
-    'Global (All)',
-    'Canada (All)',
-    'United States',
-    'Europe',
-    'Asia Pacific',
-    'Latin America'
-  ];
+const powerVerbs = [
+    { legacy: "Taught", horizon: "Facilitated", use: "Standardized delivery for stakeholders." },
+    { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
+    { legacy: "Managed", horizon: "Spearheaded", use: "Leading high-stakes initiatives." },
+    { legacy: "Talked to", horizon: "Consulted", use: "Providing expert advisory to cross-functional teams." },
+    { legacy: "Organized", horizon: "Orchestrated", use: "Handling complex, multi-layered logistics." }
+];
 
-  const jobLeads = [
-    {
-      id: 1,
-      title: "Senior Program Manager (Public Sector Liaison)",
-      company: "TechNorth Solutions",
-      location: "Toronto, Ontario, Canada",
-      region: "Canada (All)",
-      isRemote: true,
-      type: "Full-time",
-      tags: ["Strategy", "Policy", "Remote Friendly"],
-      description: "Seeking a professional who understands government procurement and stakeholder management to lead our new infrastructure initiative.",
-      link: "#"
+const salaryScripts = [
+    { 
+        label: "The 'Anchor' Avoidance", 
+        context: "When a recruiter asks for your current salary (which is likely lower than market).",
+        script: "I'm looking for a total compensation package that reflects the current market value for this level of responsibility in [City/Sector]. Given my 13 years of curriculum architecture and project leadership, I’m focused on roles in the $[X] to $[Y] range. Does that align with your budget?" 
     },
-    {
-      id: 2,
-      title: "Strategy Consultant (GovTech)",
-      company: "EuroCivic Partners",
-      location: "Berlin, Germany",
-      region: "Europe",
-      isRemote: false,
-      type: "Contract",
-      tags: ["Policy", "Digital Transformation"],
-      description: "Help European municipalities transition to cloud-based public services. Requires experience in public sector administration.",
-      link: "#"
+    { 
+        label: "The 'Total Rewards' Counter", 
+        context: "When the base salary is lower than your target but the benefits are strong.",
+        script: "I appreciate the offer and the comprehensive benefits package. However, based on the specialized nature of the [Role Name] and my background in [Skill], I was expecting the base to be closer to $[Target]. If we can close that gap, I’m prepared to sign the offer immediately." 
     },
-    {
-      id: 3,
-      title: "Public Health Director",
-      company: "HealthCore TX",
-      location: "Austin, Texas, USA",
-      region: "United States",
-      isRemote: false,
-      type: "Full-time",
-      tags: ["Health", "Leadership", "Government"],
-      description: "Oversee regional health initiatives and coordinate with state-level policy makers for community wellness programs.",
-      link: "#"
+    { 
+        label: "Negotiating Non-Monetary Assets", 
+        context: "When the budget is strictly capped.",
+        script: "Since there is no flexibility on the base salary, I'd like to discuss other levers that reflect my seniority. Can we look at an additional week of PTO, a guaranteed professional development stipend of $[Amount], or a performance-based review at the 6-month mark instead of 12?" 
     },
-    {
-      id: 4,
-      title: "Policy Analyst (CSR)",
-      company: "FinStream Inc.",
-      location: "Remote (Worldwide)",
-      region: "Global (All)",
-      isRemote: true,
-      type: "Full-time",
-      tags: ["Policy", "ESG", "Analysis"],
-      description: "Apply your analytical skills to help us navigate evolving ESG regulations and corporate transparency globally.",
-      link: "#"
-    },
-    {
-      id: 5,
-      title: "Systems Architect",
-      company: "Ottawa Defense Sys",
-      location: "Ottawa, ON",
-      region: "Canada (All)",
-      isRemote: true,
-      type: "Contract",
-      tags: ["Defense", "IT", "Security"],
-      description: "Architecture role for federal systems. Open to remote candidates across Canada with proper clearance.",
-      link: "#"
+    { 
+        label: "The 'Competing Offer' Pivot", 
+        context: "Using leverage to speed up a decision or increase an offer.",
+        script: "I’ve just received another offer that is very competitive regarding the base salary. However, [Company Name] remains my first choice because of your mission in [Sector]. If you can match the $[X] base of the other offer, I will withdraw from the other process today." 
     }
-  ];
+];
 
-  const getMatchScore = (jobTags) => {
-    if (!vault || !vault.pivotTarget) return false;
-    const userTarget = vault.pivotTarget.toLowerCase();
-    return jobTags.some(tag => 
-      userTarget.includes(tag.toLowerCase()) || 
-      tag.toLowerCase().includes(userTarget)
-    );
-  };
+const outreachPhases = [
+    { 
+        id: 'p1', 
+        title: "Phase 1: The 'Soft' Curiosity", 
+        goal: "LOW STAKES ENGAGEMENT", 
+        script: "Subject: Question from a fellow [Industry] lead\n\nHi [Name], I've been closely following how [Company] is scaling its [Specific Department]. As I transition my decade of experience in public sector curriculum management toward [Private Sector], I'm curious: what is the one 'unwritten' skill your team values most right now? No need for a long reply—just looking for a professional pulse-check." 
+    },
+    { 
+        id: 'p2', 
+        title: "Phase 2: The Value Exchange", 
+        goal: "OFFER A PERSPECTIVE", 
+        script: "Hi [Name], following up on our last exchange—I actually just drafted a brief analysis on [Relevant Topic] that addresses that 'unwritten' skill we discussed. I thought your team might find the public-to-private perspective useful. Here’s the link (no gates). Hope it helps with the [Current Project]!" 
+    },
+    { 
+        id: 'p3', 
+        title: "Phase 3: The Request for Sponsorship", 
+        goal: "THE 15-MINUTE VIRTUAL COFFEE", 
+        script: "Hi [Name], your insights have been instrumental in how I'm framing my transition. I'm currently architecting my move into [Specific Role] and would value 15 minutes of your time to ask 3 specific questions about the roadmap at [Company]. I promise to be brief and respectful of your schedule. Does next Thursday work?" 
+    },
+    { 
+        id: 'p4', 
+        title: "Phase 4: The Closing Circle", 
+        goal: "THE 'STEALTH' REFERRAL", 
+        script: "Thank you for the call, [Name]. Based on what you shared about [Company]'s growth, it's clear my background in [Specific Skill] would solve a few of the bottlenecks we discussed. If you're comfortable, I'd love to stay on your radar for any upcoming roles—even those not yet public. I've attached my Horizon-formatted resume for your records." 
+    }
+];
 
-  const filteredJobs = useMemo(() => {
-    return jobLeads.filter(job => {
-      const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                           job.company.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesRegion = selectedRegion === 'Global (All)' || job.region === selectedRegion;
-      const matchesLocation = job.location.toLowerCase().includes(locationSearch.toLowerCase()) ||
-                             (locationSearch.toLowerCase() === 'remote' && job.isRemote);
-      const matchesRemoteToggle = !remoteOnly || job.isRemote;
-
-      return matchesSearch && matchesRegion && matchesLocation && matchesRemoteToggle;
-    });
-  }, [searchTerm, selectedRegion, locationSearch, remoteOnly]);
+const Contact = () => {
+  const [expandedCard, setExpandedCard] = useState(null);
+  const [openPhaseId, setOpenPhaseId] = useState(null);
 
   return (
-    <div className="min-h-screen bg-transparent pb-20 px-4 max-w-7xl mx-auto">
-      <header className="mb-12 pt-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-2xl bg-teal-500/10 text-teal-400 border border-teal-500/20">
-              <Rocket size={28} />
-            </div>
-            <h1 className="text-3xl font-serif italic text-white tracking-tight">Horizon Job Board</h1>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={() => setRemoteOnly(!remoteOnly)}
-              className={`flex items-center gap-3 px-5 py-2.5 rounded-2xl border transition-all duration-300 ${
-                remoteOnly 
-                ? 'bg-teal-500/10 border-teal-500/40 text-teal-400 shadow-[0_0_15px_rgba(20,184,166,0.1)]' 
-                : 'bg-white/5 border-white/10 text-zinc-500 hover:border-white/20'
-              }`}
-            >
-              <Wifi size={16} className={remoteOnly ? 'animate-pulse' : ''} />
-              <span className="text-[11px] font-bold uppercase tracking-wider">Remote Only</span>
-              <div className={`w-8 h-4 rounded-full relative transition-colors duration-300 ${remoteOnly ? 'bg-teal-500' : 'bg-zinc-700'}`}>
-                <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all duration-300 ${remoteOnly ? 'left-5' : 'left-1'}`} />
-              </div>
-            </button>
-
-            {vault?.lastSync && (
-              <div className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#110E16]/60 border border-white/10">
-                <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
-                <span className="text-[10px] text-zinc-400 uppercase tracking-widest font-black">Hearth Synced</span>
-              </div>
-            )}
-          </div>
-        </div>
-        
-        <p className="text-zinc-400 text-sm font-light max-w-2xl leading-relaxed text-left">
-          {vault?.userName ? `Welcome back, ${vault.userName.split(' ')[0]}. ` : ""}
-          Welcome to the Launchpad! The Horizon Board curates roles where your public-sector background is an advantage. 
-          {vault?.pivotTarget ? ` We've highlighted roles matching your path in ${vault.pivotTarget}.` : ""}
+    <div className="max-w-6xl mx-auto pb-24 px-4 animate-in fade-in duration-500">
+      
+      {/* HEADER SECTION */}
+      <div className="mb-16 text-center">
+        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-400 mb-4">The Library Archives</h2>
+        <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6">Provisions for the Path</h1>
+        <p className="max-w-2xl mx-auto text-zinc-400 text-sm font-light italic leading-relaxed">
+          Tactical frameworks, negotiation scripts, and communication protocols for the public-to-private transition.
         </p>
-      </header>
-
-      <div className="flex flex-col gap-4 mb-12">
-        <div className="relative group">
-          <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-teal-500 transition-colors" size={20} />
-          <input 
-            type="text"
-            placeholder="Search roles, companies, or expertise..."
-            className="w-full bg-[#110E16]/40 border border-zinc-800/80 rounded-[1.8rem] py-5 pl-16 pr-6 text-sm text-white focus:border-teal-500/30 outline-none transition-all placeholder:text-zinc-700 shadow-2xl"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="relative group">
-            <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-teal-500 transition-colors" size={18} />
-            <input 
-              type="text"
-              placeholder="City, State, or Province..."
-              className="w-full bg-[#110E16]/40 border border-zinc-800/80 rounded-[1.5rem] py-5 pl-16 pr-6 text-sm text-white focus:border-teal-500/30 outline-none transition-all placeholder:text-zinc-700 shadow-2xl"
-              value={locationSearch}
-              onChange={(e) => setLocationSearch(e.target.value)}
-            />
-          </div>
-          <div className="relative">
-            <Globe className="absolute left-6 top-1/2 -translate-y-1/2 text-zinc-600" size={18} />
-            <select 
-              className="w-full bg-[#110E16]/40 border border-zinc-800/80 rounded-[1.5rem] py-5 pl-16 pr-12 text-sm text-white focus:border-teal-500/30 outline-none appearance-none cursor-pointer shadow-2xl"
-              value={selectedRegion}
-              onChange={(e) => setSelectedRegion(e.target.value)}
-            >
-              {regions.map(r => <option key={r} value={r} className="bg-[#1A1625]">{r}</option>)}
-            </select>
-            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-600">
-              <Filter size={14} />
-            </div>
-          </div>
-        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <AnimatePresence mode='popLayout'>
-          {filteredJobs.length > 0 ? (
-            filteredJobs.map((job) => {
-              const isMatch = getMatchScore(job.tags);
-              return (
-                <motion.div
-                  key={job.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className={`group p-8 rounded-[2.5rem] bg-[#110E16]/30 border ${isMatch ? 'border-teal-500/20 shadow-[0_0_50px_rgba(20,184,166,0.03)]' : 'border-zinc-800/40'} hover:border-teal-500/40 transition-all duration-500 relative overflow-hidden`}
-                >
-                  <div className="flex justify-between items-start mb-8 text-left">
-                    <div className="flex gap-4">
-                      <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-zinc-500 group-hover:text-teal-400 group-hover:bg-teal-500/10 transition-all duration-500 border border-white/5 shrink-0">
-                        <Building2 size={26} />
-                      </div>
-                      <div>
-                        <h3 className="text-white font-bold text-lg leading-tight group-hover:text-teal-200 transition-colors mb-1">{job.title}</h3>
-                        <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">{job.company}</p>
-                      </div>
+      <div className="flex items-center gap-4 mb-10">
+        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400/80">Active Provisions</h3>
+        <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
+      </div>
+
+      {/* RESOURCE GRID */}
+      <div className="grid grid-cols-1 gap-6 mb-20">
+        {trailKitProvisions.map((tool) => {
+          const isOpen = expandedCard === tool.id;
+          return (
+            <div key={tool.id} className="flex flex-col group">
+              <div 
+                onClick={() => {
+                  if (tool.isAccordion) setExpandedCard(isOpen ? null : tool.id);
+                  else if (tool.url) window.open(tool.url, '_blank');
+                }}
+                className={`relative bg-[#110E16] border p-8 transition-all duration-300 overflow-hidden shadow-xl ${
+                  isOpen ? 'rounded-t-[2.5rem] border-teal-500/30 bg-teal-500/[0.02]' : 'rounded-[2.5rem] border-zinc-800/50 hover:border-teal-500/30'
+                } cursor-pointer`}
+              >
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                  <div className="flex items-center gap-6">
+                    <div className="p-4 rounded-2xl bg-white/5 border border-white/5 group-hover:bg-teal-500/10 transition-colors">
+                      {tool.icon}
                     </div>
-                    {isMatch && (
-                      <div className="flex items-center gap-1.5 px-3 py-1 bg-teal-500/10 border border-teal-500/20 rounded-full text-teal-400 text-[9px] font-black uppercase tracking-tighter">
-                        <Zap size={10} fill="currentColor" /> Top Match
-                      </div>
-                    )}
-                  </div>
-
-                  <p className="text-zinc-400 text-sm font-light mb-8 leading-relaxed line-clamp-2 text-left">
-                    {job.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    {job.isRemote && (
-                      <span className="px-3 py-1.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-[10px] text-teal-400 font-bold uppercase flex items-center gap-1.5">
-                        <Home size={10} /> Remote
+                    <div>
+                      <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest bg-zinc-800/50 text-zinc-500 mb-2">
+                        {tool.type}
                       </span>
-                    )}
-                    {job.tags.map(tag => (
-                      <span key={tag} className="px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/10 text-[10px] text-zinc-500 font-medium">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-between pt-6 border-t border-white/5">
-                    <div className="flex items-center gap-2 text-xs text-zinc-500 font-medium">
-                      <Navigation size={14} className="text-teal-500/40" />
-                      {job.location}
+                      <h3 className="text-xl font-serif italic font-black text-white group-hover:text-teal-400 transition-colors">{tool.title}</h3>
+                      <p className="text-zinc-400 mt-1 max-w-md text-xs font-light italic leading-relaxed">{tool.desc}</p>
                     </div>
-                    <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-teal-400 hover:text-white transition-all transform group-hover:translate-x-1">
-                      View Posting <ArrowRight size={14} />
-                    </button>
                   </div>
-                </motion.div>
-              );
-            })
-          ) : (
-            <div className="col-span-full py-40 text-center bg-[#110E16]/10 rounded-[3rem] border border-dashed border-zinc-800/40">
-              <div className="relative inline-block mb-6">
-                <Globe className="w-16 h-16 text-zinc-800 opacity-20" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Wifi className="w-8 h-8 text-zinc-800 opacity-40 animate-pulse" />
+                  <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors">
+                    {tool.action}
+                    {tool.isAccordion ? (isOpen ? <ChevronUp size={14} className="text-teal-400" /> : <ChevronDown size={14} />) : <ExternalLink size={14} />}
+                  </div>
                 </div>
               </div>
-              <h3 className="text-zinc-500 font-serif italic text-2xl">Signal Lost</h3>
-              <p className="text-zinc-700 text-sm mt-3 max-w-xs mx-auto leading-relaxed text-center">No paths found in this direction. Adjust your search parameters or toggle filters to find more leads.</p>
+
+              {isOpen && (
+                <div className="bg-[#110E16]/50 border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4">
+                  
+                  {/* LEXICON SECTION */}
+                  {tool.id === 'verbs' && (
+                    <div className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {powerVerbs.map((v, i) => (
+                            <div key={i} className="bg-black/40 border border-white/5 p-4 rounded-xl">
+                                <div className="text-[10px] text-zinc-600 line-through uppercase mb-1">{v.legacy}</div>
+                                <div className="text-lg font-serif italic text-teal-400">{v.horizon}</div>
+                                <p className="text-[10px] text-zinc-500 italic mt-1">{v.use}</p>
+                            </div>
+                        ))}
+                        </div>
+                        <button className="w-full py-4 border border-dashed border-zinc-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 hover:border-teal-400/30 transition-all">
+                            Open Full List (50+ Verbs)
+                        </button>
+                    </div>
+                  )}
+
+                  {/* MARKET PRIMER / WORKSHEET SECTION */}
+                  {tool.id === 'market' && (
+                    <div className="bg-teal-500/5 border border-teal-500/20 p-8 rounded-[2rem]">
+                        <div className="flex items-start justify-between gap-6">
+                            <div>
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-teal-400 mb-2">Horizon Workshop</h4>
+                                <h5 className="text-2xl font-serif italic text-white mb-4">Auditing Your Functional Legacy</h5>
+                                <p className="text-xs text-zinc-400 leading-relaxed mb-6 max-w-lg">
+                                    Use this worksheet to identify which 20% of your current duties generate 80% of your market value.
+                                </p>
+                                <button 
+                                    onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit", "_blank")}
+                                    className="bg-teal-500 text-black px-8 py-3 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-white transition-colors"
+                                >
+                                    Launch Strategy
+                                </button>
+                            </div>
+                            <Compass className="text-teal-500/20 hidden md:block" size={80} />
+                        </div>
+                    </div>
+                  )}
+
+                  {/* BEEFED UP SALARY SCRIPTS */}
+                  {tool.id === 'scripts' && (
+                    <div className="space-y-4">
+                        <div className="mb-6 p-4 bg-teal-500/10 border border-teal-500/20 rounded-xl">
+                            <p className="text-[11px] text-teal-400 italic">Pro-Tip: In the private sector, everything is a data point. Use these scripts to pivot from 'asking' to 'collaborating' on a fair price.</p>
+                        </div>
+                        {salaryScripts.map((s, i) => (
+                            <div key={i} className="bg-black/40 border border-white/5 p-5 rounded-xl">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <DollarSign size={12} className="text-teal-400" />
+                                    <h4 className="text-[9px] font-black uppercase tracking-widest text-white">{s.label}</h4>
+                                </div>
+                                <p className="text-[10px] text-zinc-500 italic mb-3">{s.context}</p>
+                                <div className="p-4 bg-black/60 rounded-lg border border-white/5">
+                                    <p className="font-mono text-[11px] text-zinc-300 leading-relaxed italic">"{s.script}"</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                  )}
+
+                  {/* BEEFED UP OUTREACH SEQUENCE */}
+                  {tool.id === 'outreach' && (
+                    <div className="space-y-4">
+                        {outreachPhases.map((phase) => (
+                            <div key={phase.id} className="bg-black/40 border border-white/5 rounded-2xl overflow-hidden">
+                                <button onClick={() => setOpenPhaseId(openPhaseId === phase.id ? null : phase.id)} className="w-full p-5 flex items-center justify-between text-left hover:bg-white/5 transition-colors">
+                                    <div className="flex flex-col">
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-white">{phase.title}</span>
+                                        <span className="text-[9px] text-zinc-500 uppercase font-bold tracking-tighter mt-1">{phase.goal}</span>
+                                    </div>
+                                    {openPhaseId === phase.id ? <ChevronUp size={14} className="text-teal-400" /> : <ChevronDown size={14} />}
+                                </button>
+                                {openPhaseId === phase.id && (
+                                    <div className="p-6 pt-0 border-t border-white/5 bg-black/20">
+                                        <div className="p-4 bg-black/40 rounded-xl mt-4 font-mono text-[11px] text-zinc-300 italic whitespace-pre-wrap leading-relaxed border border-white/5">
+                                            {phase.script}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-          )}
-        </AnimatePresence>
+          );
+        })}
       </div>
 
-      {isAdmin && (
-        <div className="mt-20 p-16 rounded-[4rem] bg-gradient-to-br from-teal-500/[0.04] to-purple-500/[0.04] border border-white/5 text-center shadow-3xl">
-          <p className="text-teal-400 text-[10px] font-black uppercase tracking-[0.5em] mb-6 text-center">Founder's Console</p>
-          <h4 className="text-white font-serif italic text-3xl mb-8 text-center">Found a new lead for the community?</h4>
-          <button className="px-14 py-5 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-white hover:scale-105 transition-all shadow-[0_0_40px_rgba(20,184,166,0.3)] mx-auto block">
-            Add New Job Lead
+      {/* VOLUME TOGGLE */}
+      <div className="mt-12 flex flex-col items-center gap-6">
+        <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600">Navigate the Archives</h4>
+        <div className="flex p-1.5 bg-[#110E16] border border-zinc-800/50 rounded-full shadow-2xl">
+          <button className="px-10 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all text-zinc-500 hover:text-white">
+            Volume I: Basecamp
+          </button>
+          <button className="px-10 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all bg-teal-500 text-black shadow-lg shadow-teal-500/20">
+            Volume II: Trail Kit
           </button>
         </div>
-      )}
+      </div>
+
     </div>
   );
 };
 
-export default App;
+export default Contact;
