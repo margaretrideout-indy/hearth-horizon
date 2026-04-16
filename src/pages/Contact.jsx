@@ -4,8 +4,6 @@ import {
   Mail, ExternalLink, Compass, DollarSign, FileDown, BookOpen, Sparkles
 } from 'lucide-react';
 
-// --- GENERALIZED DATA FOR ALL USERS ---
-
 const powerVerbs = [
     { legacy: "Taught", horizon: "Facilitated", use: "Standardizing delivery for stakeholders." },
     { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
@@ -53,8 +51,7 @@ const basecampProvisions = [
     { id: 'intro', title: "Public-to-Private 101", desc: "Overview of the psychological shift for a successful pivot.", type: "Mindset Workshop", icon: <Sparkles className="text-purple-400" /> }
 ];
 
-const Contact = () => {
-  const [currentVolume, setCurrentVolume] = useState(2);
+const Contact = ({ currentVolume }) => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [openPhaseId, setOpenPhaseId] = useState(null);
 
@@ -63,7 +60,6 @@ const Contact = () => {
   return (
     <div className="max-w-6xl mx-auto pb-24 px-4 animate-in fade-in duration-500">
       
-      {/* HEADER SECTION */}
       <div className="mb-16 text-center">
         <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-400 mb-4">The Library Archives</h2>
         <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6">
@@ -71,7 +67,6 @@ const Contact = () => {
         </h1>
       </div>
 
-      {/* RESOURCE GRID */}
       <div className="grid grid-cols-1 gap-6 mb-20">
         {activeResources.map((tool) => {
           const isOpen = expandedCard === tool.id;
@@ -96,7 +91,6 @@ const Contact = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors">
-                    {tool.action}
                     {isOpen ? <ChevronUp size={14} className="text-teal-400" /> : <ChevronDown size={14} />}
                   </div>
                 </div>
@@ -105,7 +99,6 @@ const Contact = () => {
               {isOpen && (
                 <div className="bg-[#110E16]/50 border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4">
                   
-                  {/* LEXICON SECTION */}
                   {tool.id === 'verbs' && (
                     <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -122,7 +115,6 @@ const Contact = () => {
                     </div>
                   )}
 
-                  {/* MARKET PRIMER WITH FIXED PDF LINK */}
                   {tool.id === 'market' && (
                     <div className="bg-teal-500/5 border border-teal-500/20 p-8 rounded-[2rem]">
                         <h4 className="text-[10px] font-black uppercase tracking-widest text-teal-400 mb-2">Horizon Workshop</h4>
@@ -135,7 +127,6 @@ const Contact = () => {
                     </div>
                   )}
 
-                  {/* NEGOTIATION SCRIPTS - GENERALIZED */}
                   {tool.id === 'scripts' && (
                     <div className="space-y-4">
                         {salaryScripts.map((s, i) => (
@@ -153,7 +144,6 @@ const Contact = () => {
                     </div>
                   )}
 
-                  {/* OUTREACH SEQUENCE - GENERALIZED */}
                   {tool.id === 'outreach' && (
                     <div className="space-y-4">
                         {outreachPhases.map((phase) => (
@@ -179,26 +169,6 @@ const Contact = () => {
           );
         })}
       </div>
-
-      {/* PERSISTENT VOLUME TOGGLE */}
-      <div className="mt-12 flex flex-col items-center gap-6">
-        <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600">Navigate the Archives</h4>
-        <div className="flex p-1.5 bg-[#110E16] border border-zinc-800/50 rounded-full">
-          <button 
-            onClick={() => {setCurrentVolume(1); setExpandedCard(null);}} 
-            className={`px-10 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 1 ? "bg-teal-500 text-black shadow-lg shadow-teal-500/20" : "text-zinc-500 hover:text-white"}`}
-          >
-            Volume I: Basecamp
-          </button>
-          <button 
-            onClick={() => {setCurrentVolume(2); setExpandedCard(null);}} 
-            className={`px-10 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 2 ? "bg-teal-500 text-black shadow-lg shadow-teal-500/20" : "text-zinc-500 hover:text-white"}`}
-          >
-            Volume II: Trail Kit
-          </button>
-        </div>
-      </div>
-
     </div>
   );
 };
