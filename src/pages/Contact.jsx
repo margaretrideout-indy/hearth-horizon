@@ -71,25 +71,25 @@ const outreachPhases = [
     { 
         id: 'p1', 
         title: "Phase 1: The 'Soft' Curiosity", 
-        goal: "Low Stakes Engagement", 
+        goal: "LOW STAKES ENGAGEMENT", 
         script: "Subject: Insight on [Company Name] growth\n\nHi [Name], I've been following [Company]'s recent move into [Industry Sector]. As someone pivoting from a decade in public-sector program management, I'm curious about how your team handles [Specific Challenge]. Would you be open to a 5-minute email exchange or a quick coffee?" 
     },
     { 
         id: 'p2', 
         title: "Phase 2: The Value Exchange", 
-        goal: "Offer a Perspective", 
+        goal: "OFFER A PERSPECTIVE", 
         script: "Hi [Name], I noticed you mentioned [Challenge] in our last chat. I actually just finished a brief audit of [Related Topic] and thought this framework might be useful for your team. Happy to discuss if it resonates!" 
     },
     { 
         id: 'p3', 
         title: "Phase 3: The Request for Sponsorship", 
-        goal: "The 15-Minute 'Ask'", 
+        goal: "THE 15-MINUTE CALL", 
         script: "Hi [Name], I'm currently architecting my transition into [Specific Private Sector Role]. Given your experience, I'd value your 'internal' lens on whether my background in [Skill] translates well to your current roadmap. Do you have 15 minutes next Tuesday?" 
     },
     { 
         id: 'p4', 
         title: "Phase 4: The Closing Circle", 
-        goal: "Referral & Gratitude", 
+        goal: "REFERRAL & GRATITUDE", 
         script: "Thank you for the insight today, [Name]. Based on our talk, it sounds like [Department] is the place to be. If you're comfortable, I'd love to stay on your radar for any upcoming 'Stealth' roles that might fit this profile." 
     }
 ];
@@ -101,16 +101,21 @@ const Contact = () => {
   return (
     <div className="max-w-6xl mx-auto pb-24 px-4 animate-in fade-in duration-500">
       
-      {/* PAGE HEADER */}
+      {/* 1. PAGE TITLE & INTRO SECTION */}
       <div className="mb-16 text-center">
         <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-400 mb-4">The Library Archives</h2>
-        <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6">Provisions for the Path</h1>
-        <p className="max-w-2xl mx-auto text-zinc-400 text-sm font-light italic leading-relaxed">
+        <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6 text-center">Provisions for the Path</h1>
+        <p className="max-w-2xl mx-auto text-zinc-400 text-sm font-light italic leading-relaxed text-center">
           Tactical tools designed to help Hearth & Horizon members translate public-sector skills into private-sector impact.
         </p>
       </div>
 
-      {/* TOOLKIT GRID */}
+      <div className="flex items-center gap-4 mb-10">
+        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400/80">Active Provisions</h3>
+        <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
+      </div>
+
+      {/* 2. RESOURCE CARDS GRID */}
       <div className="grid grid-cols-1 gap-6 mb-20">
         {trailKitProvisions.map((tool) => {
           const isOpen = expandedCard === tool.id;
@@ -147,10 +152,11 @@ const Contact = () => {
 
               {isOpen && (
                 <div className="bg-[#110E16]/50 border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4">
+                  
                   {/* LEXICON SUB-CONTENT */}
                   {tool.id === 'verbs' && (
-                    <>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {powerVerbs.map((v, i) => (
                             <div key={i} className="bg-black/40 border border-white/5 p-4 rounded-xl">
                             <div className="text-[10px] text-zinc-600 line-through uppercase mb-1">{v.legacy}</div>
@@ -160,9 +166,9 @@ const Contact = () => {
                         ))}
                         </div>
                         <button className="w-full py-4 border border-dashed border-zinc-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 hover:border-teal-400/30 transition-all">
-                            View Full List (50+ Verbs)
+                            Open Full List (50+ Verbs)
                         </button>
-                    </>
+                    </div>
                   )}
 
                   {/* MARKET PRIMER / WORKSHEET SUB-CONTENT */}
@@ -223,7 +229,7 @@ const Contact = () => {
         })}
       </div>
 
-      {/* VOLUME TOGGLE */}
+      {/* 3. PERSISTENT VOLUME TOGGLE */}
       <div className="mt-12 flex flex-col items-center gap-6">
         <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600">Navigate the Archives</h4>
         <div className="flex p-1.5 bg-[#110E16] border border-zinc-800/50 rounded-full shadow-2xl">
