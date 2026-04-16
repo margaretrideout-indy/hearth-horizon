@@ -1,56 +1,11 @@
 import React, { useState } from 'react';
 import { 
   FileText, MessageSquare, Map, ChevronDown, ChevronUp, Zap, 
-  Mail, ExternalLink, Compass, DollarSign, FileDown, Target
+  Mail, ExternalLink, Compass, DollarSign, FileDown, Target,
+  BookOpen, Sparkles
 } from 'lucide-react';
 
-const trailKitProvisions = [
-  {
-    id: 'verbs',
-    title: "The Power Verb Lexicon",
-    desc: "The 'Flip' dictionary. Strategic verbs to replace legacy public-sector language.",
-    type: "Interactive Glossary",
-    icon: <Zap className="text-purple-400" />,
-    action: "Open Lexicon",
-    isAccordion: true,
-  },
-  {
-    id: 'market',
-    title: "Canadian Market Primer",
-    desc: "The 'How-To' guide for sector translation, including the Horizon Workshop.",
-    type: "Interactive Guide",
-    icon: <Map className="text-teal-400" />,
-    action: "Read Primer",
-    isAccordion: true,
-  },
-  {
-    id: 'resume',
-    title: "The Horizon Resume Template",
-    desc: "A clean, ATS-optimized layout. Click to create your own private, editable copy.",
-    type: "Digital Blueprint",
-    icon: <FileText className="text-purple-400" />,
-    action: "Create My Copy",
-    url: "https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy",
-  },
-  {
-    id: 'scripts',
-    title: "Salary Negotiation Scripts",
-    desc: "High-leverage word-for-word scripts for the 'expectations' talk and high-stakes counter-offers.",
-    type: "Interactive Tool",
-    icon: <MessageSquare className="text-teal-400" />,
-    action: "View Scripts",
-    isAccordion: true,
-  },
-  {
-      id: 'outreach',
-      title: "Sponsorship Outreach",
-      desc: "The 4-phase sequence for turning cold contacts into professional advocates.",
-      type: "Communication Sequence",
-      icon: <Mail className="text-purple-400" />,
-      action: "View Protocols",
-      isAccordion: true,
-  }
-];
+// --- DATA STRUCTURES ---
 
 const powerVerbs = [
     { legacy: "Taught", horizon: "Facilitated", use: "Standardized delivery for stakeholders." },
@@ -102,25 +57,106 @@ const outreachPhases = [
         id: 'p4', 
         title: "Phase 4: The Closing Circle", 
         goal: "THE STEALTH REFERRAL", 
-        script: "Thank you for the talk, [Name]. Based on our discussion, it's clear my background in [Skill] would solve a few of the bottlenecks we discussed. If you're comfortable, I'd love to stay on your radar for any upcoming roles—even those not yet public. I've attached my Horizon-formatted resume for your records." 
+        script: "Thank you for the call, [Name]. Based on our discussion, it's clear my background in [Skill] would solve a few of the bottlenecks we discussed. If you're comfortable, I'd love to stay on your radar for any upcoming roles—even those not yet public. I've attached my Horizon-formatted resume for your records." 
     }
 ];
 
+const trailKitProvisions = [
+  {
+    id: 'verbs',
+    title: "The Power Verb Lexicon",
+    desc: "The 'Flip' dictionary. Strategic verbs to replace legacy public-sector language.",
+    type: "Interactive Glossary",
+    icon: <Zap className="text-purple-400" />,
+    action: "Open Lexicon",
+    isAccordion: true,
+  },
+  {
+    id: 'market',
+    title: "Canadian Market Primer",
+    desc: "The 'How-To' guide for sector translation, including the Horizon Workshop.",
+    type: "Interactive Guide",
+    icon: <Map className="text-teal-400" />,
+    action: "Read Primer",
+    isAccordion: true,
+  },
+  {
+    id: 'resume',
+    title: "The Horizon Resume Template",
+    desc: "A clean, ATS-optimized layout. Click to create your own private, editable copy.",
+    type: "Digital Blueprint",
+    icon: <FileText className="text-purple-400" />,
+    action: "Create My Copy",
+    url: "https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy",
+  },
+  {
+    id: 'scripts',
+    title: "Salary Negotiation Scripts",
+    desc: "High-leverage word-for-word scripts for the 'expectations' talk and counter-offers.",
+    type: "Interactive Tool",
+    icon: <MessageSquare className="text-teal-400" />,
+    action: "View Scripts",
+    isAccordion: true,
+  },
+  {
+      id: 'outreach',
+      title: "Sponsorship Outreach",
+      desc: "The 4-phase sequence for turning cold contacts into professional advocates.",
+      type: "Communication Sequence",
+      icon: <Mail className="text-purple-400" />,
+      action: "View Protocols",
+      isAccordion: true,
+  }
+];
+
+const basecampProvisions = [
+    {
+        id: 'welcome',
+        title: "The Founding Member Guide",
+        desc: "Everything you need to know about the Hearth & Horizon mission and your role as a Steward.",
+        type: "Welcome Kit",
+        icon: <BookOpen className="text-teal-400" />,
+        action: "Read Guide"
+    },
+    {
+        id: 'intro',
+        title: "Public-to-Private 101",
+        desc: "A high-level overview of the psychological shift required for a successful transition.",
+        type: "Mindset Workshop",
+        icon: <Sparkles className="text-purple-400" />,
+        action: "Watch Video"
+    }
+];
+
+// --- COMPONENT ---
+
 const Contact = () => {
+  const [currentVolume, setCurrentVolume] = useState(2); // Toggle between Volume 1 and 2
   const [expandedCard, setExpandedCard] = useState(null);
   const [openPhaseId, setOpenPhaseId] = useState(null);
 
+  const activeResources = currentVolume === 1 ? basecampProvisions : trailKitProvisions;
+
   return (
-    <div className="max-w-6xl mx-auto pb-24 px-4">
-      {/* HEADER SECTION */}
+    <div className="max-w-6xl mx-auto pb-24 px-4 animate-in fade-in duration-500">
+      
+      {/* HEADER */}
       <div className="mb-16 text-center">
-        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-400 mb-4 text-center">The Library Archives</h2>
-        <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6 text-center">Provisions for the Path</h1>
+        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-400 mb-4">The Library Archives</h2>
+        <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6">
+            {currentVolume === 1 ? "Volume I: Basecamp" : "Volume II: Trail Kit"}
+        </h1>
+        <p className="max-w-2xl mx-auto text-zinc-400 text-sm font-light italic leading-relaxed">
+          {currentVolume === 1 
+            ? "Laying the foundation for your career pivot. Start here." 
+            : "Tactical frameworks and negotiation scripts for the public-to-private transition."
+          }
+        </p>
       </div>
 
-      {/* PROVISIONS GRID */}
+      {/* RESOURCE GRID */}
       <div className="grid grid-cols-1 gap-6 mb-20">
-        {trailKitProvisions.map((tool) => {
+        {activeResources.map((tool) => {
           const isOpen = expandedCard === tool.id;
           return (
             <div key={tool.id} className="flex flex-col group">
@@ -183,7 +219,7 @@ const Contact = () => {
                                     <h4 className="text-[10px] font-black uppercase tracking-widest text-teal-400 mb-2">Horizon Workshop</h4>
                                     <h5 className="text-2xl font-serif italic text-white mb-4">Auditing Your Functional Legacy</h5>
                                     <p className="text-xs text-zinc-400 leading-relaxed mb-6 max-w-lg">
-                                        Use this worksheet to identify which 20% of your current duties generate 80% of your market value.
+                                        Identify which 20% of your current duties generate 80% of your market value.
                                     </p>
                                     <div className="flex flex-col sm:flex-row gap-4">
                                         <button 
@@ -257,14 +293,34 @@ const Contact = () => {
         })}
       </div>
 
-      {/* PERSISTENT VOLUME TOGGLE */}
+      {/* VOLUME TOGGLE - NOW FUNCTIONAL */}
       <div className="mt-12 flex flex-col items-center gap-6">
         <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600">Navigate the Archives</h4>
         <div className="flex p-1.5 bg-[#110E16] border border-zinc-800/50 rounded-full shadow-2xl">
-          <button className="px-10 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all text-zinc-500 hover:text-white">
+          <button 
+            onClick={() => {
+                setCurrentVolume(1);
+                setExpandedCard(null); // Reset expanded state when switching
+            }}
+            className={`px-10 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                currentVolume === 1 
+                ? "bg-teal-500 text-black shadow-lg shadow-teal-500/20" 
+                : "text-zinc-500 hover:text-white"
+            }`}
+          >
             Volume I: Basecamp
           </button>
-          <button className="px-10 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all bg-teal-500 text-black shadow-lg shadow-teal-500/20">
+          <button 
+            onClick={() => {
+                setCurrentVolume(2);
+                setExpandedCard(null); // Reset expanded state when switching
+            }}
+            className={`px-10 py-4 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                currentVolume === 2 
+                ? "bg-teal-500 text-black shadow-lg shadow-teal-500/20" 
+                : "text-zinc-500 hover:text-white"
+            }`}
+          >
             Volume II: Trail Kit
           </button>
         </div>
