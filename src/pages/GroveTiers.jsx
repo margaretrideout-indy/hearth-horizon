@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Flame, Heart, Sprout, Globe, ShieldCheck, Check, Leaf, Mountain, UserPlus,
   Smartphone, Share2, PlusSquare, Sparkles, Send, Zap, FileText, Map, MessageSquare, Briefcase,
-  MoreVertical
+  MoreVertical, Star
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,6 +17,9 @@ const GroveTiers = ({ vault, onSync }) => {
   const [requestStatus, setRequestStatus] = useState(null);
   const [contactStatus, setContactStatus] = useState(null);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+
+  // For the Luminary Registry
+  const luminaries = ["Josh"]; 
 
   const hasSession = vault?.isAligned || !!localStorage.getItem('base44_auth_session');
 
@@ -154,6 +157,7 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </header>
 
+        {/* PROVISIONS SECTION */}
         <section className="mb-24 md:mb-48">
           <div className="text-center mb-16">
             <h2 className="text-white font-serif italic text-4xl mb-4">Provisions from the Hearth</h2>
@@ -178,7 +182,8 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        <section className="mb-24 md:mb-48">
+        {/* TIERS SECTION */}
+        <section className="mb-24">
           <div className="text-center mb-16 space-y-4">
              <h2 className="text-white font-serif italic text-4xl">Choose Your Path</h2>
              <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">Structured Support Options</p>
@@ -207,6 +212,60 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
+        {/* LUMINARY REGISTRY (DONATOR'S WALL) */}
+        <section className="mb-24 md:mb-48 max-w-4xl mx-auto">
+          <div className="relative p-1 bg-gradient-to-r from-teal-500/20 via-purple-500/20 to-teal-500/20 rounded-[3rem]">
+            <div className="bg-[#0A080D] rounded-[2.9rem] px-8 py-12 text-center relative overflow-hidden">
+              {/* Twinkling background element */}
+              <motion.div 
+                animate={{ opacity: [0.2, 0.5, 0.2] }} 
+                transition={{ duration: 3, repeat: Infinity }}
+                className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,184,166,0.05),transparent_70%)] pointer-events-none" 
+              />
+              
+              <div className="relative z-10">
+                <div className="flex items-center justify-center gap-3 mb-6">
+                  <Star className="text-teal-400 fill-teal-400/20" size={16} />
+                  <h2 className="text-white font-serif italic text-3xl">Luminary Registry</h2>
+                  <Star className="text-teal-400 fill-teal-400/20" size={16} />
+                </div>
+                <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em] mb-10">
+                  Honoring those who light the way for others
+                </p>
+
+                <div className="flex flex-wrap justify-center gap-6">
+                  {luminaries.map((name, i) => (
+                    <motion.div 
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      className="group relative"
+                    >
+                      <div className="px-6 py-2 rounded-full border border-zinc-800 bg-white/5 text-white font-serif italic text-lg hover:border-teal-500/50 transition-all duration-500">
+                        {name}
+                      </div>
+                      {/* Founding Wayfarer Glow */}
+                      <div className="absolute -inset-1 bg-teal-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-full pointer-events-none" />
+                    </motion.div>
+                  ))}
+                </div>
+
+                <p className="mt-12 text-zinc-500 text-[11px] italic font-light max-w-md mx-auto leading-relaxed">
+                  Thank you to our founding donors. Your contributions directly fund scholarship seats for those in deep transition.
+                </p>
+                
+                <button 
+                  onClick={() => window.location.href = LINK_DONATION}
+                  className="mt-8 text-[9px] font-black uppercase tracking-[0.3em] text-teal-400/60 hover:text-teal-400 transition-colors"
+                >
+                  + Add your light to the Registry
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CONTACT SECTION */}
         <section className="mb-24 md:mb-32 max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-white font-serif italic text-4xl mb-4">Questions?</h2>
@@ -243,6 +302,7 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
+        {/* MOBILE APP SECTION */}
         <section className="max-w-4xl mx-auto pb-24 selection:bg-teal-500/30">
           <div className="bg-[#110E16]/40 border border-zinc-800/50 rounded-[2.5rem] p-10 md:p-12 shadow-xl overflow-hidden relative">
             <div className="absolute top-0 right-0 p-8 text-teal-500/5">
