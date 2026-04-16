@@ -213,62 +213,56 @@ const GroveTiers = ({ vault, onSync }) => {
         </section>
 
         {/* LUMINARY REGISTRY */}
-        <section className="mb-24 md:mb-48 max-w-4xl mx-auto">
-          <div className="relative p-1 bg-gradient-to-r from-teal-500/20 via-purple-500/20 to-teal-500/20 rounded-[3rem]">
-            <div className="bg-[#0A080D] rounded-[2.9rem] px-8 py-12 text-center relative overflow-hidden">
-              <motion.div 
-                animate={{ opacity: [0.2, 0.5, 0.2] }} 
-                transition={{ duration: 3, repeat: Infinity }}
-                className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,184,166,0.05),transparent_70%)] pointer-events-none" 
-              />
-              
-              <div className="relative z-10">
-                <div className="flex items-center justify-center gap-3 mb-6">
-                  <Star className="text-teal-400 fill-teal-400/20" size={16} />
-                  <h2 className="text-white font-serif italic text-3xl">Luminary Registry</h2>
-                  <Star className="text-teal-400 fill-teal-400/20" size={16} />
-                </div>
-                
-                <div className="mb-10 flex flex-col items-center">
-                  <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em] mb-4">
-                    Honoring those who light the way
-                  </p>
-                  {/* Husband/Founder Message */}
-                  <p className="text-slate-400 text-sm italic font-light max-w-sm leading-relaxed border-l border-teal-500/30 pl-4 py-1">
-                    "To Matthew: Thank you for holding the map while I figured out which way my horizon was shifting, and for believing in my dream before the first stone was even laid."
-                  </p>
-                </div>
+        {/* LUMINARY REGISTRY (DONATOR'S WALL) - REFINED */}
+<section className="mb-24 md:mb-48 max-w-4xl mx-auto">
+  <div className="relative p-1 bg-gradient-to-r from-teal-500/20 via-purple-500/20 to-teal-500/20 rounded-[3rem]">
+    <div className="bg-[#0A080D] rounded-[2.9rem] px-8 py-12 md:p-16 text-center relative overflow-hidden">
+      {/* Twinkling background element */}
+      <motion.div 
+        animate={{ opacity: [0.2, 0.5, 0.2] }} 
+        transition={{ duration: 3, repeat: Infinity }}
+        className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,184,166,0.05),transparent_70%)] pointer-events-none" 
+      />
+      
+      <div className="relative z-10">
+        {/* Registry Header */}
+        <div className="flex items-center justify-center gap-3 mb-6">
+          <Star className="text-teal-400 fill-teal-400/20" size={16} />
+          <h2 className="text-white font-serif italic text-3xl">Luminary Registry</h2>
+          <Star className="text-teal-400 fill-teal-400/20" size={16} />
+        </div>
+        
+        {/* Distinguished Founder's Gratitude Note */}
+        <div className="mb-16 md:mb-20 flex flex-col items-center">
+          <Badge className="bg-teal-500/10 text-teal-400 border border-teal-500/20 italic mb-4 w-fit flex gap-2 items-center">
+            <Star size={10} className="fill-teal-400"/> FOUNDER’S GRATITUDE
+          </Badge>
+          <p className="text-slate-400 text-sm md:text-base italic font-light max-w-lg leading-relaxed border-l border-white/10 pl-5 py-2">
+            "To Matthew—thank you for holding the map while I figured out which way my horizon was shifting, and for believing in this dream before the first stone was even laid."
+          </p>
+        </div>
 
-                <div className="flex flex-wrap justify-center gap-6">
-                  {luminaries.map((name, i) => (
-                    <motion.div 
-                      key={i}
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      className="group relative"
-                    >
-                      <div className="px-6 py-2 rounded-full border border-teal-500/30 bg-teal-500/5 text-white font-serif italic text-lg hover:border-teal-400 transition-all duration-500 shadow-[0_0_20px_rgba(20,184,166,0.1)]">
-                        {name}
-                      </div>
-                      <div className="absolute -inset-1 bg-teal-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity rounded-full pointer-events-none" />
-                    </motion.div>
-                  ))}
-                </div>
+        {/* Clear Development Fund Description */}
+        <div className="mt-16 pt-12 border-t border-white/5 space-y-4 text-center max-w-xl mx-auto mb-10">
+          <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">Fund Description</h4>
+          <p className="text-xs text-zinc-400 leading-relaxed font-light italic">
+            Gifts to the Hearth directly fund the ongoing architectural development of the Hearth & Horizon platform. Your support helps us build better tools for those navigating the climb.
+          </p>
+        </div>
 
-                <p className="mt-12 text-zinc-500 text-[11px] italic font-light max-w-md mx-auto leading-relaxed">
-                  Gifts to the Registry fund the future of this platform. Your support helps us build better tools for those navigating the climb.
-                </p>
-                
-                <button 
-                  onClick={() => window.location.href = LINK_DONATION}
-                  className="mt-8 text-[9px] font-black uppercase tracking-[0.3em] text-teal-400/60 hover:text-teal-400 transition-colors"
-                >
-                  + Add your light to the Registry
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Main CTA Button - Matching Plan Style */}
+        <div className="flex justify-center">
+            <button 
+              onClick={() => window.location.href = LINK_DONATION}
+              className="px-10 py-4 bg-[#39D7B8] text-[#0A080D] font-black rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-xl shadow-teal-500/20 hover:scale-105"
+            >
+                INVEST IN THE HEARTH
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
         {/* CONTACT SECTION */}
         <section className="mb-24 md:mb-32 max-w-4xl mx-auto">
