@@ -153,17 +153,22 @@ function AppRoutes() {
         <Route path="/" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         <Route path="/grove" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         
-        {/* THE HORIZON (PUBLIC/FREEMIUM) */}
+        {/* THE HORIZON & LIBRARY (PUBLIC/FREEMIUM) */}
         <Route path="/launch" element={
           <AppLayout currentTier={effectiveTier}>
             <Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} />
           </AppLayout>
         } />
+
+        <Route path="/library" element={
+          <AppLayout currentTier={effectiveTier}>
+            <Library vault={vault} onSync={onSync} isAdmin={isAdmin} />
+          </AppLayout>
+        } />
         
-        {/* REDIRECT CANOPY TO LAUNCH */}
         <Route path="/canopy" element={<Navigate to="/launch" replace />} />
 
-        {/* PROTECTED ACCESS (SUBSCRIBERS) */}
+        {/* PROTECTED ACCESS (SUBSCRIBERS ONLY) */}
         <Route path="/hearth" element={
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
@@ -192,14 +197,6 @@ function AppRoutes() {
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
               <CulturalFit vault={vault} onSync={onSync} isAdmin={isAdmin} />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-        
-        <Route path="/library" element={
-          <ProtectedRoute>
-            <AppLayout currentTier={effectiveTier}>
-              <Library vault={vault} onSync={onSync} isAdmin={isAdmin} />
             </AppLayout>
           </ProtectedRoute>
         } />
