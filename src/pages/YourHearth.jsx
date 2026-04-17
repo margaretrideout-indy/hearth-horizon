@@ -6,9 +6,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { 
   Flame, Upload, CheckCircle2, FileText, 
   Sparkles, ArrowRight, ShieldCheck, Zap,
-  BookOpen, PenLine, Lock, Globe
+  BookOpen, PenLine, Lock, Globe, Trash2, RefreshCw
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHorizon }) {
   const navigate = useNavigate();
@@ -16,16 +15,29 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
   const [reflection, setReflection] = useState("");
   const [selectedEmoji, setSelectedEmoji] = useState(null);
 
-  const pulses = ["🌱", "🔥", "🌊", "🌪️", "💎"];
+  // RESTORED: Your specific descriptors
+  const pulses = [
+    { icon: "🌱", label: "Positive" },
+    { icon: "🔥", label: "Stretched" },
+    { icon: "🌊", label: "Flowing" },
+    { icon: "🌪️", label: "Cloudy" },
+    { icon: "💎", label: "Resilient" }
+  ];
 
   const handleFileChange = (e) => {
-    setIsUploading(true);
     const file = e.target.files[0];
-    // Simulate the "Hearth" processing the legacy data
+    if (!file) return;
+    setIsUploading(true);
     setTimeout(() => {
       onResumeSync(file);
       setIsUploading(false);
     }, 2000);
+  };
+
+  const handlePurgeResume = () => {
+    if (confirm("Are you sure you wish to purge this legacy document?")) {
+      onSync({ resume: null });
+    }
   };
 
   const handleSaveReflection = () => {
@@ -35,7 +47,6 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
       emoji: selectedEmoji,
       text: reflection
     };
-    // Sync to vault
     onSync({ pulses: [newPulse, ...(vault.pulses || [])] });
     setReflection("");
     setSelectedEmoji(null);
@@ -44,14 +55,14 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
   return (
     <div className="max-w-6xl mx-auto space-y-12 pb-24 animate-in fade-in duration-1000">
       
-      {/* --- HERO SECTION --- */}
+      {/* --- HERO --- */}
       <header className="text-center space-y-4 pt-4">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/5 border border-teal-500/20 text-teal-400 mb-2">
           <Flame size={14} className="animate-pulse" />
           <span className="text-[10px] font-black uppercase tracking-[0.3em]">The Eternal Flame</span>
         </div>
         <h1 className="text-5xl md:text-6xl font-serif italic text-white tracking-tight">Your Hearth</h1>
-        <p className="text-zinc-500 text-base md:text-lg max-w-2xl mx-auto font-light italic">
+        <p className="text-zinc-500 text-base md:text-lg max-w-2xl mx-auto font-light italic leading-relaxed">
           Fuel the flame with your <strong>Résumé/CV</strong> and document your internal weather.
         </p>
       </header>
@@ -60,8 +71,6 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
         
         {/* --- LEFT COLUMN: REFLECTION & LOGBOOK --- */}
         <div className="lg:col-span-5 space-y-8">
-          
-          {/* DAILY CHECK-IN (Optional) */}
           <Card className="bg-[#0D0B10] border-white/5 p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
             <div className="relative z-10 space-y-6">
               <div className="flex items-center gap-3 text-teal-400">
@@ -71,18 +80,22 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
               
               <div className="space-y-3">
                 <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 italic">Optional Pulse</p>
-                <div className="flex justify-between bg-black/40 p-2 rounded-2xl border border-white/5">
-                  {pulses.map(emoji => (
+                {/* RESTORED: Emoji + Label layout */}
+                <div className="grid grid-cols-5 gap-2 bg-black/40 p-2 rounded-2xl border border-white/5">
+                  {pulses.map((p) => (
                     <button
-                      key={emoji}
-                      onClick={() => setSelectedEmoji(emoji)}
-                      className={`text-2xl w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-300 ${
-                        selectedEmoji === emoji 
-                        ? "bg-teal-500/20 border-teal-500/40 scale-110 shadow-[0_0_15px_rgba(20,184,166,0.2)]" 
-                        : "hover:bg-white/5"
+                      key={p.label}
+                      onClick={() => setSelectedEmoji(p.icon)}
+                      className={`flex flex-col items-center gap-1 py-3 rounded-xl transition-all duration-300 ${
+                        selectedEmoji === p.icon 
+                        ? "bg-teal-500/20 border-teal-500/40 scale-105 shadow-[0_0_15px_rgba(20,184,166,0.2)]" 
+                        : "hover:bg-white/5 border border-transparent"
                       }`}
                     >
-                      {emoji}
+                      <span className="text-xl">{p.icon}</span>
+                      <span className={`text-[7px] font-black uppercase tracking-tighter ${selectedEmoji === p.icon ? 'text-teal-400' : 'text-zinc-600'}`}>
+                        {p.label}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -107,7 +120,7 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
             </div>
           </Card>
 
-          {/* THE LOGBOOK (Ecosystem Alignment Info) */}
+          {/* LOGBOOK: ALIGNMENT RECORD */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-zinc-500 px-4">
               <BookOpen size={14} />
@@ -133,7 +146,7 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
                   variant="link" 
                   className="p-0 h-auto text-[9px] text-teal-400 font-black uppercase tracking-[0.2em]"
                 >
-                  View Full Alignment Details →
+                  Re-calibrate Alignment →
                 </Button>
               </Card>
             ) : (
@@ -150,12 +163,11 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
           </div>
         </div>
 
-        {/* --- RIGHT COLUMN: RÉSUMÉ/CV SYNC --- */}
+        {/* --- RIGHT COLUMN: RÉSUMÉ/CV SYNC & GATE --- */}
         <div className="lg:col-span-7 space-y-8">
-          
           <Card className="bg-[#0D0B10] border-white/5 p-10 rounded-[3rem] relative overflow-hidden shadow-2xl">
             <div className="relative z-10 space-y-8">
-              <div className="space-y-2 text-left">
+              <div className="space-y-2">
                 <h3 className="text-2xl font-bold text-white tracking-tight">Sync Your Legacy</h3>
                 <p className="text-sm text-zinc-500 font-light">Provide your latest <strong>Résumé/CV</strong> (PDF/Docx) to begin the translation.</p>
               </div>
@@ -167,22 +179,37 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
                       {isUploading ? <Zap className="text-teal-400 animate-bounce" size={36} /> : <Upload className="text-zinc-600 group-hover:text-teal-400" size={36} />}
                     </div>
                     <p className="text-sm font-bold text-zinc-500 group-hover:text-white transition-colors">Drop Résumé/CV here</p>
-                    <p className="text-[9px] text-zinc-700 mt-2 uppercase tracking-widest font-black">Max file size: 5MB</p>
+                    <p className="text-[9px] text-zinc-700 mt-2 uppercase tracking-widest font-black font-sans">Max 5MB</p>
                   </div>
                   <input type="file" className="hidden" onChange={handleFileChange} accept=".pdf,.doc,.docx" />
                 </label>
               ) : (
-                <div className="p-8 bg-teal-500/5 border border-teal-500/20 rounded-[2.5rem] flex items-center justify-between group animate-in zoom-in-95 shadow-inner">
-                  <div className="flex items-center gap-6">
-                    <div className="p-4 bg-teal-500 text-black rounded-2xl shadow-[0_0_20px_rgba(20,184,166,0.3)]">
-                      <FileText size={28} />
+                <div className="space-y-4 animate-in zoom-in-95 duration-500">
+                  <div className="p-8 bg-teal-500/5 border border-teal-500/20 rounded-[2.5rem] flex items-center justify-between group shadow-inner">
+                    <div className="flex items-center gap-6">
+                      <div className="p-4 bg-teal-500 text-black rounded-2xl shadow-[0_0_20px_rgba(20,184,166,0.3)]">
+                        <FileText size={28} />
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-bold text-white line-clamp-1">{vault.resume.name}</h4>
+                        <p className="text-xs text-teal-500/60 font-black uppercase tracking-widest italic">Legacy Document Synced</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="text-lg font-bold text-white line-clamp-1">{vault.resume.name}</h4>
-                      <p className="text-xs text-teal-500/60 font-black uppercase tracking-widest italic">Legacy Document Synced</p>
-                    </div>
+                    <CheckCircle2 className="text-teal-500" size={32} />
                   </div>
-                  <CheckCircle2 className="text-teal-500" size={32} />
+
+                  <div className="flex gap-3 justify-end px-2">
+                    <Button 
+                      onClick={handlePurgeResume}
+                      className="bg-red-500/5 hover:bg-red-500/20 text-red-500/60 hover:text-red-500 border border-red-500/10 text-[9px] font-black uppercase tracking-widest h-10 rounded-xl transition-all"
+                    >
+                      <Trash2 size={12} className="mr-2" /> Purge Legacy
+                    </Button>
+                    <label className="cursor-pointer bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white border border-white/5 px-4 flex items-center text-[9px] font-black uppercase tracking-widest h-10 rounded-xl transition-all">
+                      <RefreshCw size={12} className="mr-2" /> Replace Sync
+                      <input type="file" className="hidden" onChange={handleFileChange} accept=".pdf,.doc,.docx" />
+                    </label>
+                  </div>
                 </div>
               )}
 
@@ -203,34 +230,58 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
                 </div>
               </div>
             </div>
-            
             <div className="absolute top-0 right-0 w-80 h-80 bg-teal-500/[0.03] blur-[100px] -z-0" />
           </Card>
 
-          {/* NEXT STEP ACTION */}
+          {/* NEXT STEP ACTION - STRICT GATE */}
           <div className="pt-4">
             <button 
-              onClick={onNavigateToHorizon}
-              disabled={!vault.resume}
+              onClick={() => { if (vault.resume && vault.isAligned) onNavigateToHorizon(); }}
               className={`w-full p-8 rounded-[2.5rem] border flex items-center justify-between transition-all duration-700 group relative overflow-hidden ${
-                vault.resume 
-                ? "bg-teal-500 text-black border-teal-400 hover:shadow-[0_0_50px_rgba(20,184,166,0.3)] hover:scale-[1.01]" 
+                vault.resume && vault.isAligned 
+                ? "bg-teal-500 text-black border-teal-400 hover:shadow-[0_0_50px_rgba(20,184,166,0.3)] hover:scale-[1.01] cursor-pointer" 
                 : "bg-white/5 border-white/5 text-zinc-700 cursor-not-allowed opacity-40"
               }`}
             >
               <div className="relative z-10 flex items-center gap-6">
-                <div className={`p-4 rounded-2xl border ${vault.resume ? "bg-black/10 border-black/20" : "bg-white/5 border-white/10"}`}>
-                  <Globe size={28} className={vault.resume ? "animate-pulse" : ""} />
+                <div className={`p-4 rounded-2xl border ${
+                  (vault.resume && vault.isAligned) ? "bg-black/10 border-black/20" : "bg-white/5 border-white/10"
+                }`}>
+                  <Globe size={28} className={vault.resume && vault.isAligned ? "animate-pulse" : ""} />
                 </div>
                 <div className="text-left">
-                  <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-1">Proceed to Expedition</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-1">
+                    {!(vault.resume && vault.isAligned) ? "Expedition Locked" : "Expedition Ready"}
+                  </p>
                   <p className="text-2xl font-serif italic font-bold">The Horizon Board</p>
                 </div>
               </div>
+
               <div className="relative z-10 flex items-center gap-4">
-                {!vault.resume ? <Lock size={20} /> : <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform duration-500" />}
+                {!(vault.resume && vault.isAligned) ? (
+                  <div className="flex flex-col items-end gap-1">
+                    <Lock size={18} />
+                    <span className="text-[7px] font-black uppercase tracking-tighter opacity-60">
+                      {!vault.resume ? "Missing Résumé" : "Missing Alignment"}
+                    </span>
+                  </div>
+                ) : (
+                  <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform duration-500" />
+                )}
               </div>
             </button>
+
+            {/* Checklist Footer */}
+            {(!vault.resume || !vault.isAligned) && (
+              <div className="mt-6 flex justify-center gap-6">
+                 <div className={`flex items-center gap-2 text-[8px] font-black uppercase tracking-widest transition-colors ${vault.resume ? 'text-teal-500' : 'text-zinc-700'}`}>
+                   {vault.resume ? <CheckCircle2 size={10} /> : <div className="w-1.5 h-1.5 rounded-full bg-zinc-800" />} Résumé Synced
+                 </div>
+                 <div className={`flex items-center gap-2 text-[8px] font-black uppercase tracking-widest transition-colors ${vault.isAligned ? 'text-teal-500' : 'text-zinc-700'}`}>
+                   {vault.isAligned ? <CheckCircle2 size={10} /> : <div className="w-1.5 h-1.5 rounded-full bg-zinc-800" />} Alignment Etched
+                 </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
