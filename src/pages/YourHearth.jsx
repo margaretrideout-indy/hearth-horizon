@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
-  Compass, Map, Trees, FileText, Sparkles, BookOpen, 
+  Compass, Map, Binoculars, FileText, Sparkles, BookOpen, 
   Activity, Zap, ShieldCheck, Box, Upload, Trash2, ChevronRight, Flame
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -125,7 +125,7 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
             {[
               { label: 'Discovery', sub: 'ROOTWERK', icon: Compass, active: true },
               { label: 'Alignment', sub: 'ECOSYSTEM', icon: Map, active: hasResume },
-              { label: 'Launch', sub: 'CANOPY', icon: Trees, active: blueprints.length > 0 }
+              { label: 'Launch', sub: 'HORIZON BOARD', icon: Binoculars, active: blueprints.length > 0 }
             ].map((node, i) => (
               <div key={i} className="flex flex-col items-center gap-4 z-10">
                 <div className={`p-4 rounded-[1.5rem] border transition-all duration-700 ${
@@ -193,7 +193,7 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
                           icon: Sparkles, 
                           color: blueprints.length > 0 ? "text-purple-500" : "text-zinc-700" 
                         },
-                        { title: "Pathway Readiness", status: syncPercentage > 80 ? "High" : "Pending", icon: Zap, color: syncPercentage > 80 ? "text-teal-500" : "text-zinc-700" }
+                        { title: "Horizon Placement", status: syncPercentage > 80 ? "Matched" : "Pending", icon: Zap, color: syncPercentage > 80 ? "text-teal-500" : "text-zinc-700" }
                       ].map((item, i) => (
                         <div key={i} className="flex items-center justify-between p-5 rounded-2xl bg-black/20 border border-white/5 hover:border-teal-500/20 transition-all">
                           <div className="flex items-center gap-4">
