@@ -72,10 +72,13 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
     setTimeout(() => {
       const core = manualInput.trim().toLowerCase()
         .replace(/^(managed|led|taught|designed|created|organized|facilitated|coordinated|developed|ran)\s+/i, "");
+      
       setBridgeData({
         pm: `Strategic orchestration of ${core}, focusing on milestone delivery, resource allocation, and cross-functional stakeholder alignment.`,
         data: `Quantitative and qualitative analysis of ${core} to derive data-driven insights and optimize future organizational outcomes.`,
-        ops: `Architecting scalable systems for ${core} to minimize operational friction and maximize institutional efficiency.`
+        ops: `Architecting scalable systems for ${core} to minimize operational friction and maximize institutional efficiency.`,
+        exec: `High-level visioning and governance of ${core} to drive enterprise value and long-term organizational sustainability.`,
+        creative: `Narrative-driven reimagining of ${core}, blending aesthetic innovation with core functional objectives.`
       });
       setIsGenerating(false);
     }, 1400);
@@ -146,7 +149,6 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
 
       <div className="max-w-6xl mx-auto py-8 px-4 md:px-6">
         
-        {/* GAP REDUCED HERE */}
         <div className="h-16 md:h-20" />
 
         <main className="relative z-10">
@@ -178,8 +180,15 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
                       </div>
                     </div>
                     <div className="grid gap-4">
-                      {['Project Management', 'Data & Strategy', 'Operations'].map((dialect, i) => {
-                        const key = dialect === 'Project Management' ? 'pm' : dialect === 'Data & Strategy' ? 'data' : 'ops';
+                      {['Project Management', 'Data & Strategy', 'Operations', 'Executive Leadership', 'Creative Strategy'].map((dialect, i) => {
+                        const keyMap = {
+                          'Project Management': 'pm',
+                          'Data & Strategy': 'data',
+                          'Operations': 'ops',
+                          'Executive Leadership': 'exec',
+                          'Creative Strategy': 'creative'
+                        };
+                        const key = keyMap[dialect];
                         const text = bridgeData?.[key];
                         return (
                           <motion.div key={i} animate={{ opacity: text ? 1 : 0.4, y: text ? 0 : 5 }} className={`p-4 md:p-6 rounded-3xl border transition-all duration-700 ${text ? 'bg-teal-500/5 border-teal-500/20 shadow-[0_0_20px_rgba(20,184,166,0.05)]' : 'border-white/5 bg-transparent'}`}>
@@ -327,19 +336,19 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
               </div>
               <Card className="p-8 md:p-12 bg-[#0D0B14] border border-teal-500/20 rounded-[3rem] relative shadow-2xl mt-8">
                   <div className="space-y-8 relative z-10 max-w-2xl mx-auto text-center">
-                     <h3 className="text-3xl font-serif italic text-white tracking-tight">Finalized Blueprint</h3>
-                     <p className="text-slate-400 italic text-lg leading-relaxed font-light">"The distance to <span className="text-white font-bold">{selectedPath?.domain}</span> has been charted. Your narrative is ready."</p>
-                     <div className="bg-black/40 p-6 md:p-8 rounded-3xl border border-white/5 text-slate-300 italic font-serif text-sm shadow-inner">
-                       {bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Strategy & Implementation' ? 'data' : 'pm')]}
-                     </div>
-                     <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-                       <Button onClick={() => handleCopy(bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Strategy & Implementation' ? 'data' : 'pm')])} className="h-16 px-10 bg-white/[0.03] text-white font-black rounded-2xl uppercase tracking-widest border border-white/10 gap-3 transition-all hover:bg-white/[0.08]">
-                         {copied ? <Check size={18} /> : <Copy size={18} />} {copied ? "Copied" : "Copy Translation"}
-                       </Button>
-                       <Button onClick={() => { onSync({ isAligned: true }); navigate('/launch'); }} className="h-16 px-10 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-2xl uppercase tracking-widest gap-3 shadow-lg shadow-teal-500/20">
-                         Enter Launch Mode <Binoculars size={18} />
-                       </Button>
-                     </div>
+                      <h3 className="text-3xl font-serif italic text-white tracking-tight">Finalized Blueprint</h3>
+                      <p className="text-slate-400 italic text-lg leading-relaxed font-light">"The distance to <span className="text-white font-bold">{selectedPath?.domain}</span> has been charted. Your narrative is ready."</p>
+                      <div className="bg-black/40 p-6 md:p-8 rounded-3xl border border-white/5 text-slate-300 italic font-serif text-sm shadow-inner">
+                        {bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Strategy & Implementation' ? 'data' : 'pm')]}
+                      </div>
+                      <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
+                        <Button onClick={() => handleCopy(bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Strategy & Implementation' ? 'data' : 'pm')])} className="h-16 px-10 bg-white/[0.03] text-white font-black rounded-2xl uppercase tracking-widest border border-white/10 gap-3 transition-all hover:bg-white/[0.08]">
+                          {copied ? <Check size={18} /> : <Copy size={18} />} {copied ? "Copied" : "Copy Translation"}
+                        </Button>
+                        <Button onClick={() => { onSync({ isAligned: true }); navigate('/launch'); }} className="h-16 px-10 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-2xl uppercase tracking-widest gap-3 shadow-lg shadow-teal-500/20">
+                          Enter Launch Mode <Binoculars size={18} />
+                        </Button>
+                      </div>
                   </div>
               </Card>
             </div>
