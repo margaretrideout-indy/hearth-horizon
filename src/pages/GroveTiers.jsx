@@ -161,7 +161,7 @@ const GroveTiers = ({ vault, onSync }) => {
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif italic text-white mb-12 tracking-tight leading-tight max-w-5xl mx-auto">Transition with Intention.</h1>
           <div className="max-w-5xl mx-auto p-8 md:p-12 rounded-[3rem] bg-[#110E16]/60 backdrop-blur-xl border border-zinc-800/50 shadow-2xl relative overflow-hidden mb-16">
             <p className="relative z-10 text-base md:text-lg text-zinc-300 font-light leading-relaxed mb-8 italic text-center">
-              "As an Indigenous educator with 13 years in the classroom and a Master of Education in Indigenous Studies, my approach is rooted in the Psychology and Sociology of belonging. I have spent my career learning how we anchor ourselves in community and identity during times of upheaval. I realized that a professional shift is more than a move—it's a migration of the self. Hearth & Horizon is the sanctuary for those ready to write their next chapter."
+              "As an Indigenous educator with 13 years in the classroom and a Master of Education in Indigenous Studies, my approach is rooted in the Psychology and Sociology of belonging. I have spent my career learning how we anchor ourselves in community and identity during times of upheaval. I realized that a professional shift is more than a move- it's a migration of the self. Hearth & Horizon is the sanctuary for those ready to write their next chapter."
             </p>
             <div className="relative z-10 flex flex-col items-center gap-2">
               <span className="text-white font-serif italic text-2xl">— Margaret, Founder | BA, BEd, MEd</span>
