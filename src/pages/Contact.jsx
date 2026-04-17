@@ -59,20 +59,22 @@ const powerVerbs = [
     { legacy: "Expanded", horizon: "Amplified", use: "Scaling operational capacity." }
 ];
 
-// --- LOGIC: SCRIPT GENERATOR ---
 const generateDynamicScripts = (vault) => {
     const targetRole = vault?.selectedPath?.domain || "[Target Role]";
     const salaryRange = vault?.selectedPath?.salary || "$[X] to $[Y]";
     const topSkill = vault?.skills?.find(s => s.status === 'aligned')?.skill || "[Your Top Skill]";
 
     return {
+        outreach: [
+            { title: "Phase 1: Soft Curiosity", script: `Hi [Name], I've been following your team's growth in ${targetRole}. As I transition my experience in ${topSkill} toward the private sector, I'm curious: what is the one 'unwritten' skill your team values most right now?` },
+            { title: "Phase 2: The Value-Add", script: `Hi [Name], I saw the recent news about [Company Project]. It reminded me of a challenge we solved regarding ${topSkill}. Thought this insight might be useful for your team's current trajectory. No reply needed, just wanted to share!` },
+            { title: "Phase 3: Sponsorship Request", script: `Hi [Name], your insights have been instrumental. I'm currently architecting my move into ${targetRole} and would value 15 minutes of your time to ask 3 specific questions about the roadmap at [Company].` },
+            { title: "Phase 4: The Closing Loop", script: `Hi [Name], thank you again for the sync. I’ve applied for the ${targetRole} opening and mentioned our conversation regarding their focus on ${topSkill}. I'd value any internal perspective you're able to share with the hiring lead.` }
+        ],
         salary: [
             { label: "The 'Anchor' Avoidance", script: `I am looking for a total compensation package that reflects the current market value for a ${targetRole} level of responsibility. Given my expertise in ${topSkill}, I am focusing on positions in the ${salaryRange} range. Does that align with your budget?` },
-            { label: "The 'Total Rewards' Pivot", script: `I understand the base is fixed. Given my specialized background in ${topSkill}, can we discuss other levers such as a signing bonus or an accelerated performance review to align the total rewards with the seniority of this ${targetRole} position?` }
-        ],
-        outreach: [
-            { id: 'p1', title: "Phase 1: Soft Curiosity", script: `Hi [Name], I've been following your team's growth in ${targetRole}. As I transition my experience in ${topSkill} toward the private sector, I'm curious: what is the one 'unwritten' skill your team values most right now?` },
-            { id: 'p3', title: "Phase 3: Sponsorship Request", script: `Hi [Name], your insights have been instrumental. I'm currently architecting my move into ${targetRole} and would value 15 minutes of your time to ask 3 specific questions about the roadmap at [Company].` }
+            { label: "The 'Total Rewards' Pivot", script: `I understand the base is fixed. Given my specialized background in ${topSkill}, can we discuss other levers such as a signing bonus or an accelerated performance review to align the total rewards with the seniority of this ${targetRole} position?` },
+            { label: "The 'Equity/Bonus' Bridge", script: `If we can't meet the ${salaryRange} base today, I'm open to structured performance bonuses or an equity stake that triggers upon reaching [Specific KPI] within my first 6 months.` }
         ]
     };
 };
@@ -130,7 +132,6 @@ const Contact = ({ vault, isAdmin }) => {
               {isOpen && (
                 <div className="bg-[#110E16] border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4 animate-in slide-in-from-top-2">
                   
-                  {/* VERBS */}
                   {tool.id === 'verbs' && (
                     <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -151,7 +152,6 @@ const Contact = ({ vault, isAdmin }) => {
                     </div>
                   )}
 
-                  {/* IDENTITY LEDGER */}
                   {tool.id === 'ledger' && (
                     <div className="space-y-4">
                         <div className="bg-teal-500/5 border border-teal-500/20 p-6 rounded-3xl flex flex-col sm:flex-row items-center gap-6">
@@ -175,7 +175,6 @@ const Contact = ({ vault, isAdmin }) => {
                     </div>
                   )}
 
-                  {/* RESUME */}
                   {tool.id === 'resume' && (
                     <div className="bg-purple-500/5 border border-purple-500/20 p-6 rounded-3xl">
                         <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=drive_link")} className="w-full sm:w-auto px-10 h-14 bg-purple-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-400 transition-all flex items-center justify-center gap-2">
@@ -184,14 +183,13 @@ const Contact = ({ vault, isAdmin }) => {
                     </div>
                   )}
 
-                  {/* OUTREACH & SCRIPTS */}
                   {(tool.id === 'outreach' || tool.id === 'scripts') && (
                     <div className="space-y-4">
-                      {(tool.id === 'outreach' ? dynamicContent.outreach : dynamicContent.salary).map((phase, i) => (
+                      {(tool.id === 'outreach' ? dynamicContent.outreach : dynamicContent.salary).map((item, i) => (
                         <div key={i} className="bg-black/40 border border-white/5 p-5 rounded-xl group/script relative">
-                           <h4 className="text-[10px] font-black uppercase text-white mb-3 tracking-widest">{phase.title || phase.label}</h4>
-                           <div className="p-4 bg-black/60 rounded-lg border border-white/5 font-mono text-[11px] text-zinc-300 italic select-all leading-relaxed whitespace-pre-wrap">"{phase.script}"</div>
-                           <div className="absolute top-4 right-4 opacity-0 group-hover/script:opacity-100 transition-opacity"><Copy size={12} className="text-zinc-600" /></div>
+                           <h4 className="text-[10px] font-black uppercase text-white mb-3 tracking-widest">{item.title || item.label}</h4>
+                           <div className="p-4 bg-black/60 rounded-lg border border-white/5 font-mono text-[11px] text-zinc-300 italic select-all leading-relaxed whitespace-pre-wrap">"{item.script}"</div>
+                           <div className="absolute top-4 right-4 opacity-0 group-hover/script:opacity-100 transition-opacity cursor-pointer"><Copy size={12} className="text-zinc-600" /></div>
                         </div>
                       ))}
                     </div>
