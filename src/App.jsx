@@ -142,15 +142,28 @@ function AppRoutes() {
   return (
     <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
       <Routes>
+        {/* ADMIN */}
         <Route path="/admin" element={
           <AdminRoute>
             <AdminDashboard vault={vault} onSync={onSync} />
           </AdminRoute>
         } />
         
+        {/* PUBLIC ACCESS */}
         <Route path="/" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         <Route path="/grove" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         
+        {/* THE HORIZON (PUBLIC/FREEMIUM) */}
+        <Route path="/launch" element={
+          <AppLayout currentTier={effectiveTier}>
+            <Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} />
+          </AppLayout>
+        } />
+        
+        {/* REDIRECT CANOPY TO LAUNCH */}
+        <Route path="/canopy" element={<Navigate to="/launch" replace />} />
+
+        {/* PROTECTED ACCESS (SUBSCRIBERS) */}
         <Route path="/hearth" element={
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
@@ -183,14 +196,6 @@ function AppRoutes() {
           </ProtectedRoute>
         } />
         
-        <Route path="/launch" element={
-          <ProtectedRoute>
-            <AppLayout currentTier={effectiveTier}>
-              <Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-        
         <Route path="/library" element={
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
@@ -207,14 +212,7 @@ function AppRoutes() {
           </ProtectedRoute>
         } />
 
-        <Route path="/canopy" element={
-           <ProtectedRoute>
-             <AppLayout currentTier={effectiveTier}>
-               <Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} />
-             </AppLayout>
-           </ProtectedRoute>
-        } />
-
+        {/* CATCH-ALL REDIRECT */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
