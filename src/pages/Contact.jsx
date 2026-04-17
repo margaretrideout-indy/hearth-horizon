@@ -14,12 +14,9 @@ const powerVerbs = [
 ];
 
 // --- DYNAMIC SCRIPT GENERATOR ---
-// This function takes the vault data and injects it into the templates
 const generateDynamicScripts = (vault) => {
     const targetRole = vault?.selectedPath?.domain || "[Target Role]";
     const salaryRange = vault?.selectedPath?.salary || "$[X] to $[Y]";
-    
-    // Grabbing the first "aligned" skill we found in the Harvest
     const topSkill = vault?.skills?.find(s => s.status === 'aligned')?.skill || "[Your Top Skill]";
 
     return {
@@ -27,22 +24,35 @@ const generateDynamicScripts = (vault) => {
             { 
                 label: "The 'Anchor' Avoidance", 
                 context: "Pivot from current salary to market value.",
-                script: `I am looking for a total compensation package that reflects the current market value for a ${targetRole} level of responsibility. Given my expertise in ${topSkill}, I am focusing on positions in the ${salaryRange} range. Does that align with your budget?` 
+                script: `I am looking for a total compensation package that reflects the current market value for a ${targetRole} level of responsibility. Given my expertise in ${topSkill}, I am focusing on positions in the ${salaryRange} range. Does that align with your budget for this hire?` 
             },
             { 
                 label: "The 'Total Rewards' Pivot", 
                 context: "When the base salary is firm but you need more value.",
-                script: `I understand the base is fixed. Given my specialized background in ${topSkill}, can we discuss other levers such as a signing bonus or an accelerated performance review to align the total rewards with the seniority of this ${targetRole} position?` 
+                script: `I understand the base is fixed at this level. Given my specialized background in ${topSkill}, can we discuss other levers such as a signing bonus, an accelerated performance review at 6 months, or flexible wellness credits to align the total rewards with my seniority in ${targetRole}?` 
+            },
+            { 
+                label: "The 'Competing Offer' Closer", 
+                context: "Using external leverage to finalize with your preferred company.",
+                script: `I’ve received another competitive offer that is very strong on the base salary. However, your team remains my first choice. If we can get the base to the ${salaryRange.split(' - ')[1] || '$[Target]'} mark, I’m prepared to sign today and withdraw from all other processes.` 
             }
         ],
         outreach: [
             { 
-                id: 'p1', title: "Phase 1: Soft Curiosity", 
-                script: `Subject: Question from a fellow lead\n\nHi [Name], I've been following your team's growth. As I transition my experience in ${topSkill} toward a ${targetRole} focus in the private sector, I'm curious: what is the one 'unwritten' skill your team values most right now?` 
+                id: 'p1', title: "Phase 1: Soft Curiosity", goal: "LOW STAKES",
+                script: `Subject: Question from a fellow lead\n\nHi [Name], I've been following your team's growth in ${targetRole}. As I transition my experience in ${topSkill} toward the private sector, I'm curious: what is the one 'unwritten' skill your team values most right now?` 
             },
             { 
-                id: 'p3', title: "Phase 3: Sponsorship Request", 
-                script: `Hi [Name], your insights have been instrumental. I'm currently architecting my move into ${targetRole} roles and would value 15 minutes of your time to ask 3 specific questions about the roadmap at [Company]. Does [Day/Time] work?` 
+                id: 'p2', title: "Phase 2: Value Exchange", goal: "OFFER PERSPECTIVE",
+                script: `Hi [Name], following up on our exchange—I actually just drafted a brief analysis on how ${topSkill} impacts ${targetRole} outcomes regarding that 'unwritten' skill we discussed. Thought your team might find a fresh perspective useful. Here’s the link (no gates).` 
+            },
+            { 
+                id: 'p3', title: "Phase 3: Sponsorship Request", goal: "15-MINUTE CALL",
+                script: `Hi [Name], your insights have been instrumental. I'm currently architecting my move into ${targetRole} and would value 15 minutes of your time to ask 3 specific questions about the roadmap at [Company]. Does [Day/Time] work for a quick sync?` 
+            },
+            { 
+                id: 'p4', title: "Phase 4: The Stealth Referral", goal: "CLOSING THE CIRCLE",
+                script: `Thank you for the talk, [Name]. Based on our discussion, it's clear my background in ${topSkill} solves a few of the bottlenecks we touched on. If you're comfortable, I'd love to stay on your radar for any upcoming roles. I've attached my resume for your records.` 
             }
         ]
     };
@@ -50,15 +60,15 @@ const generateDynamicScripts = (vault) => {
 
 const trailKitProvisions = [
   { id: 'verbs', title: "The Power Verb Lexicon", desc: "Strategic verbs to replace legacy public-sector language.", type: "Interactive Glossary", icon: <Zap className="text-purple-400" />, isAccordion: true },
-  { id: 'market', title: "Canadian Market Primer", desc: "The 'How-To' guide for sector translation.", type: "Interactive Guide", icon: <Map className="text-teal-400" />, isAccordion: true },
-  { id: 'resume', title: "The Horizon Resume Template", desc: "ATS-optimized layout.", type: "Digital Blueprint", icon: <FileText className="text-purple-400" />, url: "https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy" },
-  { id: 'scripts', title: "Salary Negotiation Scripts", desc: "Tactical word-for-word scripts.", type: "Interactive Tool", icon: <MessageSquare className="text-teal-400" />, isAccordion: true },
-  { id: 'outreach', title: "Sponsorship Outreach", desc: "4-phase sequence to turn contacts into advocates.", type: "Communication Sequence", icon: <Mail className="text-purple-400" />, isAccordion: true }
+  { id: 'market', title: "Canadian Market Primer", desc: "The 'How-To' guide for sector translation and the Horizon Workshop.", type: "Interactive Guide", icon: <Map className="text-teal-400" />, isAccordion: true },
+  { id: 'resume', title: "The Horizon Resume Template", desc: "Clean, ATS-optimized layout for private sector applications.", type: "Digital Blueprint", icon: <FileText className="text-purple-400" />, url: "https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy" },
+  { id: 'scripts', title: "Salary Negotiation Scripts", desc: "Tactical word-for-word scripts for high-stakes compensation talks.", type: "Interactive Tool", icon: <MessageSquare className="text-teal-400" />, isAccordion: true },
+  { id: 'outreach', title: "Sponsorship Outreach", desc: "4-phase sequence to turn cold contacts into advocates.", type: "Communication Sequence", icon: <Mail className="text-purple-400" />, isAccordion: true }
 ];
 
 const basecampProvisions = [
-    { id: 'welcome', title: "The Founding Member Guide", desc: "Mission overview for Stewards.", type: "Welcome Kit", icon: <BookOpen className="text-teal-400" /> },
-    { id: 'intro', title: "Public-to-Private 101", desc: "Psychological shift for a successful pivot.", type: "Mindset Workshop", icon: <Sparkles className="text-purple-400" /> }
+    { id: 'welcome', title: "The Founding Member Guide", desc: "Mission overview for Hearth & Horizon Stewards.", type: "Welcome Kit", icon: <BookOpen className="text-teal-400" /> },
+    { id: 'intro', title: "Public-to-Private 101", desc: "Overview of the psychological shift for a successful pivot.", type: "Mindset Workshop", icon: <Sparkles className="text-purple-400" /> }
 ];
 
 const Contact = ({ currentVolume, vault }) => {
@@ -125,6 +135,21 @@ const Contact = ({ currentVolume, vault }) => {
                                 </div>
                             ))}
                         </div>
+                        <button className="w-full py-4 border border-dashed border-zinc-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 hover:border-teal-400/30 transition-all">
+                            View Full List (50+ Verbs)
+                        </button>
+                    </div>
+                  )}
+
+                  {tool.id === 'market' && (
+                    <div className="bg-teal-500/5 border border-teal-500/20 p-8 rounded-[2rem]">
+                        <h4 className="text-[10px] font-black uppercase tracking-widest text-teal-400 mb-2">Horizon Workshop Assets</h4>
+                        <div className="flex flex-col sm:flex-row gap-4 mt-6">
+                            <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit", "_blank")} className="bg-teal-500 text-black px-8 py-3 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-white transition-colors">Launch Slide Deck</button>
+                            <button onClick={() => window.open("https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link", "_blank")} className="flex items-center justify-center gap-2 border border-teal-500/30 px-8 py-3 rounded-lg text-[10px] font-black uppercase tracking-widest text-teal-400 hover:bg-teal-500/10 transition-colors">
+                                <FileDown size={14} /> Download PDF Worksheet
+                            </button>
+                        </div>
                     </div>
                   )}
 
@@ -150,7 +175,10 @@ const Contact = ({ currentVolume, vault }) => {
                         {dynamicContent.outreach.map((phase) => (
                             <div key={phase.id} className="bg-black/40 border border-white/5 rounded-2xl overflow-hidden">
                                 <button onClick={() => setOpenPhaseId(openPhaseId === phase.id ? null : phase.id)} className="w-full p-5 flex items-center justify-between hover:bg-white/5 transition-colors">
-                                    <span className="text-[10px] font-black uppercase text-white">{phase.title}</span>
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-[10px] font-black uppercase text-white">{phase.title}</span>
+                                        <span className="text-[8px] font-bold text-teal-500/40 uppercase tracking-tighter">{phase.goal}</span>
+                                    </div>
                                     {openPhaseId === phase.id ? <ChevronUp size={14} className="text-teal-400" /> : <ChevronDown size={14} />}
                                 </button>
                                 {openPhaseId === phase.id && (
@@ -164,7 +192,6 @@ const Contact = ({ currentVolume, vault }) => {
                         ))}
                     </div>
                   )}
-                  {/* ... other tool IDs (market, etc) remain same as your previous version ... */}
                 </div>
               )}
             </div>
