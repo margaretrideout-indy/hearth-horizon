@@ -87,7 +87,13 @@ const GroveTiers = ({ vault, onSync }) => {
       price: "FREE",
       period: "ALWAYS OPEN",
       desc: '"A quiet space for those beginning to look toward a new horizon."',
-      features: ["Foundational Badge", "Community Resources", "Wayfarer's Provisions", "Standard Alignment Preview"],
+      features: [
+        "Seedling Badge", 
+        "The Hearth: 1 Analysis/Mo", 
+        "The Horizon Job Board", 
+        "The Embers Community Chat",
+        "Public Library Access"
+      ],
       button: "GET STARTED",
       onClick: handleSeedling,
       icon: <Leaf className="w-5 h-5 text-teal-400" />
@@ -97,7 +103,13 @@ const GroveTiers = ({ vault, onSync }) => {
       price: "$3",
       period: "$5/MO AFTER FIRST MONTH",
       desc: '"Removing the noise to keep your creative fires burning bright."',
-      features: ["Everything in Seedling", "Hearthkeeper Badge", "Unlimited Digital Tools", "Financial Transition Guides", "Full Market Topography"],
+      features: [
+        "Hearthkeeper Badge", 
+        "Unlimited Hearth Syncing", 
+        "Full Ecosystem Alignment", 
+        "Unlimited Horizon Analysis",
+        "The Embers Community Chat"
+      ],
       button: "SELECT PLAN",
       onClick: () => handlePaid(LINK_HEARTHKEEPER, 'Hearthkeeper'),
       highlight: true,
@@ -108,7 +120,13 @@ const GroveTiers = ({ vault, onSync }) => {
       price: "$5",
       period: "$8/MO AFTER FIRST MONTH",
       desc: '"Full oversight and total access to the entire landscape."',
-      features: ["Everything in Hearthkeeper", "Steward's Mantle Badge", "Ecosystem Alignment", "The Canopy Hub", "Sponsors 1 Hearthkeeper Seat"],
+      features: [
+        "Founding Forest Badge", 
+        "Everything in Hearthkeeper", 
+        "Sponsors 1 Scholarship Seat", 
+        "The Embers Community Chat",
+        "Priority Resource Requests"
+      ],
       button: "SELECT PLAN",
       onClick: () => handlePaid(LINK_STEWARD, 'Steward'),
       icon: <Mountain className="w-5 h-5 text-teal-400" />
@@ -118,7 +136,12 @@ const GroveTiers = ({ vault, onSync }) => {
       price: "WAITLIST",
       period: "SCHOLARSHIP BASIS",
       desc: '"For those in deep transition seeking support and sanctuary."',
-      features: ["Full Access Opportunity", "Community Support", "Equity Focused"],
+      features: [
+        "Full Hearthkeeper Access", 
+        "Community Support", 
+        "Equity Focused",
+        "The Embers Community Chat"
+      ],
       button: requestStatus === 'success' ? "REQUESTED" : (requestStatus === 'sending' ? "SENDING..." : "REQUEST SEAT"),
       onClick: handleRequestSeat,
       isSpecial: true,
@@ -139,8 +162,7 @@ const GroveTiers = ({ vault, onSync }) => {
               <span className="text-[9px] font-black uppercase tracking-[0.2em]">The Library</span>
             </button>
             
-            {/* UPDATED: Path changed to /launch and Label to Horizon Job Board */}
-            <button onClick={() => navigate('/launch')} className="group flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all">
+            <button onClick={() => navigate('/horizon')} className="group flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all">
               <Compass size={14} className="group-hover:scale-110 transition-transform" />
               <span className="text-[9px] font-black uppercase tracking-[0.2em]">Horizon Job Board</span>
             </button>
@@ -170,7 +192,6 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </header>
 
-        {/* REST OF THE SECTIONS STAY THE SAME */}
         <section className="mb-24 md:mb-48">
           <div className="text-center mb-16">
             <h2 className="text-white font-serif italic text-4xl mb-4">Provisions from the Hearth</h2>
