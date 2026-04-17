@@ -153,6 +153,7 @@ function AppRoutes() {
         <Route path="/" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         <Route path="/grove" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         
+        {/* Public Access to Horizon so Seedlings can see the board */}
         <Route path="/horizon" element={
           <AppLayout currentTier={effectiveTier}>
             <Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} userTier={effectiveTier} />
