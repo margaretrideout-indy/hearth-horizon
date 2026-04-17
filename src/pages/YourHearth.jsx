@@ -246,11 +246,11 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
               <div className="flex-1 space-y-6 text-center md:text-left">
                 <div className="space-y-2">
-                  <p className="text-[9px] font-black uppercase tracking-[0.4em] text-teal-500 italic">Alignment Engine</p>
+                  <p className="text-[9px] font-black uppercase tracking-[0.4em] text-teal-500 italic">Discovery</p>
                   <h2 className="text-3xl font-serif italic text-white leading-tight">Tend the Hearth.</h2>
                 </div>
                 <p className="text-zinc-500 text-sm leading-relaxed max-w-sm font-light mx-auto md:mx-0 italic">
-                  By syncing your legacy experience, we can translate your résumé into the growth opportunities ahead on the Horizon.
+                  By syncing your Résumé or CV, we can translate your experience into the growth opportunities ahead.
                 </p>
                 {hasResume ? (
                   <div className="flex flex-col gap-3 items-center md:items-start">
@@ -280,7 +280,7 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
                     onClick={() => fileInputRef.current?.click()}
                     className="bg-transparent border-2 border-teal-500 text-teal-400 hover:bg-teal-500 hover:text-black shadow-[0_0_30px_rgba(20,184,166,0.1)] font-black rounded-xl h-14 px-10 transition-all uppercase text-[10px] tracking-widest flex items-center gap-3 mx-auto md:mx-0"
                   >
-                    <FileText className="w-4 h-4" /> Sync Résumé for Translation
+                    <FileText className="w-4 h-4" /> Sync for Translation
                   </Button>
                 )}
               </div>
