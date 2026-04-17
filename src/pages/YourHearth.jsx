@@ -52,7 +52,7 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
         { 
           date: "--.--.--", 
           event: "Awaiting Connection", 
-          desc: "The logbook is quiet. Sync your current legacy to begin mapping the path ahead.",
+          desc: "The logbook is quiet. Sync your current résumé to begin mapping the path ahead.",
           isPending: true 
         },
         ...baseLogs
@@ -123,9 +123,9 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
           <div className="absolute h-[1px] w-full bg-white/5" />
           <div className="relative flex justify-between w-full px-4">
             {[
-              { label: 'Discovery', sub: 'ROOTWERK', icon: Compass, active: true },
-              { label: 'Alignment', sub: 'ECOSYSTEM', icon: Map, active: hasResume },
-              { label: 'Launch', sub: 'HORIZON BOARD', icon: Binoculars, active: blueprints.length > 0 }
+              { label: 'Discovery', icon: Compass, active: true },
+              { label: 'Alignment', icon: Map, active: hasResume },
+              { label: 'Horizon', icon: Binoculars, active: blueprints.length > 0 }
             ].map((node, i) => (
               <div key={i} className="flex flex-col items-center gap-4 z-10">
                 <div className={`p-4 rounded-[1.5rem] border transition-all duration-700 ${
@@ -139,7 +139,6 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
                   <p className={`text-[10px] font-black uppercase tracking-widest ${node.active ? 'text-white' : 'text-zinc-600'}`}>
                     {node.label}
                   </p>
-                  <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-zinc-700 mt-1 italic">{node.sub}</p>
                 </div>
               </div>
             ))}
@@ -251,14 +250,14 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
                   <h2 className="text-3xl font-serif italic text-white leading-tight">Tend the Hearth.</h2>
                 </div>
                 <p className="text-zinc-500 text-sm leading-relaxed max-w-sm font-light mx-auto md:mx-0 italic">
-                  By syncing your Résumé or CV, we can translate your background into the growth opportunities ahead.
+                  By syncing your legacy experience, we can translate your résumé into the growth opportunities ahead on the Horizon.
                 </p>
                 {hasResume ? (
                   <div className="flex flex-col gap-3 items-center md:items-start">
                     <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-teal-500/10 border border-teal-500/20 shadow-lg">
                       <FileText className="w-4 h-4 text-teal-400 shrink-0" />
                       <span className="text-[11px] font-bold text-teal-300 truncate max-w-[180px]">
-                        {vault?.resume?.name || "Synced Legacy Document"}
+                        {vault?.resume?.name || "Synced Résumé"}
                       </span>
                     </div>
                     <div className="flex gap-3">
@@ -281,7 +280,7 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
                     onClick={() => fileInputRef.current?.click()}
                     className="bg-transparent border-2 border-teal-500 text-teal-400 hover:bg-teal-500 hover:text-black shadow-[0_0_30px_rgba(20,184,166,0.1)] font-black rounded-xl h-14 px-10 transition-all uppercase text-[10px] tracking-widest flex items-center gap-3 mx-auto md:mx-0"
                   >
-                    <FileText className="w-4 h-4" /> Sync Legacy for Translation
+                    <FileText className="w-4 h-4" /> Sync Résumé for Translation
                   </Button>
                 )}
               </div>
