@@ -109,53 +109,49 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
   };
 
   return (
-    <div className="max-w-6xl mx-auto py-8 md:py-12 px-4 md:px-6 space-y-8 md:space-y-12 animate-in fade-in duration-700 selection:bg-teal-500/30 overflow-x-hidden">
+    <div className="relative max-w-6xl mx-auto py-8 md:py-12 px-4 md:px-6 animate-in fade-in duration-700 selection:bg-teal-500/30">
       
-      {/* --- INTEGRATED STAGE NAVIGATION (FIXED ON TOP) --- */}
-      <div className="sticky top-6 z-50 mb-12">
-        <div className="max-w-4xl mx-auto bg-[#0D0B14]/90 backdrop-blur-2xl border border-white/10 rounded-3xl p-2 md:p-3 shadow-2xl">
-          <div className="flex items-center justify-around relative">
-            {[
-              { id: 1, label: "TRANSLATING", icon: Languages },
-              { id: 2, label: "VALUES", icon: ShieldCheck },
-              { id: 3, label: "TOPOGRAPHY", icon: Compass },
-              { id: 4, label: "HARVEST", icon: Pickaxe }
-            ].map((step, idx, arr) => {
-              const isAccessible = canNavigateTo(step.id);
-              const isActive = activeStep === step.id;
-              
-              return (
-                <React.Fragment key={step.id}>
-                  <button 
-                    disabled={!isAccessible}
-                    onClick={() => setActiveStep(step.id)}
-                    className={`group relative flex items-center gap-3 px-3 md:px-5 py-2 rounded-2xl transition-all duration-500 ${
-                      isActive ? 'opacity-100 scale-105' : isAccessible ? 'opacity-60 hover:opacity-100' : 'opacity-20 cursor-not-allowed'
-                    }`}
-                  >
-                    <div className={`p-2 rounded-xl transition-all ${
-                      isActive ? 'bg-teal-500 text-black shadow-[0_0_20px_rgba(20,184,166,0.4)]' : 'bg-white/5 text-zinc-500 group-hover:text-zinc-300'
-                    }`}>
-                      <step.icon size={18} />
-                    </div>
-                    <div className="hidden md:flex flex-col items-start text-left">
-                      <span className={`text-[9px] font-black uppercase tracking-[0.2em] ${isActive ? 'text-teal-400' : 'text-zinc-500'}`}>
-                        {step.label}
-                      </span>
-                    </div>
-                  </button>
-                  {idx < arr.length - 1 && <div className="h-px w-4 md:w-8 bg-white/10" />}
-                </React.Fragment>
-              );
-            })}
-          </div>
+      {/* --- FIXED NAVIGATION HEADER --- */}
+      {/* Using sticky top-0 and z-50 to keep it above everything. 
+          Added w-full and flex justify-center to prevent the 'drifting left' seen in your screenshots.
+      */}
+      <div className="sticky top-4 z-[100] w-full flex justify-center mb-16 pointer-events-none">
+        <div className="pointer-events-auto bg-[#0D0B14]/90 backdrop-blur-xl border border-white/10 rounded-full p-2 px-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center gap-2 md:gap-4">
+          {[
+            { id: 1, label: "TRANSLATING", icon: Languages },
+            { id: 2, label: "VALUES", icon: ShieldCheck },
+            { id: 3, label: "TOPOGRAPHY", icon: Compass },
+            { id: 4, label: "HARVEST", icon: Pickaxe }
+          ].map((step, idx, arr) => {
+            const isAccessible = canNavigateTo(step.id);
+            const isActive = activeStep === step.id;
+            
+            return (
+              <React.Fragment key={step.id}>
+                <button 
+                  disabled={!isAccessible}
+                  onClick={() => setActiveStep(step.id)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-full transition-all duration-300 ${
+                    isActive ? 'bg-teal-500 text-black shadow-[0_0_15px_rgba(20,184,166,0.4)]' : isAccessible ? 'text-zinc-400 hover:text-white hover:bg-white/5' : 'opacity-20 cursor-not-allowed'
+                  }`}
+                >
+                  <step.icon size={16} />
+                  <span className={`hidden md:block text-[9px] font-black tracking-widest ${isActive ? 'text-black' : ''}`}>
+                    {step.label}
+                  </span>
+                </button>
+                {idx < arr.length - 1 && <div className="w-4 h-px bg-white/10" />}
+              </React.Fragment>
+            );
+          })}
         </div>
       </div>
 
-      <main className="min-h-[500px] md:min-h-[600px] relative z-10">
+      <main className="relative z-10 pt-4">
+        {/* Step 1: Translating */}
         {activeStep === 1 && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 animate-in slide-in-from-bottom-8 duration-700">
-            <div className="lg:col-span-4 space-y-4 md:space-y-6 text-center lg:text-left pt-4">
+            <div className="lg:col-span-4 space-y-4 text-center lg:text-left pt-4">
               <div className="w-12 h-12 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20 mx-auto lg:mx-0">
                 <Microscope size={24} />
               </div>
@@ -163,7 +159,7 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
               <p className="text-[10px] text-slate-500 uppercase tracking-widest leading-relaxed">Reframing institutional achievements for the open market.</p>
             </div>
             <div className="lg:col-span-8 space-y-6">
-              <Card className="p-5 md:p-8 bg-[#1C1622]/60 border-white/5 shadow-2xl relative overflow-hidden rounded-[2.5rem]">
+              <Card className="p-6 md:p-8 bg-[#1C1622]/60 border-white/5 shadow-2xl relative overflow-hidden rounded-[2.5rem]">
                 <div className="absolute -top-10 -right-10 opacity-[0.03] pointer-events-none"><Layers size={240} /></div>
                 <div className="relative z-10 space-y-8">
                   <div className="space-y-4">
@@ -210,6 +206,7 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
           </div>
         )}
 
+        {/* Step 2: Values */}
         {activeStep === 2 && (
           <div className="space-y-12 animate-in fade-in slide-in-from-right-8 duration-1000">
             <header className="text-center max-w-2xl mx-auto space-y-4">
@@ -243,6 +240,7 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
           </div>
         )}
 
+        {/* Step 3: Topography */}
         {activeStep === 3 && (
           <div className="space-y-12 animate-in fade-in duration-1000">
             <header className="text-center max-w-2xl mx-auto space-y-4">
@@ -283,6 +281,7 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
           </div>
         )}
 
+        {/* Step 4: Harvest */}
         {activeStep === 4 && (
           <div className="animate-in slide-in-from-right-8 duration-700 space-y-12">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
