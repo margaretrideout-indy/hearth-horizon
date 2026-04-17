@@ -251,7 +251,7 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
                   <h2 className="text-3xl font-serif italic text-white leading-tight">Tend the Hearth.</h2>
                 </div>
                 <p className="text-zinc-500 text-sm leading-relaxed max-w-sm font-light mx-auto md:mx-0 italic">
-                  By syncing your legacy experience, we can translate your background into the growth opportunities ahead.
+                  By syncing your Résumé or CV, we can translate your background into the growth opportunities ahead.
                 </p>
                 {hasResume ? (
                   <div className="flex flex-col gap-3 items-center md:items-start">
