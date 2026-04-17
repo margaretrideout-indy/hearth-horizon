@@ -182,13 +182,13 @@ return (
           onClick={() => setCurrentVolume(1)} 
           className={`px-10 py-4 rounded-2xl text-[11px] font-black uppercase transition-all ${currentVolume === 1 ? 'bg-teal-500 text-black shadow-lg' : 'text-zinc-500 hover:text-white'}`}
         >
-          Volume I: Basecamp
+          Volume I
         </button>
         <button 
           onClick={() => setCurrentVolume(2)} 
           className={`px-10 py-4 rounded-2xl text-[11px] font-black uppercase transition-all ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg' : 'text-zinc-500 hover:text-white'}`}
         >
-          Volume II: Trail Kit
+          Volume II
         </button>
       </div>
     </div>
