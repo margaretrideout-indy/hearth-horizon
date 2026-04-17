@@ -122,7 +122,7 @@ const GroveTiers = ({ vault, onSync }) => {
       desc: '"Full oversight and total access to the entire landscape."',
       features: [
         "Founding Forest Badge", 
-        "Everything in Hearthkeeper", 
+        "Everything in Hearthkeeper, PLUS:", 
         "Sponsors 1 Scholarship Seat", 
         "Priority Resource Requests"
       ],
