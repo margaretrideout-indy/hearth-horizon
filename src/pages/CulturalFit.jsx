@@ -11,7 +11,7 @@ import {
   Sparkles, TrendingUp,
   Copy, Check, AlertCircle, Pickaxe,
   Layers, Target, CheckCircle2, Microscope,
-  Languages
+  Languages, ShieldCheck, Leaf, Home, Users, Flame
 } from 'lucide-react';
 
 export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
@@ -23,6 +23,7 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
   const [bridgeData, setBridgeData] = useState(null);
   const [copied, setCopied] = useState(false);
   const [selectedPath, setSelectedPath] = useState(null);
+  const [ethicalPriorities, setEthicalPriorities] = useState(vault?.ethics || []);
 
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const universalPlaceholders = [
@@ -38,6 +39,19 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
     }, 4000);
     return () => clearInterval(interval);
   }, []);
+
+  const ethicsOptions = [
+    { id: 'eco', label: 'Eco-Conscious', desc: 'Prioritizes sustainability & green tech.', icon: Leaf, color: 'text-emerald-400' },
+    { id: 'remote', label: 'Remote-First', desc: 'Values async work and location freedom.', icon: Home, color: 'text-blue-400' },
+    { id: 'equity', label: 'Equity-Driven', desc: 'Focuses on DEI and social impact.', icon: Users, color: 'text-purple-400' },
+    { id: 'balance', label: 'The Quiet Hearth', desc: 'Strict boundaries on burnout & overwork.', icon: Flame, color: 'text-orange-400' },
+  ];
+
+  const toggleEthic = (id) => {
+    setEthicalPriorities(prev => 
+      prev.includes(id) ? prev.filter(e => e !== id) : [...prev, id]
+    );
+  };
 
   const gapData = [
     { skill: "Industry-Standard Frameworks", status: "missing", effort: "2 weeks", category: "Knowledge", url: "https://www.coursera.org/search?query=project+management+frameworks" },
@@ -80,18 +94,20 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
   const canNavigateTo = (step) => {
     if (step === 1) return true;
     if (step === 2) return bridgeData !== null;
-    if (step === 3) return selectedPath !== null;
+    if (step === 3) return bridgeData !== null; // Standardized ethics is optional but accessible after translation
+    if (step === 4) return selectedPath !== null;
     return false;
   };
 
   return (
     <div className="max-w-6xl mx-auto py-8 md:py-12 px-4 md:px-6 space-y-8 md:space-y-12 animate-in fade-in duration-700 selection:bg-teal-500/30 overflow-x-hidden">
       
-      <nav className="flex justify-center items-center bg-[#1C1622]/60 border border-white/5 rounded-2xl md:rounded-full px-4 md:px-12 py-3 md:py-4 backdrop-blur-xl sticky top-4 z-50 shadow-2xl gap-8 md:gap-16">
+      <nav className="flex justify-center items-center bg-[#1C1622]/60 border border-white/5 rounded-2xl md:rounded-full px-4 md:px-12 py-3 md:py-4 backdrop-blur-xl sticky top-4 z-50 shadow-2xl gap-4 md:gap-12">
         {[
-          { id: 1, label: "THE TRANSLATING", icon: Languages },
-          { id: 2, label: "THE TOPOGRAPHY", icon: Compass },
-          { id: 3, label: "THE HARVEST", icon: Pickaxe }
+          { id: 1, label: "TRANSLATING", icon: Languages },
+          { id: 2, label: "STANDARDS", icon: ShieldCheck },
+          { id: 3, label: "TOPOGRAPHY", icon: Compass },
+          { id: 4, label: "HARVEST", icon: Pickaxe }
         ].map((step) => {
           const isAccessible = canNavigateTo(step.id);
           const isActive = activeStep === step.id;
@@ -110,9 +126,9 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
                 />
               )}
               <div className={`p-2 rounded-lg transition-colors ${isActive ? 'bg-teal-500/20 shadow-[0_0_15px_rgba(20,184,166,0.2)]' : 'bg-transparent'}`}>
-                <step.icon size={16} />
+                <step.icon size={14} />
               </div>
-              <span className="text-[7px] md:text-[9px] font-black tracking-[0.2em] md:tracking-[0.3em] uppercase">{isActive || isAccessible ? step.label : ""}</span>
+              <span className="text-[6px] md:text-[9px] font-black tracking-[0.2em] md:tracking-[0.3em] uppercase">{isActive || isAccessible ? step.label : ""}</span>
             </button>
           );
         })}
@@ -126,6 +142,7 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
                 <Microscope size={24} />
               </div>
               <h1 className="text-3xl md:text-4xl font-serif italic text-white leading-tight">Legacy<br/>Translation</h1>
+              <p className="text-[10px] text-slate-500 uppercase tracking-widest leading-relaxed">Reframing institutional achievements for the open market.</p>
             </div>
 
             <div className="lg:col-span-8 space-y-6">
@@ -193,16 +210,67 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
                 disabled={!bridgeData}
                 className="w-full h-16 bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 text-slate-400 hover:text-white font-black rounded-2xl gap-3 uppercase tracking-widest transition-all active:scale-[0.99]"
               >
-                Map Market Topography <ArrowRight size={16} />
+                Set Ethical Standards <ArrowRight size={16} />
               </Button>
             </div>
           </div>
         )}
 
         {activeStep === 2 && (
+          <div className="space-y-12 animate-in fade-in slide-in-from-right-8 duration-1000">
+            <header className="text-center max-w-2xl mx-auto space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 border border-purple-500/20 mx-auto">
+                <ShieldCheck size={24} />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-serif italic text-white tracking-tight">The Hearth Standards</h2>
+              <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em]">Define the ethical boundaries of your next grove</p>
+            </header>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              {ethicsOptions.map((opt) => {
+                const isSelected = ethicalPriorities.includes(opt.id);
+                const Icon = opt.icon;
+                return (
+                  <Card 
+                    key={opt.id}
+                    onClick={() => toggleEthic(opt.id)}
+                    className={`p-8 rounded-[2.5rem] cursor-pointer transition-all duration-500 border-2 relative overflow-hidden ${
+                      isSelected 
+                      ? 'bg-teal-500/10 border-teal-500/40 shadow-[0_0_30px_rgba(20,184,166,0.1)]' 
+                      : 'bg-[#1C1622]/40 border-white/5 hover:border-white/10'
+                    }`}
+                  >
+                    <div className="flex items-start gap-6 relative z-10">
+                      <div className={`p-4 rounded-2xl ${isSelected ? 'bg-teal-500 text-black' : 'bg-white/5 text-slate-500'}`}>
+                        <Icon size={24} />
+                      </div>
+                      <div className="space-y-2">
+                        <h4 className={`font-bold text-lg ${isSelected ? 'text-white' : 'text-slate-300'}`}>{opt.label}</h4>
+                        <p className="text-[11px] text-slate-500 italic leading-relaxed font-light">{opt.desc}</p>
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+
+            <Button 
+              onClick={() => {
+                onSync({ ethics: ethicalPriorities });
+                setActiveStep(3);
+              }}
+              className="w-full max-w-4xl mx-auto h-20 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-[2rem] gap-4 uppercase tracking-[0.2em] shadow-2xl flex"
+            >
+              Establish Topography <ArrowRight size={18} />
+            </Button>
+          </div>
+        )}
+
+        {activeStep === 3 && (
           <div className="space-y-12 animate-in fade-in duration-1000">
             <header className="text-center max-w-2xl mx-auto space-y-4">
               <h2 className="text-3xl md:text-4xl font-serif italic text-white tracking-tight">Market Topography</h2>
+              <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em]">Mapping your skills to current economic climates</p>
             </header>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
@@ -248,7 +316,7 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
             </div>
             
             <Button 
-              onClick={() => setActiveStep(3)} 
+              onClick={() => setActiveStep(4)} 
               disabled={!selectedPath}
               className={`w-full h-20 font-black rounded-[1.5rem] md:rounded-[2rem] gap-4 uppercase tracking-[0.2em] shadow-2xl transition-all duration-500 active:scale-[0.98]
                 ${selectedPath 
@@ -261,7 +329,7 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
           </div>
         )}
 
-        {activeStep === 3 && (
+        {activeStep === 4 && (
           <div className="animate-in slide-in-from-right-8 duration-700 space-y-12">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
               <div className="lg:col-span-4 space-y-6 md:space-y-8">
@@ -323,45 +391,44 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
               </div>
             </div>
 
-            {/* THE FINALIZED BLUEPRINT CARD */}
             <Card className="p-8 md:p-12 bg-white/[0.01] border border-teal-500/20 rounded-[2.5rem] md:rounded-[3rem] relative backdrop-blur-3xl overflow-hidden mt-12 shadow-2xl">
-               <div className="absolute inset-0 bg-gradient-to-b from-teal-500/5 to-transparent pointer-events-none" />
-               <div className="absolute top-0 right-0 p-8 opacity-10"><Sparkles size={60} className="text-teal-400" /></div>
-               
-               <div className="space-y-8 relative z-10 max-w-2xl mx-auto text-center">
-                  <div className="space-y-2">
-                    <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.5em] italic">Alignment Secured</p>
-                    <h3 className="text-3xl md:text-4xl font-serif italic text-white tracking-tight underline decoration-teal-500/30 underline-offset-8">Finalized Blueprint</h3>
-                  </div>
+                <div className="absolute inset-0 bg-gradient-to-b from-teal-500/5 to-transparent pointer-events-none" />
+                <div className="absolute top-0 right-0 p-8 opacity-10"><Sparkles size={60} className="text-teal-400" /></div>
+                
+                <div className="space-y-8 relative z-10 max-w-2xl mx-auto text-center">
+                   <div className="space-y-2">
+                     <p className="text-teal-500 text-[10px] font-black uppercase tracking-[0.5em] italic">Alignment Secured</p>
+                     <h3 className="text-3xl md:text-4xl font-serif italic text-white tracking-tight underline decoration-teal-500/30 underline-offset-8">Finalized Blueprint</h3>
+                   </div>
 
-                  <p className="text-slate-400 italic text-lg leading-relaxed font-light">
-                    "The distance to <span className="text-white font-bold">{selectedPath?.domain}</span> has been charted. Your narrative is ready for the market."
-                  </p>
+                   <p className="text-slate-400 italic text-lg leading-relaxed font-light">
+                     "The distance to <span className="text-white font-bold">{selectedPath?.domain}</span> has been charted. Your narrative is ready for the market."
+                   </p>
 
-                  <div className="bg-black/40 p-6 md:p-8 rounded-2xl border border-white/5 text-slate-300 italic font-serif leading-relaxed text-sm md:text-base shadow-inner">
-                    {bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Data/Strategy' ? 'data' : 'pm')]}
-                  </div>
+                   <div className="bg-black/40 p-6 md:p-8 rounded-2xl border border-white/5 text-slate-300 italic font-serif leading-relaxed text-sm md:text-base shadow-inner">
+                     {bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Data/Strategy' ? 'data' : 'pm')]}
+                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-                    <Button 
-                      onClick={() => handleCopy(bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Data/Strategy' ? 'data' : 'pm')])}
-                      className="h-16 px-10 bg-white/[0.03] hover:bg-white/[0.08] text-white font-black rounded-2xl uppercase tracking-widest border border-white/10 flex items-center gap-3 transition-all"
-                    >
-                      {copied ? <Check size={18} /> : <Copy size={18} />}
-                      {copied ? "Copied" : "Copy to Clipboard"}
-                    </Button>
+                   <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
+                     <Button 
+                       onClick={() => handleCopy(bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Data/Strategy' ? 'data' : 'pm')])}
+                       className="h-16 px-10 bg-white/[0.03] hover:bg-white/[0.08] text-white font-black rounded-2xl uppercase tracking-widest border border-white/10 flex items-center gap-3 transition-all"
+                     >
+                       {copied ? <Check size={18} /> : <Copy size={18} />}
+                       {copied ? "Copied" : "Copy to Clipboard"}
+                     </Button>
 
-                    <Button 
-                      onClick={() => {
-                        onSync({ isAligned: true });
-                        navigate('/launch');
-                      }} 
-                      className="h-16 px-10 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-2xl uppercase tracking-widest flex items-center gap-3 transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-teal-500/20"
-                    >
-                      Enter Launch Mode <Binoculars size={18} />
-                    </Button>
-                  </div>
-               </div>
+                     <Button 
+                       onClick={() => {
+                         onSync({ isAligned: true, ethics: ethicalPriorities });
+                         navigate('/launch');
+                       }} 
+                       className="h-16 px-10 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-2xl uppercase tracking-widest flex items-center gap-3 transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-teal-500/20"
+                     >
+                       Enter Launch Mode <Binoculars size={18} />
+                     </Button>
+                   </div>
+                </div>
             </Card>
           </div>
         )}
