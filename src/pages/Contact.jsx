@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { 
   FileText, ChevronDown, ChevronUp, Zap, 
-  Mail, ExternalLink, DollarSign, Download, Copy, Lock
+  Mail, ExternalLink, DollarSign, Download, Copy, Lock,
+  Fingerprint, ClipboardList
 } from 'lucide-react';
 
-// --- DATA & LOGIC ---
+// --- DATA: POWER VERBS (The "Lexicon") ---
+// You can expand this array to 50; the logic will handle the "View All" toggle.
 const powerVerbs = [
     { legacy: "Taught", horizon: "Facilitated", use: "Standardizing delivery for stakeholders." },
     { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
@@ -15,9 +17,11 @@ const powerVerbs = [
     { legacy: "Helped", horizon: "Advocated", use: "Championing client-centric solutions." },
     { legacy: "Worked on", horizon: "Executed", use: "Delivering high-impact project milestones." },
     { legacy: "Started", horizon: "Pioneered", use: "Launching first-to-market initiatives." },
-    { legacy: "Used", horizon: "Leveraged", use: "Utilizing data-driven insights for growth." }
+    { legacy: "Used", horizon: "Leveraged", use: "Utilizing data-driven insights for growth." },
+    // Add more here to reach 50...
 ];
 
+// --- LOGIC: SCRIPT GENERATOR (SYNCCED TO VAULT) ---
 const generateDynamicScripts = (vault) => {
     const targetRole = vault?.selectedPath?.domain || "[Target Role]";
     const salaryRange = vault?.selectedPath?.salary || "$[X] to $[Y]";
@@ -39,16 +43,14 @@ const Contact = ({ vault, isAdmin }) => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [showAllVerbs, setShowAllVerbs] = useState(false);
 
-  // --- TIER LOGIC ---
   const tiers = { 'free': 0, 'seedling': 1, 'hearthkeeper': 2, 'steward': 3 };
   const userRank = tiers[vault?.tier?.toLowerCase()] || 0;
-  
-  // GOD MODE: Constant true while developing
   const godMode = true; 
 
   const dynamicContent = generateDynamicScripts(vault);
 
   const trailKitResources = [
+    { id: 'ledger', title: "The Identity Ledger", desc: "A psychological worksheet to decouple your worth from your legacy title.", type: "Stewards Only", icon: <Fingerprint className="text-teal-400" />, requiredTier: 3 },
     { id: 'verbs', title: "Power Verb Lexicon", desc: "Strategic verbs to replace legacy language.", type: "Seedlings+", icon: <Zap className="text-purple-400" />, requiredTier: 1 },
     { id: 'resume', title: "Trailblazer's Blueprint", desc: "ATS-optimized resume layout.", type: "Hearthkeepers+", icon: <FileText className="text-teal-400" />, requiredTier: 2 },
     { id: 'outreach', title: "Sponsorship Outreach", desc: "4-phase sequence to turn contacts into advocates.", type: "Stewards Only", icon: <Mail className="text-purple-400" />, requiredTier: 3 },
@@ -97,6 +99,21 @@ const Contact = ({ vault, isAdmin }) => {
 
               {isOpen && (
                 <div className="bg-[#110E16] border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4">
+                  
+                  {/* IDENTITY LEDGER CONTENT */}
+                  {tool.id === 'ledger' && (
+                    <div className="bg-teal-500/5 border border-teal-500/20 p-6 rounded-3xl flex flex-col md:flex-row items-center gap-6">
+                        <div className="flex-1">
+                            <h4 className="text-white font-serif italic mb-2">Internal Re-Alignment Worksheet</h4>
+                            <p className="text-[11px] text-zinc-500 italic mb-4">A digital workbook designed to translate public service achievements into private sector value propositions.</p>
+                            <button onClick={() => window.open("https://docs.google.com/document/d/1Zt-f6O0vY-MreC9_Kq7-8vY6D6L0vK-O/copy")} className="w-full md:w-auto px-8 py-3 bg-teal-500 text-black text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all flex items-center justify-center gap-2">
+                                <ClipboardList size={14} /> Claim My Ledger
+                            </button>
+                        </div>
+                    </div>
+                  )}
+
+                  {/* VERBS CONTENT */}
                   {tool.id === 'verbs' && (
                     <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -114,19 +131,19 @@ const Contact = ({ vault, isAdmin }) => {
                     </div>
                   )}
 
+                  {/* RESUME CONTENT */}
                   {tool.id === 'resume' && (
-                    <div className="bg-purple-500/5 border border-purple-500/20 p-6 rounded-3xl">
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy")} className="flex-1 bg-purple-500 text-white px-8 h-14 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-400 transition-all flex items-center justify-center gap-2">
-                                <ExternalLink size={14} /> Open Google Doc
-                            </button>
-                            <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/export?format=docx")} className="flex-1 border border-purple-500/30 text-purple-400 px-8 h-14 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-500/10 transition-all flex items-center justify-center gap-2">
-                                <Download size={14} /> Download .DOCX
-                            </button>
-                        </div>
+                    <div className="bg-purple-500/5 border border-purple-500/20 p-6 rounded-3xl flex flex-col sm:flex-row gap-4">
+                        <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy")} className="flex-1 bg-purple-500 text-white px-8 h-14 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-purple-400 transition-all flex items-center justify-center gap-2">
+                            <ExternalLink size={14} /> Open Google Doc
+                        </button>
+                        <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/export?format=docx")} className="flex-1 border border-purple-500/30 text-purple-400 px-8 h-14 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-purple-500/10 transition-all flex items-center justify-center gap-2">
+                            <Download size={14} /> Download .DOCX
+                        </button>
                     </div>
                   )}
 
+                  {/* DYNAMIC SCRIPTS (VAULT SYNCED) */}
                   {(tool.id === 'outreach' || tool.id === 'scripts') && (
                     <div className="space-y-4">
                       {(tool.id === 'outreach' ? dynamicContent.outreach : dynamicContent.salary).map((phase, i) => (
