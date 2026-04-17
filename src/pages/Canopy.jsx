@@ -9,6 +9,7 @@ import {
   Clock, Loader2, Home, 
   ExternalLink, Globe, Search, Sparkles
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Canopy({ vault, userTier = "Seedling" }) {
   const [isAnalyzing, setIsAnalyzing] = useState(null); 
@@ -23,6 +24,7 @@ export default function Canopy({ vault, userTier = "Seedling" }) {
   const appId = "fdbe8139"; 
   const appKey = "bc73ecdb23eacf99b7cf1739dcaec883"; 
 
+  // Curated items stay at the top
   const curatedJobs = [
     {
       id: "curated-1",
@@ -33,8 +35,9 @@ export default function Canopy({ vault, userTier = "Seedling" }) {
       salary: "$110k - $140k",
       tags: ["eco", "remote"],
       isPublic: true, 
-      link: "https://www.linkedin.com/jobs/", 
-      desc: "Scaling sustainable infrastructure through optimized workflow protocols and legacy translation."
+      link: "https://www.linkedin.com/jobs/view/...", // Replace with your actual curated link
+      desc: "Scaling sustainable infrastructure through optimized workflow protocols and legacy translation.",
+      isCurated: true
     }
   ];
 
@@ -56,7 +59,7 @@ export default function Canopy({ vault, userTier = "Seedling" }) {
         salary: job.salary_min ? `~$${Math.round(job.salary_min).toLocaleString()}` : "Market Rate",
         tags: [isRemoteOnly ? "remote" : "onsite"], 
         isPublic: true,
-        link: job.redirect_url,
+        link: job.redirect_url, // THE LIVE API LINK
         desc: job.description.replace(/<\/?[^>]+(>|$)/g, "").substring(0, 160) + "..."
       }));
       setApiJobs(formatted);
@@ -68,24 +71,15 @@ export default function Canopy({ vault, userTier = "Seedling" }) {
   const allJobs = [...curatedJobs, ...apiJobs];
 
   const handleAnalyze = (job) => {
-    // 1. Membership Check
     if (userTier === "Seedling") {
       if (window.confirm("Deep alignment analysis is reserved for Stewards and Sentinels. Upgrade your standing?")) {
         window.location.href = "/";
       }
       return;
     }
-    // 2. Data Check (The Hearth) - Using the "Résumé" term we established
-    if (!vault.resume) {
+    if (!vault?.resume) {
       if (window.confirm("The Hearth requires your professional legacy to calculate fit. Sync your résumé now?")) {
         window.location.href = "/hearth";
-      }
-      return;
-    }
-    // 3. Ethics Check (Ecosystem Alignment)
-    if (!vault.ethics || vault.ethics.length === 0) {
-      if (window.confirm("Alignment requires your Ecosystem standards. Define your ethics in Alignment?")) {
-        window.location.href = "/alignment";
       }
       return;
     }
@@ -155,6 +149,11 @@ export default function Canopy({ vault, userTier = "Seedling" }) {
                   <div className="p-3 bg-black border border-white/5 rounded-2xl group-hover:border-teal-500/30 transition-all">
                     <Briefcase size={20} className="text-zinc-600 group-hover:text-teal-400" />
                   </div>
+                  {job.isCurated && (
+                    <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30 font-black text-[8px] tracking-[0.2em] px-3 py-1 uppercase">
+                      Featured Territory
+                    </Badge>
+                  )}
                   {isMatched && (
                     <Badge className="bg-teal-500 text-black font-black text-[8px] tracking-[0.2em] px-3 py-1 animate-in zoom-in">
                       {analysisResult.score}% ALIGNED
@@ -176,7 +175,9 @@ export default function Canopy({ vault, userTier = "Seedling" }) {
                 <div className="flex justify-between items-center text-lg font-black italic text-white/90 font-serif">{job.salary}</div>
                 <div className="grid grid-cols-2 gap-3">
                   <Button asChild className="h-12 bg-black border border-white/5 text-zinc-400 hover:text-white font-black rounded-xl text-[9px] uppercase tracking-widest transition-all">
-                    <a href={job.link} target="_blank" rel="noopener noreferrer">Inspect Role <ExternalLink size={12} className="ml-2" /></a>
+                    <a href={job.link} target="_blank" rel="noopener noreferrer">
+                       Inspect Role <ExternalLink size={12} className="ml-2" />
+                    </a>
                   </Button>
                   <Button 
                     onClick={() => handleAnalyze(job)} 
@@ -200,7 +201,6 @@ export default function Canopy({ vault, userTier = "Seedling" }) {
                   </motion.div>
                 )}
               </div>
-              <div className="absolute -bottom-12 -right-12 w-24 h-24 bg-teal-500/5 blur-[40px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
             </Card>
           );
         })}
