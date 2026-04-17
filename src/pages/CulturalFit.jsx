@@ -110,35 +110,49 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
 
   return (
     <div className="max-w-6xl mx-auto py-8 md:py-12 px-4 md:px-6 space-y-8 md:space-y-12 animate-in fade-in duration-700 selection:bg-teal-500/30 overflow-x-hidden">
-      <nav className="flex justify-center items-center bg-[#0D0B14]/80 border border-white/5 rounded-2xl md:rounded-full px-4 md:px-12 py-3 md:py-4 backdrop-blur-xl sticky top-4 z-50 shadow-2xl gap-4 md:gap-12">
-        {[
-          { id: 1, label: "TRANSLATING", icon: Languages },
-          { id: 2, label: "STANDARDS", icon: ShieldCheck },
-          { id: 3, label: "TOPOGRAPHY", icon: Compass },
-          { id: 4, label: "HARVEST", icon: Pickaxe }
-        ].map((step) => {
-          const isAccessible = canNavigateTo(step.id);
-          const isActive = activeStep === step.id;
-          return (
-            <button 
-              key={step.id}
-              disabled={!isAccessible}
-              onClick={() => setActiveStep(step.id)}
-              className={`relative flex flex-col md:flex-row items-center gap-1 md:gap-3 transition-all px-3 py-1 rounded-xl ${isActive ? 'text-teal-400' : isAccessible ? 'text-slate-500 hover:text-slate-300' : 'text-slate-800 cursor-not-allowed'}`}
-            >
-              {isActive && (
-                <motion.div layoutId="activeNavTab" className="absolute inset-0 bg-teal-500/5 blur-md rounded-full -z-10" />
-              )}
-              <div className={`p-2 rounded-lg transition-colors ${isActive ? 'bg-teal-500/20 shadow-[0_0_15px_rgba(20,184,166,0.2)]' : 'bg-transparent'}`}>
-                <step.icon size={14} />
-              </div>
-              <span className="text-[6px] md:text-[9px] font-black tracking-[0.2em] md:tracking-[0.3em] uppercase">{isActive || isAccessible ? step.label : ""}</span>
-            </button>
-          );
-        })}
-      </nav>
+      
+      {/* --- INTEGRATED STAGE NAVIGATION (FIXED ON TOP) --- */}
+      <div className="sticky top-6 z-50 mb-12">
+        <div className="max-w-4xl mx-auto bg-[#0D0B14]/90 backdrop-blur-2xl border border-white/10 rounded-3xl p-2 md:p-3 shadow-2xl">
+          <div className="flex items-center justify-around relative">
+            {[
+              { id: 1, label: "TRANSLATING", icon: Languages },
+              { id: 2, label: "VALUES", icon: ShieldCheck },
+              { id: 3, label: "TOPOGRAPHY", icon: Compass },
+              { id: 4, label: "HARVEST", icon: Pickaxe }
+            ].map((step, idx, arr) => {
+              const isAccessible = canNavigateTo(step.id);
+              const isActive = activeStep === step.id;
+              
+              return (
+                <React.Fragment key={step.id}>
+                  <button 
+                    disabled={!isAccessible}
+                    onClick={() => setActiveStep(step.id)}
+                    className={`group relative flex items-center gap-3 px-3 md:px-5 py-2 rounded-2xl transition-all duration-500 ${
+                      isActive ? 'opacity-100 scale-105' : isAccessible ? 'opacity-60 hover:opacity-100' : 'opacity-20 cursor-not-allowed'
+                    }`}
+                  >
+                    <div className={`p-2 rounded-xl transition-all ${
+                      isActive ? 'bg-teal-500 text-black shadow-[0_0_20px_rgba(20,184,166,0.4)]' : 'bg-white/5 text-zinc-500 group-hover:text-zinc-300'
+                    }`}>
+                      <step.icon size={18} />
+                    </div>
+                    <div className="hidden md:flex flex-col items-start text-left">
+                      <span className={`text-[9px] font-black uppercase tracking-[0.2em] ${isActive ? 'text-teal-400' : 'text-zinc-500'}`}>
+                        {step.label}
+                      </span>
+                    </div>
+                  </button>
+                  {idx < arr.length - 1 && <div className="h-px w-4 md:w-8 bg-white/10" />}
+                </React.Fragment>
+              );
+            })}
+          </div>
+        </div>
+      </div>
 
-      <main className="min-h-[500px] md:min-h-[600px]">
+      <main className="min-h-[500px] md:min-h-[600px] relative z-10">
         {activeStep === 1 && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 animate-in slide-in-from-bottom-8 duration-700">
             <div className="lg:col-span-4 space-y-4 md:space-y-6 text-center lg:text-left pt-4">
@@ -190,7 +204,7 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
                 </div>
               </Card>
               <Button onClick={() => setActiveStep(2)} disabled={!bridgeData} className="w-full h-16 bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 text-slate-400 hover:text-white font-black rounded-2xl gap-3 uppercase tracking-widest transition-all">
-                Set Ethical Standards <ArrowRight size={16} />
+                Define Values <ArrowRight size={16} />
               </Button>
             </div>
           </div>
@@ -200,8 +214,8 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
           <div className="space-y-12 animate-in fade-in slide-in-from-right-8 duration-1000">
             <header className="text-center max-w-2xl mx-auto space-y-4">
               <div className="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 border border-purple-500/20 mx-auto"><ShieldCheck size={24} /></div>
-              <h2 className="text-3xl md:text-4xl font-serif italic text-white tracking-tight">The Hearth Standards</h2>
-              <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em]">Define the ethical boundaries of your next grove</p>
+              <h2 className="text-3xl md:text-4xl font-serif italic text-white tracking-tight">The Hearth Values</h2>
+              <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em]">Define your non-negotiables and human priorities</p>
             </header>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {ethicsOptions.map((opt) => {
@@ -319,10 +333,10 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
                    <h3 className="text-3xl font-serif italic text-white tracking-tight">Finalized Blueprint</h3>
                    <p className="text-slate-400 italic text-lg leading-relaxed font-light">"The distance to <span className="text-white font-bold">{selectedPath?.domain}</span> has been charted. Your narrative is ready."</p>
                    <div className="bg-black/40 p-6 md:p-8 rounded-3xl border border-white/5 text-slate-300 italic font-serif text-sm shadow-inner">
-                     {bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Data/Strategy' ? 'data' : 'pm')]}
+                     {bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Strategy & Implementation' ? 'data' : 'pm')]}
                    </div>
                    <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-                     <Button onClick={() => handleCopy(bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Data/Strategy' ? 'data' : 'pm')])} className="h-16 px-10 bg-white/[0.03] text-white font-black rounded-2xl uppercase tracking-widest border border-white/10 gap-3 transition-all hover:bg-white/[0.08]">
+                     <Button onClick={() => handleCopy(bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Strategy & Implementation' ? 'data' : 'pm')])} className="h-16 px-10 bg-white/[0.03] text-white font-black rounded-2xl uppercase tracking-widest border border-white/10 gap-3 transition-all hover:bg-white/[0.08]">
                        {copied ? <Check size={18} /> : <Copy size={18} />} {copied ? "Copied" : "Copy Translation"}
                      </Button>
                      <Button onClick={() => { onSync({ isAligned: true }); navigate('/launch'); }} className="h-16 px-10 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-2xl uppercase tracking-widest gap-3 shadow-lg shadow-teal-500/20">
@@ -334,7 +348,8 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
           </div>
         )}
       </main>
-      <footer className="text-center pt-8">
+
+      <footer className="text-center pt-8 relative z-10">
         <div className="inline-flex items-center gap-3 bg-black/20 px-6 py-2 rounded-full border border-white/5">
           <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] italic">Synchronized with Hearth Horizon Ledger</p>
