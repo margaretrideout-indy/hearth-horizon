@@ -111,8 +111,7 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
   return (
     <div className="relative min-h-screen selection:bg-teal-500/30">
       
-      {/* --- RE-POSITIONED NAVIGATION PILL --- */}
-      {/* Moved top-24 to sit below your top nav bar */}
+      {/* Fixed Sub-Nav Pill */}
       <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] w-full px-4 pointer-events-none flex justify-center">
         <div className="pointer-events-auto bg-[#0D0B14]/80 backdrop-blur-3xl border border-white/10 rounded-full p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.4)] flex items-center gap-1 md:gap-2">
           {[
@@ -133,7 +132,7 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
                     isActive ? 'bg-teal-500 text-black shadow-[0_0_20px_rgba(20,184,166,0.5)] scale-105' : isAccessible ? 'text-zinc-400 hover:text-white hover:bg-white/5' : 'opacity-20 cursor-not-allowed'
                   }`}
                 >
-                  <step.icon size={15} className={isActive ? "animate-pulse" : ""} />
+                  <step.icon size={14} className={isActive ? "animate-pulse" : ""} />
                   <span className={`hidden md:block text-[8px] font-black tracking-[0.2em] ${isActive ? 'text-black' : 'text-zinc-500'}`}>
                     {step.label}
                   </span>
@@ -145,11 +144,10 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="max-w-6xl mx-auto py-12 px-4 md:px-6">
+      <div className="max-w-6xl mx-auto py-8 px-4 md:px-6">
         
-        {/* Adjusted Spacer to account for both top nav and secondary pill */}
-        <div className="h-40 md:h-48" />
+        {/* GAP REDUCED HERE */}
+        <div className="h-16 md:h-20" />
 
         <main className="relative z-10">
           {activeStep === 1 && (
