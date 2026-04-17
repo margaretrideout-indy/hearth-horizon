@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Compass, Map, Binoculars, FileText, Sparkles, BookOpen, 
-  Activity, Zap, ShieldCheck, Box, Upload, Trash2, ChevronRight, Flame
+  Activity, Zap, ShieldCheck, Box, Upload, Trash2, ChevronRight, Flame, CheckCircle2
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
   const [isProtocolOpen, setIsProtocolOpen] = useState(true);
   const [sentiment, setSentiment] = useState(null);
   const [reflection, setReflection] = useState("");
+  const [showToast, setShowToast] = useState(false);
   const fileInputRef = useRef(null);
   
   const [userLogs, setUserLogs] = useState(() => {
@@ -33,6 +34,14 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
   const maturityPulses = baseMaturity + (blueprints.length * 2); 
   const maturityTarget = 14;
   const syncPercentage = Math.min(Math.round((maturityPulses / maturityTarget) * 100), 100);
+
+  useEffect(() => {
+    if (hasResume) {
+      setShowToast(true);
+      const timer = setTimeout(() => setShowToast(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [hasResume]);
 
   const sentiments = [
     { emoji: '🌱', label: 'New', type: 'positive' },
@@ -101,6 +110,28 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
 
   return (
     <div className="max-w-6xl mx-auto space-y-12 pb-24 p-6 bg-[#0A080D] overflow-x-hidden selection:bg-teal-500/30">
+      <AnimatePresence>
+        {showToast && (
+          <motion.div 
+            initial={{ opacity: 0, y: 50, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, scale: 0.95, x: '-50%' }}
+            className="fixed bottom-10 left-1/2 z-[100] flex items-center gap-4 px-6 py-4 bg-[#110E16] border border-teal-500/30 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(20,184,166,0.1)] backdrop-blur-xl min-w-[320px]"
+          >
+            <div className="p-2 bg-teal-500/20 rounded-lg">
+              <CheckCircle2 className="w-5 h-5 text-teal-400" />
+            </div>
+            <div className="flex flex-col">
+              <p className="text-[11px] font-black text-white uppercase tracking-widest">History Recorded</p>
+              <p className="text-[10px] text-zinc-500 italic mt-0.5">Step into the Ecosystem to begin your alignment.</p>
+            </div>
+            <button onClick={() => setShowToast(false)} className="ml-4 text-zinc-700 hover:text-zinc-400">
+              <Trash2 size={14} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <header className="relative py-12 text-center space-y-8">
         <div className="space-y-4">
           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/60 italic">Operational Base</p>
@@ -148,7 +179,6 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          
           <Card className="bg-[#110E16] border-white/5 rounded-[2rem] overflow-hidden shadow-2xl">
             <div 
               className="p-8 flex items-center justify-between cursor-pointer group"
@@ -246,11 +276,11 @@ export default function YourHearth({ vault, onSync, onResumeSync, onNavigateToLi
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
               <div className="flex-1 space-y-6 text-center md:text-left">
                 <div className="space-y-2">
-                  <p className="text-[9px] font-black uppercase tracking-[0.4em] text-teal-500 italic">Discovery</p>
+                  <p className="text-[9px] font-black uppercase tracking-[0.4em] text-teal-500 italic"> </p>
                   <h2 className="text-3xl font-serif italic text-white leading-tight">Tend the Hearth.</h2>
                 </div>
                 <p className="text-zinc-500 text-sm leading-relaxed max-w-sm font-light mx-auto md:mx-0 italic">
-                  By syncing your Résumé or CV, we can translate your experience into the growth opportunities ahead.
+                  By syncing your Résumé or CV, we can translate your experience into the growth opportunities ahead on the Horizon.
                 </p>
                 {hasResume ? (
                   <div className="flex flex-col gap-3 items-center md:items-start">
