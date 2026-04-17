@@ -5,7 +5,7 @@ import {
   Fingerprint, ClipboardList, Presentation
 } from 'lucide-react';
 
-// --- DATA: POWER VERBS (Populate to 50) ---
+// --- DATA: THE FULL 50 VERB LEXICON ---
 const powerVerbs = [
     { legacy: "Taught", horizon: "Facilitated", use: "Standardizing delivery for stakeholders." },
     { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
@@ -18,8 +18,45 @@ const powerVerbs = [
     { legacy: "Started", horizon: "Pioneered", use: "Launching first-to-market initiatives." },
     { legacy: "Used", horizon: "Leveraged", use: "Utilizing data-driven insights for growth." },
     { legacy: "Changed", horizon: "Transformed", use: "Modernizing legacy architectures." },
-    { legacy: "Made", horizon: "Architected", use: "Designing scalable frameworks." }
-    // ... add remaining verbs to reach 50
+    { legacy: "Made", horizon: "Architected", use: "Designing scalable frameworks." },
+    { legacy: "Led", horizon: "Championed", use: "Advocating for cross-functional excellence." },
+    { legacy: "Watched", horizon: "Monitored", use: "Ensuring real-time quality assurance." },
+    { legacy: "Gave", horizon: "Administered", use: "Managing resource allocation." },
+    { legacy: "Finished", horizon: "Finalized", use: "Closing high-value contract lifecycles." },
+    { legacy: "Showed", horizon: "Demonstrated", use: "Presenting proof-of-concept to leadership." },
+    { legacy: "Met", horizon: "Collaborated", use: "Driving consensus across departments." },
+    { legacy: "Kept", horizon: "Maintained", use: "Upholding operational continuity." },
+    { legacy: "Followed", horizon: "Aligned", use: "Synchronizing projects with corporate goals." },
+    { legacy: "Checked", horizon: "Audited", use: "Validating regulatory compliance." },
+    { legacy: "Added", horizon: "Integrated", use: "Consolidating disparate data streams." },
+    { legacy: "Asked", horizon: "Queried", use: "Extracting actionable intelligence." },
+    { legacy: "Built", horizon: "engineered", use: "Constructing robust technical solutions." },
+    { legacy: "Cleaned", horizon: "Refined", use: "Polishing user-facing deliverables." },
+    { legacy: "Cut", horizon: "Reduced", use: "Mitigating unnecessary overhead." },
+    { legacy: "Decided", horizon: "Determined", use: "Establishing strategic direction." },
+    { legacy: "Explained", horizon: "Articulated", use: "Clarifying complex value propositions." },
+    { legacy: "Found", horizon: "Identified", use: "Detecting market opportunities." },
+    { legacy: "Guarded", horizon: "Secured", use: "Protecting proprietary assets." },
+    { legacy: "Hired", horizon: "Recruited", use: "Acquiring top-tier talent." },
+    { legacy: "Ideas", horizon: "Conceptualized", use: "Ideating next-generation products." },
+    { legacy: "Joined", horizon: "Merged", use: "Unifying organizational silos." },
+    { legacy: "Lowered", horizon: "Decreased", use: "Minimizing churn rates." },
+    { legacy: "Moved", horizon: "Transitioned", use: "Migrating legacy systems to cloud." },
+    { legacy: "Noticed", horizon: "Observed", use: "Analyzing user behavior patterns." },
+    { legacy: "Opened", horizon: "Launched", use: "Deploying market-ready solutions." },
+    { legacy: "Planned", horizon: "Strategized", use: "Mapping long-term growth trajectories." },
+    { legacy: "Quiet", horizon: "Suppressed", use: "Neutralizing security vulnerabilities." },
+    { legacy: "Ran", horizon: "Directed", use: "Governing large-scale operations." },
+    { legacy: "Saved", horizon: "Conserved", use: "Preserving budgetary resources." },
+    { legacy: "Tested", horizon: "Evaluated", use: "Benchmarking performance metrics." },
+    { legacy: "Updated", horizon: "Modernized", use: "Refreshing outdated workflows." },
+    { legacy: "Verified", horizon: "Validated", use: "Confirming data integrity." },
+    { legacy: "Wrote", horizon: "Authored", use: "Producing technical documentation." },
+    { legacy: "Yielded", horizon: "Generated", use: "Producing measurable ROI." },
+    { legacy: "Zoned", horizon: "Segmented", use: "Targeting niche demographics." },
+    { legacy: "Pointed", horizon: "Indicated", use: "Forecasting industry trends." },
+    { legacy: "Simplified", horizon: "Streamlined", use: "Expediting delivery timelines." },
+    { legacy: "Expanded", horizon: "Amplified", use: "Scaling operational capacity." }
 ];
 
 // --- LOGIC: SCRIPT GENERATOR ---
@@ -50,7 +87,6 @@ const Contact = ({ vault, isAdmin }) => {
 
   const dynamicContent = generateDynamicScripts(vault);
 
-  // --- RECALIBRATED ORDER & RESOURCES ---
   const trailKitResources = [
     { id: 'verbs', title: "Power Verb Lexicon", desc: "Strategic verbs to replace legacy language.", type: "Seedlings+", icon: <Zap className="text-purple-400" />, requiredTier: 1 },
     { id: 'ledger', title: "The Identity Ledger", desc: "Psychological framework & workbook to decouple your worth.", type: "Stewards Only", icon: <Fingerprint className="text-teal-400" />, requiredTier: 3 },
@@ -94,11 +130,11 @@ const Contact = ({ vault, isAdmin }) => {
               {isOpen && (
                 <div className="bg-[#110E16] border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4 animate-in slide-in-from-top-2">
                   
-                  {/* 1. POWER VERBS */}
+                  {/* VERBS */}
                   {tool.id === 'verbs' && (
                     <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {(showAllVerbs ? powerVerbs : powerVerbs.slice(0, 6)).map((v, i) => (
+                            {(showAllVerbs ? powerVerbs : powerVerbs.slice(0, 9)).map((v, i) => (
                                 <div key={i} className="bg-black/40 border border-white/5 p-4 rounded-xl">
                                     <div className="text-[10px] text-zinc-600 line-through uppercase tracking-tighter">{v.legacy}</div>
                                     <div className="text-lg font-serif italic text-teal-400">{v.horizon}</div>
@@ -106,13 +142,16 @@ const Contact = ({ vault, isAdmin }) => {
                                 </div>
                             ))}
                         </div>
-                        <button onClick={() => setShowAllVerbs(!showAllVerbs)} className="w-full py-4 border border-dashed border-zinc-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 transition-all">
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); setShowAllVerbs(!showAllVerbs); }} 
+                            className="w-full py-4 border border-dashed border-zinc-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 transition-all"
+                        >
                             {showAllVerbs ? "Collapse List" : "View Full Lexicon (50 Verbs)"}
                         </button>
                     </div>
                   )}
 
-                  {/* 2. IDENTITY LEDGER */}
+                  {/* IDENTITY LEDGER */}
                   {tool.id === 'ledger' && (
                     <div className="space-y-4">
                         <div className="bg-teal-500/5 border border-teal-500/20 p-6 rounded-3xl flex flex-col sm:flex-row items-center gap-6">
@@ -120,7 +159,7 @@ const Contact = ({ vault, isAdmin }) => {
                                 <h4 className="text-white font-serif italic mb-1">Vol II: The Identity Ledger</h4>
                                 <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-4">Core Strategy Presentation</p>
                                 <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link")} className="w-full sm:w-auto px-8 py-3 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all flex items-center justify-center gap-2">
-                                    <Presentation size={14} /> View Presentation
+                                    <Presentation size={14} /> View Slide Deck
                                 </button>
                             </div>
                         </div>
@@ -136,16 +175,16 @@ const Contact = ({ vault, isAdmin }) => {
                     </div>
                   )}
 
-                  {/* 3. RESUME */}
+                  {/* RESUME */}
                   {tool.id === 'resume' && (
-                    <div className="bg-purple-500/5 border border-purple-500/20 p-6 rounded-3xl flex flex-col sm:flex-row gap-4">
-                        <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=drive_link")} className="flex-1 bg-purple-500 text-white px-8 h-14 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-purple-400 transition-all flex items-center justify-center gap-2">
+                    <div className="bg-purple-500/5 border border-purple-500/20 p-6 rounded-3xl">
+                        <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=drive_link")} className="w-full sm:w-auto px-10 h-14 bg-purple-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-400 transition-all flex items-center justify-center gap-2">
                             <ExternalLink size={14} /> Open Blueprint
                         </button>
                     </div>
                   )}
 
-                  {/* 4. OUTREACH & 5. SCRIPTS */}
+                  {/* OUTREACH & SCRIPTS */}
                   {(tool.id === 'outreach' || tool.id === 'scripts') && (
                     <div className="space-y-4">
                       {(tool.id === 'outreach' ? dynamicContent.outreach : dynamicContent.salary).map((phase, i) => (
