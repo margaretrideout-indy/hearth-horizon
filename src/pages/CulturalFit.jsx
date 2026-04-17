@@ -109,11 +109,12 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
   };
 
   return (
-    <div className="relative min-h-screen bg-black selection:bg-teal-500/30">
+    <div className="relative min-h-screen selection:bg-teal-500/30">
       
-      {/* --- FIXED NAVIGATION: CENTERING THE GIRL --- */}
-      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-full max-w-4xl px-4 pointer-events-none">
-        <div className="pointer-events-auto bg-[#0D0B14]/80 backdrop-blur-2xl border border-white/10 rounded-full p-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-center gap-2 md:gap-4">
+      {/* --- RE-POSITIONED NAVIGATION PILL --- */}
+      {/* Moved top-24 to sit below your top nav bar */}
+      <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] w-full px-4 pointer-events-none flex justify-center">
+        <div className="pointer-events-auto bg-[#0D0B14]/80 backdrop-blur-3xl border border-white/10 rounded-full p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.4)] flex items-center gap-1 md:gap-2">
           {[
             { id: 1, label: "TRANSLATING", icon: Languages },
             { id: 2, label: "VALUES", icon: ShieldCheck },
@@ -128,27 +129,27 @@ export default function CulturalFit({ vault, onSync, userTier = "Seedling" }) {
                 <button 
                   disabled={!isAccessible}
                   onClick={() => setActiveStep(step.id)}
-                  className={`flex items-center gap-3 px-4 py-2 rounded-full transition-all duration-500 ${
+                  className={`flex items-center gap-2.5 px-4 py-2 rounded-full transition-all duration-500 ${
                     isActive ? 'bg-teal-500 text-black shadow-[0_0_20px_rgba(20,184,166,0.5)] scale-105' : isAccessible ? 'text-zinc-400 hover:text-white hover:bg-white/5' : 'opacity-20 cursor-not-allowed'
                   }`}
                 >
-                  <step.icon size={16} className={isActive ? "animate-pulse" : ""} />
-                  <span className={`hidden md:block text-[9px] font-black tracking-[0.2em] ${isActive ? 'text-black' : 'text-zinc-500'}`}>
+                  <step.icon size={15} className={isActive ? "animate-pulse" : ""} />
+                  <span className={`hidden md:block text-[8px] font-black tracking-[0.2em] ${isActive ? 'text-black' : 'text-zinc-500'}`}>
                     {step.label}
                   </span>
                 </button>
-                {idx < arr.length - 1 && <div className="w-4 h-px bg-white/10" />}
+                {idx < arr.length - 1 && <div className="w-3 h-px bg-white/10" />}
               </React.Fragment>
             );
           })}
         </div>
       </div>
 
-      {/* Main Container */}
-      <div className="max-w-6xl mx-auto py-8 md:py-12 px-4 md:px-6">
+      {/* Main Content Area */}
+      <div className="max-w-6xl mx-auto py-12 px-4 md:px-6">
         
-        {/* Spacer to push content below fixed nav */}
-        <div className="h-24 md:h-32" />
+        {/* Adjusted Spacer to account for both top nav and secondary pill */}
+        <div className="h-40 md:h-48" />
 
         <main className="relative z-10">
           {activeStep === 1 && (
