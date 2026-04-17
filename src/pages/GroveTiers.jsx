@@ -108,7 +108,6 @@ const GroveTiers = ({ vault, onSync }) => {
         "Unlimited Hearth Syncing", 
         "Full Ecosystem Alignment", 
         "Unlimited Horizon Analysis",
-        "The Embers Community Chat"
       ],
       button: "SELECT PLAN",
       onClick: () => handlePaid(LINK_HEARTHKEEPER, 'Hearthkeeper'),
@@ -124,7 +123,6 @@ const GroveTiers = ({ vault, onSync }) => {
         "Founding Forest Badge", 
         "Everything in Hearthkeeper", 
         "Sponsors 1 Scholarship Seat", 
-        "The Embers Community Chat",
         "Priority Resource Requests"
       ],
       button: "SELECT PLAN",
@@ -140,7 +138,6 @@ const GroveTiers = ({ vault, onSync }) => {
         "Full Hearthkeeper Access", 
         "Community Support", 
         "Equity Focused",
-        "The Embers Community Chat"
       ],
       button: requestStatus === 'success' ? "REQUESTED" : (requestStatus === 'sending' ? "SENDING..." : "REQUEST SEAT"),
       onClick: handleRequestSeat,
