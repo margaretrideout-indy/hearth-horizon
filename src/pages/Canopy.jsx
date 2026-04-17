@@ -8,10 +8,9 @@ import {
 const Canopy = ({ vault }) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-  const [locationQuery, setLocationQuery] = useState(''); // New State for typing Province/State
+  const [locationQuery, setLocationQuery] = useState(''); 
   const [isRemoteOnly, setIsRemoteOnly] = useState(true);
 
-  const userAlignment = vault?.alignment || {}; 
   const hasResume = !!vault?.resumeData;
 
   const jobs = [
@@ -49,9 +48,7 @@ const Canopy = ({ vault }) => {
       const matchesSearch = job.role.toLowerCase().includes(searchTerm.toLowerCase()) || 
                             job.company.toLowerCase().includes(searchTerm.toLowerCase());
       
-      // Smart Location Filter: Checks if the typed location is in the job's location string
       const matchesLocation = job.location.toLowerCase().includes(locationQuery.toLowerCase());
-      
       const matchesRemote = isRemoteOnly ? job.isRemote : true;
       
       return matchesSearch && matchesLocation && matchesRemote;
@@ -63,15 +60,20 @@ const Canopy = ({ vault }) => {
       <div className="max-w-7xl mx-auto">
         
         {/* HEADER SECTION */}
-        <div className="flex justify-between items-center mb-12">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20">
-              <Compass size={20} />
+        <div className="flex flex-col md:flex-row justify-between items-start mb-12 gap-6">
+          <div className="flex items-center gap-5">
+            <div className="w-14 h-14 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20 shadow-[0_0_20px_rgba(20,184,166,0.1)]">
+              <Compass size={28} />
             </div>
-            <h1 className="text-2xl font-serif italic text-white">The Horizon</h1>
+            <div>
+              <h1 className="text-3xl font-serif italic text-white tracking-tight">The Horizon</h1>
+              <p className="text-sm text-zinc-500 font-light italic mt-1">
+                The launchpad for your professional migration. Find where your values and your next chapter align.
+              </p>
+            </div>
           </div>
           
-          <div className="flex items-center gap-3 bg-[#110E16] px-4 py-2 rounded-2xl border border-zinc-800">
+          <div className="flex items-center gap-3 bg-[#110E16] px-4 py-2 rounded-2xl border border-zinc-800 self-end md:self-start">
              <div className={`w-2 h-2 rounded-full ${hasResume ? 'bg-teal-500' : 'bg-zinc-700'}`} />
              <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">
                {hasResume ? 'Personalized View' : 'Guest View'}
