@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { 
-  Flame, Compass, MessageSquare, Library, Rocket, Lock, LogIn, Globe
+  Flame, Compass, MessageSquare, Library, Binoculars, Lock, LogIn, Globe
 } from 'lucide-react';
 
 const AppLayout = ({ children, currentTier = "Seedling" }) => {
@@ -12,10 +12,11 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
   const isGrove = location.pathname === '/' || location.pathname === '/grove';
   const isEmbers = location.pathname === '/embers';
 
+  // "Launch" is now officially "Horizon"
   const journeyItems = [
     { name: "Hearth", path: "/hearth", icon: <Flame size={14} />, tier: "Seedling" },
     { name: "Alignment", path: "/alignment", icon: <Compass size={14} />, tier: "Seedling" },
-    { name: "Launch", path: "/launch", icon: <Rocket size={14} />, tier: "Seedling" },
+    { name: "Horizon", path: "/horizon", icon: <Binoculars size={14} />, tier: "Seedling" },
   ];
 
   const communityItems = [
@@ -30,7 +31,8 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
 
   const NavItem = ({ item }) => {
     const locked = isLocked(item.tier);
-    const isActive = location.pathname === item.path;
+    // Check for both /horizon and the legacy /launch path to keep the highlight active
+    const isActive = location.pathname === item.path || (item.name === "Horizon" && location.pathname === "/launch");
 
     return (
       <button
@@ -58,7 +60,6 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
         <nav className="absolute top-3 md:top-6 left-0 right-0 z-50 flex justify-center px-4">
           <div className="flex items-center gap-1 md:gap-2 p-1.5 bg-[#141118]/80 backdrop-blur-2xl border border-white/5 rounded-2xl md:rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] max-w-full overflow-x-auto no-scrollbar">
             
-            {/* NEW: RETURN TO GROVE PORTAL */}
             <button
               onClick={() => navigate('/grove')}
               className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-zinc-500 hover:text-teal-400 hover:bg-white/5 transition-all border border-transparent whitespace-nowrap group"
