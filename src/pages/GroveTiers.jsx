@@ -105,7 +105,7 @@ const GroveTiers = ({ vault, onSync }) => {
       desc: '"Removing the noise to keep your creative fires burning bright."',
       features: [
         "Hearthkeeper Badge", 
-        "Everything in Seedling, Plus:",
+        "Everything in Seedling, PLUS:",
         "Unlimited Hearth Syncing", 
         "Full Ecosystem Alignment", 
         "Unlimited Horizon Analysis",
