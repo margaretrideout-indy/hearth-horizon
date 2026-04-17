@@ -5,8 +5,7 @@ import {
   Fingerprint, ClipboardList
 } from 'lucide-react';
 
-// --- DATA: POWER VERBS (The "Lexicon") ---
-// You can expand this array to 50; the logic will handle the "View All" toggle.
+// --- DATA: POWER VERBS ---
 const powerVerbs = [
     { legacy: "Taught", horizon: "Facilitated", use: "Standardizing delivery for stakeholders." },
     { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
@@ -17,8 +16,7 @@ const powerVerbs = [
     { legacy: "Helped", horizon: "Advocated", use: "Championing client-centric solutions." },
     { legacy: "Worked on", horizon: "Executed", use: "Delivering high-impact project milestones." },
     { legacy: "Started", horizon: "Pioneered", use: "Launching first-to-market initiatives." },
-    { legacy: "Used", horizon: "Leveraged", use: "Utilizing data-driven insights for growth." },
-    // Add more here to reach 50...
+    { legacy: "Used", horizon: "Leveraged", use: "Utilizing data-driven insights for growth." }
 ];
 
 // --- LOGIC: SCRIPT GENERATOR (SYNCCED TO VAULT) ---
@@ -45,12 +43,15 @@ const Contact = ({ vault, isAdmin }) => {
 
   const tiers = { 'free': 0, 'seedling': 1, 'hearthkeeper': 2, 'steward': 3 };
   const userRank = tiers[vault?.tier?.toLowerCase()] || 0;
+  
+  // GOD MODE ACTIVE
   const godMode = true; 
 
   const dynamicContent = generateDynamicScripts(vault);
 
+  // CORRECTED ORDER: Ledger -> Verbs -> Resume -> Outreach -> Scripts
   const trailKitResources = [
-    { id: 'ledger', title: "The Identity Ledger", desc: "A psychological worksheet to decouple your worth from your legacy title.", type: "Stewards Only", icon: <Fingerprint className="text-teal-400" />, requiredTier: 3 },
+    { id: 'ledger', title: "The Identity Ledger", desc: "Decouple your worth from your legacy title.", type: "Stewards Only", icon: <Fingerprint className="text-teal-400" />, requiredTier: 3 },
     { id: 'verbs', title: "Power Verb Lexicon", desc: "Strategic verbs to replace legacy language.", type: "Seedlings+", icon: <Zap className="text-purple-400" />, requiredTier: 1 },
     { id: 'resume', title: "Trailblazer's Blueprint", desc: "ATS-optimized resume layout.", type: "Hearthkeepers+", icon: <FileText className="text-teal-400" />, requiredTier: 2 },
     { id: 'outreach', title: "Sponsorship Outreach", desc: "4-phase sequence to turn contacts into advocates.", type: "Stewards Only", icon: <Mail className="text-purple-400" />, requiredTier: 3 },
@@ -77,12 +78,12 @@ const Contact = ({ vault, isAdmin }) => {
               <div 
                 onClick={() => !isLocked && setExpandedCard(isOpen ? null : tool.id)}
                 className={`relative bg-[#16121D] border transition-all duration-300 ${
-                  isLocked ? 'cursor-not-allowed border-zinc-800' : 'cursor-pointer hover:border-teal-500/30'
+                  isLocked ? 'cursor-not-allowed border-zinc-800' : 'cursor-pointer hover:border-teal-500/30 shadow-lg'
                 } ${isOpen ? 'rounded-t-[2.5rem] border-teal-500/30' : 'rounded-[2.5rem] border-zinc-800'}`}
               >
                 <div className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
                   <div className="flex items-center gap-6">
-                    <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
+                    <div className="p-4 rounded-2xl bg-white/5 border border-white/5 group-hover:bg-teal-500/10 transition-colors">
                         {isLocked ? <Lock size={20} className="text-zinc-600" /> : tool.icon}
                     </div>
                     <div>
@@ -90,7 +91,7 @@ const Contact = ({ vault, isAdmin }) => {
                           {isLocked ? "Upgrade Required" : tool.type}
                       </span>
                       <h3 className="text-xl text-white font-serif italic font-black">{tool.title}</h3>
-                      <p className="text-zinc-500 mt-1 max-w-md text-[11px] italic leading-relaxed">{tool.desc}</p>
+                      <p className="text-zinc-500 mt-1 max-w-md text-[11px] font-light italic leading-relaxed">{tool.desc}</p>
                     </div>
                   </div>
                   {!isLocked && <div className="text-zinc-600 group-hover:text-white transition-colors">{isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</div>}
@@ -98,22 +99,22 @@ const Contact = ({ vault, isAdmin }) => {
               </div>
 
               {isOpen && (
-                <div className="bg-[#110E16] border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4">
+                <div className="bg-[#110E16] border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4 animate-in slide-in-from-top-2">
                   
-                  {/* IDENTITY LEDGER CONTENT */}
+                  {/* 1. IDENTITY LEDGER */}
                   {tool.id === 'ledger' && (
                     <div className="bg-teal-500/5 border border-teal-500/20 p-6 rounded-3xl flex flex-col md:flex-row items-center gap-6">
                         <div className="flex-1">
-                            <h4 className="text-white font-serif italic mb-2">Internal Re-Alignment Worksheet</h4>
-                            <p className="text-[11px] text-zinc-500 italic mb-4">A digital workbook designed to translate public service achievements into private sector value propositions.</p>
-                            <button onClick={() => window.open("https://docs.google.com/document/d/1Zt-f6O0vY-MreC9_Kq7-8vY6D6L0vK-O/copy")} className="w-full md:w-auto px-8 py-3 bg-teal-500 text-black text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all flex items-center justify-center gap-2">
+                            <h4 className="text-lg text-white font-serif italic mb-2">Internal Re-Alignment Worksheet</h4>
+                            <p className="text-[11px] text-zinc-500 italic mb-6">A digital workbook designed to translate public service achievements into private sector value propositions.</p>
+                            <button onClick={() => window.open("https://docs.google.com/document/d/1Zt-f6O0vY-MreC9_Kq7-8vY6D6L0vK-O/copy")} className="w-full md:w-auto px-10 h-14 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all flex items-center justify-center gap-2">
                                 <ClipboardList size={14} /> Claim My Ledger
                             </button>
                         </div>
                     </div>
                   )}
 
-                  {/* VERBS CONTENT */}
+                  {/* 2. VERBS */}
                   {tool.id === 'verbs' && (
                     <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -131,10 +132,10 @@ const Contact = ({ vault, isAdmin }) => {
                     </div>
                   )}
 
-                  {/* RESUME CONTENT */}
+                  {/* 3. RESUME */}
                   {tool.id === 'resume' && (
                     <div className="bg-purple-500/5 border border-purple-500/20 p-6 rounded-3xl flex flex-col sm:flex-row gap-4">
-                        <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy")} className="flex-1 bg-purple-500 text-white px-8 h-14 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-purple-400 transition-all flex items-center justify-center gap-2">
+                        <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy")} className="flex-1 bg-purple-500 text-white px-8 h-14 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-purple-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20">
                             <ExternalLink size={14} /> Open Google Doc
                         </button>
                         <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/export?format=docx")} className="flex-1 border border-purple-500/30 text-purple-400 px-8 h-14 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-purple-500/10 transition-all flex items-center justify-center gap-2">
@@ -143,7 +144,7 @@ const Contact = ({ vault, isAdmin }) => {
                     </div>
                   )}
 
-                  {/* DYNAMIC SCRIPTS (VAULT SYNCED) */}
+                  {/* 4. SCRIPTS (SYNCED) */}
                   {(tool.id === 'outreach' || tool.id === 'scripts') && (
                     <div className="space-y-4">
                       {(tool.id === 'outreach' ? dynamicContent.outreach : dynamicContent.salary).map((phase, i) => (
@@ -155,6 +156,7 @@ const Contact = ({ vault, isAdmin }) => {
                       ))}
                     </div>
                   )}
+
                 </div>
               )}
             </div>
