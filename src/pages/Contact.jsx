@@ -42,9 +42,12 @@ const Contact = ({ vault }) => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [showAllVerbs, setShowAllVerbs] = useState(false);
 
-  // --- TIER LOGIC ---
+  // --- TIER LOGIC & GOD MODE ---
   const tiers = { 'free': 0, 'seedling': 1, 'hearthkeeper': 2, 'steward': 3 };
   const userRank = tiers[vault?.tier?.toLowerCase()] || 0;
+  
+  // ADMIN OVERRIDE: Set to true to bypass all locks
+  const isAdmin = true; 
 
   const dynamicContent = generateDynamicScripts(vault);
 
@@ -58,13 +61,21 @@ const Contact = ({ vault }) => {
   return (
     <div className="max-w-6xl mx-auto pb-24 px-4 animate-in fade-in duration-500">
       <div className="mb-16 text-center">
-        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-400 mb-4">The Library Archives</h2>
+        <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-400 mb-4 tracking-widest">The Library Archives</h2>
         <h1 className="text-4xl md:text-5xl font-serif italic font-black text-white mb-6">Volume II: The Trail Kit</h1>
+        {isAdmin && (
+          <div className="mt-4">
+            <span className="px-3 py-1 rounded-full border border-teal-500/30 bg-teal-500/10 text-[9px] font-black text-teal-400 uppercase tracking-widest italic">
+              God Mode Active: All Archives Unlocked
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-6 mb-20">
         {trailKitResources.map((tool) => {
-          const isLocked = userRank < tool.requiredTier;
+          // Check if locked: Must NOT be admin AND must have lower rank than required
+          const isLocked = !isAdmin && userRank < tool.requiredTier;
           const isOpen = expandedCard === tool.id && !isLocked;
 
           return (
@@ -77,7 +88,7 @@ const Contact = ({ vault }) => {
               >
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                   <div className="flex items-center gap-6">
-                    <div className="p-4 rounded-2xl bg-white/5 border border-white/5 group-hover:bg-teal-500/10 transition-colors">
+                    <div className="p-4 rounded-2xl bg-white/5 border border-white/5 group-hover:bg-teal-500/10 transition-colors text-zinc-400">
                         {isLocked ? <Lock size={20} className="text-zinc-600" /> : tool.icon}
                     </div>
                     <div>
@@ -117,7 +128,7 @@ const Contact = ({ vault }) => {
                   {tool.id === 'resume' && (
                     <div className="bg-purple-500/5 border border-purple-500/20 p-6 rounded-3xl">
                         <div className="flex flex-col sm:flex-row gap-4">
-                            <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy")} className="flex-1 bg-purple-500 text-white px-8 h-14 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-400 transition-all flex items-center justify-center gap-2">
+                            <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/copy")} className="flex-1 bg-purple-500 text-white px-8 h-14 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20">
                                 <ExternalLink size={14} /> Open Google Doc
                             </button>
                             <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/export?format=docx")} className="flex-1 border border-purple-500/30 text-purple-400 px-8 h-14 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-500/10 transition-all flex items-center justify-center gap-2">
