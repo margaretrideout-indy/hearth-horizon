@@ -29,24 +29,41 @@
     background-color: #0A080D;
     color: #A1A1AA;
     
-    /* 1. THE BIG FIX: Safe Area Padding */
-    /* This ensures your app content never crawls under the notch or the home bar */
+    /* Safe Area Padding: Notch/Home Bar protection */
     padding-top: var(--sat);
     padding-bottom: var(--sab);
     padding-left: var(--sal);
     padding-right: var(--sar);
     
     min-height: 100vh;
-    /* Use dynamic viewport height for mobile browsers */
     min-height: -webkit-fill-available;
   }
 
-  /* 2. NATIVE FEEL: Gesture Protection */
-  /* Prevents accidental text-selection on UI elements which reveals web origins */
+  /* --- NATIVE FEEL: Gesture & Selection Protection --- */
+  
+  /* Broad protection for interactive elements */
+  button, 
+  a, 
+  nav, 
+  [role="button"],
   .native-ui {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
+    /* Removes the grey tap flicker on iOS */
+    -webkit-tap-highlight-color: transparent; 
+  }
+
+  /* Escape hatch for text that SHOULD be copyable (Library/Jobs) */
+  .selectable-content {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+  }
+
+  /* Ensure inputs still allow interaction */
+  input, textarea {
+    -webkit-user-select: text;
+    user-select: text;
   }
 }
 
@@ -93,7 +110,6 @@ button:focus-visible {
 }
 
 /* --- GLOBAL SCROLLBAR MANAGEMENT --- */
-/* We keep the clean look but ensure functionality for Embers */
 * {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -111,7 +127,7 @@ button:focus-visible {
   width: 5px;
 }
 
-/* Helper for the Bottom Nav - specifically for your scan results */
+/* Bottom Nav Visuals */
 .bottom-nav-blur {
   background: rgba(10, 8, 13, 0.8);
   backdrop-filter: blur(12px);
