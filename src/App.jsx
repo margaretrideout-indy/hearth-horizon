@@ -37,8 +37,8 @@ function HearthProvider({ children }) {
   const isAdmin = user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
   const initialState = {
-    name: "Traveler",
-    tier: "Seedling",
+    name: "Traveler", // The User's starting identity
+    tier: "Seedling", // The User's starting free tier
     journey: "Professional Transition",
     isAligned: false,
     pulses: [],
@@ -55,15 +55,14 @@ function HearthProvider({ children }) {
     }
   }, [user]);
 
-  // 2. REFRESH LOGIC (For Native Pull-to-Refresh)
+  // 2. REFRESH LOGIC
   const handleManualRefresh = async () => {
     await queryClient.invalidateQueries(['me']);
     await refetchUser();
   };
 
-  // 3. CLOUD SYNC & DELETION LOGIC
+  // 3. CLOUD SYNC
   const forceSync = async (updates) => {
-    // If updates is null, we are performing the mandatory "Account Deletion" wipe
     const isDeletion = updates === null;
     const newState = isDeletion ? initialState : { ...sanctuaryState, ...updates };
     
@@ -103,6 +102,7 @@ function HearthProvider({ children }) {
     onSync: forceSync,
     onRefresh: handleManualRefresh,
     onResumeSync: handleResumeSync,
+    // Admin is always a Steward, otherwise use the vault tier
     effectiveTier: isAdmin ? 'Steward' : sanctuaryState.tier,
     activeLibraryTool,
     onSetLibraryTool: setActiveLibraryTool
@@ -122,6 +122,7 @@ function LoadingScreen() {
 function AdminRoute({ children }) {
   const { user, isAdmin, authLoading } = useHearth();
   if (authLoading) return <LoadingScreen />;
+  // Secure check for Margaret's email via isAdmin
   if (!user || !isAdmin) return <Navigate to="/" replace />;
   return children;
 }
@@ -166,7 +167,7 @@ function AppRoutes() {
         {/* --- ADMIN --- */}
         <Route path="/admin" element={
           <AdminRoute>
-            <AdminDashboard vault={vault} onSync={onSync} />
+            <AdminDashboard vault={vault} onSync={onSync} isAdmin={isAdmin} />
           </AdminRoute>
         } />
         
@@ -218,7 +219,7 @@ function AppRoutes() {
         <Route path="/embers" element={
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
-              <EmbersChat isAdmin={isAdmin} />
+              <EmbersChat isAdmin={isAdmin} vault={vault} />
             </AppLayout>
           </ProtectedRoute>
         } />
