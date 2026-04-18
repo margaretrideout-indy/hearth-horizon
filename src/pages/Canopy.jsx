@@ -7,15 +7,16 @@ import { Switch } from '@/components/ui/switch';
 import { 
   Binoculars, MapPin, Briefcase, 
   Clock, Loader2, Home, 
-  ExternalLink, Globe, Search, Sparkles
+  ExternalLink, Globe, Search, Sparkles, RefreshCw
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function Canopy({ vault, userTier = "Seedling" }) {
+export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling" }) {
   const [isAnalyzing, setIsAnalyzing] = useState(null); 
   const [analysisResult, setAnalysisResult] = useState(null);
   const [apiJobs, setApiJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   
   const [locationQuery, setLocationQuery] = useState("");
   const [isRemoteOnly, setIsRemoteOnly] = useState(true);
@@ -28,7 +29,6 @@ export default function Canopy({ vault, userTier = "Seedling" }) {
     if (!appId || !appKey) return;
     setIsLoading(true);
     try {
-      // "What" is the keyword search. "Remote" yields high-quality distributed roles.
       const what = isRemoteOnly ? "Remote" : "Professional";
       const where = activeLocation ? `&where=${encodeURIComponent(activeLocation)}` : "";
       const url = `https://api.adzuna.com/v1/api/jobs/ca/search/1?app_id=${appId}&app_key=${appKey}&results_per_page=15&what=${what}${where}&content-type=application/json`;
@@ -43,7 +43,7 @@ export default function Canopy({ vault, userTier = "Seedling" }) {
         location: job.location?.display_name || "Remote / Global",
         type: job.contract_type === 'full_time' ? "Full-time" : "Contract Role",
         salary: job.salary_min ? `~$${Math.round(job.salary_min).toLocaleString()}` : "Market Rate",
-        link: job.redirect_url, // DIRECT API REDIRECT
+        link: job.redirect_url,
         desc: job.description.replace(/<\/?[^>]+(>|$)/g, "").substring(0, 160) + "..."
       }));
       
@@ -53,6 +53,16 @@ export default function Canopy({ vault, userTier = "Seedling" }) {
     } finally { 
       setIsLoading(false); 
     }
+  };
+
+  // NATIVE REFRESH LOGIC
+  const handleManualRefresh = async () => {
+    setIsRefreshing(true);
+    // Sync the Cloud Vault
+    if (onRefresh) await onRefresh();
+    // Sync the Jobs Board
+    await fetchJobs();
+    setIsRefreshing(false);
   };
 
   useEffect(() => { fetchJobs(); }, [activeLocation, isRemoteOnly]);
@@ -79,8 +89,21 @@ export default function Canopy({ vault, userTier = "Seedling" }) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-12 px-6 space-y-12 animate-in fade-in duration-700 bg-[#0A080D]">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+    <div className="max-w-7xl mx-auto py-8 px-6 space-y-12 animate-in fade-in duration-700 bg-[#0A080D]">
+      
+      {/* PULL TO REFRESH UI */}
+      <div className="flex justify-center h-4">
+        <motion.div 
+          animate={isRefreshing ? { rotate: 360 } : { y: 0 }}
+          transition={isRefreshing ? { repeat: Infinity, duration: 1, ease: "linear" } : {}}
+          className="opacity-40 text-teal-500 cursor-pointer"
+          onClick={handleManualRefresh}
+        >
+          <RefreshCw size={20} className={isRefreshing ? "" : "hover:scale-110 transition-transform"} />
+        </motion.div>
+      </div>
+
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pt-4">
         <div className="space-y-2">
           <div className="flex items-center gap-3 text-teal-500 mb-2">
             <Binoculars size={20} />
@@ -118,7 +141,7 @@ export default function Canopy({ vault, userTier = "Seedling" }) {
           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 italic">Connecting to Global Survey...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
           {apiJobs.map((job) => {
             const isMatched = analysisResult?.jobId === job.id;
             return (
@@ -183,7 +206,7 @@ export default function Canopy({ vault, userTier = "Seedling" }) {
         </div>
       )}
 
-      <footer className="pt-12 border-t border-white/5 flex justify-between items-center">
+      <footer className="pt-12 border-t border-white/5 flex justify-between items-center pb-8">
         <div className="flex items-center gap-3 bg-black px-5 py-2.5 rounded-full border border-white/5 shadow-inner">
           <Globe size={12} className="text-teal-500 animate-pulse" />
           <p className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.3em] italic">
