@@ -85,7 +85,7 @@ const Contact = ({ vault, isAdmin }) => {
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
 
-  // --- UPDATED TIER MAPPING ---
+  // --- TIER GATING LOGIC ---
   const tiers = { 'traveler': 0, 'seedling': 1, 'hearthkeeper': 2, 'steward': 3 };
   const userRank = isAdmin ? 3 : (tiers[vault?.tier?.toLowerCase()] || 0);
 
@@ -99,14 +99,32 @@ const Contact = ({ vault, isAdmin }) => {
 
   const trailKitResources = [
     { id: 'verbs', title: "Power Verb Lexicon", desc: "Strategic verbs to replace legacy language.", type: "Seedlings+", icon: <Zap className="text-purple-400" />, requiredTier: 1 },
-    { id: 'ledger', title: "The Identity Ledger", desc: "Psychological framework & workbook to decouple worth.", type: "Hearthkeepers+", icon: <Fingerprint className="text-teal-400" />, requiredTier: 2 },
+    { id: 'ledger', title: "The Identity Ledger", desc: "Workbook & Deck to decouple your worth.", type: "Hearthkeepers+", icon: <Fingerprint className="text-teal-400" />, requiredTier: 2 },
     { id: 'resume', title: "Trailblazer's Blueprint", desc: "ATS-optimized resume layout.", type: "Hearthkeepers+", icon: <FileText className="text-purple-400" />, requiredTier: 2 },
-    { id: 'outreach', title: "Sponsorship Outreach", desc: "4-phase sequence to turn contacts into advocates.", type: "Stewards Only", icon: <Mail className="text-teal-400" />, requiredTier: 3 },
+    { id: 'outreach', title: "Sponsorship Outreach", desc: "Turn contacts into advocates.", type: "Stewards Only", icon: <Mail className="text-teal-400" />, requiredTier: 3 },
     { id: 'scripts', title: "Salary Negotiations", desc: "Tactical word-for-word scripts.", type: "Stewards Only", icon: <DollarSign className="text-purple-400" />, requiredTier: 3 }
   ];
 
   return (
-    <div className="animate-in fade-in duration-500 pb-20">
+    <div className="animate-in fade-in duration-500 pb-20 px-4 md:px-0">
+      
+      {/* --- VOLUME HEADER --- */}
+      <div className="mb-12 border-b border-white/5 pb-12">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="h-[1px] w-12 bg-teal-500/50" />
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-500/70">
+            Tactical Arsenal
+          </span>
+        </div>
+        <h2 className="text-4xl md:text-5xl text-white font-serif italic mb-4">
+          Volume II: The Trail Kit
+        </h2>
+        <p className="max-w-xl text-zinc-500 text-sm leading-relaxed font-light italic">
+          Strategic assets for the transition. From shifting your lexicon to 
+          securing your market value—these are the tools for planting new roots.
+        </p>
+      </div>
+
       <div className="grid grid-cols-1 gap-4">
         {trailKitResources.map((tool) => {
           const isLocked = userRank < tool.requiredTier;
@@ -153,15 +171,15 @@ const Contact = ({ vault, isAdmin }) => {
                   >
                     <div className="p-6 md:p-8 pt-0 space-y-6">
                       
-                      {/* 1. POWER VERBS CONTENT */}
+                      {/* 1. POWER VERBS */}
                       {tool.id === 'verbs' && (
                         <div className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                 {(showAllVerbs ? powerVerbs : powerVerbs.slice(0, 9)).map((v, i) => (
-                                    <div key={i} className="bg-black/40 border border-white/5 p-4 rounded-2xl hover:border-teal-500/20 transition-colors">
+                                    <div key={i} className="bg-black/40 border border-white/5 p-4 rounded-2xl">
                                         <div className="text-[9px] text-zinc-600 line-through uppercase tracking-tighter mb-1">{v.legacy}</div>
                                         <div className="text-lg font-serif italic text-teal-400">{v.horizon}</div>
-                                        <div className="text-[10px] text-zinc-500 mt-2 italic opacity-70 leading-relaxed">"{v.use}"</div>
+                                        <div className="text-[10px] text-zinc-500 mt-2 italic opacity-70">"{v.use}"</div>
                                     </div>
                                 ))}
                             </div>
@@ -174,9 +192,9 @@ const Contact = ({ vault, isAdmin }) => {
                         </div>
                       )}
 
-                      {/* 2. IDENTITY LEDGER CONTENT */}
+                      {/* 2. IDENTITY LEDGER */}
                       {tool.id === 'ledger' && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4">
                             <div className="bg-teal-500/5 border border-teal-500/10 p-6 rounded-[2rem] flex flex-col justify-between">
                                 <div>
                                     <h4 className="text-white font-serif italic text-lg mb-1">The Identity Ledger</h4>
@@ -198,19 +216,19 @@ const Contact = ({ vault, isAdmin }) => {
                         </div>
                       )}
 
-                      {/* 3. RESUME BLUEPRINT CONTENT */}
+                      {/* 3. RESUME BLUEPRINT */}
                       {tool.id === 'resume' && (
-                        <div className="bg-purple-500/5 border border-purple-500/20 p-8 rounded-[2rem] text-center">
-                            <p className="text-sm text-zinc-400 italic mb-6">An ATS-optimized template designed specifically for public-to-private sector pivots.</p>
-                            <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing")} className="px-10 h-14 bg-purple-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-400 active:scale-95 transition-all inline-flex items-center gap-2 shadow-xl shadow-purple-500/20">
+                        <div className="bg-purple-500/5 border border-purple-500/20 p-8 rounded-[2rem] text-center mb-4">
+                            <p className="text-sm text-zinc-400 italic mb-6">ATS-optimized template designed specifically for career pivots.</p>
+                            <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing")} className="px-10 h-14 bg-purple-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-400 active:scale-95 transition-all inline-flex items-center gap-2">
                                 <ExternalLink size={14} /> Get Blueprint (Google Doc)
                             </button>
                         </div>
                       )}
 
-                      {/* 4. SCRIPTS CONTENT (OUTREACH & SALARY) */}
+                      {/* 4. SCRIPTS (OUTREACH & SALARY) */}
                       {(tool.id === 'outreach' || tool.id === 'scripts') && (
-                        <div className="space-y-4">
+                        <div className="space-y-4 pb-4">
                           {(tool.id === 'outreach' ? dynamicContent.outreach : dynamicContent.salary).map((item, i) => {
                             const uniqueKey = `${tool.id}-${i}`;
                             return (
@@ -227,11 +245,6 @@ const Contact = ({ vault, isAdmin }) => {
                                     <div className="font-mono text-[11px] text-zinc-300 italic select-all leading-relaxed whitespace-pre-wrap">
                                         "{item.script}"
                                     </div>
-                                    {copiedIndex === uniqueKey && (
-                                        <div className="absolute top-2 right-12 text-[8px] font-black uppercase text-teal-500 animate-in fade-in slide-in-from-right-2">
-                                            Copied to Clipboard
-                                        </div>
-                                    )}
                                 </div>
                             );
                           })}
