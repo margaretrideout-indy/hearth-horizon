@@ -31,10 +31,11 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
 
   const isLocked = (itemTier) => {
     const weights = { "Seedling": 1, "Hearthkeeper": 2, "Steward": 3 };
-    return weights[itemTier] > weights[currentTier];
+    const userWeight = weights[currentTier] || 1;
+    const requiredWeight = weights[itemTier] || 1;
+    return requiredWeight > userWeight;
   };
 
-  // 2. Mock Pull-to-Refresh Logic for PWA feel
   const handleRefresh = () => {
     setIsRefreshing(true);
     setTimeout(() => setIsRefreshing(false), 1500);
@@ -43,11 +44,10 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
   return (
     <div className="h-[100dvh] w-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans flex flex-col overflow-hidden relative">
       
-      {/* 1. TOP BRANDING BAR (With Smart Back Button) */}
+      {/* 1. TOP BRANDING BAR */}
       {!isGrove && (
         <header className="pt-[env(safe-area-inset-top)] px-6 flex items-center justify-between h-20 z-40">
           <div className="flex items-center gap-4">
-            {/* Show back button if not on primary Hearth screen */}
             {!isHearth && (
               <motion.button 
                 initial={{ opacity: 0, x: -10 }}
@@ -68,7 +68,6 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Pull to refresh visual trigger */}
             <button 
               onClick={handleRefresh}
               className={`p-2 rounded-full bg-white/5 text-zinc-500 transition-all ${isRefreshing ? 'animate-spin text-teal-400' : ''}`}
@@ -86,7 +85,7 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
         </header>
       )}
 
-      {/* 2. MAIN CONTENT AREA (Responsive & Overscroll aware) */}
+      {/* 2. MAIN CONTENT AREA */}
       <main className={`flex-1 w-full overflow-hidden flex flex-col ${isEmbers ? '' : 'pb-24'}`}>
         <AnimatePresence mode="wait">
           <motion.div 
@@ -101,7 +100,6 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
                 : "max-w-7xl px-4 md:px-8 overflow-y-auto embers-scroll"
             }`}
           >
-            {/* Pull to Refresh Indicator Overlay */}
             {isRefreshing && (
               <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50">
                 <div className="bg-teal-500 text-black px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest shadow-lg">
@@ -120,7 +118,6 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
         <nav className="native-ui fixed bottom-0 left-0 right-0 bg-[#141118]/80 backdrop-blur-2xl border-t border-white/5 z-50 px-2">
           <div className="max-w-md mx-auto flex justify-around items-center h-16 mb-[env(safe-area-inset-bottom)]">
             
-            {/* Grove/Home Link */}
             <button 
               onClick={() => navigate('/grove')} 
               className={`flex flex-col items-center gap-1 transition-colors ${location.pathname === '/grove' ? 'text-teal-400' : 'text-zinc-500'}`}
@@ -131,10 +128,9 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
 
             <div className="w-[1px] h-6 bg-white/5 mx-1" />
 
-            {/* Dynamic Items */}
             {allNavItems.map((item) => {
               const locked = isLocked(item.tier);
-              const isActive = location.pathname === item.path || (item.name === "Horizon" && location.pathname === "/launch");
+              const isActive = location.pathname === item.path;
 
               return (
                 <button
