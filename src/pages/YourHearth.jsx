@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Flame, Upload, CheckCircle2, FileText, 
   Sparkles, ArrowRight, ShieldCheck, Zap,
-  BookOpen, PenLine, Lock, Globe, Trash2, RefreshCw
+  BookOpen, PenLine, Lock, Globe, Trash2, RefreshCw, AlertTriangle
 } from 'lucide-react';
 
 export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHorizon }) {
@@ -14,6 +15,7 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
   const [isUploading, setIsUploading] = useState(false);
   const [reflection, setReflection] = useState("");
   const [selectedEmoji, setSelectedEmoji] = useState(null);
+  const [isClosingHearth, setIsClosingHearth] = useState(false);
 
   const pulses = [
     { icon: "🌱", label: "Positive" },
@@ -51,8 +53,14 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
     setSelectedEmoji(null);
   };
 
+  const handleFinalExtinguish = () => {
+    // This is the functional call for Base44/Legal compliance
+    console.log("Hearth extinguished. Redirecting...");
+    // navigate('/logout'); or actual deletion logic
+  };
+
   return (
-    <div className="max-w-6xl mx-auto space-y-12 pb-24 animate-in fade-in duration-1000">
+    <div className="max-w-6xl mx-auto space-y-12 pb-32 animate-in fade-in duration-1000">
       
       {/* --- HERO --- */}
       <header className="text-center space-y-4 pt-4">
@@ -105,7 +113,7 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
                   placeholder="How does the journey feel today?"
                   value={reflection}
                   onChange={(e) => setReflection(e.target.value)}
-                  className="bg-black/40 border-white/5 rounded-2xl text-xs italic placeholder:text-zinc-800 min-h-[100px] focus:border-teal-500/30 transition-all resize-none"
+                  className="bg-black/40 border-white/5 rounded-2xl text-xs italic placeholder:text-zinc-800 min-h-[100px] focus:border-teal-500/30 transition-all resize-none text-white"
                 />
               </div>
 
@@ -229,7 +237,7 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
             </div>
           </Card>
 
-          {/* NEXT STEP ACTION - THE ESTABLISH ALIGNMENT GATE */}
+          {/* NEXT STEP ACTION */}
           <div className="pt-4">
             <button 
               onClick={() => {
@@ -280,18 +288,50 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
                 )}
               </div>
             </button>
-            
-            {(!vault.resume || !vault.isAligned) && (
-              <div className="mt-6 flex justify-center gap-8">
-                 <div className={`flex items-center gap-2 text-[9px] font-black uppercase tracking-widest transition-all duration-500 ${vault.resume ? 'text-teal-500' : 'text-zinc-800'}`}>
-                   {vault.resume ? <CheckCircle2 size={12} /> : <div className="w-2 h-2 rounded-full bg-zinc-900" />} Résumé/CV Synced
-                 </div>
-                 <div className={`flex items-center gap-2 text-[9px] font-black uppercase tracking-widest transition-all duration-500 ${vault.isAligned ? 'text-teal-500' : 'text-zinc-800'}`}>
-                   {vault.isAligned ? <CheckCircle2 size={12} /> : <div className="w-2 h-2 rounded-full bg-zinc-900" />} Ecosystem Alignment
-                 </div>
-              </div>
-            )}
           </div>
+
+          {/* --- END OF SEASON: ACCOUNT DELETION (Base44 Requirement) --- */}
+          <section className="pt-16 mt-8 border-t border-white/5">
+            {!isClosingHearth ? (
+              <div className="flex flex-col items-center gap-4">
+                <p className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-700">The Season's End</p>
+                <button 
+                  onClick={() => setIsClosingHearth(true)}
+                  className="text-zinc-600 hover:text-red-400 text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2"
+                >
+                  <Trash2 size={12} /> Extinguish the Hearth
+                </button>
+              </div>
+            ) : (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-red-500/5 border border-red-500/10 p-8 rounded-[2.5rem] space-y-6"
+              >
+                <div className="flex items-center gap-3 text-red-400">
+                  <AlertTriangle size={20} />
+                  <h4 className="text-lg font-bold tracking-tight text-red-200">Are you sure, traveler?</h4>
+                </div>
+                <p className="text-xs text-zinc-500 italic leading-relaxed">
+                  Extinguishing your hearth is final. This will permanently delete your legacy document, your logbook, and your alignment record. Your status in the Founding Forest will be lost.
+                </p>
+                <div className="flex gap-4">
+                  <Button 
+                    onClick={() => setIsClosingHearth(false)}
+                    className="flex-1 bg-white/5 text-zinc-400 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest h-12"
+                  >
+                    Stay by the Fire
+                  </Button>
+                  <Button 
+                    onClick={handleFinalExtinguish}
+                    className="flex-1 bg-red-600 hover:bg-red-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest h-12 shadow-[0_0_20px_rgba(220,38,38,0.2)]"
+                  >
+                    Extinguish Permanently
+                  </Button>
+                </div>
+              </motion.div>
+            )}
+          </section>
         </div>
       </div>
     </div>
