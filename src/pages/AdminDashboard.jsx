@@ -11,7 +11,8 @@ import {
   X,
   ShieldAlert,
   ChevronRight,
-  Zap
+  Zap,
+  ArrowLeft
 } from 'lucide-react';
 
 export default function AdminDashboard({ vault, onSync, isAdmin }) {
@@ -22,7 +23,6 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newUser, setNewUser] = useState({ name: '', email: '', tier: 'Tester' });
 
-  // Access Control: Only "Steward" or explicit Admins enter the Forest Admin
   const isAuthorized = isAdmin || vault?.tier?.toLowerCase() === 'steward';
 
   const B44_PROJECT_ID = window.BASE44_PROJECT_ID || ''; 
@@ -33,15 +33,11 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
       setLoading(false);
       return;
     }
-
     setLoading(true);
     try {
-      // Fetch Intentions (Messages)
       const msgRes = await fetch(`https://api.base44.io/v1/projects/${B44_PROJECT_ID}/collections/messages/documents`, {
         headers: { 'Authorization': `Bearer ${B44_TOKEN}` }
       });
-      
-      // Fetch Dwellers (Users/App Scans)
       const dwellerRes = await fetch(`https://api.base44.io/v1/projects/${B44_PROJECT_ID}/collections/dwellers/documents`, {
         headers: { 'Authorization': `Bearer ${B44_TOKEN}` }
       });
@@ -50,7 +46,6 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
         const data = await msgRes.json();
         setIntentions(data.documents || []);
       }
-
       if (dwellerRes.ok) {
         const data = await dwellerRes.json();
         setMembers(data.documents || []);
@@ -66,7 +61,7 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
     syncBase44();
   }, [isAuthorized]);
 
-  // Authorization Guard
+  // Authorization Guard (With standardized Back button)
   if (!isAuthorized) {
     return (
       <div className="min-h-screen bg-[#0D0B14] flex items-center justify-center p-6 text-center">
@@ -76,7 +71,12 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
           </div>
           <h2 className="text-3xl font-serif italic text-white">Restricted Access</h2>
           <p className="text-zinc-500 text-sm leading-relaxed">Only those with Steward-level clearance may oversee the Forest Registry.</p>
-          <button onClick={() => navigate('/')} className="text-[#39FFCA] text-[10px] font-black uppercase tracking-widest border-b border-[#39FFCA]/20 pb-1">Return to Hearth</button>
+          <button 
+            onClick={() => navigate('/hearth', { replace: true })} 
+            className="w-full h-11 flex items-center justify-center text-[#39FFCA] text-[10px] font-black uppercase tracking-widest border-b border-[#39FFCA]/20"
+          >
+            Return to Hearth
+          </button>
         </div>
       </div>
     );
@@ -91,13 +91,8 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${B44_TOKEN}`
         },
-        body: JSON.stringify({
-            ...newUser,
-            isAligned: false,
-            joinedAt: new Date().toISOString()
-        })
+        body: JSON.stringify({ ...newUser, isAligned: false, joinedAt: new Date().toISOString() })
       });
-
       if (response.ok) {
         setIsModalOpen(false);
         setNewUser({ name: '', email: '', tier: 'Tester' });
@@ -109,15 +104,24 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0D0B14] text-white font-sans p-4 md:p-12">
+    <div className="min-h-screen bg-[#0D0B14] text-white font-sans p-4 md:p-12 pb-32">
       <header className="flex flex-col md:flex-row justify-between items-start gap-8 mb-16">
         <div className="text-left">
+          {/* Back Button for Navigation Stack sanity */}
+          <button 
+            onClick={() => navigate('/hearth')}
+            className="w-11 h-11 -ml-3 mb-4 flex items-center justify-center rounded-full bg-white/5 text-zinc-400 hover:text-teal-400 transition-colors"
+          >
+            <ArrowLeft size={20} />
+          </button>
+          
           <div className="flex items-center gap-3 mb-2">
             <div className="w-2 h-2 rounded-full bg-[#39FFCA] animate-pulse" />
             <p className="text-[#39FFCA] text-[10px] font-black uppercase tracking-[0.3em]">System Oversight</p>
           </div>
           <h1 className="text-5xl md:text-6xl font-serif text-white italic tracking-tight">Forest Admin</h1>
         </div>
+
         <div className="flex w-full md:w-auto gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={16} />
@@ -127,7 +131,10 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
               className="bg-[#1C1622] border border-white/5 rounded-2xl py-4 pl-12 pr-6 w-full md:w-80 text-xs focus:ring-1 focus:ring-[#39FFCA]/30 transition-all outline-none"
             />
           </div>
-          <button onClick={syncBase44} className="p-4 bg-[#1C1622] rounded-2xl hover:bg-white/5 transition-colors border border-white/5 group">
+          <button 
+            onClick={syncBase44} 
+            className="w-14 h-14 bg-[#1C1622] flex items-center justify-center rounded-2xl hover:bg-white/5 transition-colors border border-white/5 group"
+          >
             <RefreshCw size={20} className={loading ? 'animate-spin text-[#39FFCA]' : 'text-zinc-500 group-hover:text-white'} />
           </button>
         </div>
@@ -137,45 +144,44 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         <div className="bg-[#1C1622] p-8 rounded-[2.5rem] border border-white/5 flex justify-between items-end">
           <div className="space-y-1">
-            <p className="text-zinc-500 text-[9px] font-black uppercase tracking-widest">Total Dwellers</p>
+            <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Total Dwellers</p>
             <span className="text-6xl font-bold tracking-tighter">{members.length}</span>
           </div>
-          <div className="p-4 bg-white/5 rounded-2xl text-zinc-500"><Users size={28} /></div>
+          <div className="w-14 h-14 flex items-center justify-center bg-white/5 rounded-2xl text-zinc-500"><Users size={28} /></div>
         </div>
 
         <div className="bg-[#1C1622] p-8 rounded-[2.5rem] border border-white/5 flex justify-between items-end">
           <div className="space-y-1">
-            <p className="text-zinc-500 text-[9px] font-black uppercase tracking-widest">Active Scans</p>
+            <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Active Scans</p>
             <span className="text-6xl font-bold tracking-tighter text-[#39FFCA]">
                 {members.filter(m => m.isAligned).length}
             </span>
           </div>
-          <div className="p-4 bg-[#39FFCA]/10 rounded-2xl text-[#39FFCA]"><Zap size={28} /></div>
+          <div className="w-14 h-14 flex items-center justify-center bg-[#39FFCA]/10 rounded-2xl text-[#39FFCA]"><Zap size={28} /></div>
         </div>
 
         <div className="bg-[#1C1622] p-8 rounded-[2.5rem] border border-[#39FFCA]/10 flex justify-between items-end">
           <div className="space-y-1">
-            <p className="text-[#39FFCA] text-[9px] font-black uppercase tracking-widest">Intentions</p>
+            <p className="text-[#39FFCA] text-[10px] font-black uppercase tracking-widest">Intentions</p>
             <span className="text-6xl font-bold tracking-tighter leading-none">{intentions.length}</span>
           </div>
-          <div className="p-4 bg-white/5 rounded-2xl text-zinc-500"><Mail size={28} /></div>
+          <div className="w-14 h-14 flex items-center justify-center bg-white/5 rounded-2xl text-zinc-500"><Mail size={28} /></div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 text-left">
-        {/* MAIN REGISTRY */}
-        <div className="lg:col-span-8 bg-[#1C1622] p-8 md:p-10 rounded-[3rem] border border-white/5">
+        <div className="lg:col-span-8 bg-[#1C1622] p-8 md:p-10 rounded-[3rem] border border-white/5 overflow-hidden">
           <div className="flex justify-between items-center mb-10">
             <h2 className="text-2xl font-serif italic">Dweller Registry</h2>
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-3 bg-[#39FFCA] text-[#0D0B14] px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg shadow-[#39FFCA]/10"
+              className="h-11 flex items-center gap-3 bg-[#39FFCA] text-[#0D0B14] px-6 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg"
             >
               <Plus size={14} strokeWidth={3} /> Invite
             </button>
           </div>
           
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto embers-scroll">
             <table className="w-full">
                 <thead>
                 <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600 border-b border-white/5">
@@ -204,51 +210,38 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
                         )}
                     </td>
                     <td className="py-6">
-                        <span className="bg-white/5 px-3 py-1 rounded-full text-[9px] font-black text-zinc-400 border border-white/5">
+                        <span className="bg-white/5 px-3 py-1 rounded-full text-[10px] font-black text-zinc-400 border border-white/5">
                         {m.tier || 'Traveler'}
                         </span>
                     </td>
                     <td className="py-6 text-right">
-                        <button className="p-2 text-zinc-700 hover:text-white transition-colors">
+                        <button className="w-11 h-11 inline-flex items-center justify-center text-zinc-700 hover:text-white transition-colors">
                         <ChevronRight size={18} />
                         </button>
                     </td>
                     </tr>
                 ))}
-                {members.length === 0 && (
-                    <tr>
-                    <td colSpan="4" className="py-20 text-center text-zinc-700 italic font-serif">Registry is currently empty.</td>
-                    </tr>
-                )}
                 </tbody>
             </table>
           </div>
         </div>
 
-        {/* INTENTIONS FEED */}
-        <div className="lg:col-span-4 space-y-6">
+        <div className="lg:col-span-4">
             <div className="bg-[#1C1622] p-10 rounded-[3rem] h-full border border-white/5 flex flex-col">
             <div className="flex justify-between items-center mb-10">
                 <div className="flex items-center gap-3">
                 <Clock size={18} className="text-[#9D79FF]" />
                 <h2 className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Intentions Feed</h2>
                 </div>
-                <span className="bg-[#9D79FF]/10 text-[#9D79FF] text-[10px] font-black px-3 py-1 rounded-full border border-[#9D79FF]/20">{intentions.length}</span>
             </div>
             
-            <div className="flex-1 space-y-4 overflow-y-auto max-h-[500px] pr-2 custom-scrollbar">
+            <div className="flex-1 space-y-4 overflow-y-auto max-h-[500px] pr-2 embers-scroll">
                 {intentions.map((item, idx) => (
-                    <div key={idx} className="bg-black/20 p-6 rounded-[2rem] border border-white/5 hover:border-[#9D79FF]/30 transition-all group">
-                    <p className="text-[10px] font-black text-zinc-500 mb-3 uppercase tracking-tighter truncate">{item.email || 'Anonymous Traveler'}</p>
+                    <div key={idx} className="bg-black/20 p-6 rounded-[2rem] border border-white/5">
+                    <p className="text-[10px] font-black text-zinc-500 mb-3 uppercase tracking-tighter truncate">{item.email || 'Anonymous'}</p>
                     <p className="text-xs text-zinc-400 italic font-serif leading-relaxed line-clamp-4">"{item.message || item.content}"</p>
                     </div>
                 ))}
-                {intentions.length === 0 && (
-                <div className="h-full flex flex-col items-center justify-center opacity-20 py-20">
-                    <Mail size={40} className="mb-4" />
-                    <p className="text-sm font-serif italic">No signals detected.</p>
-                </div>
-                )}
             </div>
             </div>
         </div>
@@ -257,45 +250,43 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
       {/* INVITE MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-[#0D0B14]/90 backdrop-blur-xl z-[200] flex items-center justify-center p-4">
-          <div className="bg-[#1C1622] w-full max-w-md rounded-[3rem] p-10 border border-white/10 relative shadow-2xl">
+          <div className="bg-[#1C1622] w-full max-w-md rounded-[3rem] p-10 border border-white/10 relative">
             <button 
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-8 right-8 text-zinc-500 hover:text-white transition-colors"
+              className="absolute top-8 right-8 w-11 h-11 flex items-center justify-center text-zinc-500 hover:text-white transition-colors"
             >
               <X size={24} />
             </button>
             
-            <div className="mb-8">
+            <div className="mb-8 text-left">
                 <h2 className="text-3xl font-serif mb-2 italic text-white">New Dweller</h2>
-                <p className="text-zinc-500 text-xs uppercase font-black tracking-widest">Add to registry</p>
+                <p className="text-zinc-500 text-[10px] uppercase font-black tracking-widest">Add to registry</p>
             </div>
             
             <form onSubmit={handleAddUser} className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-[9px] font-black uppercase tracking-widest text-zinc-600 ml-2">Display Name</label>
+              <div className="space-y-2 text-left">
+                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 ml-2">Display Name</label>
                 <input 
                   required
                   type="text" 
                   value={newUser.name}
                   onChange={(e) => setNewUser({...newUser, name: e.target.value})}
-                  className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm text-white focus:ring-1 focus:ring-[#39FFCA]/30 outline-none transition-all"
-                  placeholder="Hearth User"
+                  className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm text-white outline-none"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-[9px] font-black uppercase tracking-widest text-zinc-600 ml-2">Email Identity</label>
+              <div className="space-y-2 text-left">
+                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 ml-2">Email Identity</label>
                 <input 
                   required
                   type="email" 
                   value={newUser.email}
                   onChange={(e) => setNewUser({...newUser, email: e.target.value})}
-                  className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm text-white focus:ring-1 focus:ring-[#39FFCA]/30 outline-none transition-all"
-                  placeholder="dweller@hearth.io"
+                  className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm text-white outline-none"
                 />
               </div>
               <button 
                 type="submit"
-                className="w-full bg-white text-black font-black uppercase tracking-[0.2em] py-5 rounded-2xl text-[10px] hover:bg-[#39FFCA] transition-all shadow-xl"
+                className="w-full h-14 bg-white text-black font-black uppercase tracking-[0.2em] rounded-2xl text-[10px] hover:bg-[#39FFCA] transition-all"
               >
                 Seal Invitation
               </button>
