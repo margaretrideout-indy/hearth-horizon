@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Flame, Upload, CheckCircle2, FileText, 
   ArrowRight, RefreshCw, Activity, History,
-  Lock, Globe, BookOpen, Trash2, AlertTriangle, ChevronUp, X, Sparkles
+  Lock, Globe, BookOpen, Trash2, AlertTriangle, X, Sparkles, Compass
 } from 'lucide-react';
 
 export default function YourHearth({ vault, onSync, onRefresh, onResumeSync, onNavigateToHorizon }) {
@@ -179,38 +179,54 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync, onN
 
         {/* RIGHT: ALIGNMENT & LEGACY */}
         <div className="lg:col-span-7 space-y-8">
-          {/* Alignment Score Card */}
-          <Card className="p-10 bg-gradient-to-br from-teal-500/[0.07] to-transparent border border-teal-500/20 rounded-[3rem] shadow-2xl relative overflow-hidden">
+          
+          {/* Dynamic Alignment / Horizon CTA */}
+          <Card className={`p-10 rounded-[3rem] shadow-2xl relative overflow-hidden transition-all border ${vault.archetype ? 'bg-teal-500/[0.07] border-teal-500/20' : 'bg-[#0D0B10] border-white/5'}`}>
             <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12">
-                <Globe size={120} className="text-teal-500" />
+                <Compass size={120} className="text-teal-500" />
             </div>
-            <div className="flex justify-between items-center relative z-10">
-              <div className="space-y-2">
+            
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
+              <div className="space-y-3">
                 <div className="px-3 py-1 bg-teal-500/10 border border-teal-500/20 rounded-full w-fit">
                     <span className="text-[9px] text-teal-400 font-black uppercase tracking-widest">Alignment Ledger</span>
                 </div>
-                <h4 className="text-white font-bold text-3xl tracking-tight leading-none">{vault.archetype || "Calibrating..."}</h4>
-                <p className="text-[10px] text-zinc-500 italic">Based on your current trajectory & pulses.</p>
+                <h4 className="text-white font-bold text-3xl tracking-tight leading-none">
+                  {vault.archetype || "Calibrating..."}
+                </h4>
+                <p className="text-[11px] text-zinc-500 italic max-w-xs leading-relaxed">
+                  {vault.archetype 
+                    ? "Your path is clear. View your full trajectory and current standings on the Horizon Board."
+                    : "Your internal weather is still shifting. Complete your Alignment to unlock your trajectory."}
+                </p>
               </div>
-              <div className="text-right">
-                <span className="text-6xl font-serif italic text-white drop-shadow-[0_0_15px_rgba(20,184,166,0.3)]">{vault.alignmentScore || "0"}%</span>
+
+              <div className="flex flex-col items-center md:items-end gap-4 w-full md:w-auto">
+                <div className="text-6xl font-serif italic text-white drop-shadow-[0_0_15px_rgba(20,184,166,0.3)]">
+                  {vault.alignmentScore || "0"}%
+                </div>
+                <button 
+                  onClick={() => navigate(vault.archetype ? '/horizon' : '/culture')}
+                  className="w-full md:w-auto px-8 py-4 rounded-2xl bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest hover:bg-teal-400 transition-all flex items-center justify-center gap-3 shadow-lg shadow-teal-500/10"
+                >
+                  {vault.archetype ? "Horizon Board" : "Begin Alignment"} <ArrowRight size={14} />
+                </button>
               </div>
             </div>
           </Card>
 
-          {/* Legacy Sync (Resume) */}
+          {/* Legacy Sync (Resume) with Success State */}
           <Card className="bg-[#0D0B10] border-white/5 p-10 rounded-[3rem] shadow-2xl">
-             <div className="flex flex-col gap-8">
+              <div className="flex flex-col gap-8">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <FileText className="text-teal-500" size={24} />
                         <h3 className="text-xl font-bold text-white tracking-tight">Legacy Archive</h3>
                     </div>
-                    {vault.resume && <span className="text-[8px] font-black text-teal-500 bg-teal-500/10 px-2 py-1 rounded uppercase">Synced</span>}
                 </div>
 
                 {!vault.resume ? (
-                    <label className="group flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/5 hover:border-teal-500/30 rounded-[2rem] bg-black/40 cursor-pointer transition-all hover:bg-teal-500/[0.02]">
+                    <label className="group flex flex-col items-center justify-center w-full h-56 border-2 border-dashed border-white/5 hover:border-teal-500/30 rounded-[2rem] bg-black/40 cursor-pointer transition-all hover:bg-teal-500/[0.02]">
                         <div className="w-14 h-14 rounded-full bg-zinc-900 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                             <Upload className="text-zinc-600 group-hover:text-teal-400" size={24} />
                         </div>
@@ -219,40 +235,22 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync, onN
                         <input type="file" className="hidden" onChange={(e) => onResumeSync(e.target.files[0])} />
                     </label>
                 ) : (
-                    <div className="p-8 rounded-[2rem] bg-teal-500/[0.03] border border-teal-500/10 flex items-center justify-between group">
-                        <div className="flex items-center gap-4 min-w-0">
-                            <div className="w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-500">
-                                <BookOpen size={20} />
-                            </div>
-                            <div className="min-w-0">
-                                <p className="text-sm text-white font-bold truncate">{vault.resume.name}</p>
-                                <p className="text-[9px] text-zinc-600 font-black uppercase tracking-tighter">Vault ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
-                            </div>
+                    <div className="p-10 rounded-[2rem] bg-teal-500/[0.03] border border-teal-500/20 flex flex-col items-center text-center group animate-in zoom-in duration-500">
+                        <div className="w-20 h-20 bg-teal-500/20 rounded-full flex items-center justify-center mb-6 border border-teal-500/30">
+                          <CheckCircle2 size={40} className="text-teal-400" />
                         </div>
-                        <CheckCircle2 size={24} className="text-teal-500 flex-shrink-0" />
+                        <h4 className="text-white font-bold text-lg uppercase tracking-widest">Legacy Secured</h4>
+                        <p className="text-zinc-500 text-xs mt-2 italic max-w-[200px]">
+                          "{vault.resume.name}" has been successfully etched into the vault.
+                        </p>
+                        <label className="mt-8 cursor-pointer text-[10px] text-zinc-600 font-black uppercase tracking-widest hover:text-white transition-colors border-b border-white/10 pb-1">
+                          Update Record
+                          <input type="file" className="hidden" onChange={(e) => onResumeSync(e.target.files[0])} />
+                        </label>
                     </div>
                 )}
-             </div>
+              </div>
           </Card>
-
-          {/* Horizon Board CTA */}
-          <motion.button 
-             whileHover={{ y: -5 }}
-             whileTap={{ scale: 0.98 }}
-             onClick={onNavigateToHorizon}
-             className="w-full p-10 rounded-[3rem] bg-teal-500 text-black flex items-center justify-between group transition-all shadow-[0_20px_40px_rgba(20,184,166,0.15)]"
-          >
-            <div className="flex items-center gap-6 text-left">
-              <div className="w-14 h-14 rounded-2xl bg-black/10 flex items-center justify-center">
-                <Globe size={32} />
-              </div>
-              <div>
-                <p className="text-2xl font-serif italic font-bold leading-none mb-1">The Horizon Board</p>
-                <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Visualize the Migration</p>
-              </div>
-            </div>
-            <ArrowRight size={32} className="group-hover:translate-x-3 transition-transform" />
-          </motion.button>
 
           {/* DANGER ZONE */}
           <div className="pt-20 text-center pb-10">
@@ -325,7 +323,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync, onN
                   </div>
 
                   <div className="space-y-6 px-2">
-                     <Textarea 
+                    <Textarea 
                       placeholder="How does the journey feel today? (Optional)"
                       value={reflection}
                       onChange={(e) => setReflection(e.target.value)}
