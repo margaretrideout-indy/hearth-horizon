@@ -69,7 +69,7 @@ export default function EmbersChat({ vault, isAdmin }) {
   const FIXED_STARTERS = [
     {
       id: 'static-founder-welcome',
-      author_name: 'Margaret (Founder)',
+      author_name: 'Margaret',
       content: "Welcome to the Hearth. I built this because I know how hard the 'translation' is. You aren't alone here.",
       subscription_tier: 'Founder',
       email: 'margaretpardy@gmail.com',
