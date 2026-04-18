@@ -54,14 +54,15 @@ const EmberReactions = ({ postId }) => {
 
 // --- COMPONENT: TIER BADGES ---
 const TierBadge = ({ tier }) => {
-  switch (tier) {
-    case 'Founder':
+  const normalizedTier = tier?.toLowerCase();
+  switch (normalizedTier) {
+    case 'founder':
       return (
         <span className="bg-purple-900/40 text-purple-300 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-purple-500/30 flex items-center gap-1 shadow-[0_0_15px_rgba(168,85,247,0.15)]">
           <Sparkles className="w-2.5 h-2.5" /> Founder
         </span>
       );
-    case 'Hearth':
+    case 'hearth':
       return (
         <div className="flex items-center justify-center">
           <motion.div
@@ -77,13 +78,13 @@ const TierBadge = ({ tier }) => {
           </motion.div>
         </div>
       );
-    case 'Seedling':
+    case 'seedling':
       return (
         <span className="bg-green-900/10 text-green-500/60 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-green-500/10 flex items-center gap-1">
           <Leaf className="w-2.5 h-2.5" /> Seedling
         </span>
       );
-    case 'Steward':
+    case 'steward':
       return (
         <span className="bg-slate-800/50 text-slate-300 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-teal-500/20 flex items-center gap-1">
           <Mountain className="w-2.5 h-2.5 text-teal-500" /> Steward
@@ -94,11 +95,14 @@ const TierBadge = ({ tier }) => {
   }
 };
 
-export default function EmbersChat() {
+export default function EmbersChat({ vault, isAdmin }) {
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [remotePosts, setRemotePosts] = useState([]);
   const scrollRef = useRef(null);
+
+  const B44_PROJECT_ID = window.BASE44_PROJECT_ID || ''; 
+  const B44_TOKEN = window.BASE44_API_TOKEN || '';
 
   // Maintenance: Prompt shifts automatically every 2 weeks
   const promptIndex = Math.floor(getWeek(new Date()) / 2) % HEARTH_PROMPTS.length;
@@ -132,6 +136,34 @@ export default function EmbersChat() {
     }
   };
 
+  // Fetch real messages on mount
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const res = await fetch(`https://api.base44.io/v1/projects/${B44_PROJECT_ID}/collections/messages/documents`, {
+          headers: { 'Authorization': `Bearer ${B44_TOKEN}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          // Map to match your UI's expected keys
+          const mapped = data.documents.map(d => ({
+            id: d.id,
+            author_name: d.author_name || 'Traveler',
+            content: d.message || d.content,
+            subscription_tier: d.tier || 'Seedling',
+            created_date: d.created_at || d.timestamp,
+            email: d.email
+          }));
+          setRemotePosts(mapped);
+        }
+      } catch (err) {
+        console.error("Chat Load Error:", err);
+      }
+    };
+
+    fetchMessages();
+  }, [B44_PROJECT_ID, B44_TOKEN]);
+
   useEffect(() => {
     scrollToBottom();
   }, [remotePosts]);
@@ -139,18 +171,40 @@ export default function EmbersChat() {
   const handleSend = async () => {
     if (!input.trim() || sending) return;
     setSending(true);
-    // Simulate API delay for that "Cozy Tech" feeling
-    setTimeout(() => {
-      setRemotePosts(prev => [...prev, {
-        id: Date.now(),
-        author_name: 'You',
-        content: input,
-        subscription_tier: 'Seedling',
-        created_date: new Date().toISOString()
-      }]);
-      setInput('');
-      setSending(false);
-    }, 500);
+
+    const messageData = {
+        author_name: vault?.name || 'Traveler',
+        email: vault?.email || 'anonymous',
+        message: input,
+        tier: isAdmin ? 'Steward' : (vault?.tier || 'Seedling'),
+        timestamp: new Date().toISOString()
+    };
+
+    try {
+        const response = await fetch(`https://api.base44.io/v1/projects/${B44_PROJECT_ID}/collections/messages/documents`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${B44_TOKEN}`
+            },
+            body: JSON.stringify(messageData)
+        });
+
+        if (response.ok) {
+            setRemotePosts(prev => [...prev, {
+                ...messageData,
+                id: Date.now(),
+                content: input,
+                subscription_tier: messageData.tier,
+                created_date: messageData.timestamp
+            }]);
+            setInput('');
+        }
+    } catch (err) {
+        console.error("Ember Failed to Light:", err);
+    } finally {
+        setSending(false);
+    }
   };
 
   return (
@@ -198,18 +252,18 @@ export default function EmbersChat() {
             </motion.div>
           ) : (
             remotePosts.map((msg) => {
-              const isOwn = msg.author_name === 'You';
+              const isOwn = msg.email === vault?.email;
               return (
                 <motion.div key={msg.id} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'}`}>
-                  <div className="flex items-center gap-2 mb-2 px-1 text-[10px] text-zinc-500 font-bold uppercase tracking-widest">
-                    {formatAuthorName(msg.author_name)}
+                  <div className={`flex items-center gap-2 mb-2 px-1 text-[10px] text-zinc-500 font-bold uppercase tracking-widest ${isOwn ? 'flex-row-reverse' : ''}`}>
+                    {isOwn ? 'You' : formatAuthorName(msg.author_name)}
                     <TierBadge tier={msg.subscription_tier} />
                   </div>
                   <div className={`max-w-[90%] md:max-w-[85%] p-4 rounded-2xl border transition-all ${isOwn ? 'bg-teal-500/10 border-teal-500/30 text-white shadow-[0_4px_20px_rgba(20,184,166,0.05)]' : 'bg-[#110E16] border-white/5'}`}>
                     <p className="text-zinc-300 text-sm leading-relaxed font-light">{msg.content}</p>
                   </div>
                   <EmberReactions postId={msg.id} />
-                  <span className="text-[9px] text-zinc-700 mt-2 px-1 uppercase tracking-tighter">
+                  <span className={`text-[9px] text-zinc-700 mt-2 px-1 uppercase tracking-tighter ${isOwn ? 'text-right' : 'text-left'}`}>
                     {msg.created_date ? format(new Date(msg.created_date), 'h:mm a') : 'Now'}
                   </span>
                 </motion.div>
