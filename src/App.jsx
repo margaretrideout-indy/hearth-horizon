@@ -27,14 +27,12 @@ export function useHearth() {
 function HearthProvider({ children }) {
   const queryClient = useQueryClient();
 
-  // 1. AUTH & CLOUD DATA FETCHING
   const { data: user, isLoading: authLoading, refetch: refetchUser } = useQuery({
     queryKey: ['me'],
     queryFn: () => base44.auth.me(),
     retry: false,
   });
 
-  // 2. STABILITY LOGIC: Calculate Admin status and Tier immediately
   const isAdmin = useMemo(() => {
     return user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
   }, [user]);
@@ -52,7 +50,6 @@ function HearthProvider({ children }) {
 
   const [sanctuaryState, setSanctuaryState] = useState(initialState);
 
-  // Sync state when user data arrives
   useEffect(() => {
     if (user) {
       const cloudVault = user.metadata?.vault || {};
@@ -78,7 +75,6 @@ function HearthProvider({ children }) {
     const isDeletion = updates === null;
     const newState = isDeletion ? initialState : { ...sanctuaryState, ...updates };
     setSanctuaryState(newState);
-
     if (user?.id) {
       try {
         await base44.user.update(user.id, {
@@ -91,26 +87,17 @@ function HearthProvider({ children }) {
   const handleResumeSync = (file) => {
     forceSync({
       isAligned: true,
-      resume: {
-        name: file?.name || "Uploaded Document",
-        lastSynced: new Date().toISOString()
-      }
+      resume: { name: file?.name || "Uploaded Document", lastSynced: new Date().toISOString() }
     });
   };
 
   const [activeLibraryTool, setActiveLibraryTool] = useState(null);
 
   const value = {
-    user,
-    isAdmin,
-    authLoading,
-    vault: sanctuaryState,
-    onSync: forceSync,
-    onRefresh: handleManualRefresh,
-    onResumeSync: handleResumeSync,
-    effectiveTier,
-    activeLibraryTool,
-    onSetLibraryTool: setActiveLibraryTool
+    user, isAdmin, authLoading, vault: sanctuaryState,
+    onSync: forceSync, onRefresh: handleManualRefresh,
+    onResumeSync: handleResumeSync, effectiveTier,
+    activeLibraryTool, onSetLibraryTool: setActiveLibraryTool
   };
 
   return <HearthContext.Provider value={value}>{children}</HearthContext.Provider>;
@@ -125,7 +112,6 @@ function LoadingScreen() {
   );
 }
 
-// ROUTE PROTECTION: Margaret bypasses all locks
 function AdminRoute({ children }) {
   const { user, isAdmin, authLoading } = useHearth();
   if (authLoading) return <LoadingScreen />;
@@ -133,11 +119,11 @@ function AdminRoute({ children }) {
   return children;
 }
 
+// We simplified this to prevent the "Margaret Bounce"
 function ProtectedRoute({ children }) {
   const { user, authLoading, isAdmin } = useHearth();
   if (authLoading) return <LoadingScreen />;
-  // If Margaret is logged in, she bypasses the landing page redirect
-  if (!user && !isAdmin) return <Navigate to="/grove" replace />;
+  if (!user) return <Navigate to="/grove" replace />;
   return children;
 }
 
@@ -148,42 +134,33 @@ function AppRoutes() {
   return (
     <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
       <Routes>
-        {/* --- ADMIN DASHBOARD --- */}
-        <Route path="/admin" element={
-          <AdminRoute>
-            <AdminDashboard vault={vault} onSync={onSync} isAdmin={isAdmin} />
-          </AdminRoute>
-        } />
+        <Route path="/admin" element={<AdminRoute><AdminDashboard vault={vault} onSync={onSync} isAdmin={isAdmin} /></AdminRoute>} />
         
-        {/* --- LANDING / GROVE --- */}
         <Route path="/" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         <Route path="/grove" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         
-        {/* --- CORE FEATURES --- */}
+        {/* CORE FEATURES - Protected by AppLayout UI locks, not Route redirects */}
         <Route path="/horizon" element={
-          <AppLayout currentTier={effectiveTier}>
-            <Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} userTier={effectiveTier} />
-          </AppLayout>
+          <ProtectedRoute>
+            <AppLayout currentTier={effectiveTier}>
+              <Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} userTier={effectiveTier} />
+            </AppLayout>
+          </ProtectedRoute>
         } />
 
         <Route path="/library" element={
-          <AppLayout currentTier={effectiveTier}>
-            <Library vault={vault} onSync={onSync} isAdmin={isAdmin} />
-          </AppLayout>
+          <ProtectedRoute>
+            <AppLayout currentTier={effectiveTier}>
+              <Library vault={vault} onSync={onSync} isAdmin={isAdmin} />
+            </AppLayout>
+          </ProtectedRoute>
         } />
         
         <Route path="/hearth" element={
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
-              <YourHearth 
-                vault={vault} 
-                onSync={onSync} 
-                onRefresh={onRefresh}
-                onResumeSync={onResumeSync}
-                isAdmin={isAdmin}
-                onNavigateToLibrary={() => navigate('/library')}
-                onNavigateToEmbers={() => navigate('/embers')}
-                onNavigateToHorizon={() => navigate('/horizon')}
+              <YourHearth vault={vault} onSync={onSync} onRefresh={onRefresh} onResumeSync={onResumeSync} isAdmin={isAdmin}
+                onNavigateToLibrary={() => navigate('/library')} onNavigateToEmbers={() => navigate('/embers')} onNavigateToHorizon={() => navigate('/horizon')}
               />
             </AppLayout>
           </ProtectedRoute>
@@ -205,14 +182,7 @@ function AppRoutes() {
           </ProtectedRoute>
         } />
         
-        <Route path="/contact" element={
-          <ProtectedRoute>
-            <AppLayout currentTier={effectiveTier}>
-              <Contact />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-
+        <Route path="/contact" element={<ProtectedRoute><AppLayout currentTier={effectiveTier}><Contact /></AppLayout></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
@@ -223,9 +193,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <HearthProvider>
-        <Router>
-          <AppRoutes />
-        </Router>
+        <Router><AppRoutes /></Router>
       </HearthProvider>
     </QueryClientProvider>
   );
