@@ -7,15 +7,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Flame, Upload, CheckCircle2, FileText, 
   Sparkles, ArrowRight, ShieldCheck, Zap,
-  BookOpen, PenLine, Lock, Globe, Trash2, RefreshCw, AlertTriangle
+  BookOpen, PenLine, Lock, Globe, Trash2, RefreshCw, AlertTriangle, Loader2
 } from 'lucide-react';
 
 export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHorizon }) {
   const navigate = useNavigate();
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [reflection, setReflection] = useState("");
   const [selectedEmoji, setSelectedEmoji] = useState(null);
   const [isClosingHearth, setIsClosingHearth] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const pulses = [
     { icon: "🌱", label: "Positive" },
@@ -25,44 +27,96 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
     { icon: "💎", label: "Resilient" }
   ];
 
+  // 1. PULL TO REFRESH LOGIC
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    // Simulate a spring refresh
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsRefreshing(false);
+    triggerToast("The Spring has been refreshed.");
+  };
+
+  // 2. OPTIMISTIC UI: RESUME SYNC (The "Ghost" State)
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    // Optimistically update the UI to show we are working on it
     setIsUploading(true);
+    
+    // Create a temporary "Ghost Sync" state
+    const ghostResume = { name: file.name, isOptimistic: true };
+    onSync({ resume: ghostResume });
+
     setTimeout(() => {
-      onResumeSync(file);
+      onResumeSync(file); // Real file sync
       setIsUploading(false);
+      triggerToast("Legacy document successfully etched.");
     }, 2000);
   };
 
-  const handlePurgeResume = () => {
-    if (confirm("Are you sure you wish to purge this legacy document?")) {
-      onSync({ resume: null });
-    }
-  };
-
+  // 3. OPTIMISTIC UI: REFLECTIONS
   const handleSaveReflection = () => {
     if (!reflection && !selectedEmoji) return;
+    
     const newPulse = {
       date: new Date().toISOString(),
       emoji: selectedEmoji,
       text: reflection
     };
+
+    // Push to state immediately
     onSync({ pulses: [newPulse, ...(vault.pulses || [])] });
+    
+    // Clear inputs immediately
     setReflection("");
     setSelectedEmoji(null);
+    triggerToast("Reflection added to the Logbook.");
+  };
+
+  const triggerToast = (msg) => {
+    setShowToast(msg);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
+  const handlePurgeResume = () => {
+    if (confirm("Are you sure you wish to purge this legacy document?")) {
+      onSync({ resume: null });
+      triggerToast("Legacy purged.");
+    }
   };
 
   const handleFinalExtinguish = () => {
-    // This is the functional call for Base44/Legal compliance
-    console.log("Hearth extinguished. Redirecting...");
-    // navigate('/logout'); or actual deletion logic
+    console.log("Hearth extinguished.");
+    navigate('/');
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-12 pb-32 animate-in fade-in duration-1000">
+    <div className="max-w-6xl mx-auto space-y-12 pb-32 animate-in fade-in duration-1000 relative">
       
-      {/* --- HERO --- */}
+      {/* TOAST NOTIFICATION */}
+      <AnimatePresence>
+        {showToast && (
+          <motion.div 
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 50, opacity: 0 }}
+            className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] bg-teal-500 text-black px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-white/20"
+          >
+            <CheckCircle2 size={16} />
+            <span className="text-[10px] font-black uppercase tracking-widest">{showToast}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* PULL TO REFRESH INDICATOR */}
+      <div className="flex justify-center -mb-8">
+        <button onClick={handleRefresh} className="group flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity">
+          <RefreshCw size={14} className={`${isRefreshing ? 'animate-spin text-teal-400' : 'group-hover:rotate-180 transition-transform duration-700'}`} />
+          <span className="text-[7px] font-black uppercase tracking-[0.2em]">Refresh Spring</span>
+        </button>
+      </div>
+
       <header className="text-center space-y-4 pt-4">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/5 border border-teal-500/20 text-teal-400 mb-2">
           <Flame size={14} className="animate-pulse" />
@@ -76,7 +130,7 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         
-        {/* --- LEFT COLUMN: REFLECTION & LOGBOOK --- */}
+        {/* LEFT COLUMN: REFLECTION */}
         <div className="lg:col-span-5 space-y-8">
           <Card className="bg-[#0D0B10] border-white/5 p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
             <div className="relative z-10 space-y-6">
@@ -85,37 +139,31 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
                 <h3 className="text-lg font-bold tracking-tight">Internal Weather</h3>
               </div>
               
-              <div className="space-y-3">
-                <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 italic">Optional Pulse</p>
-                <div className="grid grid-cols-5 gap-2 bg-black/40 p-2 rounded-2xl border border-white/5">
-                  {pulses.map((p) => (
-                    <button
-                      key={p.label}
-                      onClick={() => setSelectedEmoji(p.icon)}
-                      className={`flex flex-col items-center gap-1 py-3 rounded-xl transition-all duration-300 ${
-                        selectedEmoji === p.icon 
-                        ? "bg-teal-500/20 border-teal-500/40 scale-105 shadow-[0_0_15px_rgba(20,184,166,0.2)]" 
-                        : "hover:bg-white/5 border border-transparent"
-                      }`}
-                    >
-                      <span className="text-xl">{p.icon}</span>
-                      <span className={`text-[7px] font-black uppercase tracking-tighter ${selectedEmoji === p.icon ? 'text-teal-400' : 'text-zinc-600'}`}>
-                        {p.label}
-                      </span>
-                    </button>
-                  ))}
-                </div>
+              <div className="grid grid-cols-5 gap-2 bg-black/40 p-2 rounded-2xl border border-white/5">
+                {pulses.map((p) => (
+                  <button
+                    key={p.label}
+                    onClick={() => setSelectedEmoji(p.icon)}
+                    className={`flex flex-col items-center gap-1 py-3 rounded-xl transition-all duration-300 ${
+                      selectedEmoji === p.icon 
+                      ? "bg-teal-500/20 border-teal-500/40 scale-105 shadow-[0_0_15px_rgba(20,184,166,0.2)]" 
+                      : "hover:bg-white/5 border border-transparent"
+                    }`}
+                  >
+                    <span className="text-xl">{p.icon}</span>
+                    <span className={`text-[7px] font-black uppercase tracking-tighter ${selectedEmoji === p.icon ? 'text-teal-400' : 'text-zinc-600'}`}>
+                      {p.label}
+                    </span>
+                  </button>
+                ))}
               </div>
 
-              <div className="space-y-3">
-                <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 italic">Optional Reflection</p>
-                <Textarea 
-                  placeholder="How does the journey feel today?"
-                  value={reflection}
-                  onChange={(e) => setReflection(e.target.value)}
-                  className="bg-black/40 border-white/5 rounded-2xl text-xs italic placeholder:text-zinc-800 min-h-[100px] focus:border-teal-500/30 transition-all resize-none text-white"
-                />
-              </div>
+              <Textarea 
+                placeholder="How does the journey feel today?"
+                value={reflection}
+                onChange={(e) => setReflection(e.target.value)}
+                className="bg-black/40 border-white/5 rounded-2xl text-xs italic placeholder:text-zinc-800 min-h-[100px] focus:border-teal-500/30 transition-all resize-none text-white"
+              />
 
               <Button 
                 onClick={handleSaveReflection}
@@ -126,50 +174,22 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
             </div>
           </Card>
 
-          {/* LOGBOOK ENTRY */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 text-zinc-500 px-4">
+          {/* LOGBOOK */}
+          <div className="space-y-4 px-2">
+            <div className="flex items-center gap-2 text-zinc-500">
               <BookOpen size={14} />
-              <span className="text-[10px] font-black uppercase tracking-widest italic">The Logbook: Alignment Record</span>
+              <span className="text-[10px] font-black uppercase tracking-widest italic">The Logbook</span>
             </div>
-
-            {vault.isAligned ? (
-              <Card className="p-6 bg-teal-500/5 border border-teal-500/20 rounded-[2rem] space-y-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="text-white font-bold text-lg leading-tight">{vault.archetype || "Calibrated Traveler"}</h4>
-                    <p className="text-[10px] text-teal-500 font-black uppercase tracking-widest mt-1">Standing Calibrated</p>
-                  </div>
-                  <div className="bg-teal-500 text-black text-[10px] font-black px-2 py-1 rounded-md">
-                    {vault.alignmentScore || "94"}% FIT
-                  </div>
-                </div>
-                <p className="text-[11px] text-zinc-500 italic leading-relaxed font-light">
-                  "Your frequency is currently aligned with {vault.journey || "impact-driven territories"}."
-                </p>
-                <Button 
-                  onClick={() => navigate('/alignment')}
-                  variant="link" 
-                  className="p-0 h-auto text-[9px] text-teal-400 font-black uppercase tracking-[0.2em]"
-                >
-                  Re-calibrate Alignment →
-                </Button>
-              </Card>
-            ) : (
-              <div className="p-8 bg-white/[0.02] border border-dashed border-white/10 rounded-[2rem] text-center">
-                <p className="text-[11px] text-zinc-600 italic mb-4">No ecosystem data found in the Logbook.</p>
-                <Button 
-                  onClick={() => navigate('/alignment')}
-                  className="bg-zinc-900 hover:bg-teal-500/10 text-zinc-400 hover:text-teal-400 text-[9px] font-black uppercase tracking-widest rounded-full px-6 border border-white/5"
-                >
-                  Establish Alignment
-                </Button>
+            {vault.pulses?.slice(0, 3).map((p, i) => (
+              <div key={i} className="flex gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                <span className="text-lg">{p.emoji}</span>
+                <p className="text-[11px] text-zinc-400 italic line-clamp-1">{p.text || "A quiet reflection..."}</p>
               </div>
-            )}
+            ))}
           </div>
         </div>
 
-        {/* --- RIGHT COLUMN: RÉSUMÉ/CV SYNC & GATE --- */}
+        {/* RIGHT COLUMN: SYNC */}
         <div className="lg:col-span-7 space-y-8">
           <Card className="bg-[#0D0B10] border-white/5 p-10 rounded-[3rem] relative overflow-hidden shadow-2xl">
             <div className="relative z-10 space-y-8">
@@ -182,37 +202,42 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
                 <label className="group flex flex-col items-center justify-center w-full h-72 border-2 border-dashed border-white/10 hover:border-teal-500/40 rounded-[2.5rem] bg-black/40 cursor-pointer transition-all duration-500">
                   <div className="flex flex-col items-center">
                     <div className="p-6 bg-zinc-900 rounded-3xl mb-4 group-hover:scale-110 group-hover:bg-teal-500/10 transition-all duration-500 shadow-xl">
-                      {isUploading ? <Zap className="text-teal-400 animate-bounce" size={36} /> : <Upload className="text-zinc-600 group-hover:text-teal-400" size={36} />}
+                      <Upload className="text-zinc-600 group-hover:text-teal-400" size={36} />
                     </div>
-                    <p className="text-sm font-bold text-zinc-500 group-hover:text-white transition-colors">Drop Résumé/CV here</p>
+                    <p className="text-sm font-bold text-zinc-500 group-hover:text-white">Drop Legacy Document</p>
                   </div>
                   <input type="file" className="hidden" onChange={handleFileChange} accept=".pdf,.doc,.docx" />
                 </label>
               ) : (
                 <div className="space-y-4">
-                  <div className="p-8 bg-teal-500/5 border border-teal-500/20 rounded-[2.5rem] flex items-center justify-between group animate-in zoom-in-95">
+                  <div className={`p-8 border rounded-[2.5rem] flex items-center justify-between group animate-in zoom-in-95 transition-all duration-500 ${
+                    vault.resume.isOptimistic 
+                      ? "bg-zinc-900/50 border-zinc-800 border-dashed" 
+                      : "bg-teal-500/5 border-teal-500/20"
+                  }`}>
                     <div className="flex items-center gap-6">
-                      <div className="p-4 bg-teal-500 text-black rounded-2xl shadow-[0_0_20px_rgba(20,184,166,0.3)]">
-                        <FileText size={28} />
+                      <div className={`p-4 rounded-2xl shadow-xl transition-all ${
+                        vault.resume.isOptimistic ? "bg-zinc-800 text-zinc-500" : "bg-teal-500 text-black"
+                      }`}>
+                        {vault.resume.isOptimistic ? <Loader2 size={28} className="animate-spin" /> : <FileText size={28} />}
                       </div>
                       <div>
                         <h4 className="text-lg font-bold text-white line-clamp-1">{vault.resume.name}</h4>
-                        <p className="text-xs text-teal-500/60 font-black uppercase tracking-widest italic">Legacy Document Synced</p>
+                        <p className="text-xs text-teal-500/60 font-black uppercase tracking-widest italic">
+                          {vault.resume.isOptimistic ? "Mapping to Horizon..." : "Legacy Document Synced"}
+                        </p>
                       </div>
                     </div>
-                    <CheckCircle2 className="text-teal-500" size={32} />
+                    {!vault.resume.isOptimistic && <CheckCircle2 className="text-teal-500" size={32} />}
                   </div>
 
                   <div className="flex gap-3 justify-end px-2">
-                    <Button 
-                      onClick={handlePurgeResume}
-                      className="bg-red-500/5 hover:bg-red-500/20 text-red-500/60 hover:text-red-500 border border-red-500/10 text-[9px] font-black uppercase tracking-widest h-10 rounded-xl transition-all"
-                    >
+                    <Button onClick={handlePurgeResume} className="bg-red-500/5 hover:bg-red-500/20 text-red-500/60 border border-red-500/10 text-[9px] font-black h-10 rounded-xl">
                       <Trash2 size={12} className="mr-2" /> Purge Legacy
                     </Button>
-                    <label className="cursor-pointer bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white border border-white/5 px-4 flex items-center text-[9px] font-black uppercase tracking-widest h-10 rounded-xl transition-all">
+                    <label className="cursor-pointer bg-white/5 hover:bg-white/10 text-zinc-400 border border-white/5 px-4 flex items-center text-[9px] font-black h-10 rounded-xl">
                       <RefreshCw size={12} className="mr-2" /> Replace Sync
-                      <input type="file" className="hidden" onChange={handleFileChange} accept=".pdf,.doc,.docx" />
+                      <input type="file" className="hidden" onChange={handleFileChange} />
                     </label>
                   </div>
                 </div>
@@ -223,14 +248,14 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
                   <ShieldCheck size={20} className="text-teal-500/40" />
                   <div>
                     <h5 className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Privacy Locked</h5>
-                    <p className="text-[10px] text-zinc-600 leading-tight mt-1 italic">Data remains local for your calculations.</p>
+                    <p className="text-[10px] text-zinc-600 italic">Data remains local.</p>
                   </div>
                 </div>
                 <div className="p-5 bg-white/[0.02] border border-white/5 rounded-2xl flex flex-col items-start gap-3">
                   <Sparkles size={20} className="text-teal-500/40" />
                   <div>
                     <h5 className="text-[10px] font-black uppercase tracking-widest text-zinc-400">AI Translation</h5>
-                    <p className="text-[10px] text-zinc-600 leading-tight mt-1 italic">Mapping skills to the Horizon ecosystem.</p>
+                    <p className="text-[10px] text-zinc-600 italic">Mapping your wisdom.</p>
                   </div>
                 </div>
               </div>
@@ -240,98 +265,27 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
           {/* NEXT STEP ACTION */}
           <div className="pt-4">
             <button 
-              onClick={() => {
-                if (!vault.resume) return;
-                if (!vault.isAligned) {
-                  navigate('/alignment');
-                } else {
-                  onNavigateToHorizon();
-                }
-              }}
+              onClick={() => vault.resume && !vault.resume.isOptimistic && onNavigateToHorizon()}
               className={`w-full p-8 rounded-[2.5rem] border flex items-center justify-between transition-all duration-700 group relative overflow-hidden ${
-                vault.resume && vault.isAligned 
+                vault.resume && !vault.resume.isOptimistic
                 ? "bg-teal-500 text-black border-teal-400 hover:shadow-[0_0_50px_rgba(20,184,166,0.3)] hover:scale-[1.01]" 
-                : vault.resume
-                  ? "bg-white/10 text-white border-white/20 hover:bg-white/20" 
-                  : "bg-white/5 border-white/5 text-zinc-700 cursor-not-allowed opacity-40"
+                : "bg-white/5 border-white/5 text-zinc-700 cursor-not-allowed opacity-40"
               }`}
             >
-              <div className="relative z-10 flex items-center gap-6">
-                <div className={`p-4 rounded-2xl border ${
-                  (vault.resume && vault.isAligned) ? "bg-black/10 border-black/20" : "bg-white/5 border-white/10"
-                }`}>
-                  {(vault.resume && !vault.isAligned) ? <Sparkles size={28} className="text-teal-400" /> : <Globe size={28} className={vault.resume && vault.isAligned ? "animate-pulse" : ""} />}
+              <div className="relative z-10 flex items-center gap-6 text-left">
+                <div className="p-4 rounded-2xl bg-black/10 border border-black/20">
+                  <Globe size={28} className={vault.resume ? "animate-pulse" : ""} />
                 </div>
-                <div className="text-left">
+                <div>
                   <p className="text-[10px] font-black uppercase tracking-[0.4em] mb-1">
-                    {!vault.resume 
-                      ? "Expedition Locked" 
-                      : !vault.isAligned 
-                        ? "Action Required" 
-                        : "Expedition Ready"}
+                    {vault.resume ? "Expedition Ready" : "Expedition Locked"}
                   </p>
-                  <p className="text-2xl font-serif italic font-bold tracking-tight">
-                    {!vault.resume 
-                      ? "The Horizon Board" 
-                      : !vault.isAligned 
-                        ? "Establish Alignment" 
-                        : "The Horizon Board"}
-                  </p>
+                  <p className="text-2xl font-serif italic font-bold tracking-tight">The Horizon Board</p>
                 </div>
               </div>
-
-              <div className="relative z-10 flex items-center gap-4">
-                {!vault.resume ? (
-                  <Lock size={18} />
-                ) : (
-                  <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform duration-500" />
-                )}
-              </div>
+              <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform duration-500" />
             </button>
           </div>
-
-          {/* --- END OF SEASON: ACCOUNT DELETION (Base44 Requirement) --- */}
-          <section className="pt-16 mt-8 border-t border-white/5">
-            {!isClosingHearth ? (
-              <div className="flex flex-col items-center gap-4">
-                <p className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-700">The Season's End</p>
-                <button 
-                  onClick={() => setIsClosingHearth(true)}
-                  className="text-zinc-600 hover:text-red-400 text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2"
-                >
-                  <Trash2 size={12} /> Extinguish the Hearth
-                </button>
-              </div>
-            ) : (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-red-500/5 border border-red-500/10 p-8 rounded-[2.5rem] space-y-6"
-              >
-                <div className="flex items-center gap-3 text-red-400">
-                  <AlertTriangle size={20} />
-                  <h4 className="text-lg font-bold tracking-tight text-red-200">Are you sure, traveler?</h4>
-                </div>
-                <p className="text-xs text-zinc-500 italic leading-relaxed">
-                  Extinguishing your hearth is final. This will permanently delete your legacy document, your logbook, and your alignment record. Your status in the Founding Forest will be lost.
-                </p>
-                <div className="flex gap-4">
-                  <Button 
-                    onClick={() => setIsClosingHearth(false)}
-                    className="flex-1 bg-white/5 text-zinc-400 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest h-12"
-                  >
-                    Stay by the Fire
-                  </Button>
-                  <Button 
-                    onClick={handleFinalExtinguish}
-                    className="flex-1 bg-red-600 hover:bg-red-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest h-12 shadow-[0_0_20px_rgba(220,38,38,0.2)]"
-                  >
-                    Extinguish Permanently
-                  </Button>
-                </div>
-              </motion.div>
-            )}
-          </section>
         </div>
       </div>
     </div>
