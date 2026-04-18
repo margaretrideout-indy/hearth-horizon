@@ -39,16 +39,15 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
   const [ethicalPriorities, setEthicalPriorities] = useState(vault?.ethics || []);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
 
-  // --- TIER GATING REFINED ---
   const tiers = { 'traveler': 0, 'seedling': 1, 'hearthkeeper': 2, 'steward': 3 };
   const userRank = (isAdmin || vault?.tier?.toLowerCase() === 'steward') ? 3 : (tiers[vault?.tier?.toLowerCase()] || 0);
 
   const universalPlaceholders = [
-    "e.g., Managed a team of 15 in a fast-paced retail environment...",
-    "e.g., Designed a sustainable irrigation system for a local farm...",
-    "e.g., Coordinated logistical operations for a regional non-profit...",
-    "e.g., Developed technical documentation for a proprietary software...",
-    "e.g., Taught 30+ students in a high-pressure environment..."
+    "e.g., Managed a team of 15...",
+    "e.g., Designed a sustainable system...",
+    "e.g., Coordinated logistical operations...",
+    "e.g., Developed technical documentation...",
+    "e.g., Taught 30+ students..."
   ];
 
   useEffect(() => {
@@ -60,9 +59,9 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
 
   const ethicsOptions = [
     { id: 'eco', label: 'Eco-Conscious', desc: 'Prioritizes sustainability & green tech.', icon: Leaf },
-    { id: 'remote', label: 'Remote-First', desc: 'Values async work and location freedom.', icon: Home },
+    { id: 'remote', label: 'Remote-First', desc: 'Values async work and freedom.', icon: Home },
     { id: 'equity', label: 'Equity-Driven', desc: 'Focuses on DEI and social impact.', icon: Users },
-    { id: 'balance', label: 'The Quiet Hearth', desc: 'Strict boundaries on burnout & overwork.', icon: Flame },
+    { id: 'balance', label: 'The Quiet Hearth', desc: 'Strict boundaries on burnout.', icon: Flame },
   ];
 
   const toggleEthic = (id) => {
@@ -79,11 +78,11 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
         .replace(/^(managed|led|taught|designed|created|organized|facilitated|coordinated|developed|ran)\s+/i, "");
       
       setBridgeData({
-        pm: `Strategic orchestration of ${core}, focusing on milestone delivery, resource allocation, and cross-functional stakeholder alignment.`,
-        data: `Quantitative and qualitative analysis of ${core} to derive data-driven insights and optimize future organizational outcomes.`,
-        ops: `Architecting scalable systems for ${core} to minimize operational friction and maximize institutional efficiency.`,
-        exec: `High-level visioning and governance of ${core} to drive enterprise value and long-term organizational sustainability.`,
-        creative: `Narrative-driven reimagining of ${core}, blending aesthetic innovation with core functional objectives.`
+        pm: `Strategic orchestration of ${core}, focusing on milestone delivery and stakeholder alignment.`,
+        data: `Quantitative analysis of ${core} to derive data-driven insights.`,
+        ops: `Architecting scalable systems for ${core} to maximize efficiency.`,
+        exec: `High-level visioning and governance of ${core} to drive enterprise value.`,
+        creative: `Narrative-driven reimagining of ${core}, blending aesthetic innovation.`
       });
       setIsGenerating(false);
     }, 1400);
@@ -93,13 +92,12 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
     { skill: "Agile/Scrum Methodology", status: "missing", effort: "2 weeks", category: "Knowledge", url: "https://www.scrum.org/" },
     { skill: "Stakeholder Management", status: "aligned", effort: "sync'd", category: "Leadership", url: null },
     { skill: "SaaS CRM Tools", status: "missing", effort: "3 weeks", category: "Technical", url: "https://trailhead.salesforce.com/" },
-    { skill: "Public Speaking & Training", status: "aligned", effort: "sync'd", category: "Soft Skills", url: null },
   ];
 
   const trajectories = [
-    { domain: "Operations & Systems", salary: "$85k - $120k", fit: 94, velocity: "High", desc: "Optimizing workflows and scaling efficiency.", key: 'ops' },
-    { domain: "Project & Delivery", salary: "$90k - $130k", fit: 91, velocity: "Stable", desc: "Lifecycle management and complex deadlines.", key: 'pm' },
-    { domain: "Strategy & Implementation", salary: "$95k - $145k", fit: 88, velocity: "Emerging", desc: "Translating visions into actionable roadmaps.", key: 'data' }
+    { domain: "Operations & Systems", salary: "$85k - $120k", fit: 94, velocity: "High", desc: "Optimizing workflows.", key: 'ops' },
+    { domain: "Project & Delivery", salary: "$90k - $130k", fit: 91, velocity: "Stable", desc: "Lifecycle management.", key: 'pm' },
+    { domain: "Strategy & Implementation", salary: "$95k - $145k", fit: 88, velocity: "Emerging", desc: "Translating visions.", key: 'data' }
   ];
 
   const handleCopy = (text) => {
@@ -119,12 +117,13 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
   return (
     <div className="relative min-h-screen selection:bg-teal-500/30">
       
-      <div className="w-full pt-12 pb-12 flex justify-center">
-        <div className="bg-[#0D0B14]/80 backdrop-blur-3xl border border-white/10 rounded-full p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.4)] flex items-center gap-1 md:gap-2">
+      {/* NATIVE STEP NAVIGATION: Enlarged for Accessibility */}
+      <div className="w-full pt-12 pb-12 flex justify-center sticky top-0 z-[60]">
+        <div className="bg-[#0D0B14]/90 backdrop-blur-3xl border border-white/10 rounded-full p-2 shadow-2xl flex items-center gap-1 md:gap-3">
           {[
-            { id: 1, label: "TRANSLATING", icon: Languages },
+            { id: 1, label: "TRANSLATE", icon: Languages },
             { id: 2, label: "VALUES", icon: ShieldCheck },
-            { id: 3, label: "TOPOGRAPHY", icon: Compass },
+            { id: 3, label: "MAP", icon: Compass },
             { id: 4, label: "HARVEST", icon: Pickaxe }
           ].map((step, idx, arr) => {
             const isAccessible = canNavigateTo(step.id);
@@ -135,16 +134,16 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
                 <button 
                   disabled={!isAccessible}
                   onClick={() => setActiveStep(step.id)}
-                  className={`flex items-center gap-2.5 px-4 py-2 rounded-full transition-all duration-500 ${
-                    isActive ? 'bg-teal-500 text-black shadow-[0_0_20px_rgba(20,184,166,0.5)] scale-105' : isAccessible ? 'text-zinc-400 hover:text-white hover:bg-white/5' : 'opacity-20 cursor-not-allowed'
+                  className={`flex items-center gap-3 px-5 py-3 rounded-full transition-all duration-500 ${
+                    isActive ? 'bg-teal-500 text-black shadow-lg scale-105' : isAccessible ? 'text-zinc-400 hover:text-white' : 'opacity-20 cursor-not-allowed'
                   }`}
                 >
-                  <step.icon size={14} className={isActive ? "animate-pulse" : ""} />
-                  <span className={`hidden md:block text-[8px] font-black tracking-[0.2em] ${isActive ? 'text-black' : 'text-zinc-500'}`}>
+                  <step.icon size={18} />
+                  <span className={`hidden md:block text-xs font-black tracking-widest ${isActive ? 'text-black' : 'text-zinc-500'}`}>
                     {step.label}
                   </span>
                 </button>
-                {idx < arr.length - 1 && <div className="w-3 h-px bg-white/10" />}
+                {idx < arr.length - 1 && <div className="w-2 h-px bg-white/10" />}
               </React.Fragment>
             );
           })}
@@ -152,49 +151,47 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 md:px-6">
-        <main className="relative z-10 pb-20">
-          {/* STEP 1: TRANSLATING */}
+        <main className="relative z-10 pb-32">
           {activeStep === 1 && (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 animate-in slide-in-from-bottom-8 duration-700">
-              <div className="lg:col-span-4 space-y-4 text-center lg:text-left pt-4">
-                <div className="w-12 h-12 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20 mx-auto lg:mx-0">
-                  <Microscope size={24} />
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 animate-in slide-in-from-bottom-8 duration-700">
+              <div className="lg:col-span-4 space-y-4 pt-4">
+                <div className="w-14 h-14 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20">
+                  <Microscope size={28} />
                 </div>
-                <h1 className="text-3xl md:text-4xl font-serif italic text-white leading-tight">Legacy<br/>Translation</h1>
-                <p className="text-[10px] text-slate-500 uppercase tracking-widest leading-relaxed">Reframing institutional achievements for the open market.</p>
+                <h1 className="text-4xl font-serif italic text-white leading-tight">Legacy<br/>Translation</h1>
+                <p className="text-xs text-slate-500 uppercase tracking-widest leading-relaxed">Reframing achievements for the open market.</p>
               </div>
               <div className="lg:col-span-8 space-y-6">
-                <Card className="p-6 md:p-8 bg-[#1C1622]/60 border-white/5 shadow-2xl relative overflow-hidden rounded-[2.5rem]">
-                  <div className="absolute -top-10 -right-10 opacity-[0.03] pointer-events-none"><Layers size={240} /></div>
-                  <div className="relative z-10 space-y-8">
+                <Card className="p-8 bg-[#1C1622]/60 border-white/5 shadow-2xl rounded-[2.5rem]">
+                  <div className="space-y-8">
                     <div className="space-y-4">
-                      <label className="text-[9px] font-black uppercase tracking-[0.4em] text-teal-500/60 ml-2">Source Achievement</label>
+                      <label className="text-[11px] font-black uppercase tracking-[0.4em] text-teal-500/60 ml-2">Source Achievement</label>
                       <div className="flex flex-col md:flex-row gap-4">
                         <Input 
                           placeholder={universalPlaceholders[placeholderIdx]}
-                          className="bg-black/40 border-white/5 text-white h-14 md:h-16 rounded-2xl italic px-6 focus:ring-1 focus:ring-teal-500/30 outline-none transition-all duration-500"
+                          className="bg-black/40 border-white/5 text-white h-16 rounded-2xl italic px-6 text-base focus:ring-2 focus:ring-teal-500/30"
                           value={manualInput}
                           onChange={(e) => setManualInput(e.target.value)}
                         />
-                        <Button onClick={handleDecode} disabled={isGenerating || !manualInput} className="h-14 md:h-16 bg-teal-600 hover:bg-teal-500 text-black px-10 font-black rounded-2xl transition-all shadow-lg active:scale-95 shrink-0">
+                        <Button onClick={handleDecode} disabled={isGenerating || !manualInput} className="h-16 bg-teal-600 hover:bg-teal-500 text-black px-10 font-black rounded-2xl shadow-lg active:scale-95 shrink-0">
                           {isGenerating ? <Loader2 className="animate-spin" /> : "TRANSLATE"}
                         </Button>
                       </div>
                     </div>
                     <div className="grid gap-4">
-                      {['pm', 'data', 'ops', 'exec', 'creative'].map((key, i) => {
-                        const labels = { pm: 'Project Management', data: 'Data & Strategy', ops: 'Operations', exec: 'Executive Leadership', creative: 'Creative Strategy' };
+                      {['pm', 'data', 'ops'].map((key, i) => {
+                        const labels = { pm: 'Project Management', data: 'Data & Strategy', ops: 'Operations' };
                         const text = bridgeData?.[key];
                         return (
-                          <motion.div key={i} animate={{ opacity: text ? 1 : 0.4, y: text ? 0 : 5 }} className={`p-4 md:p-6 rounded-3xl border transition-all duration-700 ${text ? 'bg-teal-500/5 border-teal-500/20 shadow-[0_0_20px_rgba(20,184,166,0.05)]' : 'border-white/5 bg-transparent'}`}>
+                          <motion.div key={i} animate={{ opacity: text ? 1 : 0.4 }} className={`p-6 rounded-3xl border transition-all duration-700 ${text ? 'bg-teal-500/5 border-teal-500/20' : 'border-white/5 bg-transparent'}`}>
                             <div className="flex justify-between items-start gap-4">
                               <div className="space-y-2 flex-1">
-                                <span className="text-[8px] font-black text-teal-500/60 uppercase tracking-widest">{labels[key]} Dialect</span>
-                                <p className="text-sm text-slate-300 font-serif italic leading-relaxed">{text || "Waiting for your story..."}</p>
+                                <span className="text-[11px] font-black text-teal-500/60 uppercase tracking-widest">{labels[key]} Dialect</span>
+                                <p className="text-base text-slate-300 font-serif italic leading-relaxed">{text || "Waiting for your story..."}</p>
                               </div>
                               {text && (
-                                <Button variant="ghost" size="icon" onClick={() => handleCopy(text)} className="text-slate-500 hover:text-teal-400 hover:bg-teal-500/10 rounded-full">
-                                  {copied ? <Check size={16} /> : <Copy size={16} />}
+                                <Button variant="ghost" size="icon" onClick={() => handleCopy(text)} className="text-slate-500 hover:text-teal-400">
+                                  {copied ? <Check size={20} /> : <Copy size={20} />}
                                 </Button>
                               )}
                             </div>
@@ -204,158 +201,145 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
                     </div>
                   </div>
                 </Card>
-                <Button onClick={() => setActiveStep(2)} disabled={!bridgeData} className="w-full h-16 bg-white/[0.02] hover:bg-white/[0.05] border border-white/10 text-slate-400 hover:text-white font-black rounded-2xl gap-3 uppercase tracking-widest transition-all">
-                  Define Values <ArrowRight size={16} />
+                <Button onClick={() => setActiveStep(2)} disabled={!bridgeData} className="w-full h-20 bg-white/[0.02] border border-white/10 text-slate-400 font-black rounded-2xl uppercase tracking-widest">
+                  Define Values <ArrowRight size={18} className="ml-2" />
                 </Button>
               </div>
             </div>
           )}
 
-          {/* STEP 2: VALUES */}
           {activeStep === 2 && (
-            <div className="space-y-12 animate-in fade-in slide-in-from-right-8 duration-1000">
+            <div className="space-y-12 animate-in fade-in duration-1000">
               <header className="text-center max-w-2xl mx-auto space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 border border-purple-500/20 mx-auto"><ShieldCheck size={24} /></div>
-                <h2 className="text-3xl md:text-4xl font-serif italic text-white tracking-tight">The Hearth Values</h2>
-                <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em]">Define your non-negotiables and human priorities</p>
+                <div className="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 border border-purple-500/20 mx-auto"><ShieldCheck size={28} /></div>
+                <h2 className="text-4xl font-serif italic text-white tracking-tight">The Hearth Values</h2>
+                <p className="text-xs text-slate-500 uppercase tracking-[0.3em]">Define your non-negotiables</p>
               </header>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                 {ethicsOptions.map((opt) => {
                   const isSelected = ethicalPriorities.includes(opt.id);
                   return (
-                    <Card key={opt.id} onClick={() => toggleEthic(opt.id)} className={`p-8 rounded-[2.5rem] cursor-pointer transition-all duration-500 border-2 relative overflow-hidden ${isSelected ? 'bg-teal-500/10 border-teal-500/40 shadow-[0_0_30px_rgba(20,184,166,0.1)]' : 'bg-[#1C1622]/40 border-white/5 hover:border-white/10'}`}>
-                      <div className="flex items-start gap-6 relative z-10">
+                    <Card key={opt.id} onClick={() => toggleEthic(opt.id)} className={`p-10 rounded-[3rem] cursor-pointer transition-all duration-500 border-2 ${isSelected ? 'bg-teal-500/10 border-teal-500/40' : 'bg-[#1C1622]/40 border-white/5'}`}>
+                      <div className="flex items-start gap-6">
                         {opt.id === 'balance' ? <HearthIcon isSelected={isSelected} /> : (
                           <div className={`p-4 rounded-2xl ${isSelected ? 'bg-teal-500 text-black' : 'bg-white/5 text-slate-500'}`}>
-                            <opt.icon size={24} />
+                            <opt.icon size={28} />
                           </div>
                         )}
                         <div className="space-y-2">
-                          <h4 className={`font-bold text-lg ${isSelected ? 'text-white' : 'text-slate-300'}`}>{opt.label}</h4>
-                          <p className="text-[11px] text-slate-500 italic leading-relaxed font-light">{opt.desc}</p>
+                          <h4 className={`font-bold text-xl ${isSelected ? 'text-white' : 'text-slate-300'}`}>{opt.label}</h4>
+                          <p className="text-xs text-slate-500 italic leading-relaxed">{opt.desc}</p>
                         </div>
                       </div>
                     </Card>
                   );
                 })}
               </div>
-              <Button onClick={() => { onSync({ ethics: ethicalPriorities }); setActiveStep(3); }} disabled={ethicalPriorities.length === 0} className="w-full max-w-4xl mx-auto h-20 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-[2rem] gap-4 uppercase tracking-[0.2em] shadow-2xl flex">
-                Establish Topography <ArrowRight size={18} />
+              <Button onClick={() => { onSync({ ethics: ethicalPriorities }); setActiveStep(3); }} disabled={ethicalPriorities.length === 0} className="w-full max-w-4xl mx-auto h-24 bg-teal-600 text-black font-black rounded-[2.5rem] gap-4 uppercase tracking-[0.2em] shadow-2xl">
+                Establish Topography <ArrowRight size={20} />
               </Button>
             </div>
           )}
 
-          {/* STEP 3: TOPOGRAPHY */}
           {activeStep === 3 && (
             <div className="space-y-12 animate-in fade-in duration-1000">
               <header className="text-center max-w-2xl mx-auto space-y-4">
-                <h2 className="text-3xl md:text-4xl font-serif italic text-white tracking-tight">Market Topography</h2>
-                <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em]">Mapping your skills to current economic climates</p>
+                <h2 className="text-4xl font-serif italic text-white tracking-tight">Market Topography</h2>
+                <p className="text-xs text-slate-500 uppercase tracking-[0.3em]">Mapping your skills</p>
               </header>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {trajectories.map((path, idx) => {
                   const isSelected = selectedPath?.domain === path.domain;
                   const canSeeData = userRank >= 3; 
                   return (
-                    <Card key={idx} onClick={() => setSelectedPath(path)} className={`group cursor-pointer p-6 md:p-8 bg-[#1C1622]/40 border-white/5 transition-all duration-500 rounded-[2.5rem] relative overflow-hidden ${isSelected ? 'ring-1 ring-teal-500/50 shadow-[0_0_40px_rgba(20,184,166,0.1)] border-teal-500/40' : 'hover:border-white/10 hover:bg-[#1C1622]/60'}`}>
-                      <div className="space-y-6 relative z-10">
-                        <div className="flex justify-between items-start">
-                            <Badge className={`${isSelected ? 'bg-teal-500 text-black' : 'bg-teal-500/10 text-teal-400'} border-transparent text-[9px] font-black px-3 py-1`}>{path.fit}% MATCH</Badge>
-                            {canSeeData ? <TrendingUp size={16} className={path.velocity === 'High' ? 'text-teal-400 animate-pulse' : 'text-slate-700'} /> : <Lock size={14} className="text-slate-800" />}
-                        </div>
+                    <Card key={idx} onClick={() => setSelectedPath(path)} className={`group cursor-pointer p-8 bg-[#1C1622]/40 border-white/5 transition-all rounded-[3rem] ${isSelected ? 'ring-2 ring-teal-500 shadow-2xl border-teal-500' : 'hover:bg-[#1C1622]/60'}`}>
+                      <div className="space-y-6">
+                        <Badge className={`${isSelected ? 'bg-teal-500 text-black' : 'bg-teal-500/10 text-teal-400'} text-[11px] font-black px-4 py-1.5`}>{path.fit}% MATCH</Badge>
                         <div className="space-y-2">
-                          <h4 className={`font-bold text-lg leading-tight transition-colors ${isSelected ? 'text-white' : 'text-slate-300'}`}>{path.domain}</h4>
-                          <p className="text-[10px] text-slate-500 italic leading-relaxed font-light">{path.desc}</p>
+                          <h4 className={`font-bold text-xl transition-colors ${isSelected ? 'text-white' : 'text-slate-300'}`}>{path.domain}</h4>
+                          <p className="text-xs text-slate-500 italic">{path.desc}</p>
                         </div>
                         <div className="pt-6 border-t border-white/5">
-                          <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest italic">Est. Range</p>
-                          <p className={`text-xl font-black italic transition-colors ${isSelected ? 'text-white' : 'text-slate-400'} ${!canSeeData ? 'blur-[4px]' : ''}`}>{canSeeData ? path.salary : "$110k - $160k"}</p>
-                          {!canSeeData && <p className="text-[7px] text-teal-500/50 uppercase font-bold tracking-tighter">Requires Steward Tier</p>}
+                          <p className="text-[11px] font-black text-slate-600 uppercase tracking-widest italic">Est. Range</p>
+                          <p className={`text-2xl font-black italic transition-colors ${isSelected ? 'text-white' : 'text-slate-400'} ${!canSeeData ? 'blur-md' : ''}`}>{canSeeData ? path.salary : "$110k - $160k"}</p>
                         </div>
                       </div>
                     </Card>
                   );
                 })}
               </div>
-              <Button onClick={() => setActiveStep(4)} disabled={!selectedPath} className="w-full h-20 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-[2rem] gap-4 uppercase tracking-[0.2em] shadow-2xl transition-all">
-                {selectedPath ? `Identify Gaps for ${selectedPath.domain}` : "Select a Path"}
-                <Pickaxe size={18} className={selectedPath ? 'animate-bounce ml-2' : 'ml-2'} />
+              <Button onClick={() => setActiveStep(4)} disabled={!selectedPath} className="w-full h-24 bg-teal-600 text-black font-black rounded-[2.5rem] uppercase tracking-[0.2em] shadow-2xl">
+                Identify Gaps <Pickaxe size={24} className="ml-4" />
               </Button>
             </div>
           )}
 
-          {/* STEP 4: HARVEST */}
           {activeStep === 4 && (
-            <div className="animate-in slide-in-from-right-8 duration-700 space-y-12 pb-64">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
+            <div className="animate-in slide-in-from-right-8 duration-700 space-y-12 pb-96">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 <div className="lg:col-span-4 space-y-8">
-                    <div className="space-y-4 text-center lg:text-left">
-                      <div className="w-12 h-12 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20 mx-auto lg:mx-0"><Target size={24} /></div>
-                      <h2 className="text-3xl md:text-4xl font-serif italic text-white tracking-tight">The Harvest</h2>
+                    <div className="space-y-4">
+                      <div className="w-14 h-14 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20"><Target size={28} /></div>
+                      <h2 className="text-4xl font-serif italic text-white tracking-tight">The Harvest</h2>
                     </div>
-                    <Card className="p-8 bg-teal-500/5 border-teal-500/20 rounded-[2.5rem] relative overflow-hidden group">
-                      <p className="text-[9px] font-black text-teal-500/60 uppercase tracking-[0.3em] mb-4 italic relative z-10">Alignment Secured</p>
-                      <div className="flex items-end gap-3 mb-4 relative z-10">
-                         <span className="text-5xl font-black italic text-white">82%</span>
-                         <span className="text-[9px] text-slate-500 uppercase pb-2 font-bold tracking-widest italic">Ready</span>
-                      </div>
-                      <div className="relative h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                        <motion.div initial={{ width: 0 }} animate={{ width: "82%" }} transition={{ duration: 1.5, ease: "circOut" }} className="absolute top-0 left-0 h-full bg-teal-500" />
+                    <Card className="p-8 bg-teal-500/5 border-teal-500/20 rounded-[2.5rem]">
+                      <p className="text-xs font-black text-teal-500/60 uppercase tracking-[0.3em] mb-4 italic">Alignment Secured</p>
+                      <div className="flex items-end gap-3 mb-4">
+                         <span className="text-6xl font-black italic text-white">82%</span>
+                         <span className="text-xs text-slate-500 uppercase pb-2 font-bold tracking-widest italic">Ready</span>
                       </div>
                     </Card>
                 </div>
                 <div className="lg:col-span-8 space-y-4">
                     {gapData.map((item, i) => (
-                      <Card key={i} className="p-5 md:p-6 bg-[#1C1622]/40 border-white/5 rounded-2xl hover:border-teal-500/20 transition-all group">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <Card key={i} className="p-8 bg-[#1C1622]/40 border-white/5 rounded-[2rem] hover:border-teal-500/20 transition-all">
+                        <div className="flex items-center justify-between gap-6">
                           <div className="flex items-center gap-6">
-                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center border shrink-0 ${item.status === 'aligned' ? 'bg-teal-500/5 text-teal-400 border-teal-500/10' : 'bg-slate-500/5 text-slate-400 border-white/5'}`}>
-                               {item.status === 'aligned' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
+                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border shrink-0 ${item.status === 'aligned' ? 'bg-teal-500/5 text-teal-400 border-teal-500/10' : 'bg-slate-500/5 text-slate-400 border-white/5'}`}>
+                               {item.status === 'aligned' ? <CheckCircle2 size={24} /> : <AlertCircle size={24} />}
                             </div>
                             <div className="space-y-1">
-                              <h4 className="text-sm text-white font-bold group-hover:text-teal-400 transition-colors">{item.skill}</h4>
-                              <div className="flex flex-wrap gap-3 items-center">
-                                <span className="text-[8px] font-black text-slate-600 uppercase tracking-widest">{item.category}</span>
-                                <div className="w-1 h-1 rounded-full bg-slate-800" />
-                                <span className="text-[8px] font-bold text-teal-500/40 italic uppercase">{item.effort} Required</span>
+                              <h4 className="text-lg text-white font-bold">{item.skill}</h4>
+                              <div className="flex gap-4 items-center">
+                                <span className="text-xs font-black text-slate-600 uppercase tracking-widest">{item.category}</span>
+                                <span className="text-xs font-bold text-teal-500/40 italic uppercase">{item.effort} Required</span>
                               </div>
                             </div>
                           </div>
-                          {item.status === 'missing' && item.url && (
-                            <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-[9px] font-black uppercase text-slate-500 hover:text-teal-400 transition-colors tracking-[0.2em] border-b border-white/10 hover:border-teal-400 pb-1">Link Provision</a>
-                          )}
                         </div>
                       </Card>
                     ))}
                 </div>
               </div>
 
-              {/* NATIVE STYLE BOTTOM SELECTION SHEET */}
+              {/* NATIVE STYLE BOTTOM SELECTION SHEET: Final Polish Version */}
               <motion.div 
-                initial={{ y: "80%" }} 
-                animate={{ y: 0 }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="fixed bottom-0 left-0 right-0 z-[100] px-2 pb-[env(safe-area-inset-bottom)]"
+                initial={{ y: "90%", opacity: 0 }} 
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ type: "spring", damping: 30, stiffness: 200 }}
+                className="fixed bottom-0 left-0 right-0 z-[100] px-4 pb-[env(safe-area-inset-bottom)] mb-4"
               >
-                <Card className="p-8 md:p-10 bg-[#0D0B14] border-t border-x border-teal-500/30 rounded-t-[3rem] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] max-w-5xl mx-auto">
-                    <div className="w-12 h-1.5 bg-white/10 rounded-full mx-auto mb-8" />
-                    <div className="space-y-6 relative z-10 max-w-2xl mx-auto text-center">
-                        <h3 className="text-2xl font-serif italic text-white tracking-tight">Finalized Blueprint</h3>
-                        <div className="bg-black/60 p-6 rounded-2xl border border-white/5 text-slate-300 italic font-serif text-sm shadow-inner leading-relaxed">
+                <Card className="p-10 bg-[#0D0B14] border-t-2 border-teal-500/40 rounded-t-[3.5rem] shadow-[0_-40px_100px_rgba(0,0,0,0.9)] max-w-5xl mx-auto">
+                    {/* Native Grabber Handle: Enlarged for visibility */}
+                    <div className="w-16 h-2 bg-white/20 rounded-full mx-auto mb-10" />
+                    
+                    <div className="space-y-8 max-w-2xl mx-auto text-center">
+                        <h3 className="text-3xl font-serif italic text-white tracking-tight">Finalized Blueprint</h3>
+                        <div className="bg-black/60 p-8 rounded-[2rem] border border-white/5 text-slate-200 italic font-serif text-lg leading-relaxed shadow-inner">
                           {bridgeData?.[selectedPath?.key]}
                         </div>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                          <Button onClick={() => handleCopy(bridgeData?.[selectedPath?.key])} className="h-14 px-8 bg-white/[0.03] text-white font-black rounded-xl uppercase tracking-widest border border-white/10 gap-3 transition-all hover:bg-white/[0.08]">
-                            {copied ? <Check size={18} /> : <Copy size={18} />} {copied ? "Copied" : "Copy"}
+                        <div className="flex flex-col sm:flex-row gap-6 justify-center pt-4 pb-4">
+                          <Button onClick={() => handleCopy(bridgeData?.[selectedPath?.key])} className="h-20 px-10 bg-white/[0.03] text-white font-black rounded-2xl uppercase tracking-widest border border-white/10 gap-3 hover:bg-white/[0.08]">
+                            {copied ? <Check size={24} /> : <Copy size={24} />} {copied ? "Copied" : "Copy Translation"}
                           </Button>
                           <Button 
                             onClick={() => { 
                               onSync({ isAligned: true }); 
                               navigate('/horizon');
                             }} 
-                            className="h-14 px-8 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-xl uppercase tracking-widest gap-3 shadow-lg shadow-teal-500/20"
+                            className="h-20 px-10 bg-teal-600 text-black font-black rounded-2xl uppercase tracking-[0.2em] gap-3 shadow-2xl shadow-teal-500/40"
                           >
-                            Enter Horizon <Binoculars size={18} />
+                            Enter Horizon <Binoculars size={24} />
                           </Button>
                         </div>
                     </div>
@@ -364,13 +348,6 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
             </div>
           )}
         </main>
-
-        <footer className="text-center pt-16 relative z-10 pb-8">
-          <div className="inline-flex items-center gap-3 bg-white/5 px-6 py-2 rounded-full border border-white/5">
-            <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] italic">Synchronized with Hearth Horizon Ledger</p>
-          </div>
-        </footer>
       </div>
     </div>
   );
