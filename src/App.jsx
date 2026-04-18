@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Flame, BookOpen, Globe, User, Activity } from 'lucide-react';
 
 // Import the files that actually exist in your sidebar
-import Grove from './components/Grove';
+import Grove from './components/GroveTiers';
 import YourHearth from './components/YourHearth';
 import Library from './components/Library';
 import Admin from './components/Admin';
@@ -80,11 +80,11 @@ export default function App() {
     <div className="h-full w-full bg-[#0A080D] overflow-hidden">
       <main className="h-full w-full">
         <Routes>
-          <Route path="/" element={<Grove onSync={handleSync} />} />
+          <Route path="/" element={<GroveTiers onSync={handleSync} />} />
           <Route path="/hearth" element={<YourHearth vault={vault} onSync={handleSync} onResumeSync={(f) => setVault(p => ({...p, resume: f}))} onNavigateToHorizon={() => navigate('/horizon')} />} />
           <Route path="/library" element={<Library vault={vault} />} />
           <Route path="/horizon" element={<Canopy vault={vault} />} />
-          <Route path="/embers" element={<Embers vault={vault} />} />
+          <Route path="/embers" element={<EmbersChat vault={vault} />} />
           <Route path="/culture" element={<CulturalFit vault={vault} />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/admin" element={<Admin vault={vault} onSync={handleSync} />} />
