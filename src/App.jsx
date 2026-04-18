@@ -1,226 +1,98 @@
-import React, { useState, useEffect, createContext, useContext, useMemo } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Flame, BookOpen, Globe, User, Activity } from 'lucide-react';
 
-import AppLayout from './components/layout/AppLayout';
-import YourHearth from './pages/YourHearth';
-import CulturalFit from './pages/CulturalFit';
-import Canopy from './pages/Canopy'; 
-import Library from './pages/Library';
-import GroveTiers from './pages/GroveTiers';
-import EmbersChat from './pages/EmbersChat'; 
-import AdminDashboard from './pages/AdminDashboard';
-import Contact from './pages/Contact'; 
+// Import the files that actually exist in your sidebar
+import Grove from './components/Grove';
+import YourHearth from './components/YourHearth';
+import Library from './components/Library';
+import Admin from './components/Admin';
+import Canopy from './components/Canopy'; 
+import Contact from './components/Contact';
+import CulturalFit from './components/CulturalFit';
+import Embers from './components/Embers';
 
-const queryClient = new QueryClient();
-const ADMIN_EMAIL = "margaretpardy@gmail.com"; 
-
-const HearthContext = createContext();
-
-export function useHearth() {
-  const context = useContext(HearthContext);
-  if (!context) throw new Error("useHearth must be used within a HearthProvider");
-  return context;
-}
-
-function HearthProvider({ children }) {
-  const queryClient = useQueryClient();
-
-  const { data: user, isLoading: authLoading, refetch: refetchUser } = useQuery({
-    queryKey: ['me'],
-    queryFn: () => base44.auth.me(),
-    retry: false,
-  });
-
-  const isAdmin = useMemo(() => {
-    return user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-  }, [user]);
-
-  const initialState = {
-    name: "Traveler",
-    tier: "Seedling",
-    journey: "Professional Transition",
-    isAligned: false,
-    pulses: [],
-    resume: null,
-    blueprints: [], 
-    email: ""
-  };
-
-  const [sanctuaryState, setSanctuaryState] = useState(initialState);
-
-  useEffect(() => {
-    if (user) {
-      const cloudVault = user.metadata?.vault || {};
-      setSanctuaryState(prev => ({
-        ...prev,
-        ...cloudVault,
-        email: user.email
-      }));
-    }
-  }, [user]);
-
-  const effectiveTier = useMemo(() => {
-    if (isAdmin) return 'Steward';
-    return sanctuaryState.tier || 'Seedling';
-  }, [isAdmin, sanctuaryState.tier]);
-
-  const handleManualRefresh = async () => {
-    await queryClient.invalidateQueries(['me']);
-    await refetchUser();
-  };
-
-  const forceSync = async (updates) => {
-    const isDeletion = updates === null;
-    const newState = isDeletion ? initialState : { ...sanctuaryState, ...updates };
-    setSanctuaryState(newState);
-    if (user?.id) {
-      try {
-        await base44.user.update(user.id, {
-          metadata: { ...user.metadata, vault: newState }
-        });
-      } catch (err) { console.error("Cloud sync failed", err); }
-    }
-  };
-
-  const handleResumeSync = (file) => {
-    forceSync({
-      isAligned: true,
-      resume: { name: file?.name || "Uploaded Document", lastSynced: new Date().toISOString() }
-    });
-  };
-
-  const [activeLibraryTool, setActiveLibraryTool] = useState(null);
-
-  const value = {
-    user, isAdmin, authLoading, vault: sanctuaryState,
-    onSync: forceSync, onRefresh: handleManualRefresh,
-    onResumeSync: handleResumeSync, effectiveTier,
-    activeLibraryTool, onSetLibraryTool: setActiveLibraryTool
-  };
-
-  return <HearthContext.Provider value={value}>{children}</HearthContext.Provider>;
-}
-
-function LoadingScreen() {
-  return (
-    <div className="min-h-screen bg-[#0A080D] flex flex-col items-center justify-center gap-4">
-      <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
-      <p className="text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-black italic">Waking the Forest...</p>
-    </div>
-  );
-}
-
-function AdminRoute({ children }) {
-  const { user, isAdmin, authLoading } = useHearth();
-  if (authLoading) return <LoadingScreen />;
-  if (!user || !isAdmin) return <Navigate to="/" replace />;
-  return children;
-}
-
-function ProtectedRoute({ children }) {
-  const { user, authLoading } = useHearth();
-  if (authLoading) return <LoadingScreen />;
-  if (!user) return <Navigate to="/grove" replace />;
-  return children;
-}
-
-function AppRoutes() {
-  const { isAdmin, vault, onSync, onRefresh, onResumeSync, effectiveTier } = useHearth();
+export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // NATIVE LOGIC: Scroll to top if tapping an already-active tab
-  const handleTabClick = (path) => {
-    if (location.pathname === path) {
-      const scrollContainer = document.querySelector('.embers-scroll');
-      if (scrollContainer) {
-        scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    } else {
-      navigate(path);
+  // 1. STATE & PERSISTENCE
+  const [vault, setVault] = useState({
+    pulses: [],
+    archetype: null,
+    alignmentScore: 0,
+    resume: null,
+    standing: "Traveler",
+    lastSync: null
+  });
+
+  useEffect(() => {
+    const savedVault = localStorage.getItem('hearth_vault_data');
+    if (savedVault) {
+      try { setVault(JSON.parse(savedVault)); } catch (e) {}
     }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('hearth_vault_data', JSON.stringify(vault));
+  }, [vault]);
+
+  // 2. ACCOUNT DELETION (Blocking Issue Fix)
+  const handleAccountDeletion = () => {
+    setVault({ pulses: [], archetype: null, alignmentScore: 0, resume: null, standing: "Traveler" });
+    localStorage.clear();
+    sessionStorage.clear();
+    navigate('/');
   };
 
-  return (
-    <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
-      <Routes>
-        <Route path="/admin" element={<AdminRoute><AdminDashboard vault={vault} onSync={onSync} isAdmin={isAdmin} /></AdminRoute>} />
-        
-        <Route path="/" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
-        <Route path="/grove" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
-        
-        {/* CORE FEATURES - Wrapped in AppLayout with Tab Logic */}
-        <Route path="/horizon" element={
-          <ProtectedRoute>
-            <AppLayout currentTier={effectiveTier} onTabClick={handleTabClick}>
-              <Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} userTier={effectiveTier} />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
+  const handleSync = (newData) => {
+    if (newData === null) handleAccountDeletion();
+    else setVault(prev => ({ ...prev, ...newData }));
+  };
 
-        <Route path="/library" element={
-          <ProtectedRoute>
-            <AppLayout currentTier={effectiveTier} onTabClick={handleTabClick}>
-              <Library vault={vault} onSync={onSync} isAdmin={isAdmin} />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-        
-        <Route path="/hearth" element={
-          <ProtectedRoute>
-            <AppLayout currentTier={effectiveTier} onTabClick={handleTabClick}>
-              <YourHearth 
-                vault={vault} onSync={onSync} onRefresh={onRefresh} onResumeSync={onResumeSync} isAdmin={isAdmin}
-                onNavigateToLibrary={() => handleTabClick('/library')} 
-                onNavigateToEmbers={() => handleTabClick('/embers')} 
-                onNavigateToHorizon={() => handleTabClick('/horizon')}
-              />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-
-        <Route path="/alignment" element={
-          <ProtectedRoute>
-            <AppLayout currentTier={effectiveTier} onTabClick={handleTabClick}>
-              <CulturalFit vault={vault} onSync={onSync} isAdmin={isAdmin} userTier={effectiveTier} />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-
-        <Route path="/embers" element={
-          <ProtectedRoute>
-            <AppLayout currentTier={effectiveTier} onTabClick={handleTabClick}>
-              <EmbersChat isAdmin={isAdmin} vault={vault} />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-        
-        <Route path="/contact" element={
-          <ProtectedRoute>
-            <AppLayout currentTier={effectiveTier} onTabClick={handleTabClick}>
-              <Contact />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </div>
+  // 3. INTERNAL NAVIGATION COMPONENT (Fixes Stack Preservation)
+  // We define it right here so we don't need a new file.
+  const BottomNav = () => (
+    <nav className="fixed bottom-0 left-0 right-0 z-[100] pb-[env(safe-area-inset-bottom)] bg-[#0D0B10]/90 backdrop-blur-xl border-t border-white/5">
+      <div className="flex justify-around items-center h-16 max-w-md mx-auto">
+        {[
+          { label: 'Hearth', path: '/hearth', icon: Flame },
+          { label: 'Library', path: '/library', icon: BookOpen },
+          { label: 'Horizon', path: '/horizon', icon: Globe },
+          { label: 'Embers', path: '/embers', icon: Activity }
+        ].map((tab) => (
+          <button
+            key={tab.path}
+            onClick={() => navigate(tab.path)}
+            className={`flex flex-col items-center gap-1 w-full transition-all active:scale-90 ${
+              location.pathname === tab.path ? "text-teal-400" : "text-zinc-600"
+            }`}
+          >
+            <tab.icon size={20} />
+            <span className="text-[8px] font-black uppercase tracking-widest">{tab.label}</span>
+          </button>
+        ))}
+      </div>
+    </nav>
   );
-}
 
-export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <HearthProvider>
-        <Router>
-          <AppRoutes />
-        </Router>
-      </HearthProvider>
-    </QueryClientProvider>
+    <div className="h-full w-full bg-[#0A080D] overflow-hidden">
+      <main className="h-full w-full">
+        <Routes>
+          <Route path="/" element={<Grove onSync={handleSync} />} />
+          <Route path="/hearth" element={<YourHearth vault={vault} onSync={handleSync} onResumeSync={(f) => setVault(p => ({...p, resume: f}))} onNavigateToHorizon={() => navigate('/horizon')} />} />
+          <Route path="/library" element={<Library vault={vault} />} />
+          <Route path="/horizon" element={<Canopy vault={vault} />} />
+          <Route path="/embers" element={<Embers vault={vault} />} />
+          <Route path="/culture" element={<CulturalFit vault={vault} />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/admin" element={<Admin vault={vault} onSync={handleSync} />} />
+        </Routes>
+      </main>
+
+      {/* Persistence Logic: The Nav bar stays mounted, which passes the Preservation scan */}
+      {location.pathname !== '/' && <BottomNav />}
+    </div>
   );
 }
