@@ -23,12 +23,15 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newUser, setNewUser] = useState({ name: '', email: '', tier: 'Tester' });
 
-  const isAuthorized = isAdmin || vault?.tier?.toLowerCase() === 'steward';
+  // FIXED LOGIC: More robust check for Steward or Admin status
+  const isSteward = vault?.tier?.toLowerCase() === 'steward';
+  const isAuthorized = isAdmin || isSteward || vault?.isAdmin;
 
   const B44_PROJECT_ID = window.BASE44_PROJECT_ID || ''; 
   const B44_TOKEN = window.BASE44_API_TOKEN || '';
 
   const syncBase44 = async () => {
+    // Only block if we are SURE they aren't authorized
     if (!B44_PROJECT_ID || !B44_TOKEN || !isAuthorized) {
       setLoading(false);
       return;
@@ -61,7 +64,7 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
     syncBase44();
   }, [isAuthorized]);
 
-  // Authorization Guard (With standardized Back button)
+  // Authorization Guard
   if (!isAuthorized) {
     return (
       <div className="min-h-screen bg-[#0D0B14] flex items-center justify-center p-6 text-center">
@@ -70,7 +73,7 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
             <ShieldAlert size={40} />
           </div>
           <h2 className="text-3xl font-serif italic text-white">Restricted Access</h2>
-          <p className="text-zinc-500 text-sm leading-relaxed">Only those with Steward-level clearance may oversee the Forest Registry.</p>
+          <p className="text-zinc-500 text-sm leading-relaxed">Only Steward-level clearance may oversee the Forest Registry.</p>
           <button 
             onClick={() => navigate('/hearth', { replace: true })} 
             className="w-full h-11 flex items-center justify-center text-[#39FFCA] text-[10px] font-black uppercase tracking-widest border-b border-[#39FFCA]/20"
@@ -107,7 +110,6 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
     <div className="min-h-screen bg-[#0D0B14] text-white font-sans p-4 md:p-12 pb-32">
       <header className="flex flex-col md:flex-row justify-between items-start gap-8 mb-16">
         <div className="text-left">
-          {/* Back Button for Navigation Stack sanity */}
           <button 
             onClick={() => navigate('/hearth')}
             className="w-11 h-11 -ml-3 mb-4 flex items-center justify-center rounded-full bg-white/5 text-zinc-400 hover:text-teal-400 transition-colors"
