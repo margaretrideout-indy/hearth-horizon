@@ -42,7 +42,7 @@ const EmberReactions = ({ msgId }) => {
 const TierBadge = ({ tier }) => {
   const normalizedTier = tier?.toLowerCase();
   switch (normalizedTier) {
-    case 'founder': return <span className="bg-purple-900/40 text-purple-300 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-purple-500/30 flex items-center gap-1"><Sparkles className="w-2.5 h-2.5" /> Founder</span>;
+    case 'founder': return <span className="bg-purple-900/40 text-purple-300 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-purple-500/30 flex items-center gap-1 shadow-[0_0_15px_rgba(168,85,247,0.15)]"><Sparkles className="w-2.5 h-2.5" /> Founder</span>;
     case 'hearth': return <Flame className="w-3.5 h-3.5 text-amber-500/90 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)]" />;
     case 'seedling': return <span className="bg-green-900/10 text-green-500/60 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-green-500/10 flex items-center gap-1"><Leaf className="w-2.5 h-2.5" /> Seedling</span>;
     case 'steward': return <span className="bg-slate-800/50 text-slate-300 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-teal-500/20 flex items-center gap-1"><Mountain className="w-2.5 h-2.5 text-teal-500" /> Steward</span>;
@@ -58,6 +58,7 @@ export default function EmbersChat({ vault, isAdmin }) {
   const [replyTarget, setReplyTarget] = useState(null);
   const scrollRef = useRef(null);
 
+  // Pull-to-refresh values
   const y = useMotionValue(0);
   const opacity = useTransform(y, [0, 60], [0, 1]);
   const rotate = useTransform(y, [0, 100], [0, 360]);
@@ -93,9 +94,9 @@ export default function EmbersChat({ vault, isAdmin }) {
         const data = await res.json();
         const mapped = data.documents.map(d => ({
           id: d.id,
-          author_name: d.author_name,
+          author_name: d.author_name || 'Traveler',
           content: d.message || d.content,
-          subscription_tier: d.tier,
+          subscription_tier: d.tier || 'Seedling',
           created_date: d.created_at || d.timestamp,
           email: d.email,
           reply_to: d.reply_to
@@ -120,21 +121,29 @@ export default function EmbersChat({ vault, isAdmin }) {
       reply_to: replyTarget ? { author: replyTarget.author_name, content: replyTarget.content } : null
     };
 
+    // Optimistic Update
     setRemotePosts(prev => [...prev, { ...messageData, id: tempId, content: input, subscription_tier: messageData.tier, created_date: messageData.timestamp, isPending: true }]);
     setInput('');
     setReplyTarget(null);
     setTimeout(scrollToBottom, 100);
 
     try {
-      await fetch(`https://api.base44.io/v1/projects/${B44_PROJECT_ID}/collections/messages/documents`, {
+      const response = await fetch(`https://api.base44.io/v1/projects/${B44_PROJECT_ID}/collections/messages/documents`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${B44_TOKEN}` },
         body: JSON.stringify(messageData)
       });
+      if (!response.ok) throw new Error();
       setRemotePosts(prev => prev.map(m => m.id === tempId ? { ...m, isPending: false } : m));
     } catch (err) {
       setRemotePosts(prev => prev.filter(m => m.id !== tempId));
     }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchMessages();
+    setRefreshing(false);
   };
 
   const scrollToBottom = () => { if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; };
@@ -143,6 +152,7 @@ export default function EmbersChat({ vault, isAdmin }) {
   return (
     <div className="flex flex-col h-full w-full bg-[#0A080D] md:rounded-t-[2.5rem] border-white/5 overflow-hidden relative">
       
+      {/* Pull-to-refresh Indicator */}
       <motion.div style={{ y, opacity }} className="absolute top-4 left-0 w-full flex justify-center z-50 pointer-events-none">
         <motion.div style={{ rotate }} className="bg-teal-500/20 p-2 rounded-full border border-teal-500/40 backdrop-blur-md">
           <RefreshCw size={16} className={`text-teal-400 ${refreshing ? 'animate-spin' : ''}`} />
@@ -154,7 +164,7 @@ export default function EmbersChat({ vault, isAdmin }) {
         drag="y"
         dragConstraints={{ top: 0, bottom: 0 }}
         dragElastic={0.6}
-        onDragEnd={(e, info) => { if (info.offset.y > 80) fetchMessages(); }}
+        onDragEnd={(e, info) => { if (info.offset.y > 80) onRefresh(); }}
         className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 scrollbar-hide z-10"
       >
         <div className="space-y-10 pb-10">
@@ -167,7 +177,7 @@ export default function EmbersChat({ vault, isAdmin }) {
                         <div className={`flex items-center gap-2 mb-2 text-[10px] font-black uppercase tracking-widest text-zinc-500 ${isOwn ? 'flex-row-reverse' : ''}`}>
                             {isOwn ? 'You' : msg.author_name}
                             <TierBadge tier={msg.subscription_tier} />
-                            {!isSystem && !isOwn && (
+                            {!isOwn && (
                               <button onClick={() => setReplyTarget(msg)} className="opacity-0 group-hover:opacity-100 transition-opacity ml-2 flex items-center gap-1 text-teal-500/60 hover:text-teal-400">
                                 <Reply size={10} /> Reply
                               </button>
@@ -182,14 +192,14 @@ export default function EmbersChat({ vault, isAdmin }) {
                         )}
 
                         <div className={`max-w-[85%] p-4 rounded-2xl border transition-all ${
-                            isOwn ? 'bg-teal-500/10 border-teal-500/20 text-white' 
-                            : isSystem ? 'bg-[#1A1423] border-amber-500/20 italic' 
+                            isOwn ? 'bg-teal-500/10 border-teal-500/20 text-white shadow-[0_4px_12px_rgba(20,184,166,0.1)]' 
+                            : isSystem ? 'bg-[#1A1423] border-amber-500/20 italic shadow-[0_0_20px_rgba(245,158,11,0.05)] text-amber-100/90' 
                             : 'bg-white/[0.03] border-white/5 text-zinc-300'
                         } ${msg.isPending ? 'opacity-50 grayscale' : ''}`}>
                             <p className="text-sm leading-relaxed font-light">{msg.content}</p>
                         </div>
                         
-                        {!isSystem && <EmberReactions msgId={msg.id} />}
+                        <EmberReactions msgId={msg.id} />
                         <span className="text-[9px] text-zinc-700 mt-2 font-bold uppercase tracking-tighter">
                           {format(new Date(msg.created_date), 'h:mm a')}
                         </span>
@@ -199,6 +209,7 @@ export default function EmbersChat({ vault, isAdmin }) {
         </div>
       </motion.div>
 
+      {/* Input bar with Reply Preview */}
       <div className="p-4 pb-8 md:pb-12 bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 relative">
         <AnimatePresence>
           {replyTarget && (
@@ -220,9 +231,12 @@ export default function EmbersChat({ vault, isAdmin }) {
             placeholder={replyTarget ? `Reply to ${replyTarget.author_name}...` : "Share an ember..."}
             className="w-full bg-white/[0.02] border border-white/5 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-teal-500/40 transition-all placeholder:text-zinc-700"
           />
-          <button onClick={handleSend} disabled={!input.trim() || sending} className="bg-teal-500 text-black p-4 rounded-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50">
+          <button onClick={handleSend} disabled={!input.trim() || sending} className="bg-teal-500 text-black p-4 rounded-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 shadow-lg shadow-teal-500/20">
             {sending ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
           </button>
+        </div>
+        <div className="flex flex-col items-center mt-4">
+           <p className="text-[8px] text-zinc-700 italic text-center max-w-[280px]">{TOS_TEXT}</p>
         </div>
       </div>
     </div>
