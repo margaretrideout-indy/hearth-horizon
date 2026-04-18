@@ -42,64 +42,100 @@ export default function App() {
     else setVault(prev => ({ ...prev, ...newData }));
   };
 
-  // --- STACK PRESERVATION LOGIC ---
   const mainTabs = ['/hearth', '/library', '/horizon', '/embers'];
   const isMainTab = mainTabs.includes(location.pathname);
 
-  const BottomNav = () => (
-    <nav className="fixed bottom-0 left-0 right-0 z-[100] pb-[env(safe-area-inset-bottom)] bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5">
-      <div className="flex justify-around items-center h-16 max-w-md mx-auto">
-        {[
-          { label: 'Hearth', path: '/hearth', icon: Flame },
-          { label: 'Library', path: '/library', icon: BookOpen },
-          { label: 'Horizon', path: '/horizon', icon: Globe },
-          { label: 'Embers', path: '/embers', icon: Activity }
-        ].map((tab) => {
+  // --- RESPONSIVE NAVIGATION COMPONENTS ---
+  
+  const NavLinks = ({ isDesktop = false }) => {
+    const tabs = [
+      { label: 'Hearth', path: '/hearth', icon: Flame },
+      { label: 'Library', path: '/library', icon: BookOpen },
+      { label: 'Horizon', path: '/horizon', icon: Globe },
+      { label: 'Embers', path: '/embers', icon: Activity }
+    ];
+
+    return (
+      <div className={`flex ${isDesktop ? 'flex-col gap-2' : 'justify-around items-center h-full'}`}>
+        {tabs.map((tab) => {
           const isActive = location.pathname === tab.path;
           return (
-            <button key={tab.path} onClick={() => navigate(tab.path)} className={`flex flex-col items-center gap-1 w-full transition-all active:scale-95 ${isActive ? "text-teal-400" : "text-zinc-600"}`}>
-              <tab.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-              <span className="text-[8px] font-black uppercase tracking-widest">{tab.label}</span>
+            <button 
+              key={tab.path} 
+              onClick={() => navigate(tab.path)} 
+              className={`flex transition-all active:scale-95 ${
+                isDesktop 
+                  ? `items-center gap-4 px-6 py-4 rounded-xl mx-2 ${isActive ? 'bg-zinc-800 text-teal-400 font-bold' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'}` 
+                  : `flex-col items-center gap-1 w-full justify-center ${isActive ? 'text-teal-400' : 'text-zinc-600'}`
+              }`}
+            >
+              <tab.icon size={isDesktop ? 22 : 20} strokeWidth={isActive ? 2.5 : 2} />
+              <span className={isDesktop ? 'text-sm tracking-wide' : 'text-[8px] font-black uppercase tracking-widest'}>
+                {tab.label}
+              </span>
             </button>
           );
         })}
       </div>
-    </nav>
-  );
+    );
+  };
 
   return (
-    <div className="h-full w-full bg-[#0A080D] overflow-hidden">
-      <main className="h-full w-full relative">
+    <div className="h-screen w-full bg-[#0A080D] flex overflow-hidden">
+      
+      {/* PC SIDEBAR: Visible on md screens and up */}
+      {location.pathname !== '/' && (
+        <aside className="hidden md:flex flex-col w-64 border-r border-white/5 bg-[#08070B] pt-8">
+          <div className="px-8 mb-10 text-xs font-black uppercase tracking-[0.3em] text-zinc-700">
+            Hearth Horizon
+          </div>
+          <NavLinks isDesktop />
+        </aside>
+      )}
+
+      {/* MAIN CONTENT AREA */}
+      <main className="flex-1 h-full relative overflow-y-auto custom-scrollbar flex flex-col">
         
-        {/* NATIVE STACK: These layers stay mounted but hidden, preserving scroll/state */}
-        <div className={location.pathname === '/hearth' ? 'block h-full' : 'hidden'}>
-          <YourHearth vault={vault} onSync={handleSync} onNavigateToHorizon={() => navigate('/horizon')} />
-        </div>
-        
-        <div className={location.pathname === '/library' ? 'block h-full' : 'hidden'}>
-          <Library vault={vault} />
-        </div>
-        
-        <div className={location.pathname === '/horizon' ? 'block h-full' : 'hidden'}>
-          <Canopy vault={vault} />
-        </div>
-        
-        <div className={location.pathname === '/embers' ? 'block h-full' : 'hidden'}>
-          <EmbersChat vault={vault} />
+        <div className="flex-1 w-full relative">
+          {/* NATIVE STACK: Hidden/Visible layers for instant tab switching */}
+          <div className={location.pathname === '/hearth' ? 'block h-full' : 'hidden'}>
+            <YourHearth vault={vault} onSync={handleSync} onNavigateToHorizon={() => navigate('/horizon')} />
+          </div>
+          
+          <div className={location.pathname === '/library' ? 'block h-full' : 'hidden'}>
+            <Library vault={vault} />
+          </div>
+          
+          <div className={location.pathname === '/horizon' ? 'block h-full' : 'hidden'}>
+            <Canopy vault={vault} />
+          </div>
+          
+          <div className={location.pathname === '/embers' ? 'block h-full' : 'hidden'}>
+            <EmbersChat vault={vault} />
+          </div>
+
+          {!isMainTab && (
+            <Routes>
+              <Route path="/" element={<GroveTiers onSync={handleSync} />} />
+              <Route path="/culture" element={<CulturalFit vault={vault} />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} />} />
+            </Routes>
+          )}
         </div>
 
-        {/* SUB-PAGES: Traditional routing for one-off pages */}
-        {!isMainTab && (
-          <Routes>
-            <Route path="/" element={<GroveTiers onSync={handleSync} />} />
-            <Route path="/culture" element={<CulturalFit vault={vault} />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} />} />
-          </Routes>
-        )}
+        {/* BOTTOM NAV SPACER (Mobile only) */}
+        {location.pathname !== '/' && <div className="h-20 shrink-0 md:hidden" />}
       </main>
 
-      {location.pathname !== '/' && <BottomNav />}
+      {/* MOBILE BOTTOM NAV: Hidden on md screens and up */}
+      {location.pathname !== '/' && (
+        <nav className="fixed bottom-0 left-0 right-0 z-[100] pb-[env(safe-area-inset-bottom)] bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 md:hidden">
+          <div className="max-w-md mx-auto h-16">
+            <NavLinks />
+          </div>
+        </nav>
+      )}
     </div>
   );
 }
