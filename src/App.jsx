@@ -27,6 +27,7 @@ export function useHearth() {
 function HearthProvider({ children }) {
   const queryClient = useQueryClient();
 
+  // 1. Fetch User and Auth Data
   const { data: user, isLoading: authLoading } = useQuery({
     queryKey: ['me'],
     queryFn: () => base44.auth.me(),
@@ -35,45 +36,57 @@ function HearthProvider({ children }) {
 
   const isAdmin = user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
-  const [sanctuaryState, setSanctuaryState] = useState(() => {
-    const saved = localStorage.getItem('vault_reset_final');
-    const initialState = {
-      name: "Traveler",
-      tier: "Seedling",
-      journey: "Professional Transition",
-      isAligned: false,
-      pulses: [],
-      resume: null,
-      blueprints: [], 
-    };
-
-    if (!saved) return initialState;
-    try {
-      const parsed = JSON.parse(saved);
-      return { ...initialState, ...parsed };
-    } catch (e) {
-      return initialState;
-    }
+  // 2. Sanctuary State (The Vault)
+  const [sanctuaryState, setSanctuaryState] = useState({
+    name: "Traveler",
+    tier: "Seedling",
+    journey: "Professional Transition",
+    isAligned: false,
+    pulses: [],
+    resume: null,
+    blueprints: [], 
   });
 
-  const [activeLibraryTool, setActiveLibraryTool] = useState(null);
-
+  // 3. Effect to Hydrate state from Cloud (User Metadata)
   useEffect(() => {
-    localStorage.setItem('vault_reset_final', JSON.stringify(sanctuaryState));
-  }, [sanctuaryState]);
+    if (user && user.metadata?.vault) {
+      setSanctuaryState(user.metadata.vault);
+    }
+  }, [user]);
 
-  const forceSync = (updates) => setSanctuaryState(prev => ({ ...prev, ...updates }));
+  // 4. CLOUD SYNC LOGIC
+  // This replaces LocalStorage with the Base44 Database
+  const forceSync = async (updates) => {
+    const newState = { ...sanctuaryState, ...updates };
+    setSanctuaryState(newState);
+
+    if (user?.id) {
+      try {
+        // We save the entire vault into the user's metadata field in the cloud
+        await base44.user.update(user.id, {
+          metadata: {
+            ...user.metadata,
+            vault: newState
+          }
+        });
+        console.log("Hearth synced to cloud.");
+      } catch (err) {
+        console.error("Cloud sync failed, falling back to local memory", err);
+      }
+    }
+  };
 
   const handleResumeSync = (file) => {
-    setSanctuaryState(prev => ({
-      ...prev,
+    forceSync({
       isAligned: true,
       resume: {
         name: file?.name || "Uploaded Document",
         lastSynced: new Date().toISOString()
       }
-    }));
+    });
   };
+
+  const [activeLibraryTool, setActiveLibraryTool] = useState(null);
 
   const value = {
     user,
@@ -113,11 +126,11 @@ function ProtectedRoute({ children }) {
     const checkVipStatus = async () => {
       if (!user || user.subscription_tier === 'Hearthkeeper' || user.subscription_tier === 'Steward') return;
       try {
-        const vouchers = await window.base44.entities.VoucherPool.list();
+        const vouchers = await base44.entities.VoucherPool.list();
         const myVipTicket = vouchers.find(v => v.claimed_by?.toLowerCase() === user.email?.toLowerCase() && v.status === 'available');
         if (myVipTicket) {
-          await window.base44.entities.User.update(user.id, { subscription_tier: 'Hearthkeeper' });
-          await window.base44.entities.VoucherPool.update(myVipTicket.id, { 
+          await base44.user.update(user.id, { subscription_tier: 'Hearthkeeper' });
+          await base44.entities.VoucherPool.update(myVipTicket.id, { 
             status: 'claimed',
             claimed_date: new Date().toISOString()
           });
@@ -142,18 +155,15 @@ function AppRoutes() {
   return (
     <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
       <Routes>
-        {/* --- ADMIN --- */}
         <Route path="/admin" element={
           <AdminRoute>
             <AdminDashboard vault={vault} onSync={onSync} />
           </AdminRoute>
         } />
         
-        {/* --- PUBLIC ACCESS --- */}
         <Route path="/" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         <Route path="/grove" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         
-        {/* Public Access to Horizon so Seedlings can see the board */}
         <Route path="/horizon" element={
           <AppLayout currentTier={effectiveTier}>
             <Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} userTier={effectiveTier} />
@@ -166,11 +176,9 @@ function AppRoutes() {
           </AppLayout>
         } />
         
-        {/* Legacy Redirects */}
         <Route path="/launch" element={<Navigate to="/horizon" replace />} />
         <Route path="/canopy" element={<Navigate to="/horizon" replace />} />
 
-        {/* --- PROTECTED ACCESS --- */}
         <Route path="/hearth" element={
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
