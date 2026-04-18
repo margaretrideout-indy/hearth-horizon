@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Flame, BookOpen, Globe, Activity, Compass, LayoutDashboard, LogOut } from 'lucide-react';
+import { base44 } from '@/api/base44Client'; // Ensure this import exists
 
 import GroveTiers from './pages/GroveTiers';
 import YourHearth from './pages/YourHearth';
@@ -14,26 +15,46 @@ import EmbersChat from './pages/EmbersChat';
 export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [vault, setVault] = useState(() => {
     const saved = localStorage.getItem('hearth_vault_data');
     if (saved) {
       try { return JSON.parse(saved); } catch (e) { return null; }
     }
-    return { pulses: [], archetype: null, alignmentScore: 0, resume: null, standing: "Traveler", lastSync: null };
+    return { pulses: [], archetype: null, alignmentScore: 0, resume: null, standing: "Traveler", tier: "Seedling", lastSync: null };
   });
+
+  // Check for Admin status on load
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const user = await base44.auth.me();
+        // If the user exists and has a session, check if they are the admin/steward
+        if (user) {
+          const isSystemAdmin = user.role === 'admin' || user.email === 'margaretpardy@gmail.com'; // Add your email here as a fallback
+          setIsAdmin(isSystemAdmin);
+          
+          // Update vault with the latest tier from the DB
+          if (user.tier) {
+            setVault(prev => ({ ...prev, tier: user.tier }));
+          }
+        }
+      } catch (e) {
+        console.log("Not logged in or guest session");
+      }
+    };
+    checkAuth();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('hearth_vault_data', JSON.stringify(vault));
   }, [vault]);
 
   const handleAccountDeletion = () => {
-    setVault({ pulses: [], archetype: null, alignmentScore: 0, resume: null, standing: "Traveler", lastSync: null });
+    setVault({ pulses: [], archetype: null, alignmentScore: 0, resume: null, standing: "Traveler", tier: "Seedling", lastSync: null });
     localStorage.clear();
     sessionStorage.clear();
-    document.cookie.split(";").forEach((c) => {
-      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-    });
     navigate('/');
   };
 
@@ -45,8 +66,6 @@ export default function App() {
   const mainTabs = ['/hearth', '/library', '/horizon', '/embers'];
   const isMainTab = mainTabs.includes(location.pathname);
 
-  // --- RESPONSIVE NAVIGATION ENGINE ---
-  
   const NavLinks = ({ isDesktop = false }) => {
     const allLinks = [
       { label: 'Hearth', path: '/hearth', icon: Flame },
@@ -80,9 +99,18 @@ export default function App() {
           })}
         </div>
 
-        {/* LOGOUT / EXIT BUTTON */}
         <div className={isDesktop ? 'mt-auto pt-4 border-t border-white/5' : 'hidden'}>
-           <button 
+            {/* Admin Dashboard link visible only to you */}
+            {isAdmin && (
+              <button 
+                onClick={() => navigate('/admin')}
+                className="flex items-center gap-4 px-6 py-4 rounded-xl mx-2 w-[calc(100%-16px)] text-purple-400 hover:bg-purple-400/5 transition-all mb-2"
+              >
+                <LayoutDashboard size={20} />
+                <span className="text-sm tracking-wide font-medium">Registry Admin</span>
+              </button>
+            )}
+            <button 
               onClick={() => navigate('/')}
               className="flex items-center gap-4 px-6 py-4 rounded-xl mx-2 w-[calc(100%-16px)] text-zinc-500 hover:text-red-400 hover:bg-red-400/5 transition-all"
             >
@@ -97,7 +125,6 @@ export default function App() {
   return (
     <div className="h-screen w-full bg-[#0A080D] flex overflow-hidden">
       
-      {/* PC SIDEBAR */}
       {location.pathname !== '/' && (
         <aside className="hidden md:flex flex-col w-64 border-r border-white/5 bg-[#08070B] pt-8">
           <div className="px-8 mb-10 flex items-center justify-between">
@@ -109,7 +136,6 @@ export default function App() {
         </aside>
       )}
 
-      {/* MAIN CONTENT AREA */}
       <main className="flex-1 h-full relative overflow-y-auto custom-scrollbar flex flex-col">
         <div className="flex-1 w-full relative">
           
@@ -131,10 +157,11 @@ export default function App() {
 
           {!isMainTab && (
             <Routes>
-              <Route path="/" element={<GroveTiers onSync={handleSync} />} />
+              <Route path="/" element={<GroveTiers vault={vault} onSync={handleSync} />} />
               <Route path="/culture" element={<CulturalFit vault={vault} />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} />} />
+              {/* Added isAdmin prop here */}
+              <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             </Routes>
           )}
         </div>
@@ -142,10 +169,8 @@ export default function App() {
         {location.pathname !== '/' && <div className="h-24 shrink-0 md:hidden" />}
       </main>
 
-      {/* MOBILE BOTTOM NAV */}
       {location.pathname !== '/' && (
         <nav className="fixed bottom-0 left-0 right-0 z-[100] pb-[env(safe-area-inset-bottom)] bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 md:hidden">
-          {/* Subtle "Return" button for mobile UX if needed, or just let them use the 5 tabs */}
           <div className="w-full h-20">
             <NavLinks />
           </div>
