@@ -7,6 +7,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 // --- DATA: THE FULL 50 VERB LEXICON ---
+// (Kept your powerVerbs array as is)
 const powerVerbs = [
     { legacy: "Taught", horizon: "Facilitated", use: "Standardizing delivery for stakeholders." },
     { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
@@ -61,9 +62,9 @@ const powerVerbs = [
 ];
 
 const generateDynamicScripts = (vault) => {
-    const targetRole = vault?.selectedPath?.domain || "[Target Role]";
-    const salaryRange = vault?.selectedPath?.salary || "$[X] to $[Y]";
-    const topSkill = vault?.skills?.find(s => s.status === 'aligned')?.skill || "[Your Top Skill]";
+    const targetRole = vault?.selectedPath?.domain || "Target Role";
+    const salaryRange = vault?.selectedPath?.salary || "market competitive";
+    const topSkill = vault?.skills?.find(s => s.status === 'aligned')?.skill || "my core expertise";
 
     return {
         outreach: [
@@ -85,7 +86,6 @@ const Contact = ({ vault, isAdmin }) => {
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
 
-  // --- TIER GATING LOGIC ---
   const tiers = { 'traveler': 0, 'seedling': 1, 'hearthkeeper': 2, 'steward': 3 };
   const userRank = isAdmin ? 3 : (tiers[vault?.tier?.toLowerCase()] || 0);
 
@@ -106,10 +106,10 @@ const Contact = ({ vault, isAdmin }) => {
   ];
 
   return (
-    <div className="animate-in fade-in duration-500 pb-20 px-4 md:px-0">
+    <div className="animate-in fade-in duration-500 pb-20 px-4 md:px-0 max-w-4xl mx-auto">
       
       {/* --- VOLUME HEADER --- */}
-      <div className="mb-12 border-b border-white/5 pb-12">
+      <header className="mb-12 border-b border-white/5 pb-12">
         <div className="flex items-center gap-4 mb-4">
           <div className="h-[1px] w-12 bg-teal-500/50" />
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-500/70">
@@ -123,24 +123,25 @@ const Contact = ({ vault, isAdmin }) => {
           Strategic assets for the transition. From shifting your lexicon to 
           securing your market value—these are the tools for planting new roots.
         </p>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-6">
         {trailKitResources.map((tool) => {
           const isLocked = userRank < tool.requiredTier;
           const isOpen = expandedCard === tool.id && !isLocked;
 
           return (
-            <div key={tool.id} className="flex flex-col group">
-              <div 
+            <div key={tool.id} className="flex flex-col group scroll-mt-24">
+              <button 
                 onClick={() => !isLocked && setExpandedCard(isOpen ? null : tool.id)}
-                className={`relative bg-[#16121D] border transition-all duration-300 ${
-                  isLocked ? 'opacity-40 cursor-not-allowed border-zinc-800' : 'cursor-pointer hover:border-teal-500/30 shadow-lg'
-                } ${isOpen ? 'rounded-t-[2.5rem] border-teal-500/30' : 'rounded-[2.5rem] border-zinc-800'}`}
+                disabled={isLocked}
+                className={`relative w-full text-left bg-[#16121D] border transition-all duration-300 ${
+                  isLocked ? 'opacity-30 cursor-not-allowed border-zinc-800' : 'cursor-pointer hover:border-teal-500/30'
+                } ${isOpen ? 'rounded-t-[2.5rem] border-teal-500/30 shadow-[0_0_30px_rgba(20,184,166,0.05)]' : 'rounded-[2.5rem] border-zinc-800'}`}
               >
                 <div className="p-6 md:p-8 flex items-center justify-between gap-6">
                   <div className="flex items-center gap-6">
-                    <div className="p-4 rounded-2xl bg-white/5 border border-white/5 group-hover:bg-teal-500/10 transition-colors">
+                    <div className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-2xl bg-white/5 border border-white/5 group-hover:bg-teal-500/10 transition-colors shrink-0">
                         {isLocked ? <Lock size={20} className="text-zinc-600" /> : tool.icon}
                     </div>
                     <div>
@@ -154,12 +155,12 @@ const Contact = ({ vault, isAdmin }) => {
                     </div>
                   </div>
                   {!isLocked && (
-                    <div className="text-zinc-600 group-hover:text-white transition-colors">
-                      {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                    <div className="text-zinc-600 group-hover:text-white transition-colors p-2">
+                      {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                     </div>
                   )}
                 </div>
-              </div>
+              </button>
 
               <AnimatePresence>
                 {isOpen && (
@@ -169,23 +170,23 @@ const Contact = ({ vault, isAdmin }) => {
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden bg-[#110E16] border-x border-b border-teal-500/30 rounded-b-[2.5rem]"
                   >
-                    <div className="p-6 md:p-8 pt-0 space-y-6">
+                    <div className="p-6 md:p-10 pt-0 space-y-8">
                       
                       {/* 1. POWER VERBS */}
                       {tool.id === 'verbs' && (
                         <div className="space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {(showAllVerbs ? powerVerbs : powerVerbs.slice(0, 9)).map((v, i) => (
-                                    <div key={i} className="bg-black/40 border border-white/5 p-4 rounded-2xl">
+                                    <div key={i} className="bg-black/40 border border-white/5 p-5 rounded-2xl hover:border-teal-500/20 transition-all">
                                         <div className="text-[9px] text-zinc-600 line-through uppercase tracking-tighter mb-1">{v.legacy}</div>
-                                        <div className="text-lg font-serif italic text-teal-400">{v.horizon}</div>
-                                        <div className="text-[10px] text-zinc-500 mt-2 italic opacity-70">"{v.use}"</div>
+                                        <div className="text-xl font-serif italic text-teal-400">{v.horizon}</div>
+                                        <div className="text-[10px] text-zinc-500 mt-3 italic opacity-80 leading-snug">"{v.use}"</div>
                                     </div>
                                 ))}
                             </div>
                             <button 
                                 onClick={(e) => { e.stopPropagation(); setShowAllVerbs(!showAllVerbs); }} 
-                                className="w-full py-4 border border-dashed border-zinc-800 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 hover:border-teal-500/30 transition-all"
+                                className="w-full h-14 border border-dashed border-zinc-800 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 hover:border-teal-500/30 transition-all active:scale-[0.98]"
                             >
                                 {showAllVerbs ? "Collapse List" : "View Full Lexicon (50 Verbs)"}
                             </button>
@@ -194,55 +195,71 @@ const Contact = ({ vault, isAdmin }) => {
 
                       {/* 2. IDENTITY LEDGER */}
                       {tool.id === 'ledger' && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4">
-                            <div className="bg-teal-500/5 border border-teal-500/10 p-6 rounded-[2rem] flex flex-col justify-between">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <a 
+                              href="https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=sharing"
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="group/btn bg-teal-500/5 border border-teal-500/10 p-6 rounded-[2rem] flex flex-col justify-between hover:border-teal-500/40 transition-all"
+                            >
                                 <div>
                                     <h4 className="text-white font-serif italic text-lg mb-1">The Identity Ledger</h4>
-                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-6">Master Class Slide Deck</p>
+                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-8">Master Class Slide Deck</p>
                                 </div>
-                                <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=sharing")} className="w-full h-12 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                <div className="w-full h-12 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center justify-center gap-2 group-active/btn:scale-95 transition-transform">
                                     <Presentation size={14} /> Open Presentation
-                                </button>
-                            </div>
-                            <div className="bg-white/5 border border-white/5 p-6 rounded-[2rem] flex flex-col justify-between">
-                                <div>
-                                    <h4 className="text-white font-serif italic text-lg mb-1">The Implementation Ledger</h4>
-                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-6">Personal Workbook (PDF)</p>
                                 </div>
-                                <button onClick={() => window.open("https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=sharing")} className="w-full h-12 border border-zinc-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 active:scale-95 transition-all flex items-center justify-center gap-2">
+                            </a>
+                            <a 
+                              href="https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=sharing"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="group/btn bg-white/5 border border-white/5 p-6 rounded-[2rem] flex flex-col justify-between hover:border-white/20 transition-all"
+                            >
+                                <div>
+                                    <h4 className="text-white font-serif italic text-lg mb-1">Implementation Guide</h4>
+                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-8">Personal Workbook (PDF)</p>
+                                </div>
+                                <div className="w-full h-12 border border-zinc-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center justify-center gap-2 group-active/btn:scale-95 transition-transform">
                                     <ClipboardList size={14} /> Download Ledger
-                                </button>
-                            </div>
+                                </div>
+                            </a>
                         </div>
                       )}
 
                       {/* 3. RESUME BLUEPRINT */}
                       {tool.id === 'resume' && (
-                        <div className="bg-purple-500/5 border border-purple-500/20 p-8 rounded-[2rem] text-center mb-4">
-                            <p className="text-sm text-zinc-400 italic mb-6">ATS-optimized template designed specifically for career pivots.</p>
-                            <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing")} className="px-10 h-14 bg-purple-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-400 active:scale-95 transition-all inline-flex items-center gap-2">
+                        <div className="bg-purple-500/5 border border-purple-500/20 p-8 md:p-12 rounded-[2.5rem] text-center">
+                            <p className="text-sm text-zinc-400 italic mb-8 max-w-sm mx-auto">A specialized ATS-optimized blueprint designed for complex career pivots.</p>
+                            <a 
+                              href="https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-3 px-10 h-14 bg-purple-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-400 active:scale-95 transition-all"
+                            >
                                 <ExternalLink size={14} /> Get Blueprint (Google Doc)
-                            </button>
+                            </a>
                         </div>
                       )}
 
                       {/* 4. SCRIPTS (OUTREACH & SALARY) */}
                       {(tool.id === 'outreach' || tool.id === 'scripts') && (
-                        <div className="space-y-4 pb-4">
+                        <div className="space-y-4">
                           {(tool.id === 'outreach' ? dynamicContent.outreach : dynamicContent.salary).map((item, i) => {
                             const uniqueKey = `${tool.id}-${i}`;
                             return (
-                                <div key={i} className="bg-black/40 border border-white/5 p-6 rounded-2xl group/script relative">
-                                    <div className="flex justify-between items-start mb-3">
+                                <div key={i} className="bg-black/40 border border-white/5 p-6 rounded-[2rem] group/script relative">
+                                    <div className="flex justify-between items-start mb-4">
                                         <h4 className="text-[10px] font-black uppercase text-teal-500 tracking-widest">{item.title || item.label}</h4>
                                         <button 
                                             onClick={() => handleCopy(item.script, uniqueKey)}
-                                            className="p-2 bg-white/5 rounded-lg text-zinc-500 hover:text-white transition-colors"
+                                            className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl text-zinc-500 hover:text-white transition-all active:scale-90"
+                                            title="Copy to clipboard"
                                         >
-                                            {copiedIndex === uniqueKey ? <Check size={14} className="text-teal-500" /> : <Copy size={14} />}
+                                            {copiedIndex === uniqueKey ? <Check size={16} className="text-teal-500" /> : <Copy size={16} />}
                                         </button>
                                     </div>
-                                    <div className="font-mono text-[11px] text-zinc-300 italic select-all leading-relaxed whitespace-pre-wrap">
+                                    <div className="font-mono text-[12px] text-zinc-300 italic select-all leading-relaxed whitespace-pre-wrap pl-2 border-l border-teal-500/20">
                                         "{item.script}"
                                     </div>
                                 </div>
