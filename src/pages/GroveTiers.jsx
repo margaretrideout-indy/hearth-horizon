@@ -44,7 +44,6 @@ const GroveTiers = ({ vault, onSync }) => {
 
   const handleRequestSeat = async () => {
     if (!hasSession) {
-      // Redirect to login but store the intent
       base44.auth.redirectToLogin('/grove');
       return;
     }
@@ -77,7 +76,6 @@ const GroveTiers = ({ vault, onSync }) => {
       });
       setContactStatus('success');
     } catch (error) {
-      // Fallback for safety
       window.location.href = `mailto:margaretpardy@gmail.com?subject=Hearth Inquiry&body=${formData.message}`;
       setContactStatus('success');
     }
@@ -130,26 +128,33 @@ const GroveTiers = ({ vault, onSync }) => {
 
   return (
     <div className="relative min-h-screen bg-[#0A080D] text-slate-300 font-sans selection:bg-teal-500/30 overflow-x-hidden pb-20">
-      {/* Ambient background */}
       <div className="absolute top-0 left-0 w-full h-[100vh] bg-[radial-gradient(circle_at_50%_0%,rgba(20,184,166,0.1),rgba(147,51,234,0.03)_40%,transparent_80%)] pointer-events-none" />
 
-      {/* NAVIGATION BAR - Polished for Mobile */}
+      {/* NAVIGATION BAR */}
       <nav className="fixed top-0 left-0 w-full z-[100] bg-[#0A080D]/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4 md:gap-6">
+          
+          {/* Left Group */}
+          <div className="flex items-center gap-6">
             <button onClick={() => navigate('/library')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all">
-              <LibraryIcon size={14} />
-              <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest hidden xs:block">Library</span>
+              <LibraryIcon size={16} />
+              <span className="text-[9px] font-black uppercase tracking-widest hidden sm:block">Library</span>
             </button>
             <button onClick={() => navigate('/horizon')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all">
-              <Compass size={14} />
-              <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest hidden xs:block">Horizon</span>
+              <Compass size={16} />
+              <span className="text-[9px] font-black uppercase tracking-widest hidden sm:block">Horizon</span>
             </button>
           </div>
           
-          <button onClick={handleMemberLogin} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all">
-            <span className="text-[9px] font-black uppercase tracking-widest px-4 py-1.5 border border-zinc-800 rounded-full hover:border-teal-500/50">Log In</span>
-          </button>
+          {/* Right Group (The Login Button) */}
+          <div className="flex items-center">
+            <button 
+              onClick={handleMemberLogin} 
+              className="flex items-center gap-2 text-white hover:text-teal-400 transition-all bg-white/5 px-4 py-2 rounded-full border border-white/10 hover:border-teal-500/50 shadow-sm"
+            >
+              <span className="text-[9px] font-black uppercase tracking-widest">Log In</span>
+            </button>
+          </div>
         </div>
       </nav>
 
