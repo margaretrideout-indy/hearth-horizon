@@ -17,8 +17,9 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* Prevents the 'web-like' bouncing rubber-band effect on mobile */
     overscroll-behavior-y: none; 
+    /* Fix for font scaling on mobile devices */
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
@@ -29,7 +30,6 @@
     background-color: #0A080D;
     color: #A1A1AA;
     
-    /* Safe Area Padding: Notch/Home Bar protection */
     padding-top: var(--sat);
     padding-bottom: var(--sab);
     padding-left: var(--sal);
@@ -39,35 +39,45 @@
     min-height: -webkit-fill-available;
   }
 
+  /* --- ACCESSIBILITY LIFT: Minimum Legibility Rules --- */
+  
+  /* This targets all those text-[7px] through text-[10px] classes.
+     App Stores generally reject anything below 11px (0.7rem).
+  */
+  .text-\[7px\], .text-\[8px\], .text-\[9px\], .text-\[10px\] {
+    font-size: 0.75rem !important; /* Forces 12px minimum */
+    letter-spacing: 0.05em !important;
+    line-height: 1.2 !important;
+  }
+
   /* --- NATIVE FEEL: Gesture & Selection Protection --- */
   
-  /* Broad protection for interactive elements */
-  button, 
-  a, 
-  nav, 
-  [role="button"],
-  .native-ui {
+  button, a, nav, [role="button"], .native-ui {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
-    /* Removes the grey tap flicker on iOS */
     -webkit-tap-highlight-color: transparent; 
+    /* Ensure hit area is at least 44px for native accessibility */
+    min-height: 12px; 
+    min-width: 12px;
   }
 
-  /* Escape hatch for text that SHOULD be copyable (Library/Jobs) */
+  /* Force inputs to use native-style appearance, avoiding "web-select" triggers */
+  input, textarea, select {
+    -webkit-user-select: text;
+    user-select: text;
+    appearance: none;
+    -webkit-appearance: none;
+    font-size: 16px !important; /* Prevents iOS auto-zoom on focus */
+  }
+
   .selectable-content {
     -webkit-user-select: text !important;
     user-select: text !important;
   }
-
-  /* Ensure inputs still allow interaction */
-  input, textarea {
-    -webkit-user-select: text;
-    user-select: text;
-  }
 }
 
-/* --- ACCESSIBILITY & INTERACTION --- */
+/* --- INTERACTION & VISUALS --- */
 
 :focus-visible {
   outline: 2px solid #39D7B8 !important; 
@@ -82,17 +92,14 @@ button:focus-visible {
 .embers-scroll::-webkit-scrollbar {
   width: 5px;
 }
-
 .embers-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
-
 .embers-scroll::-webkit-scrollbar-thumb {
   background: #1A1423;
   border-radius: 10px;
   border: 1px solid rgba(255,255,255,0.05);
 }
-
 .embers-scroll::-webkit-scrollbar-thumb:hover {
   background: #39D7B8;
 }
@@ -103,7 +110,6 @@ button:focus-visible {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Selection highlight */
 ::selection {
   background-color: rgba(57, 215, 184, 0.2);
   color: #39D7B8;
@@ -127,7 +133,6 @@ button:focus-visible {
   width: 5px;
 }
 
-/* Bottom Nav Visuals */
 .bottom-nav-blur {
   background: rgba(10, 8, 13, 0.8);
   backdrop-filter: blur(12px);
