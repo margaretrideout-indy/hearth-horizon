@@ -34,7 +34,7 @@ function HearthProvider({ children }) {
     retry: false,
   });
 
-  // Master Key Check: Ensures Margaret always has Steward access
+  // 2. STABILITY LOGIC: Calculate Admin status and Tier immediately
   const isAdmin = useMemo(() => {
     return user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
   }, [user]);
@@ -47,47 +47,44 @@ function HearthProvider({ children }) {
     pulses: [],
     resume: null,
     blueprints: [], 
-    email: "" // Store email in vault for easier chat handling
+    email: ""
   };
 
   const [sanctuaryState, setSanctuaryState] = useState(initialState);
 
-  // Sync state when user data arrives from the Cloud
+  // Sync state when user data arrives
   useEffect(() => {
     if (user) {
       const cloudVault = user.metadata?.vault || {};
       setSanctuaryState(prev => ({
         ...prev,
         ...cloudVault,
-        email: user.email // Ensure email is always current
+        email: user.email
       }));
     }
   }, [user]);
 
-  // 2. REFRESH LOGIC (Mirroring the snap pull-to-refresh)
+  const effectiveTier = useMemo(() => {
+    if (isAdmin) return 'Steward';
+    return sanctuaryState.tier || 'Seedling';
+  }, [isAdmin, sanctuaryState.tier]);
+
   const handleManualRefresh = async () => {
     await queryClient.invalidateQueries(['me']);
     await refetchUser();
   };
 
-  // 3. CLOUD SYNC
   const forceSync = async (updates) => {
     const isDeletion = updates === null;
     const newState = isDeletion ? initialState : { ...sanctuaryState, ...updates };
-    
     setSanctuaryState(newState);
 
     if (user?.id) {
       try {
         await base44.user.update(user.id, {
-          metadata: {
-            ...user.metadata,
-            vault: newState
-          }
+          metadata: { ...user.metadata, vault: newState }
         });
-      } catch (err) {
-        console.error("Cloud sync failed", err);
-      }
+      } catch (err) { console.error("Cloud sync failed", err); }
     }
   };
 
@@ -102,12 +99,6 @@ function HearthProvider({ children }) {
   };
 
   const [activeLibraryTool, setActiveLibraryTool] = useState(null);
-
-  // The final source of truth for permissions
-  const effectiveTier = useMemo(() => {
-    if (isAdmin) return 'Steward';
-    return sanctuaryState.tier || 'Seedling';
-  }, [isAdmin, sanctuaryState.tier]);
 
   const value = {
     user,
@@ -129,11 +120,12 @@ function LoadingScreen() {
   return (
     <div className="min-h-screen bg-[#0A080D] flex flex-col items-center justify-center gap-4">
       <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
-      <p className="text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-black">Waking the Forest...</p>
+      <p className="text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-black italic">Waking the Forest...</p>
     </div>
   );
 }
 
+// ROUTE PROTECTION: Margaret bypasses all locks
 function AdminRoute({ children }) {
   const { user, isAdmin, authLoading } = useHearth();
   if (authLoading) return <LoadingScreen />;
@@ -143,9 +135,8 @@ function AdminRoute({ children }) {
 
 function ProtectedRoute({ children }) {
   const { user, authLoading, isAdmin } = useHearth();
-  
   if (authLoading) return <LoadingScreen />;
-  // Admins bypass the redirection to the landing page
+  // If Margaret is logged in, she bypasses the landing page redirect
   if (!user && !isAdmin) return <Navigate to="/grove" replace />;
   return children;
 }
@@ -157,15 +148,18 @@ function AppRoutes() {
   return (
     <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
       <Routes>
+        {/* --- ADMIN DASHBOARD --- */}
         <Route path="/admin" element={
           <AdminRoute>
             <AdminDashboard vault={vault} onSync={onSync} isAdmin={isAdmin} />
           </AdminRoute>
         } />
         
+        {/* --- LANDING / GROVE --- */}
         <Route path="/" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         <Route path="/grove" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         
+        {/* --- CORE FEATURES --- */}
         <Route path="/horizon" element={
           <AppLayout currentTier={effectiveTier}>
             <Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} userTier={effectiveTier} />
@@ -198,7 +192,7 @@ function AppRoutes() {
         <Route path="/alignment" element={
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
-              <CulturalFit vault={vault} onSync={onSync} isAdmin={isAdmin} />
+              <CulturalFit vault={vault} onSync={onSync} isAdmin={isAdmin} userTier={effectiveTier} />
             </AppLayout>
           </ProtectedRoute>
         } />
