@@ -17,8 +17,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Prevents the entire page from bouncing like a website */
     overscroll-behavior-y: none; 
-    /* Fix for font scaling on mobile devices */
     -webkit-text-size-adjust: 100%;
   }
 
@@ -37,15 +37,15 @@
     
     min-height: 100vh;
     min-height: -webkit-fill-available;
+    /* Extra insurance against horizontal shift */
+    overflow-x: hidden;
   }
 
   /* --- ACCESSIBILITY LIFT: Minimum Legibility Rules --- */
   
-  /* This targets all those text-[7px] through text-[10px] classes.
-     App Stores generally reject anything below 11px (0.7rem).
-  */
-  .text-\[7px\], .text-\[8px\], .text-\[9px\], .text-\[10px\] {
-    font-size: 0.75rem !important; /* Forces 12px minimum */
+  /* Forces all ultra-small utility classes to App Store minimums (~12px) */
+  .text-\[7px\], .text-\[8px\], .text-\[9px\], .text-\[10px\], .text-tiny {
+    font-size: 0.75rem !important; 
     letter-spacing: 0.05em !important;
     line-height: 1.2 !important;
   }
@@ -57,23 +57,44 @@
     -webkit-user-select: none;
     user-select: none;
     -webkit-tap-highlight-color: transparent; 
-    /* Ensure hit area is at least 44px for native accessibility */
-    min-height: 12px; 
-    min-width: 12px;
+    
+    /* MANDATORY: Apple/Google 44pt Tap Target Rule */
+    min-height: 44px; 
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  /* Force inputs to use native-style appearance, avoiding "web-select" triggers */
+  /* Force inputs to behave like native fields */
   input, textarea, select {
     -webkit-user-select: text;
     user-select: text;
     appearance: none;
     -webkit-appearance: none;
-    font-size: 16px !important; /* Prevents iOS auto-zoom on focus */
+    /* 16px font prevents iOS from zooming in on the input box automatically */
+    font-size: 16px !important; 
   }
 
   .selectable-content {
     -webkit-user-select: text !important;
     user-select: text !important;
+  }
+}
+
+@layer components {
+  /* Use this on small icons to give them a large invisible hit area */
+  .tap-target-fix {
+    position: relative;
+  }
+  .tap-target-fix::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 48px;
+    height: 48px;
+    transform: translate(-50%, -50%);
   }
 }
 
@@ -84,35 +105,24 @@
   outline-offset: 4px;
 }
 
-button:focus-visible {
-  box-shadow: 0 0 0 2px #0A080D, 0 0 0 4px #39D7B8;
+/* Custom Embers Scrollbar */
+.embers-scroll {
+  /* Internal container scroll only */
+  overscroll-behavior-y: contain; 
 }
 
-/* Custom Embers Scrollbar */
 .embers-scroll::-webkit-scrollbar {
   width: 5px;
-}
-.embers-scroll::-webkit-scrollbar-track {
-  background: transparent;
 }
 .embers-scroll::-webkit-scrollbar-thumb {
   background: #1A1423;
   border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.05);
-}
-.embers-scroll::-webkit-scrollbar-thumb:hover {
-  background: #39D7B8;
 }
 
 /* Global Transition Defaults */
 .transition-all {
   transition-duration: 250ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-::selection {
-  background-color: rgba(57, 215, 184, 0.2);
-  color: #39D7B8;
 }
 
 /* --- GLOBAL SCROLLBAR MANAGEMENT --- */
@@ -130,11 +140,10 @@ button:focus-visible {
 }
 .embers-scroll::-webkit-scrollbar {
   display: block;
-  width: 5px;
 }
 
 .bottom-nav-blur {
-  background: rgba(10, 8, 13, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(10, 8, 13, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
