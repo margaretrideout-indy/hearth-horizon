@@ -41,7 +41,6 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
 
   // --- TIER GATING REFINED ---
   const tiers = { 'traveler': 0, 'seedling': 1, 'hearthkeeper': 2, 'steward': 3 };
-  // Check both isAdmin prop and the vault tier for Steward status
   const userRank = (isAdmin || vault?.tier?.toLowerCase() === 'steward') ? 3 : (tiers[vault?.tier?.toLowerCase()] || 0);
 
   const universalPlaceholders = [
@@ -98,9 +97,9 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
   ];
 
   const trajectories = [
-    { domain: "Operations & Systems", salary: "$85k - $120k", fit: 94, velocity: "High", desc: "Optimizing workflows and scaling efficiency." },
-    { domain: "Project & Delivery", salary: "$90k - $130k", fit: 91, velocity: "Stable", desc: "Lifecycle management and complex deadlines." },
-    { domain: "Strategy & Implementation", salary: "$95k - $145k", fit: 88, velocity: "Emerging", desc: "Translating visions into actionable roadmaps." }
+    { domain: "Operations & Systems", salary: "$85k - $120k", fit: 94, velocity: "High", desc: "Optimizing workflows and scaling efficiency.", key: 'ops' },
+    { domain: "Project & Delivery", salary: "$90k - $130k", fit: 91, velocity: "Stable", desc: "Lifecycle management and complex deadlines.", key: 'pm' },
+    { domain: "Strategy & Implementation", salary: "$95k - $145k", fit: 88, velocity: "Emerging", desc: "Translating visions into actionable roadmaps.", key: 'data' }
   ];
 
   const handleCopy = (text) => {
@@ -118,7 +117,7 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
   };
 
   return (
-    <div className="relative min-h-screen selection:bg-teal-500/30 pb-20">
+    <div className="relative min-h-screen selection:bg-teal-500/30">
       
       <div className="w-full pt-12 pb-12 flex justify-center">
         <div className="bg-[#0D0B14]/80 backdrop-blur-3xl border border-white/10 rounded-full p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.4)] flex items-center gap-1 md:gap-2">
@@ -153,8 +152,7 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 md:px-6">
-        
-        <main className="relative z-10">
+        <main className="relative z-10 pb-20">
           {/* STEP 1: TRANSLATING */}
           {activeStep === 1 && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 animate-in slide-in-from-bottom-8 duration-700">
@@ -288,7 +286,7 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
 
           {/* STEP 4: HARVEST */}
           {activeStep === 4 && (
-            <div className="animate-in slide-in-from-right-8 duration-700 space-y-12">
+            <div className="animate-in slide-in-from-right-8 duration-700 space-y-12 pb-64">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
                 <div className="lg:col-span-4 space-y-8">
                     <div className="space-y-4 text-center lg:text-left">
@@ -331,28 +329,38 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
                     ))}
                 </div>
               </div>
-              <Card className="p-8 md:p-12 bg-[#0D0B14] border border-teal-500/20 rounded-[3rem] relative shadow-2xl mt-8">
-                  <div className="space-y-8 relative z-10 max-w-2xl mx-auto text-center">
-                      <h3 className="text-3xl font-serif italic text-white tracking-tight">Finalized Blueprint</h3>
-                      <div className="bg-black/40 p-6 md:p-8 rounded-3xl border border-white/5 text-slate-300 italic font-serif text-sm shadow-inner leading-relaxed">
-                        {bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Strategy & Implementation' ? 'data' : 'pm')]}
-                      </div>
-                      <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-                        <Button onClick={() => handleCopy(bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Strategy & Implementation' ? 'data' : 'pm')])} className="h-16 px-10 bg-white/[0.03] text-white font-black rounded-2xl uppercase tracking-widest border border-white/10 gap-3 transition-all hover:bg-white/[0.08]">
-                          {copied ? <Check size={18} /> : <Copy size={18} />} {copied ? "Copied" : "Copy Translation"}
-                        </Button>
-                        <Button 
-                          onClick={() => { 
-                            onSync({ isAligned: true }); 
-                            navigate('/horizon'); // DIRECT NAVIGATION TO PREVENT REDIRECT BOUNCE
-                          }} 
-                          className="h-16 px-10 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-2xl uppercase tracking-widest gap-3 shadow-lg shadow-teal-500/20"
-                        >
-                          Enter Launch Mode <Binoculars size={18} />
-                        </Button>
-                      </div>
-                  </div>
-              </Card>
+
+              {/* NATIVE STYLE BOTTOM SELECTION SHEET */}
+              <motion.div 
+                initial={{ y: "80%" }} 
+                animate={{ y: 0 }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="fixed bottom-0 left-0 right-0 z-[100] px-2 pb-[env(safe-area-inset-bottom)]"
+              >
+                <Card className="p-8 md:p-10 bg-[#0D0B14] border-t border-x border-teal-500/30 rounded-t-[3rem] shadow-[0_-20px_50px_rgba(0,0,0,0.8)] max-w-5xl mx-auto">
+                    <div className="w-12 h-1.5 bg-white/10 rounded-full mx-auto mb-8" />
+                    <div className="space-y-6 relative z-10 max-w-2xl mx-auto text-center">
+                        <h3 className="text-2xl font-serif italic text-white tracking-tight">Finalized Blueprint</h3>
+                        <div className="bg-black/60 p-6 rounded-2xl border border-white/5 text-slate-300 italic font-serif text-sm shadow-inner leading-relaxed">
+                          {bridgeData?.[selectedPath?.key]}
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                          <Button onClick={() => handleCopy(bridgeData?.[selectedPath?.key])} className="h-14 px-8 bg-white/[0.03] text-white font-black rounded-xl uppercase tracking-widest border border-white/10 gap-3 transition-all hover:bg-white/[0.08]">
+                            {copied ? <Check size={18} /> : <Copy size={18} />} {copied ? "Copied" : "Copy"}
+                          </Button>
+                          <Button 
+                            onClick={() => { 
+                              onSync({ isAligned: true }); 
+                              navigate('/horizon');
+                            }} 
+                            className="h-14 px-8 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-xl uppercase tracking-widest gap-3 shadow-lg shadow-teal-500/20"
+                          >
+                            Enter Horizon <Binoculars size={18} />
+                          </Button>
+                        </div>
+                    </div>
+                </Card>
+              </motion.div>
             </div>
           )}
         </main>
