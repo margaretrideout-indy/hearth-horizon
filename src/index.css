@@ -16,10 +16,11 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
-    /* Prevents the entire page from bouncing like a website */
-    overscroll-behavior-y: none; 
+    /* Lock the viewport to prevent the entire page from bouncing/scrolling */
+    overflow: hidden;
+    height: 100%;
     -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -30,20 +31,29 @@
     background-color: #0A080D;
     color: #A1A1AA;
     
-    padding-top: var(--sat);
-    padding-bottom: var(--sab);
-    padding-left: var(--sal);
-    padding-right: var(--sar);
+    /* NATIVE LOCK: Prevents the browser "elastic" bounce past content */
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
     
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    /* Extra insurance against horizontal shift */
-    overflow-x: hidden;
+    /* Safe Area Handling */
+    padding: var(--sat) var(--sar) var(--sab) var(--sal);
   }
 
-  /* --- ACCESSIBILITY LIFT: Minimum Legibility Rules --- */
+  /* The Scrolling Stage: This handles content flow while keeping UI fixed */
+  #root {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Ensures content clears the iOS Home Indicator */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* --- ACCESSIBILITY LIFT --- */
   
-  /* Forces all ultra-small utility classes to App Store minimums (~12px) */
+  /* Forces ultra-small labels to readable App Store minimums */
   .text-\[7px\], .text-\[8px\], .text-\[9px\], .text-\[10px\], .text-tiny {
     font-size: 0.75rem !important; 
     letter-spacing: 0.05em !important;
@@ -52,38 +62,43 @@
 
   /* --- NATIVE FEEL: Gesture & Selection Protection --- */
   
-  button, a, nav, [role="button"], .native-ui {
+  /* Prevent system callouts (Save Image/Copy) and unwanted selection globally */
+  * {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
     -webkit-tap-highlight-color: transparent; 
-    
+  }
+
+  /* Re-enable selection for reading content and pulses */
+  p, h1, h2, h3, h4, .selectable-content, .prose {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  button, a, nav, [role="button"], .native-ui {
     /* MANDATORY: Apple/Google 44pt Tap Target Rule */
     min-height: 44px; 
     min-width: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
   }
 
   /* Force inputs to behave like native fields */
   input, textarea, select {
-    -webkit-user-select: text;
-    user-select: text;
-    appearance: none;
-    -webkit-appearance: none;
-    /* 16px font prevents iOS from zooming in on the input box automatically */
-    font-size: 16px !important; 
-  }
-
-  .selectable-content {
     -webkit-user-select: text !important;
     user-select: text !important;
+    appearance: none;
+    -webkit-appearance: none;
+    /* 16px prevents iOS from "auto-zooming" the camera onto the box */
+    font-size: 16px !important; 
   }
 }
 
 @layer components {
-  /* Use this on small icons to give them a large invisible hit area */
+  /* Adds large invisible hit area to small icons */
   .tap-target-fix {
     position: relative;
   }
@@ -105,15 +120,17 @@
   outline-offset: 4px;
 }
 
-/* Custom Embers Scrollbar */
+/* Custom Embers Scrollbar (Visible only in specific containers) */
 .embers-scroll {
-  /* Internal container scroll only */
   overscroll-behavior-y: contain; 
+  scrollbar-width: thin;
 }
 
 .embers-scroll::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
+  display: block;
 }
+
 .embers-scroll::-webkit-scrollbar-thumb {
   background: #1A1423;
   border-radius: 10px;
@@ -125,21 +142,9 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* --- GLOBAL SCROLLBAR MANAGEMENT --- */
-* {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
+/* Hide Global Scrollbars for App Aesthetic */
 *::-webkit-scrollbar {
   display: none;
-}
-
-.embers-scroll {
-  scrollbar-width: thin;
-  -ms-overflow-style: auto;
-}
-.embers-scroll::-webkit-scrollbar {
-  display: block;
 }
 
 .bottom-nav-blur {
