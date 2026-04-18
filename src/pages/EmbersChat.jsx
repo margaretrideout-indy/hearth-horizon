@@ -17,24 +17,30 @@ const HEARTH_PROMPTS = [
 const TOS_TEXT = "This is a sanctuary of reciprocity. We support, we don't vent. We build, we don't break.";
 
 // --- COMPONENT: INTENTIONAL REACTIONS ---
+// Polished for better thumb-targets and feedback
 const EmberReactions = ({ msgId }) => {
   const [counts, setCounts] = useState({ sparkle: 0, leaf: 0, heart: 0 });
   const react = (type) => setCounts(prev => ({ ...prev, [type]: prev[type] + 1 }));
 
+  const reactionConfigs = [
+    { type: 'sparkle', icon: Sparkles, color: 'text-teal-400', border: 'hover:border-teal-400/30', label: 'Inspired' },
+    { type: 'leaf', icon: Leaf, color: 'text-green-500', border: 'hover:border-green-500/30', label: 'Growth' },
+    { type: 'heart', icon: Heart, color: 'text-purple-500', border: 'hover:border-purple-500/30', label: 'Love' },
+  ];
+
   return (
-    <div className="flex gap-2 mt-3 ml-1">
-      <button onClick={() => react('sparkle')} className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/[0.03] border border-white/5 hover:border-teal-400/30 transition-colors group" title="Inspired">
-        <Sparkles size={12} className={counts.sparkle > 0 ? 'text-teal-400' : 'text-zinc-600'} />
-        {counts.sparkle > 0 && <span className="text-[10px] text-zinc-400 font-bold">{counts.sparkle}</span>}
-      </button>
-      <button onClick={() => react('leaf')} className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/[0.03] border border-white/5 hover:border-green-500/30 transition-colors group" title="Growth">
-        <Leaf size={12} className={counts.leaf > 0 ? 'text-green-500' : 'text-zinc-600'} />
-        {counts.leaf > 0 && <span className="text-[10px] text-zinc-400 font-bold">{counts.leaf}</span>}
-      </button>
-      <button onClick={() => react('heart')} className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/[0.03] border border-white/5 hover:border-purple-500/30 transition-colors group" title="Love">
-        <Heart size={12} className={counts.heart > 0 ? 'text-purple-500' : 'text-zinc-600'} />
-        {counts.heart > 0 && <span className="text-[10px] text-zinc-400 font-bold">{counts.heart}</span>}
-      </button>
+    <div className="flex gap-3 mt-3 ml-1">
+      {reactionConfigs.map(({ type, icon: Icon, color, border, label }) => (
+        <button 
+          key={type}
+          onClick={() => react(type)} 
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/5 ${border} transition-all active:scale-90 group`} 
+          title={label}
+        >
+          <Icon size={12} className={counts[type] > 0 ? color : 'text-zinc-600'} />
+          {counts[type] > 0 && <span className="text-[10px] text-zinc-400 font-bold">{counts[type]}</span>}
+        </button>
+      ))}
     </div>
   );
 };
@@ -57,8 +63,9 @@ export default function EmbersChat({ vault, isAdmin }) {
   const [remotePosts, setRemotePosts] = useState([]);
   const [replyTarget, setReplyTarget] = useState(null);
   const scrollRef = useRef(null);
+  const inputRef = useRef(null);
 
-  // Pull-to-refresh values
+  // Pull-to-refresh logic
   const y = useMotionValue(0);
   const opacity = useTransform(y, [0, 60], [0, 1]);
   const rotate = useTransform(y, [0, 100], [0, 360]);
@@ -101,7 +108,11 @@ export default function EmbersChat({ vault, isAdmin }) {
           email: d.email,
           reply_to: d.reply_to
         }));
-        setRemotePosts(mapped.filter(m => m.email !== 'system@hearth').sort((a, b) => new Date(a.created_date) - new Date(b.created_date)));
+        // Remove hearth system messages from remote and sort
+        const sorted = mapped
+          .filter(m => m.email !== 'system@hearth')
+          .sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
+        setRemotePosts(sorted);
       }
     } catch (err) { console.error("Sync failed", err); }
   };
@@ -111,6 +122,7 @@ export default function EmbersChat({ vault, isAdmin }) {
   const handleSend = async () => {
     if (!input.trim() || sending) return;
     
+    setSending(true);
     const tempId = Date.now();
     const messageData = {
       author_name: vault?.name || 'Traveler',
@@ -125,8 +137,7 @@ export default function EmbersChat({ vault, isAdmin }) {
     setRemotePosts(prev => [...prev, { ...messageData, id: tempId, content: input, subscription_tier: messageData.tier, created_date: messageData.timestamp, isPending: true }]);
     setInput('');
     setReplyTarget(null);
-    setTimeout(scrollToBottom, 100);
-
+    
     try {
       const response = await fetch(`https://api.base44.io/v1/projects/${B44_PROJECT_ID}/collections/messages/documents`, {
         method: 'POST',
@@ -137,6 +148,9 @@ export default function EmbersChat({ vault, isAdmin }) {
       setRemotePosts(prev => prev.map(m => m.id === tempId ? { ...m, isPending: false } : m));
     } catch (err) {
       setRemotePosts(prev => prev.filter(m => m.id !== tempId));
+    } finally {
+      setSending(false);
+      setTimeout(scrollToBottom, 50);
     }
   };
 
@@ -146,11 +160,19 @@ export default function EmbersChat({ vault, isAdmin }) {
     setRefreshing(false);
   };
 
-  const scrollToBottom = () => { if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; };
+  const scrollToBottom = () => { 
+    if (scrollRef.current) {
+        scrollRef.current.scrollTo({
+            top: scrollRef.current.scrollHeight,
+            behavior: 'smooth'
+        });
+    } 
+  };
+
   useEffect(() => { scrollToBottom(); }, [remotePosts]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#0A080D] md:rounded-t-[2.5rem] border-white/5 overflow-hidden relative">
+    <div className="flex flex-col h-full w-full bg-[#0A080D] md:rounded-t-[2.5rem] overflow-hidden relative touch-none overscroll-none">
       
       {/* Pull-to-refresh Indicator */}
       <motion.div style={{ y, opacity }} className="absolute top-4 left-0 w-full flex justify-center z-50 pointer-events-none">
@@ -163,29 +185,40 @@ export default function EmbersChat({ vault, isAdmin }) {
         ref={scrollRef}
         drag="y"
         dragConstraints={{ top: 0, bottom: 0 }}
-        dragElastic={0.6}
+        dragElastic={0.4}
         onDragEnd={(e, info) => { if (info.offset.y > 80) onRefresh(); }}
-        className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 scrollbar-hide z-10"
+        className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 scrollbar-hide z-10 touch-pan-y"
       >
-        <div className="space-y-10 pb-10">
+        <div className="space-y-10 pb-12">
             {[...FIXED_STARTERS, ...remotePosts].map((msg, idx) => {
                 const isOwn = msg.email === vault?.email;
                 const isSystem = msg.subscription_tier === 'Hearth';
                 
                 return (
-                    <motion.div key={msg.id || idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex flex-col group ${isOwn ? 'items-end' : 'items-start'}`}>
+                    <motion.div 
+                        key={msg.id || idx} 
+                        initial={{ opacity: 0, y: 10 }} 
+                        animate={{ opacity: 1, y: 0 }} 
+                        className={`flex flex-col group ${isOwn ? 'items-end' : 'items-start'}`}
+                    >
                         <div className={`flex items-center gap-2 mb-2 text-[10px] font-black uppercase tracking-widest text-zinc-500 ${isOwn ? 'flex-row-reverse' : ''}`}>
                             {isOwn ? 'You' : msg.author_name}
                             <TierBadge tier={msg.subscription_tier} />
-                            {!isOwn && (
-                              <button onClick={() => setReplyTarget(msg)} className="opacity-0 group-hover:opacity-100 transition-opacity ml-2 flex items-center gap-1 text-teal-500/60 hover:text-teal-400">
+                            {!isOwn && !isSystem && (
+                              <button 
+                                onClick={() => {
+                                    setReplyTarget(msg);
+                                    inputRef.current?.focus();
+                                }} 
+                                className="md:opacity-0 group-hover:opacity-100 transition-opacity ml-2 flex items-center gap-1 text-teal-500/60 hover:text-teal-400 active:scale-95"
+                              >
                                 <Reply size={10} /> Reply
                               </button>
                             )}
                         </div>
 
                         {msg.reply_to && (
-                          <div className={`mb-1 px-3 py-1.5 border-l-2 border-white/10 text-[10px] text-zinc-500 italic bg-white/[0.01] rounded-r-lg max-w-[70%] ${isOwn ? 'text-right' : ''}`}>
+                          <div className={`mb-1 px-3 py-1.5 border-l-2 border-white/10 text-[10px] text-zinc-500 italic bg-white/[0.01] rounded-r-lg max-w-[75%] ${isOwn ? 'text-right ml-auto' : ''}`}>
                             <span className="font-bold text-zinc-600 mr-1">{msg.reply_to.author}:</span>
                             "{msg.reply_to.content.substring(0, 45)}..."
                           </div>
@@ -199,7 +232,8 @@ export default function EmbersChat({ vault, isAdmin }) {
                             <p className="text-sm leading-relaxed font-light">{msg.content}</p>
                         </div>
                         
-                        <EmberReactions msgId={msg.id} />
+                        {!isSystem && <EmberReactions msgId={msg.id} />}
+                        
                         <span className="text-[9px] text-zinc-700 mt-2 font-bold uppercase tracking-tighter">
                           {format(new Date(msg.created_date), 'h:mm a')}
                         </span>
@@ -210,35 +244,54 @@ export default function EmbersChat({ vault, isAdmin }) {
       </motion.div>
 
       {/* Input bar with Reply Preview */}
-      <div className="p-4 pb-8 md:pb-12 bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 relative">
+      <footer className="p-4 pb-8 md:pb-12 bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 relative z-30">
         <AnimatePresence>
           {replyTarget && (
-            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }} className="absolute bottom-[100%] left-0 w-full p-3 bg-[#110E16] border-t border-white/5 flex items-center justify-between z-20">
-              <div className="flex items-center gap-2 text-xs text-zinc-400">
-                <Reply size={12} className="text-teal-500" />
-                <span>Replying to <span className="text-teal-500 font-bold">{replyTarget.author_name}</span></span>
+            <motion.div 
+                initial={{ y: 20, opacity: 0 }} 
+                animate={{ y: 0, opacity: 1 }} 
+                exit={{ y: 20, opacity: 0 }} 
+                className="absolute bottom-full left-0 w-full p-4 bg-[#110E16] border-t border-teal-500/20 flex items-center justify-between"
+            >
+              <div className="flex items-center gap-3 text-xs text-zinc-400">
+                <Reply size={14} className="text-teal-500" />
+                <div className="flex flex-col">
+                    <span className="text-[9px] uppercase font-black text-teal-500/60">Replying to</span>
+                    <span className="text-white font-serif italic">{replyTarget.author_name}</span>
+                </div>
               </div>
-              <button onClick={() => setReplyTarget(null)} className="text-zinc-500 hover:text-white"><X size={14} /></button>
+              <button 
+                onClick={() => setReplyTarget(null)} 
+                className="w-8 h-8 flex items-center justify-center bg-white/5 rounded-full text-zinc-500 hover:text-white"
+              >
+                <X size={14} />
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
 
-        <div className="relative flex items-center gap-3 max-w-4xl mx-auto z-10">
+        <div className="relative flex items-center gap-3 max-w-4xl mx-auto">
           <input
+            ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder={replyTarget ? `Reply to ${replyTarget.author_name}...` : "Share an ember..."}
-            className="w-full bg-white/[0.02] border border-white/5 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-teal-500/40 transition-all placeholder:text-zinc-700"
+            className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-teal-500/40 transition-all placeholder:text-zinc-700 shadow-inner"
           />
-          <button onClick={handleSend} disabled={!input.trim() || sending} className="bg-teal-500 text-black p-4 rounded-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 shadow-lg shadow-teal-500/20">
+          <button 
+            onClick={handleSend} 
+            disabled={!input.trim() || sending} 
+            className="w-14 h-14 shrink-0 bg-teal-500 text-black flex items-center justify-center rounded-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale shadow-lg shadow-teal-500/20"
+          >
             {sending ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
           </button>
         </div>
+        
         <div className="flex flex-col items-center mt-4">
-           <p className="text-[8px] text-zinc-700 italic text-center max-w-[280px]">{TOS_TEXT}</p>
+           <p className="text-[8px] text-zinc-700 italic text-center max-w-[280px] leading-relaxed uppercase tracking-widest">{TOS_TEXT}</p>
         </div>
-      </div>
+      </footer>
     </div>
   );
 }
