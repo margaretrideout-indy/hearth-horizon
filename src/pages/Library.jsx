@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Library as LibraryIcon, ExternalLink, Lock,
   Heart, Phone, Headphones, RefreshCw, X,
-  Package, Book, Mountain, Compass, ChevronUp
+  Package, Book, Mountain, Compass, ChevronUp, ArrowRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Component import for Volume II
 import Provisions from './Contact';
 
 // --- CONFIGURATION ---
@@ -32,182 +33,217 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
   const handleRefresh = async () => {
     setIsRefreshing(true);
     if (onRefresh) await onRefresh();
-    setIsRefreshing(false);
+    setTimeout(() => setIsRefreshing(false), 800);
   };
 
   return (
-    <div className="min-h-screen bg-[#0A080D] text-zinc-300 p-4 sm:p-6 md:p-12 font-sans overflow-x-hidden relative">
-      <div className="max-w-7xl mx-auto relative z-10">
+    <div className="min-h-screen bg-[#0A080D] text-zinc-300 font-sans overflow-x-hidden relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-8 relative z-10">
 
         {/* GESTURE REFRESH UI */}
-        <div className="flex justify-center h-4 mb-4">
+        <div className="flex justify-center h-8 mb-4">
           <motion.div 
             animate={isRefreshing ? { rotate: 360 } : { y: 0 }}
             transition={isRefreshing ? { repeat: Infinity, duration: 1, ease: "linear" } : {}}
-            className="opacity-40 text-teal-500 cursor-pointer"
+            className="text-teal-500/40 cursor-pointer"
             onClick={handleRefresh}
           >
-            <RefreshCw size={20} className={isRefreshing ? "" : "hover:scale-110 transition-transform"} />
+            <RefreshCw size={24} className={isRefreshing ? "" : "hover:scale-110 transition-transform active:rotate-180"} />
           </motion.div>
         </div>
 
         {/* HEADER */}
-        <header className="mb-16 border-b border-white/5 pb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <header className="mb-12 border-b border-white/5 pb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div className="space-y-4">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20">
-                <LibraryIcon size={20} />
+              <div className="w-12 h-12 rounded-2xl bg-teal-500/5 flex items-center justify-center text-teal-400 border border-teal-500/10 shadow-inner">
+                <LibraryIcon size={24} />
               </div>
-              <h1 className="text-2xl md:text-3xl font-serif italic text-white tracking-tight">
-                The Library: Vol. {currentVolume === 1 ? 'I' : 'II'}
-              </h1>
+              <div>
+                <h1 className="text-3xl font-serif italic text-white tracking-tight leading-none mb-1">
+                  The Library
+                </h1>
+                <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.3em] italic">
+                  Volume {currentVolume === 1 ? 'I' : 'II'}: {currentVolume === 1 ? 'Sanctuary & Basecamp' : 'Tactical Assets'}
+                </p>
+              </div>
             </div>
-            <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.3em] italic">
-              {currentVolume === 1 ? 'Sanctuary, Basecamp & The Lookout' : 'Trail Kit: Tactical Assets'}
-            </p>
           </div>
-          <div className="px-5 py-2 rounded-2xl border border-zinc-800 bg-[#16121D] flex items-center gap-3">
-             <div className={`w-2 h-2 rounded-full ${isRegistered ? 'bg-teal-500 animate-pulse' : 'bg-zinc-600'}`} />
-             <span className="text-[10px] font-black uppercase tracking-widest text-white">{userTier} Standing</span>
+          
+          <div className="px-4 py-2 rounded-2xl border border-white/5 bg-[#16121D]/50 backdrop-blur-sm flex items-center gap-3">
+             <div className={`w-2 h-2 rounded-full ${isRegistered ? 'bg-teal-500 shadow-[0_0_8px_rgba(20,184,166,0.5)]' : 'bg-zinc-600'}`} />
+             <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">{userTier} Standing</span>
           </div>
         </header>
 
         {currentVolume === 1 ? (
-          <div className="animate-in fade-in duration-700">
-            
+          <motion.div 
+            initial={{ opacity: 0, x: -10 }} 
+            animate={{ opacity: 1, x: 0 }}
+            className="space-y-20"
+          >
             {/* 1. THE SANCTUARY */}
-            <div className="mb-8 flex items-center gap-4">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400 whitespace-nowrap">The Sanctuary</h3>
-              <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
-            </div>
-            <section className="mb-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-[#16121D] border border-zinc-800 p-8 rounded-[2.5rem] flex flex-col shadow-xl">
-                   <Heart className="text-purple-400 mb-6" />
-                   <h4 className="text-lg text-white font-serif italic mb-2">Burnout to Balance</h4>
-                   <p className="text-[11px] text-zinc-500 italic mb-6 leading-relaxed">A guided roadmap for recovering energy during transition.</p>
-                   <a href="https://static1.squarespace.com/static/5d3080f196bac8000148b997/t/664cfc0539541d281b05c587/1716321288694/GKYMH+From+Burnout+to+Balance.pdf" target="_blank" rel="noreferrer" className="mt-auto py-3 bg-purple-500/10 text-purple-400 rounded-xl text-[9px] font-black uppercase text-center border border-purple-500/20 active:scale-95 transition-transform">View PDF Resource</a>
-                </div>
-                <div className="bg-[#16121D] border border-zinc-800 p-8 rounded-[2.5rem] flex flex-col shadow-xl">
-                   <Headphones className="text-purple-400 mb-6" />
-                   <h4 className="text-lg text-white font-serif italic mb-2">Inner Advocate</h4>
-                   <p className="text-[11px] text-zinc-500 italic mb-6 leading-relaxed">Podcast series: Navigating professional upheaval.</p>
-                   <a href="https://podcasts.apple.com/ca/podcast/your-inner-advocate/id1722984987" target="_blank" rel="noreferrer" className="mt-auto py-3 bg-purple-500/10 text-purple-400 rounded-xl text-[9px] font-black uppercase text-center border border-purple-500/20 active:scale-95 transition-transform">Listen on Apple</a>
+            <section>
+              <div className="mb-8 flex items-center gap-4">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400 whitespace-nowrap">The Sanctuary</h3>
+                <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Burnout Card */}
+                <div className="bg-[#16121D] border border-white/5 p-8 rounded-[2.5rem] flex flex-col group hover:border-purple-500/20 transition-all">
+                   <Heart className="text-purple-400/50 group-hover:text-purple-400 transition-colors mb-6" size={24} />
+                   <h4 className="text-xl text-white font-serif italic mb-2">Burnout to Balance</h4>
+                   <p className="text-xs text-zinc-500 italic mb-8 leading-relaxed">A guided roadmap for recovering energy during transition.</p>
+                   <a href="https://static1.squarespace.com/static/5d3080f196bac8000148b997/t/664cfc0539541d281b05c587/1716321288694/GKYMH+From+Burnout+to+Balance.pdf" target="_blank" rel="noreferrer" className="mt-auto py-4 bg-white/5 text-purple-400 rounded-2xl text-[9px] font-black uppercase text-center border border-purple-500/10 hover:bg-purple-500/10 transition-all">View PDF Resource</a>
                 </div>
 
-                <div className="relative overflow-hidden bg-rose-500/5 border-2 border-rose-500/20 p-8 rounded-[2.5rem] flex flex-col group shadow-[0_0_30px_rgba(244,63,94,0.1)]">
-                   <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-40 transition-opacity">
-                       <Phone size={40} className="text-rose-500" />
-                   </div>
+                {/* Podcast Card */}
+                <div className="bg-[#16121D] border border-white/5 p-8 rounded-[2.5rem] flex flex-col group hover:border-purple-500/20 transition-all">
+                   <Headphones className="text-purple-400/50 group-hover:text-purple-400 transition-colors mb-6" size={24} />
+                   <h4 className="text-xl text-white font-serif italic mb-2">Inner Advocate</h4>
+                   <p className="text-xs text-zinc-500 italic mb-8 leading-relaxed">Podcast series: Navigating professional upheaval and self-worth.</p>
+                   <a href="https://podcasts.apple.com/ca/podcast/your-inner-advocate/id1722984987" target="_blank" rel="noreferrer" className="mt-auto py-4 bg-white/5 text-purple-400 rounded-2xl text-[9px] font-black uppercase text-center border border-purple-500/10 hover:bg-purple-500/10 transition-all">Listen on Apple</a>
+                </div>
+
+                {/* Crisis Support Card */}
+                <div className="relative overflow-hidden bg-rose-500/[0.03] border border-rose-500/20 p-8 rounded-[2.5rem] flex flex-col group shadow-lg shadow-rose-500/5">
                    <div className="flex items-center gap-2 mb-6">
                        <div className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
-                       <span className="text-[9px] font-black uppercase tracking-widest text-rose-500">Urgent Support</span>
+                       <span className="text-[9px] font-black uppercase tracking-widest text-rose-500">Crisis Support</span>
                    </div>
-                   <h4 className="text-lg text-white font-serif italic mb-2">Crisis Support</h4>
-                   <p className="text-[11px] text-zinc-400 italic mb-6 leading-relaxed">Confidential text-based support available 24/7 for mental health emergencies.</p>
-                   <div className="mt-auto bg-rose-500 text-white p-5 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-[0.98]">
-                       <span className="text-[8px] font-black uppercase tracking-[0.3em] mb-1 opacity-80 text-center">Text to Connect</span>
-                       <span className="text-2xl font-black tracking-[0.2em]">686868</span>
+                   <h4 className="text-xl text-white font-serif italic mb-2">Mental Health Safe-Space</h4>
+                   <p className="text-xs text-zinc-400 italic mb-8 leading-relaxed">Confidential text support available 24/7 for emergencies.</p>
+                   <div className="mt-auto bg-rose-500 text-white p-6 rounded-2xl flex flex-col items-center justify-center transition-all active:scale-95 shadow-xl shadow-rose-500/20">
+                       <span className="text-[8px] font-black uppercase tracking-[0.3em] mb-1 opacity-70">Text to Connect</span>
+                       <span className="text-3xl font-black tracking-widest leading-none">686868</span>
                    </div>
                 </div>
+              </div>
             </section>
 
             {/* 2. THE BASECAMP */}
-            <div className="mb-8 flex items-center gap-4">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500 whitespace-nowrap">The Basecamp</h3>
-              <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
-            </div>
-            <section className="mb-16 grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-                  <div className="flex lg:flex-col gap-3 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
-                    <button onClick={() => setStudyTab('amazon')} className={`flex-1 min-w-[140px] p-6 rounded-2xl border text-left transition-all ${studyTab === 'amazon' ? 'bg-teal-500/10 border-teal-500/50' : 'bg-[#16121D] border-zinc-800 opacity-60'}`}>
-                      <Package className="w-5 h-5 mb-4 text-teal-400" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-white block">Wayfarer Provisions</span>
+            <section>
+              <div className="mb-8 flex items-center gap-4">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500 whitespace-nowrap">The Basecamp</h3>
+                <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                  {/* Native Segmented Control */}
+                  <div className="flex lg:flex-col gap-2 p-1.5 bg-[#16121D] border border-white/5 rounded-3xl overflow-x-auto scrollbar-hide">
+                    <button 
+                      onClick={() => setStudyTab('amazon')} 
+                      className={`flex-1 lg:flex-none flex items-center justify-center lg:justify-start gap-4 p-4 rounded-2xl transition-all whitespace-nowrap ${studyTab === 'amazon' ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/10' : 'text-zinc-500 hover:bg-white/5'}`}
+                    >
+                      <Package size={18} />
+                      <span className="text-[10px] font-black uppercase tracking-widest">Wayfarer Provisions</span>
                     </button>
-                    <button onClick={() => setStudyTab('reading')} className={`flex-1 min-w-[140px] p-6 rounded-2xl border text-left transition-all ${studyTab === 'reading' ? 'bg-teal-500/10 border-teal-500/50' : 'bg-[#16121D] border-zinc-800 opacity-60'}`}>
-                      <Book className="w-5 h-5 mb-4 text-teal-400" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-white block">Reading List</span>
+                    <button 
+                      onClick={() => setStudyTab('reading')} 
+                      className={`flex-1 lg:flex-none flex items-center justify-center lg:justify-start gap-4 p-4 rounded-2xl transition-all whitespace-nowrap ${studyTab === 'reading' ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/10' : 'text-zinc-500 hover:bg-white/5'}`}
+                    >
+                      <Book size={18} />
+                      <span className="text-[10px] font-black uppercase tracking-widest">Reading List</span>
                     </button>
                   </div>
-                  <div className="lg:col-span-3 bg-[#110E16] border border-zinc-800 p-8 md:p-14 rounded-[2.5rem] shadow-2xl min-h-[300px] flex flex-col">
-                    {studyTab === 'amazon' ? (
-                      <div className="flex-1 flex flex-col">
-                        <h4 className="text-3xl text-white font-serif italic mb-4">Wayfarer’s Provisions</h4>
-                        <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 italic">Curated ergonomic and analog tools selected to support the mental demands of professional migration.</p>
-                        <a href={AMZ_PROVISIONS_URL} target="_blank" rel="noreferrer" className="inline-flex items-center px-10 h-16 rounded-xl text-[10px] font-black uppercase tracking-widest bg-teal-500 text-black hover:bg-teal-400 active:scale-95 transition-all w-fit shadow-xl shadow-teal-500/20">BROWSE STOREFRONT <ExternalLink className="ml-2 w-4 h-4" /></a>
-                        <p className="mt-auto pt-10 text-[9px] text-zinc-600 font-medium italic uppercase tracking-tighter">{AMZ_LEGAL}</p>
-                      </div>
-                    ) : (
-                      <div>
-                        <h4 className="text-3xl text-white font-serif italic mb-4">Foundational Reading</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                          <div className="p-8 rounded-[2rem] bg-[#16121D] border border-zinc-800/50 flex flex-col">
-                             <h5 className="text-[9px] font-black text-teal-500 uppercase tracking-widest mb-4">Domestic</h5>
-                             <p className="text-xl text-white font-serif italic mb-2">Indigo Collection</p>
-                             <p className="text-[11px] text-zinc-500 italic">Arriving shortly.</p>
+
+                  <div className="lg:col-span-3 bg-gradient-to-br from-[#110E16] to-[#0A080D] border border-white/5 p-8 md:p-16 rounded-[3rem] shadow-2xl relative overflow-hidden min-h-[400px]">
+                    <div className="absolute top-0 right-0 p-12 text-teal-500/5 rotate-12 pointer-events-none">
+                        {studyTab === 'amazon' ? <Package size={180} /> : <Book size={180} />}
+                    </div>
+                    
+                    <AnimatePresence mode="wait">
+                      {studyTab === 'amazon' ? (
+                        <motion.div key="amz" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="relative z-10 flex flex-col h-full">
+                          <h4 className="text-4xl text-white font-serif italic mb-6 leading-tight">Provisions</h4>
+                          <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 italic max-w-lg">Curated ergonomic tools and analog systems selected to support the mental demands of professional migration.</p>
+                          <a href={AMZ_PROVISIONS_URL} target="_blank" rel="noreferrer" className="inline-flex items-center px-10 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] bg-teal-500 text-black hover:bg-teal-400 active:scale-95 transition-all w-fit shadow-2xl shadow-teal-500/20">
+                            Visit Storefront <ExternalLink className="ml-3 w-4 h-4" />
+                          </a>
+                          <p className="mt-12 text-[8px] text-zinc-600 font-bold uppercase tracking-widest max-w-xs">{AMZ_LEGAL}</p>
+                        </motion.div>
+                      ) : (
+                        <motion.div key="book" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="relative z-10">
+                          <h4 className="text-4xl text-white font-serif italic mb-8 leading-tight">Archives</h4>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div className="p-8 rounded-[2rem] bg-white/[0.03] border border-white/5 group">
+                               <p className="text-xs text-teal-500 font-black uppercase tracking-widest mb-2">Domestic</p>
+                               <p className="text-xl text-white font-serif italic mb-4">Indigo Collection</p>
+                               <span className="text-[9px] text-zinc-600 font-black uppercase tracking-widest">Cataloging In Progress</span>
+                            </div>
+                            <div className="p-8 rounded-[2rem] bg-white/[0.03] border border-white/5 group hover:border-purple-500/30 transition-all">
+                               <p className="text-xs text-purple-500 font-black uppercase tracking-widest mb-2">Global</p>
+                               <p className="text-xl text-white font-serif italic mb-4">Bookshop.org</p>
+                               <a href={BOOKSHOP_URL} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-[10px] text-purple-400 font-black uppercase tracking-widest group-hover:gap-4 transition-all">
+                                 View Shop <ArrowRight size={14} />
+                               </a>
+                            </div>
                           </div>
-                          <div className="p-8 rounded-[2rem] bg-[#16121D] border border-zinc-800/50 flex flex-col">
-                             <h5 className="text-[9px] font-black text-purple-500 uppercase tracking-widest mb-4">International</h5>
-                             <p className="text-xl text-white font-serif italic mb-2">Bookshop.org</p>
-                             <p className="text-[11px] text-zinc-500 italic mb-6">Curated shelves for the global migration.</p>
-                             <a href={BOOKSHOP_URL} target="_blank" rel="noreferrer" className="mt-auto py-3 bg-purple-500/10 text-purple-400 rounded-xl text-[9px] font-black uppercase text-center border border-purple-500/20 flex items-center justify-center gap-2 hover:bg-purple-500/20 active:scale-95 transition-all">Visit Shop <ExternalLink size={12} /></a>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
+              </div>
             </section>
 
             {/* 3. THE LOOKOUT */}
-            <div className="mb-8 flex items-center gap-4">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500 whitespace-nowrap">The Lookout</h3>
-              <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
-            </div>
-            <section className="mb-20">
-                <div 
-                  onClick={() => !isHearthkeeper && setShowLockSheet(true)}
-                  className={`relative w-full max-w-2xl bg-[#16121D] border ${isHearthkeeper ? 'border-teal-500/30' : 'border-white/5'} p-10 md:p-14 rounded-[3rem] overflow-hidden shadow-2xl cursor-pointer group`}
-                >
-                  <div className="relative z-10">
-                    <div className="flex justify-between items-start mb-8">
-                      <div className="bg-teal-500/10 text-teal-400 px-4 py-1.5 rounded-full text-[9px] font-black uppercase w-fit italic border border-teal-500/20">Member Gift</div>
-                      {!isHearthkeeper && <Lock size={16} className="text-zinc-700" />}
-                    </div>
-                    <h4 className="text-3xl text-white font-serif italic mb-6 leading-tight">Master Strategy Deck</h4>
-                    <p className="text-sm text-zinc-400 italic mb-10 leading-relaxed max-w-md">The primary blueprint for your career migration and resignation protocol.</p>
-                    <button 
-                      onClick={(e) => {
-                        if(isHearthkeeper) {
-                          e.stopPropagation();
-                          window.open(STRATEGY_DECK_URL, '_blank');
-                        }
-                      }}
-                      className={`h-16 px-10 rounded-2xl flex items-center gap-4 transition-all uppercase text-[10px] tracking-widest font-black ${isHearthkeeper ? 'bg-teal-500 text-black hover:bg-teal-400 active:scale-95' : 'bg-zinc-800 text-zinc-600'}`}
-                    >
-                      Open Blueprint <Compass size={18} />
-                    </button>
+            <section className="pb-32">
+              <div className="mb-8 flex items-center gap-4">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500 whitespace-nowrap">The Lookout</h3>
+                <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
+              </div>
+              
+              <motion.div 
+                whileHover={{ y: -5 }}
+                onClick={() => !isHearthkeeper && setShowLockSheet(true)}
+                className={`relative w-full max-w-2xl bg-gradient-to-br from-[#16121D] to-[#0D0B10] border ${isHearthkeeper ? 'border-teal-500/20' : 'border-white/5'} p-10 md:p-16 rounded-[3rem] overflow-hidden shadow-2xl cursor-pointer group`}
+              >
+                <div className="relative z-10">
+                  <div className="flex justify-between items-start mb-10">
+                    <div className="bg-teal-500/10 text-teal-400 px-4 py-1.5 rounded-full text-[9px] font-black uppercase italic border border-teal-500/20 shadow-lg">Member Gift</div>
+                    {!isHearthkeeper && <Lock size={20} className="text-zinc-700" />}
                   </div>
+                  <h4 className="text-4xl text-white font-serif italic mb-6 leading-tight">Master Strategy Deck</h4>
+                  <p className="text-sm text-zinc-400 italic mb-12 leading-relaxed max-w-md">The primary blueprint for your career migration and resignation protocol.</p>
+                  
+                  <button 
+                    onClick={(e) => {
+                      if(isHearthkeeper) {
+                        e.stopPropagation();
+                        window.open(STRATEGY_DECK_URL, '_blank');
+                      }
+                    }}
+                    className={`h-16 px-10 rounded-2xl flex items-center gap-4 transition-all uppercase text-[10px] tracking-widest font-black ${isHearthkeeper ? 'bg-teal-500 text-black shadow-xl shadow-teal-500/20' : 'bg-white/5 text-zinc-600 border border-white/5'}`}
+                  >
+                    Open Blueprint <Compass size={18} />
+                  </button>
                 </div>
+              </motion.div>
             </section>
-          </div>
+          </motion.div>
         ) : (
-          /* THE TRAIL KIT */
-          <div className="relative animate-in slide-in-from-right duration-500 pb-20">
+          <motion.div 
+            initial={{ opacity: 0, x: 10 }} 
+            animate={{ opacity: 1, x: 0 }}
+            className="pb-32"
+          >
              <Provisions 
                vault={vault} 
                isAdmin={isAdmin} 
                currentVolume={currentVolume}
-               onRefresh={onRefresh} // Passing refresh logic to Vol II
+               onRefresh={onRefresh}
              />
-          </div>
+          </motion.div>
         )}
 
-        {/* VOLUME NAV - STICKY FOR MOBILE THUMB */}
-        <div className="fixed bottom-8 left-0 right-0 z-50 px-4 md:static md:bottom-auto md:px-0 md:mt-12 md:pb-12">
-          <div className="max-w-md mx-auto flex flex-col items-center gap-4">
-            <p className="hidden md:block text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 italic">Navigate the Archives</p>
-            <div className="flex w-full gap-2 p-1.5 bg-[#16121D]/90 backdrop-blur-xl rounded-[2rem] border border-white/10 shadow-2xl">
+        {/* VOLUME NAV - NATIVE STICKY BAR */}
+        <div className="fixed bottom-6 left-0 right-0 z-[110] px-6 pointer-events-none">
+          <div className="max-w-md mx-auto pointer-events-auto">
+            <div className="flex p-2 bg-[#16121D]/80 backdrop-blur-xl rounded-[2.5rem] border border-white/10 shadow-2xl">
               <button 
                 onClick={() => { setCurrentVolume(1); window.scrollTo({top: 0, behavior: 'smooth'}); }} 
-                className={`flex-1 py-4 rounded-2xl text-[11px] font-black uppercase transition-all ${currentVolume === 1 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500'}`}
+                className={`flex-1 py-4 rounded-[2rem] text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 1 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}
               >
                 Volume I
               </button>
@@ -220,62 +256,59 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
                     setShowLockSheet(true);
                   }
                 }} 
-                className={`flex-1 py-4 rounded-2xl text-[11px] font-black uppercase transition-all flex items-center justify-center gap-2 ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500'}`}
+                className={`flex-1 py-4 rounded-[2rem] text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}
               >
-                Volume II {!isSteward && <Lock size={12} />}
+                Volume II {!isSteward && <Lock size={12} className="opacity-50" />}
               </button>
             </div>
           </div>
         </div>
 
-        <footer className="mt-20 opacity-30 flex justify-between items-center pb-32 md:pb-12">
-            <div className="flex items-center gap-2">
-                <Mountain size={14} className="text-teal-500" />
-                <span className="text-[9px] font-black uppercase tracking-widest text-white">Hearth & Horizon 2026</span>
+        <footer className="mt-20 opacity-30 flex flex-col md:flex-row gap-6 justify-between items-center pb-20">
+            <div className="flex items-center gap-3">
+                <Mountain size={16} className="text-teal-500" />
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Hearth & Horizon © 2026</span>
             </div>
-            <button onClick={() => navigate(isRegistered ? '/hearth' : '/grove')} className="text-[9px] font-black uppercase tracking-widest hover:text-teal-400 transition-colors">Exit Library</button>
+            <button onClick={() => navigate(isRegistered ? '/hearth' : '/grove')} className="text-[10px] font-black uppercase tracking-widest px-6 py-2 border border-white/10 rounded-full hover:bg-white/5 transition-all">Exit Library</button>
         </footer>
       </div>
 
-      {/* NATIVE LOCK SHEET (Universal Bottom Sheet) */}
+      {/* NATIVE LOCK SHEET */}
       <AnimatePresence>
         {showLockSheet && (
           <>
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setShowLockSheet(false)}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[120]"
+              className="fixed inset-0 bg-black/90 backdrop-blur-md z-[120]"
             />
             <motion.div 
               initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3rem] z-[130] p-8 pb-12 shadow-[0_-20px_50px_rgba(0,0,0,0.5)]"
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3rem] z-[130] p-8 pb-16 shadow-[0_-20px_50px_rgba(0,0,0,0.8)]"
             >
-              <div className="w-12 h-1.5 bg-zinc-800 rounded-full mx-auto mb-8" />
-              <div className="flex justify-between items-center mb-8 px-2">
-                <div className="space-y-1">
-                  <h3 className="text-2xl font-serif italic text-white leading-tight">Elevated Standing Required</h3>
-                  <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Master Strategy & Trail Kit Access</p>
+              <div className="w-12 h-1.5 bg-zinc-800 rounded-full mx-auto mb-10" />
+              
+              <div className="max-w-md mx-auto text-center">
+                <div className="w-20 h-20 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-purple-500/20 shadow-inner">
+                  <Lock className="text-purple-400" size={32} />
                 </div>
-                <button onClick={() => setShowLockSheet(false)} className="p-2 bg-white/5 rounded-full text-zinc-500"><X size={20} /></button>
-              </div>
+                <h3 className="text-3xl font-serif italic text-white mb-4">Elevated Standing Required</h3>
+                <p className="text-sm text-zinc-400 italic leading-relaxed mb-10 px-4">
+                   Tactical scripts, resignation blueprints, and advanced trail assets are reserved for our Steward-tier supporters.
+                </p>
 
-              <div className="bg-purple-500/5 border border-purple-500/20 p-8 rounded-[2.5rem] mb-8 text-center">
-                 <Lock className="mx-auto text-purple-400 mb-4" size={32} />
-                 <p className="text-sm text-zinc-300 italic leading-relaxed mb-6">
-                   Advanced tactical assets, scripts, and resignation blueprints are reserved for our Steward-tier supporters.
-                 </p>
-                 <button 
+                <button 
                   onClick={() => navigate('/grove')}
-                  className="w-full h-16 rounded-2xl bg-purple-500 text-white font-black uppercase tracking-[0.2em] shadow-xl shadow-purple-500/20 active:scale-[0.98]"
-                 >
+                  className="w-full py-6 rounded-2xl bg-purple-500 text-white font-black uppercase tracking-[0.2em] shadow-2xl shadow-purple-500/30 active:scale-95 transition-all mb-8"
+                >
                    Become a Steward
-                 </button>
+                </button>
+                
+                <button onClick={() => setShowLockSheet(false)} className="text-[10px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-400 transition-colors">
+                  Keep Exploring Volume I
+                </button>
               </div>
-
-              <p className="text-[9px] text-zinc-700 text-center font-bold uppercase tracking-widest">
-                Support the Sanctuary for $5 / Month
-              </p>
             </motion.div>
           </>
         )}
