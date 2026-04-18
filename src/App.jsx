@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { Flame, BookOpen, Globe, Activity } from 'lucide-react';
+import { Flame, BookOpen, Globe, Activity, Compass, LayoutDashboard } from 'lucide-react';
 
 import GroveTiers from './pages/GroveTiers';
 import YourHearth from './pages/YourHearth';
@@ -45,23 +45,25 @@ export default function App() {
   const mainTabs = ['/hearth', '/library', '/horizon', '/embers'];
   const isMainTab = mainTabs.includes(location.pathname);
 
-  // --- RESPONSIVE NAVIGATION COMPONENTS ---
+  // --- RESPONSIVE NAVIGATION ENGINE ---
   
   const NavLinks = ({ isDesktop = false }) => {
-    const tabs = [
+    // Definitive Navigation List based on your pillars
+    const allLinks = [
       { label: 'Hearth', path: '/hearth', icon: Flame },
+      { label: 'Alignment', path: '/culture', icon: Compass },
+      { label: 'Horizon Board', path: '/horizon', icon: LayoutDashboard },
       { label: 'Library', path: '/library', icon: BookOpen },
-      { label: 'Horizon', path: '/horizon', icon: Globe },
       { label: 'Embers', path: '/embers', icon: Activity }
     ];
 
     return (
       <div className={`flex ${isDesktop ? 'flex-col gap-2' : 'justify-around items-center h-full'}`}>
-        {tabs.map((tab) => {
+        {allLinks.map((tab) => {
           const isActive = location.pathname === tab.path;
           return (
             <button 
-              key={tab.path} 
+              key={tab.label} 
               onClick={() => navigate(tab.path)} 
               className={`flex transition-all active:scale-95 ${
                 isDesktop 
@@ -69,8 +71,8 @@ export default function App() {
                   : `flex-col items-center gap-1 w-full justify-center ${isActive ? 'text-teal-400' : 'text-zinc-600'}`
               }`}
             >
-              <tab.icon size={isDesktop ? 22 : 20} strokeWidth={isActive ? 2.5 : 2} />
-              <span className={isDesktop ? 'text-sm tracking-wide' : 'text-[8px] font-black uppercase tracking-widest'}>
+              <tab.icon size={isDesktop ? 22 : 18} strokeWidth={isActive ? 2.5 : 2} />
+              <span className={isDesktop ? 'text-sm tracking-wide' : 'text-[7px] font-black uppercase tracking-tighter'}>
                 {tab.label}
               </span>
             </button>
@@ -83,21 +85,23 @@ export default function App() {
   return (
     <div className="h-screen w-full bg-[#0A080D] flex overflow-hidden">
       
-      {/* PC SIDEBAR: Visible on md screens and up */}
+      {/* PC SIDEBAR */}
       {location.pathname !== '/' && (
         <aside className="hidden md:flex flex-col w-64 border-r border-white/5 bg-[#08070B] pt-8">
           <div className="px-8 mb-10 text-xs font-black uppercase tracking-[0.3em] text-zinc-700">
             Hearth Horizon
           </div>
-          <NavLinks isDesktop />
+          <div className="flex-1 overflow-y-auto">
+            <NavLinks isDesktop />
+          </div>
         </aside>
       )}
 
       {/* MAIN CONTENT AREA */}
       <main className="flex-1 h-full relative overflow-y-auto custom-scrollbar flex flex-col">
-        
         <div className="flex-1 w-full relative">
-          {/* NATIVE STACK: Hidden/Visible layers for instant tab switching */}
+          
+          {/* NATIVE STACK LAYERS */}
           <div className={location.pathname === '/hearth' ? 'block h-full' : 'hidden'}>
             <YourHearth vault={vault} onSync={handleSync} onNavigateToHorizon={() => navigate('/horizon')} />
           </div>
@@ -114,6 +118,7 @@ export default function App() {
             <EmbersChat vault={vault} />
           </div>
 
+          {/* TRADITIONAL ROUTES (Includes Alignment) */}
           {!isMainTab && (
             <Routes>
               <Route path="/" element={<GroveTiers onSync={handleSync} />} />
@@ -124,14 +129,13 @@ export default function App() {
           )}
         </div>
 
-        {/* BOTTOM NAV SPACER (Mobile only) */}
-        {location.pathname !== '/' && <div className="h-20 shrink-0 md:hidden" />}
+        {location.pathname !== '/' && <div className="h-24 shrink-0 md:hidden" />}
       </main>
 
-      {/* MOBILE BOTTOM NAV: Hidden on md screens and up */}
+      {/* MOBILE BOTTOM NAV */}
       {location.pathname !== '/' && (
         <nav className="fixed bottom-0 left-0 right-0 z-[100] pb-[env(safe-area-inset-bottom)] bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 md:hidden">
-          <div className="max-w-md mx-auto h-16">
+          <div className="w-full h-20">
             <NavLinks />
           </div>
         </nav>
