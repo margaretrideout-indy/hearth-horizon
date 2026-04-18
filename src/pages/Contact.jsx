@@ -85,7 +85,7 @@ const Contact = ({ vault, isAdmin }) => {
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
 
-  // --- STRICT TIER LOGIC ---
+  // --- UPDATED TIER MAPPING ---
   const tiers = { 'traveler': 0, 'seedling': 1, 'hearthkeeper': 2, 'steward': 3 };
   const userRank = isAdmin ? 3 : (tiers[vault?.tier?.toLowerCase()] || 0);
 
@@ -99,7 +99,7 @@ const Contact = ({ vault, isAdmin }) => {
 
   const trailKitResources = [
     { id: 'verbs', title: "Power Verb Lexicon", desc: "Strategic verbs to replace legacy language.", type: "Seedlings+", icon: <Zap className="text-purple-400" />, requiredTier: 1 },
-    { id: 'ledger', title: "The Identity Ledger", desc: "Psychological framework & workbook to decouple worth.", type: "Stewards Only", icon: <Fingerprint className="text-teal-400" />, requiredTier: 3 },
+    { id: 'ledger', title: "The Identity Ledger", desc: "Psychological framework & workbook to decouple worth.", type: "Hearthkeepers+", icon: <Fingerprint className="text-teal-400" />, requiredTier: 2 },
     { id: 'resume', title: "Trailblazer's Blueprint", desc: "ATS-optimized resume layout.", type: "Hearthkeepers+", icon: <FileText className="text-purple-400" />, requiredTier: 2 },
     { id: 'outreach', title: "Sponsorship Outreach", desc: "4-phase sequence to turn contacts into advocates.", type: "Stewards Only", icon: <Mail className="text-teal-400" />, requiredTier: 3 },
     { id: 'scripts', title: "Salary Negotiations", desc: "Tactical word-for-word scripts.", type: "Stewards Only", icon: <DollarSign className="text-purple-400" />, requiredTier: 3 }
@@ -107,7 +107,7 @@ const Contact = ({ vault, isAdmin }) => {
 
   return (
     <div className="animate-in fade-in duration-500 pb-20">
-      <div className="grid grid-cols-1 gap-4 mb-20">
+      <div className="grid grid-cols-1 gap-4">
         {trailKitResources.map((tool) => {
           const isLocked = userRank < tool.requiredTier;
           const isOpen = expandedCard === tool.id && !isLocked;
@@ -128,7 +128,7 @@ const Contact = ({ vault, isAdmin }) => {
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${isLocked ? 'bg-zinc-800 text-zinc-500' : 'bg-teal-500/10 text-teal-500'}`}>
-                            {isLocked ? "Steward Standing Required" : tool.type}
+                            {tool.type}
                         </span>
                       </div>
                       <h3 className="text-lg md:text-xl text-white font-serif italic">{tool.title}</h3>
@@ -153,6 +153,7 @@ const Contact = ({ vault, isAdmin }) => {
                   >
                     <div className="p-6 md:p-8 pt-0 space-y-6">
                       
+                      {/* 1. POWER VERBS CONTENT */}
                       {tool.id === 'verbs' && (
                         <div className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -173,6 +174,7 @@ const Contact = ({ vault, isAdmin }) => {
                         </div>
                       )}
 
+                      {/* 2. IDENTITY LEDGER CONTENT */}
                       {tool.id === 'ledger' && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="bg-teal-500/5 border border-teal-500/10 p-6 rounded-[2rem] flex flex-col justify-between">
@@ -180,7 +182,7 @@ const Contact = ({ vault, isAdmin }) => {
                                     <h4 className="text-white font-serif italic text-lg mb-1">The Identity Ledger</h4>
                                     <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-6">Master Class Slide Deck</p>
                                 </div>
-                                <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link")} className="w-full h-12 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=sharing")} className="w-full h-12 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 active:scale-95 transition-all flex items-center justify-center gap-2">
                                     <Presentation size={14} /> Open Presentation
                                 </button>
                             </div>
@@ -189,22 +191,24 @@ const Contact = ({ vault, isAdmin }) => {
                                     <h4 className="text-white font-serif italic text-lg mb-1">The Implementation Ledger</h4>
                                     <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-6">Personal Workbook (PDF)</p>
                                 </div>
-                                <button onClick={() => window.open("https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link")} className="w-full h-12 border border-zinc-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                <button onClick={() => window.open("https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=sharing")} className="w-full h-12 border border-zinc-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 active:scale-95 transition-all flex items-center justify-center gap-2">
                                     <ClipboardList size={14} /> Download Ledger
                                 </button>
                             </div>
                         </div>
                       )}
 
+                      {/* 3. RESUME BLUEPRINT CONTENT */}
                       {tool.id === 'resume' && (
                         <div className="bg-purple-500/5 border border-purple-500/20 p-8 rounded-[2rem] text-center">
                             <p className="text-sm text-zinc-400 italic mb-6">An ATS-optimized template designed specifically for public-to-private sector pivots.</p>
-                            <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=drive_link")} className="px-10 h-14 bg-purple-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-400 active:scale-95 transition-all inline-flex items-center gap-2 shadow-xl shadow-purple-500/20">
+                            <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing")} className="px-10 h-14 bg-purple-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-400 active:scale-95 transition-all inline-flex items-center gap-2 shadow-xl shadow-purple-500/20">
                                 <ExternalLink size={14} /> Get Blueprint (Google Doc)
                             </button>
                         </div>
                       )}
 
+                      {/* 4. SCRIPTS CONTENT (OUTREACH & SALARY) */}
                       {(tool.id === 'outreach' || tool.id === 'scripts') && (
                         <div className="space-y-4">
                           {(tool.id === 'outreach' ? dynamicContent.outreach : dynamicContent.salary).map((item, i) => {
