@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { 
@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const AppLayout = ({ children, currentTier = "Seedling" }) => {
+const AppLayout = ({ children, currentTier = "Seedling", onTabClick }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -15,16 +15,15 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
   const isHearth = location.pathname === '/hearth';
   const isEmbers = location.pathname === '/embers';
 
-  // Navigation items logic
   const journeyItems = [
-    { name: "Hearth", path: "/hearth", icon: <Flame size={18} />, tier: "Seedling" },
-    { name: "Alignment", path: "/alignment", icon: <Compass size={18} />, tier: "Seedling" },
-    { name: "Horizon", path: "/horizon", icon: <Binoculars size={18} />, tier: "Seedling" },
+    { name: "Hearth", path: "/hearth", icon: <Flame size={20} />, tier: "Seedling" },
+    { name: "Alignment", path: "/alignment", icon: <Compass size={20} />, tier: "Seedling" },
+    { name: "Horizon", path: "/horizon", icon: <Binoculars size={20} />, tier: "Seedling" },
   ];
 
   const communityItems = [
-    { name: "Library", path: "/library", icon: <Library size={18} />, tier: "Seedling" },
-    { name: "Embers", path: "/embers", icon: <MessageSquare size={18} />, tier: "Seedling" },
+    { name: "Library", path: "/library", icon: <Library size={20} />, tier: "Seedling" },
+    { name: "Embers", path: "/embers", icon: <MessageSquare size={20} />, tier: "Seedling" },
   ];
 
   const allNavItems = [...journeyItems, ...communityItems];
@@ -44,7 +43,7 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
   return (
     <div className="h-[100dvh] w-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans flex flex-col overflow-hidden relative">
       
-      {/* 1. TOP BRANDING BAR */}
+      {/* 1. TOP BRANDING BAR (Enlarged Hit Targets) */}
       {!isGrove && (
         <header className="pt-[env(safe-area-inset-top)] px-6 flex items-center justify-between h-20 z-40">
           <div className="flex items-center gap-4">
@@ -53,15 +52,15 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 onClick={() => navigate(-1)}
-                className="p-2 -ml-2 rounded-full bg-white/5 text-zinc-400 hover:text-teal-400 transition-colors"
+                className="w-11 h-11 flex items-center justify-center rounded-full bg-white/5 text-zinc-400 hover:text-teal-400 transition-colors"
               >
-                <ArrowLeft size={18} />
+                <ArrowLeft size={20} />
               </motion.button>
             )}
             
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">
+              <span className="text-xs font-black uppercase tracking-[0.3em] text-zinc-500">
                 {location.pathname.replace('/', '') || 'Hearth & Horizon'}
               </span>
             </div>
@@ -70,16 +69,16 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
           <div className="flex items-center gap-3">
             <button 
               onClick={handleRefresh}
-              className={`p-2 rounded-full bg-white/5 text-zinc-500 transition-all ${isRefreshing ? 'animate-spin text-teal-400' : ''}`}
+              className={`w-11 h-11 flex items-center justify-center rounded-full bg-white/5 text-zinc-500 transition-all ${isRefreshing ? 'animate-spin text-teal-400' : ''}`}
             >
-              <RefreshCw size={14} />
+              <RefreshCw size={16} />
             </button>
             
             <button 
               onClick={() => base44.auth.redirectToLogin(location.pathname)}
-              className="p-2 rounded-full bg-white/5 text-zinc-500 hover:text-teal-400"
+              className="w-11 h-11 flex items-center justify-center rounded-full bg-white/5 text-zinc-500 hover:text-teal-400"
             >
-              <LogIn size={16} />
+              <LogIn size={20} />
             </button>
           </div>
         </header>
@@ -102,7 +101,7 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
           >
             {isRefreshing && (
               <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50">
-                <div className="bg-teal-500 text-black px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest shadow-lg">
+                <div className="bg-teal-500 text-black px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
                   Refreshing Grove...
                 </div>
               </div>
@@ -113,20 +112,21 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
         </AnimatePresence>
       </main>
 
-      {/* 3. NATIVE BOTTOM NAVIGATION */}
+      {/* 3. NATIVE BOTTOM NAVIGATION (Optimized Hit Targets) */}
       {!isGrove && (
-        <nav className="native-ui fixed bottom-0 left-0 right-0 bg-[#141118]/80 backdrop-blur-2xl border-t border-white/5 z-50 px-2">
+        <nav className="native-ui fixed bottom-0 left-0 right-0 bg-[#0D0B14]/95 backdrop-blur-2xl border-t border-white/5 z-50 px-2">
           <div className="max-w-md mx-auto flex justify-around items-center h-16 mb-[env(safe-area-inset-bottom)]">
             
+            {/* Grove Button */}
             <button 
-              onClick={() => navigate('/grove')} 
-              className={`flex flex-col items-center gap-1 transition-colors ${location.pathname === '/grove' ? 'text-teal-400' : 'text-zinc-500'}`}
+              onClick={() => onTabClick('/grove')} 
+              className={`flex-1 h-full flex flex-col items-center justify-center gap-1 transition-colors ${location.pathname === '/grove' ? 'text-teal-400' : 'text-zinc-500'}`}
             >
-              <Globe size={18} />
-              <span className="text-[7px] font-black uppercase tracking-tighter">Grove</span>
+              <Globe size={20} />
+              <span className="text-[10px] font-black uppercase tracking-tighter">Grove</span>
             </button>
 
-            <div className="w-[1px] h-6 bg-white/5 mx-1" />
+            <div className="w-[1px] h-6 bg-white/5" />
 
             {allNavItems.map((item) => {
               const locked = isLocked(item.tier);
@@ -135,25 +135,25 @@ const AppLayout = ({ children, currentTier = "Seedling" }) => {
               return (
                 <button
                   key={item.path}
-                  onClick={() => !locked && navigate(item.path)}
+                  onClick={() => !locked && onTabClick(item.path)}
                   disabled={locked}
-                  className={`flex flex-col items-center justify-center gap-1 relative transition-all duration-300 ${
+                  className={`flex-1 h-full flex flex-col items-center justify-center gap-1 relative transition-all duration-300 ${
                     locked ? 'opacity-20' : isActive ? 'text-teal-400' : 'text-zinc-500'
                   }`}
                 >
-                  <motion.div whileTap={!locked ? { scale: 0.8 } : {}}>
+                  <motion.div whileTap={!locked ? { scale: 0.85 } : {}}>
                     {item.icon}
                   </motion.div>
-                  <span className="text-[7px] font-black uppercase tracking-tighter">
+                  <span className="text-[10px] font-black uppercase tracking-tighter">
                     {item.name}
                   </span>
                   {isActive && (
                     <motion.div 
                       layoutId="activeGlow" 
-                      className="absolute -inset-2 bg-teal-500/10 blur-md rounded-full -z-10" 
+                      className="absolute inset-x-2 inset-y-1 bg-teal-500/5 blur-md rounded-xl -z-10" 
                     />
                   )}
-                  {locked && <Lock size={8} className="absolute -top-1 -right-1 text-zinc-700" />}
+                  {locked && <Lock size={10} className="absolute top-2 right-4 text-zinc-700" />}
                 </button>
               );
             })}
