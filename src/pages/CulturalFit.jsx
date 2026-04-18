@@ -39,9 +39,10 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
   const [ethicalPriorities, setEthicalPriorities] = useState(vault?.ethics || []);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
 
-  // --- TIER GATING ---
+  // --- TIER GATING REFINED ---
   const tiers = { 'traveler': 0, 'seedling': 1, 'hearthkeeper': 2, 'steward': 3 };
-  const userRank = isAdmin ? 3 : (tiers[vault?.tier?.toLowerCase()] || 0);
+  // Check both isAdmin prop and the vault tier for Steward status
+  const userRank = (isAdmin || vault?.tier?.toLowerCase() === 'steward') ? 3 : (tiers[vault?.tier?.toLowerCase()] || 0);
 
   const universalPlaceholders = [
     "e.g., Managed a team of 15 in a fast-paced retail environment...",
@@ -119,7 +120,6 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
   return (
     <div className="relative min-h-screen selection:bg-teal-500/30 pb-20">
       
-      {/* FIXED POSITIONING REMOVED: Now Anchored in Layout Flow */}
       <div className="w-full pt-12 pb-12 flex justify-center">
         <div className="bg-[#0D0B14]/80 backdrop-blur-3xl border border-white/10 rounded-full p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.4)] flex items-center gap-1 md:gap-2">
           {[
@@ -262,8 +262,8 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
                     <Card key={idx} onClick={() => setSelectedPath(path)} className={`group cursor-pointer p-6 md:p-8 bg-[#1C1622]/40 border-white/5 transition-all duration-500 rounded-[2.5rem] relative overflow-hidden ${isSelected ? 'ring-1 ring-teal-500/50 shadow-[0_0_40px_rgba(20,184,166,0.1)] border-teal-500/40' : 'hover:border-white/10 hover:bg-[#1C1622]/60'}`}>
                       <div className="space-y-6 relative z-10">
                         <div className="flex justify-between items-start">
-                           <Badge className={`${isSelected ? 'bg-teal-500 text-black' : 'bg-teal-500/10 text-teal-400'} border-transparent text-[9px] font-black px-3 py-1`}>{path.fit}% MATCH</Badge>
-                           {canSeeData ? <TrendingUp size={16} className={path.velocity === 'High' ? 'text-teal-400 animate-pulse' : 'text-slate-700'} /> : <Lock size={14} className="text-slate-800" />}
+                            <Badge className={`${isSelected ? 'bg-teal-500 text-black' : 'bg-teal-500/10 text-teal-400'} border-transparent text-[9px] font-black px-3 py-1`}>{path.fit}% MATCH</Badge>
+                            {canSeeData ? <TrendingUp size={16} className={path.velocity === 'High' ? 'text-teal-400 animate-pulse' : 'text-slate-700'} /> : <Lock size={14} className="text-slate-800" />}
                         </div>
                         <div className="space-y-2">
                           <h4 className={`font-bold text-lg leading-tight transition-colors ${isSelected ? 'text-white' : 'text-slate-300'}`}>{path.domain}</h4>
@@ -341,7 +341,13 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
                         <Button onClick={() => handleCopy(bridgeData?.[selectedPath?.domain === 'Operations & Systems' ? 'ops' : (selectedPath?.domain === 'Strategy & Implementation' ? 'data' : 'pm')])} className="h-16 px-10 bg-white/[0.03] text-white font-black rounded-2xl uppercase tracking-widest border border-white/10 gap-3 transition-all hover:bg-white/[0.08]">
                           {copied ? <Check size={18} /> : <Copy size={18} />} {copied ? "Copied" : "Copy Translation"}
                         </Button>
-                        <Button onClick={() => { onSync({ isAligned: true }); navigate('/launch'); }} className="h-16 px-10 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-2xl uppercase tracking-widest gap-3 shadow-lg shadow-teal-500/20">
+                        <Button 
+                          onClick={() => { 
+                            onSync({ isAligned: true }); 
+                            navigate('/horizon'); // DIRECT NAVIGATION TO PREVENT REDIRECT BOUNCE
+                          }} 
+                          className="h-16 px-10 bg-teal-600 hover:bg-teal-500 text-black font-black rounded-2xl uppercase tracking-widest gap-3 shadow-lg shadow-teal-500/20"
+                        >
                           Enter Launch Mode <Binoculars size={18} />
                         </Button>
                       </div>
