@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Flame, BookOpen, Globe, Activity, Compass, LayoutDashboard, LogOut } from 'lucide-react';
-import { base44 } from '@/api/base44Client'; // Ensure this import exists
+import { base44 } from '@/api/base44Client'; 
 
 import GroveTiers from './pages/GroveTiers';
 import YourHearth from './pages/YourHearth';
@@ -25,17 +25,16 @@ export default function App() {
     return { pulses: [], archetype: null, alignmentScore: 0, resume: null, standing: "Traveler", tier: "Seedling", lastSync: null };
   });
 
-  // Check for Admin status on load
+  // Admin Check Logic
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const user = await base44.auth.me();
-        // If the user exists and has a session, check if they are the admin/steward
         if (user) {
-          const isSystemAdmin = user.role === 'admin' || user.email === 'margaretpardy@gmail.com'; // Add your email here as a fallback
+          // Identify you as the Master Admin
+          const isSystemAdmin = user.role === 'admin' || user.email === 'margaretpardy@gmail.com'; 
           setIsAdmin(isSystemAdmin);
           
-          // Update vault with the latest tier from the DB
           if (user.tier) {
             setVault(prev => ({ ...prev, tier: user.tier }));
           }
@@ -100,7 +99,6 @@ export default function App() {
         </div>
 
         <div className={isDesktop ? 'mt-auto pt-4 border-t border-white/5' : 'hidden'}>
-            {/* Admin Dashboard link visible only to you */}
             {isAdmin && (
               <button 
                 onClick={() => navigate('/admin')}
@@ -139,28 +137,31 @@ export default function App() {
       <main className="flex-1 h-full relative overflow-y-auto custom-scrollbar flex flex-col">
         <div className="flex-1 w-full relative">
           
+          {/* PERSISTENT MAIN TABS (HEARTH, LIBRARY, CANOPY, EMBERS) */}
           <div className={location.pathname === '/hearth' ? 'block h-full' : 'hidden'}>
-            <YourHearth vault={vault} onSync={handleSync} onNavigateToHorizon={() => navigate('/horizon')} />
+            <YourHearth vault={vault} onSync={handleSync} isAdmin={isAdmin} onNavigateToHorizon={() => navigate('/horizon')} />
           </div>
           
           <div className={location.pathname === '/library' ? 'block h-full' : 'hidden'}>
-            <Library vault={vault} />
+            <Library vault={vault} isAdmin={isAdmin} />
           </div>
           
           <div className={location.pathname === '/horizon' ? 'block h-full' : 'hidden'}>
-            <Canopy vault={vault} />
+            <Canopy vault={vault} isAdmin={isAdmin} />
           </div>
           
           <div className={location.pathname === '/embers' ? 'block h-full' : 'hidden'}>
-            <EmbersChat vault={vault} />
+            <EmbersChat vault={vault} isAdmin={isAdmin} />
           </div>
 
+          {/* DYNAMIC ROUTES (GROVE TIERS, CULTURE, CONTACT, ADMIN) */}
           {!isMainTab && (
             <Routes>
-              <Route path="/" element={<GroveTiers vault={vault} onSync={handleSync} />} />
-              <Route path="/culture" element={<CulturalFit vault={vault} />} />
-              <Route path="/contact" element={<Contact />} />
-              {/* Added isAdmin prop here */}
+              {/* This is your Landing Page/Grove Tiers */}
+              <Route path="/" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+              
+              <Route path="/culture" element={<CulturalFit vault={vault} isAdmin={isAdmin} />} />
+              <Route path="/contact" element={<Contact vault={vault} isAdmin={isAdmin} />} />
               <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             </Routes>
           )}
