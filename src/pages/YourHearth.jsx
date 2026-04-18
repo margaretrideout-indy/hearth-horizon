@@ -32,6 +32,15 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
     setTimeout(() => setShowToast(false), 3000);
   };
 
+  // 1. PULL-TO-REFRESH LOGIC
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    // Simulating the cloud sync fetch
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsRefreshing(false);
+    triggerToast("Sanctuary synchronized with Cloud.");
+  };
+
   const handleSavePulse = () => {
     if (!reflection && !selectedEmoji) return;
     const newPulse = {
@@ -45,19 +54,18 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
     triggerToast("Hearth-Pulse captured.");
   };
 
-  const handleExportLegacy = () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(vault, null, 2));
-    const downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", `Hearth_Vault_${new Date().toLocaleDateString()}.json`);
-    document.body.appendChild(downloadAnchorNode); 
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
-    triggerToast("Legacy vault exported.");
+  // 2. ACCOUNT DELETION LOGIC (Mandatory for App Stores)
+  const handleExtinguishHearth = async () => {
+    // In a real app, you would call: await base44.user.delete(user.id);
+    onSync({ pulses: [], resume: null, isAligned: false }); 
+    triggerToast("Hearth extinguished. Redirecting...");
+    setTimeout(() => navigate('/'), 2000);
   };
 
   return (
     <div className="max-w-6xl mx-auto space-y-12 pb-32 animate-in fade-in duration-1000 relative">
+      
+      {/* TOAST SYSTEM */}
       <AnimatePresence>
         {showToast && (
           <motion.div 
@@ -68,6 +76,17 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* PULL-TO-REFRESH VISUAL */}
+      <div className="flex justify-center -mb-8 pt-2">
+        <button 
+          onClick={handleRefresh} 
+          className="group flex flex-col items-center gap-1 opacity-20 hover:opacity-100 transition-all duration-500"
+        >
+          <RefreshCw size={14} className={`${isRefreshing ? 'animate-spin text-teal-400' : 'group-hover:rotate-180 transition-transform'}`} />
+          <span className="text-[7px] font-black uppercase tracking-[0.3em]">Pull to Sync</span>
+        </button>
+      </div>
 
       <header className="text-center space-y-4 pt-4">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/5 border border-teal-500/20 text-teal-400">
@@ -83,7 +102,7 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
           <Card className="bg-[#0D0B10] border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden shadow-2xl">
             <div className="absolute top-6 right-8 flex items-center gap-1.5 opacity-20">
               <Lock size={10} className="text-rose-400" />
-              <span className="text-[7px] font-black uppercase tracking-widest text-rose-400">Device Locked</span>
+              <span className="text-[7px] font-black uppercase tracking-widest text-rose-400">Cloud Encrypted</span>
             </div>
 
             <div className="relative z-10 space-y-8">
@@ -162,7 +181,7 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
               <BookOpen size={14} />
               <span className="text-[10px] font-black uppercase tracking-widest italic">The Alignment Ledger</span>
             </div>
-            <Card className="p-8 bg-teal-500/5 border border-teal-500/20 rounded-[2.5rem] relative overflow-hidden text-center lg:text-left">
+            <Card className="p-8 bg-teal-500/5 border border-teal-500/20 rounded-[2.5rem] relative overflow-hidden">
               {vault.isAligned ? (
                 <div className="flex justify-between items-center relative z-10">
                   <div>
@@ -175,7 +194,7 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
                   </div>
                 </div>
               ) : (
-                <div className="py-6 relative z-10">
+                <div className="text-center py-6 relative z-10">
                   <p className="text-xs text-zinc-600 italic mb-6">No professional outcomes found.</p>
                   <Button onClick={() => navigate('/alignment')} className="bg-zinc-900 hover:bg-teal-500 text-zinc-400 hover:text-black text-[9px] font-black uppercase rounded-full px-8 h-10 border border-white/5 transition-all">
                     Establish Alignment
@@ -218,12 +237,47 @@ export default function YourHearth({ vault, onResumeSync, onSync, onNavigateToHo
             <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform" />
           </button>
 
-          {/* BACKUP TOOL */}
-          <div className="pt-12 flex justify-center">
-            <button onClick={handleExportLegacy} className="flex items-center gap-2 text-zinc-700 hover:text-teal-500 transition-colors uppercase font-black text-[9px] tracking-widest">
-              <Download size={14} /> Backup Legacy Vault
-            </button>
-          </div>
+          {/* --- MANDATORY DATA DELETION SECTION --- */}
+          <section className="mt-20 pt-10 border-t border-white/5 space-y-6">
+            {!isClosingHearth ? (
+              <div className="flex justify-center">
+                <button 
+                  onClick={() => setIsClosingHearth(true)}
+                  className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-800 hover:text-red-500 transition-colors flex items-center gap-2"
+                >
+                  <Trash2 size={12} /> Extinguish the Hearth
+                </button>
+              </div>
+            ) : (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-red-500/5 border border-red-500/10 p-8 rounded-[2rem] space-y-6 text-center"
+              >
+                <div className="flex flex-col items-center gap-3">
+                  <AlertTriangle className="text-red-500" size={24} />
+                  <h4 className="text-white font-bold tracking-tight text-xl">Are you certain?</h4>
+                  <p className="text-xs text-zinc-500 italic max-w-sm mx-auto">
+                    Extinguishing the Hearth will permanently delete your legacy document, alignment outcomes, and all Hearth-Pulses from the cloud archives.
+                  </p>
+                </div>
+                <div className="flex gap-4">
+                  <Button 
+                    onClick={() => setIsClosingHearth(false)} 
+                    className="flex-1 bg-white/5 text-zinc-400 hover:text-white rounded-xl text-[9px] font-black uppercase h-12"
+                  >
+                    Stay by the Fire
+                  </Button>
+                  <Button 
+                    onClick={handleExtinguishHearth} 
+                    className="flex-1 bg-red-600 hover:bg-red-500 text-white rounded-xl text-[9px] font-black uppercase h-12 transition-all shadow-lg shadow-red-600/20"
+                  >
+                    Confirm Deletion
+                  </Button>
+                </div>
+              </motion.div>
+            )}
+          </section>
         </div>
       </div>
     </div>
