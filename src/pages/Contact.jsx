@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { 
   FileText, ChevronDown, ChevronUp, Zap, 
   Mail, ExternalLink, DollarSign, Download, Copy, Lock,
-  Fingerprint, ClipboardList, Presentation
+  Fingerprint, ClipboardList, Presentation, Check
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // --- DATA: THE FULL 50 VERB LEXICON ---
 const powerVerbs = [
@@ -82,120 +83,160 @@ const generateDynamicScripts = (vault) => {
 const Contact = ({ vault, isAdmin }) => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [showAllVerbs, setShowAllVerbs] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState(null);
 
-  const tiers = { 'free': 0, 'seedling': 1, 'hearthkeeper': 2, 'steward': 3 };
-  const userRank = tiers[vault?.tier?.toLowerCase()] || 0;
-  const godMode = true; 
+  // --- STRICT TIER LOGIC ---
+  const tiers = { 'traveler': 0, 'seedling': 1, 'hearthkeeper': 2, 'steward': 3 };
+  const userRank = isAdmin ? 3 : (tiers[vault?.tier?.toLowerCase()] || 0);
 
   const dynamicContent = generateDynamicScripts(vault);
 
+  const handleCopy = (text, index) => {
+    navigator.clipboard.writeText(text);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
   const trailKitResources = [
     { id: 'verbs', title: "Power Verb Lexicon", desc: "Strategic verbs to replace legacy language.", type: "Seedlings+", icon: <Zap className="text-purple-400" />, requiredTier: 1 },
-    { id: 'ledger', title: "The Identity Ledger", desc: "Psychological framework & workbook to decouple your worth.", type: "Stewards Only", icon: <Fingerprint className="text-teal-400" />, requiredTier: 3 },
+    { id: 'ledger', title: "The Identity Ledger", desc: "Psychological framework & workbook to decouple worth.", type: "Stewards Only", icon: <Fingerprint className="text-teal-400" />, requiredTier: 3 },
     { id: 'resume', title: "Trailblazer's Blueprint", desc: "ATS-optimized resume layout.", type: "Hearthkeepers+", icon: <FileText className="text-purple-400" />, requiredTier: 2 },
     { id: 'outreach', title: "Sponsorship Outreach", desc: "4-phase sequence to turn contacts into advocates.", type: "Stewards Only", icon: <Mail className="text-teal-400" />, requiredTier: 3 },
     { id: 'scripts', title: "Salary Negotiations", desc: "Tactical word-for-word scripts.", type: "Stewards Only", icon: <DollarSign className="text-purple-400" />, requiredTier: 3 }
   ];
 
   return (
-    <div className="animate-in fade-in duration-500">
-      <div className="grid grid-cols-1 gap-6 mb-20">
+    <div className="animate-in fade-in duration-500 pb-20">
+      <div className="grid grid-cols-1 gap-4 mb-20">
         {trailKitResources.map((tool) => {
-          const isLocked = !godMode && userRank < tool.requiredTier;
+          const isLocked = userRank < tool.requiredTier;
           const isOpen = expandedCard === tool.id && !isLocked;
 
           return (
-            <div key={tool.id} className={`flex flex-col group ${isLocked ? 'opacity-50' : ''}`}>
+            <div key={tool.id} className="flex flex-col group">
               <div 
                 onClick={() => !isLocked && setExpandedCard(isOpen ? null : tool.id)}
                 className={`relative bg-[#16121D] border transition-all duration-300 ${
-                  isLocked ? 'cursor-not-allowed border-zinc-800' : 'cursor-pointer hover:border-teal-500/30 shadow-lg'
+                  isLocked ? 'opacity-40 cursor-not-allowed border-zinc-800' : 'cursor-pointer hover:border-teal-500/30 shadow-lg'
                 } ${isOpen ? 'rounded-t-[2.5rem] border-teal-500/30' : 'rounded-[2.5rem] border-zinc-800'}`}
               >
-                <div className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="p-6 md:p-8 flex items-center justify-between gap-6">
                   <div className="flex items-center gap-6">
                     <div className="p-4 rounded-2xl bg-white/5 border border-white/5 group-hover:bg-teal-500/10 transition-colors">
                         {isLocked ? <Lock size={20} className="text-zinc-600" /> : tool.icon}
                     </div>
                     <div>
-                      <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest bg-zinc-800/50 text-zinc-500 mb-2">
-                          {isLocked ? "Upgrade Required" : tool.type}
-                      </span>
-                      <h3 className="text-xl text-white font-serif italic font-black">{tool.title}</h3>
-                      <p className="text-zinc-500 mt-1 max-w-md text-[11px] font-light italic leading-relaxed">{tool.desc}</p>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${isLocked ? 'bg-zinc-800 text-zinc-500' : 'bg-teal-500/10 text-teal-500'}`}>
+                            {isLocked ? "Steward Standing Required" : tool.type}
+                        </span>
+                      </div>
+                      <h3 className="text-lg md:text-xl text-white font-serif italic">{tool.title}</h3>
+                      <p className="hidden md:block text-zinc-500 mt-1 max-w-md text-[11px] font-light italic leading-relaxed">{tool.desc}</p>
                     </div>
                   </div>
-                  {!isLocked && <div className="text-zinc-600 group-hover:text-white transition-colors">{isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</div>}
+                  {!isLocked && (
+                    <div className="text-zinc-600 group-hover:text-white transition-colors">
+                      {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {isOpen && (
-                <div className="bg-[#110E16] border-x border-b border-teal-500/30 rounded-b-[2.5rem] p-8 pt-4 animate-in slide-in-from-top-2">
-                  
-                  {tool.id === 'verbs' && (
-                    <div className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {(showAllVerbs ? powerVerbs : powerVerbs.slice(0, 9)).map((v, i) => (
-                                <div key={i} className="bg-black/40 border border-white/5 p-4 rounded-xl">
-                                    <div className="text-[10px] text-zinc-600 line-through uppercase tracking-tighter">{v.legacy}</div>
-                                    <div className="text-lg font-serif italic text-teal-400">{v.horizon}</div>
-                                    <div className="text-[9px] text-zinc-500 mt-2 font-mono italic opacity-60">"{v.use}"</div>
+              <AnimatePresence>
+                {isOpen && (
+                  <motion.div 
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden bg-[#110E16] border-x border-b border-teal-500/30 rounded-b-[2.5rem]"
+                  >
+                    <div className="p-6 md:p-8 pt-0 space-y-6">
+                      
+                      {tool.id === 'verbs' && (
+                        <div className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                {(showAllVerbs ? powerVerbs : powerVerbs.slice(0, 9)).map((v, i) => (
+                                    <div key={i} className="bg-black/40 border border-white/5 p-4 rounded-2xl hover:border-teal-500/20 transition-colors">
+                                        <div className="text-[9px] text-zinc-600 line-through uppercase tracking-tighter mb-1">{v.legacy}</div>
+                                        <div className="text-lg font-serif italic text-teal-400">{v.horizon}</div>
+                                        <div className="text-[10px] text-zinc-500 mt-2 italic opacity-70 leading-relaxed">"{v.use}"</div>
+                                    </div>
+                                ))}
+                            </div>
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); setShowAllVerbs(!showAllVerbs); }} 
+                                className="w-full py-4 border border-dashed border-zinc-800 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 hover:border-teal-500/30 transition-all"
+                            >
+                                {showAllVerbs ? "Collapse List" : "View Full Lexicon (50 Verbs)"}
+                            </button>
+                        </div>
+                      )}
+
+                      {tool.id === 'ledger' && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="bg-teal-500/5 border border-teal-500/10 p-6 rounded-[2rem] flex flex-col justify-between">
+                                <div>
+                                    <h4 className="text-white font-serif italic text-lg mb-1">The Identity Ledger</h4>
+                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-6">Master Class Slide Deck</p>
                                 </div>
-                            ))}
-                        </div>
-                        <button 
-                            onClick={(e) => { e.stopPropagation(); setShowAllVerbs(!showAllVerbs); }} 
-                            className="w-full py-4 border border-dashed border-zinc-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 transition-all"
-                        >
-                            {showAllVerbs ? "Collapse List" : "View Full Lexicon (50 Verbs)"}
-                        </button>
-                    </div>
-                  )}
-
-                  {tool.id === 'ledger' && (
-                    <div className="space-y-4">
-                        <div className="bg-teal-500/5 border border-teal-500/20 p-6 rounded-3xl flex flex-col sm:flex-row items-center gap-6">
-                            <div className="flex-1">
-                                <h4 className="text-white font-serif italic mb-1">Vol II: The Identity Ledger</h4>
-                                <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-4">Core Strategy Presentation</p>
-                                <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link")} className="w-full sm:w-auto px-8 py-3 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all flex items-center justify-center gap-2">
-                                    <Presentation size={14} /> View Slide Deck
+                                <button onClick={() => window.open("https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link")} className="w-full h-12 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                    <Presentation size={14} /> Open Presentation
+                                </button>
+                            </div>
+                            <div className="bg-white/5 border border-white/5 p-6 rounded-[2rem] flex flex-col justify-between">
+                                <div>
+                                    <h4 className="text-white font-serif italic text-lg mb-1">The Implementation Ledger</h4>
+                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-6">Personal Workbook (PDF)</p>
+                                </div>
+                                <button onClick={() => window.open("https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link")} className="w-full h-12 border border-zinc-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                    <ClipboardList size={14} /> Download Ledger
                                 </button>
                             </div>
                         </div>
-                        <div className="bg-zinc-900/50 border border-white/5 p-6 rounded-3xl flex flex-col sm:flex-row items-center gap-6">
-                            <div className="flex-1">
-                                <h4 className="text-white font-serif italic mb-1">The Ledger Worksheet</h4>
-                                <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-4">Interactive Implementation Guide</p>
-                                <button onClick={() => window.open("https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link")} className="w-full sm:w-auto px-8 py-3 border border-zinc-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-white/5 transition-all flex items-center justify-center gap-2">
-                                    <ClipboardList size={14} /> Download Worksheet
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                  )}
+                      )}
 
-                  {tool.id === 'resume' && (
-                    <div className="bg-purple-500/5 border border-purple-500/20 p-6 rounded-3xl">
-                        <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=drive_link")} className="w-full sm:w-auto px-10 h-14 bg-purple-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-400 transition-all flex items-center justify-center gap-2">
-                            <ExternalLink size={14} /> Open Blueprint
-                        </button>
-                    </div>
-                  )}
-
-                  {(tool.id === 'outreach' || tool.id === 'scripts') && (
-                    <div className="space-y-4">
-                      {(tool.id === 'outreach' ? dynamicContent.outreach : dynamicContent.salary).map((item, i) => (
-                        <div key={i} className="bg-black/40 border border-white/5 p-5 rounded-xl group/script relative">
-                           <h4 className="text-[10px] font-black uppercase text-white mb-3 tracking-widest">{item.title || item.label}</h4>
-                           <div className="p-4 bg-black/60 rounded-lg border border-white/5 font-mono text-[11px] text-zinc-300 italic select-all leading-relaxed whitespace-pre-wrap">"{item.script}"</div>
-                           <div className="absolute top-4 right-4 opacity-0 group-hover/script:opacity-100 transition-opacity cursor-pointer"><Copy size={12} className="text-zinc-600" /></div>
+                      {tool.id === 'resume' && (
+                        <div className="bg-purple-500/5 border border-purple-500/20 p-8 rounded-[2rem] text-center">
+                            <p className="text-sm text-zinc-400 italic mb-6">An ATS-optimized template designed specifically for public-to-private sector pivots.</p>
+                            <button onClick={() => window.open("https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=drive_link")} className="px-10 h-14 bg-purple-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-400 active:scale-95 transition-all inline-flex items-center gap-2 shadow-xl shadow-purple-500/20">
+                                <ExternalLink size={14} /> Get Blueprint (Google Doc)
+                            </button>
                         </div>
-                      ))}
+                      )}
+
+                      {(tool.id === 'outreach' || tool.id === 'scripts') && (
+                        <div className="space-y-4">
+                          {(tool.id === 'outreach' ? dynamicContent.outreach : dynamicContent.salary).map((item, i) => {
+                            const uniqueKey = `${tool.id}-${i}`;
+                            return (
+                                <div key={i} className="bg-black/40 border border-white/5 p-6 rounded-2xl group/script relative">
+                                    <div className="flex justify-between items-start mb-3">
+                                        <h4 className="text-[10px] font-black uppercase text-teal-500 tracking-widest">{item.title || item.label}</h4>
+                                        <button 
+                                            onClick={() => handleCopy(item.script, uniqueKey)}
+                                            className="p-2 bg-white/5 rounded-lg text-zinc-500 hover:text-white transition-colors"
+                                        >
+                                            {copiedIndex === uniqueKey ? <Check size={14} className="text-teal-500" /> : <Copy size={14} />}
+                                        </button>
+                                    </div>
+                                    <div className="font-mono text-[11px] text-zinc-300 italic select-all leading-relaxed whitespace-pre-wrap">
+                                        "{item.script}"
+                                    </div>
+                                    {copiedIndex === uniqueKey && (
+                                        <div className="absolute top-2 right-12 text-[8px] font-black uppercase text-teal-500 animate-in fade-in slide-in-from-right-2">
+                                            Copied to Clipboard
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           );
         })}
