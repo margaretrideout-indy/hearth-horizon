@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect, createContext, useContext, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -34,28 +34,37 @@ function HearthProvider({ children }) {
     retry: false,
   });
 
-  const isAdmin = user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+  // Master Key Check: Ensures Margaret always has Steward access
+  const isAdmin = useMemo(() => {
+    return user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+  }, [user]);
 
   const initialState = {
-    name: "Traveler", // The User's starting identity
-    tier: "Seedling", // The User's starting free tier
+    name: "Traveler",
+    tier: "Seedling",
     journey: "Professional Transition",
     isAligned: false,
     pulses: [],
     resume: null,
     blueprints: [], 
+    email: "" // Store email in vault for easier chat handling
   };
 
   const [sanctuaryState, setSanctuaryState] = useState(initialState);
 
   // Sync state when user data arrives from the Cloud
   useEffect(() => {
-    if (user && user.metadata?.vault) {
-      setSanctuaryState(user.metadata.vault);
+    if (user) {
+      const cloudVault = user.metadata?.vault || {};
+      setSanctuaryState(prev => ({
+        ...prev,
+        ...cloudVault,
+        email: user.email // Ensure email is always current
+      }));
     }
   }, [user]);
 
-  // 2. REFRESH LOGIC
+  // 2. REFRESH LOGIC (Mirroring the snap pull-to-refresh)
   const handleManualRefresh = async () => {
     await queryClient.invalidateQueries(['me']);
     await refetchUser();
@@ -94,6 +103,12 @@ function HearthProvider({ children }) {
 
   const [activeLibraryTool, setActiveLibraryTool] = useState(null);
 
+  // The final source of truth for permissions
+  const effectiveTier = useMemo(() => {
+    if (isAdmin) return 'Steward';
+    return sanctuaryState.tier || 'Seedling';
+  }, [isAdmin, sanctuaryState.tier]);
+
   const value = {
     user,
     isAdmin,
@@ -102,8 +117,7 @@ function HearthProvider({ children }) {
     onSync: forceSync,
     onRefresh: handleManualRefresh,
     onResumeSync: handleResumeSync,
-    // Admin is always a Steward, otherwise use the vault tier
-    effectiveTier: isAdmin ? 'Steward' : sanctuaryState.tier,
+    effectiveTier,
     activeLibraryTool,
     onSetLibraryTool: setActiveLibraryTool
   };
@@ -113,8 +127,9 @@ function HearthProvider({ children }) {
 
 function LoadingScreen() {
   return (
-    <div className="min-h-screen bg-[#0A080D] flex items-center justify-center">
-      <div className="w-6 h-6 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
+    <div className="min-h-screen bg-[#0A080D] flex flex-col items-center justify-center gap-4">
+      <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
+      <p className="text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-black">Waking the Forest...</p>
     </div>
   );
 }
@@ -122,38 +137,16 @@ function LoadingScreen() {
 function AdminRoute({ children }) {
   const { user, isAdmin, authLoading } = useHearth();
   if (authLoading) return <LoadingScreen />;
-  // Secure check for Margaret's email via isAdmin
   if (!user || !isAdmin) return <Navigate to="/" replace />;
   return children;
 }
 
 function ProtectedRoute({ children }) {
-  const { user, authLoading } = useHearth();
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    const checkVipStatus = async () => {
-      if (!user || user.subscription_tier === 'Hearthkeeper' || user.subscription_tier === 'Steward') return;
-      try {
-        const vouchers = await base44.entities.VoucherPool.list();
-        const myVipTicket = vouchers.find(v => v.claimed_by?.toLowerCase() === user.email?.toLowerCase() && v.status === 'available');
-        if (myVipTicket) {
-          await base44.user.update(user.id, { subscription_tier: 'Hearthkeeper' });
-          await base44.entities.VoucherPool.update(myVipTicket.id, { 
-            status: 'claimed',
-            claimed_date: new Date().toISOString()
-          });
-          queryClient.invalidateQueries(['me']);
-        }
-      } catch (error) {
-        console.error("Sanctuary VIP check issue", error);
-      }
-    };
-    if (user) checkVipStatus();
-  }, [user, queryClient]);
-
+  const { user, authLoading, isAdmin } = useHearth();
+  
   if (authLoading) return <LoadingScreen />;
-  if (!user) return <Navigate to="/grove" replace />;
+  // Admins bypass the redirection to the landing page
+  if (!user && !isAdmin) return <Navigate to="/grove" replace />;
   return children;
 }
 
@@ -164,14 +157,12 @@ function AppRoutes() {
   return (
     <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
       <Routes>
-        {/* --- ADMIN --- */}
         <Route path="/admin" element={
           <AdminRoute>
             <AdminDashboard vault={vault} onSync={onSync} isAdmin={isAdmin} />
           </AdminRoute>
         } />
         
-        {/* --- PUBLIC ACCESS --- */}
         <Route path="/" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         <Route path="/grove" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         
@@ -187,10 +178,6 @@ function AppRoutes() {
           </AppLayout>
         } />
         
-        <Route path="/launch" element={<Navigate to="/horizon" replace />} />
-        <Route path="/canopy" element={<Navigate to="/horizon" replace />} />
-
-        {/* --- PROTECTED ACCESS --- */}
         <Route path="/hearth" element={
           <ProtectedRoute>
             <AppLayout currentTier={effectiveTier}>
