@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useMemo } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
@@ -119,9 +119,8 @@ function AdminRoute({ children }) {
   return children;
 }
 
-// We simplified this to prevent the "Margaret Bounce"
 function ProtectedRoute({ children }) {
-  const { user, authLoading, isAdmin } = useHearth();
+  const { user, authLoading } = useHearth();
   if (authLoading) return <LoadingScreen />;
   if (!user) return <Navigate to="/grove" replace />;
   return children;
@@ -130,6 +129,21 @@ function ProtectedRoute({ children }) {
 function AppRoutes() {
   const { isAdmin, vault, onSync, onRefresh, onResumeSync, effectiveTier } = useHearth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // NATIVE LOGIC: Scroll to top if tapping an already-active tab
+  const handleTabClick = (path) => {
+    if (location.pathname === path) {
+      const scrollContainer = document.querySelector('.embers-scroll');
+      if (scrollContainer) {
+        scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    } else {
+      navigate(path);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
@@ -139,10 +153,10 @@ function AppRoutes() {
         <Route path="/" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         <Route path="/grove" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
         
-        {/* CORE FEATURES - Protected by AppLayout UI locks, not Route redirects */}
+        {/* CORE FEATURES - Wrapped in AppLayout with Tab Logic */}
         <Route path="/horizon" element={
           <ProtectedRoute>
-            <AppLayout currentTier={effectiveTier}>
+            <AppLayout currentTier={effectiveTier} onTabClick={handleTabClick}>
               <Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} userTier={effectiveTier} />
             </AppLayout>
           </ProtectedRoute>
@@ -150,7 +164,7 @@ function AppRoutes() {
 
         <Route path="/library" element={
           <ProtectedRoute>
-            <AppLayout currentTier={effectiveTier}>
+            <AppLayout currentTier={effectiveTier} onTabClick={handleTabClick}>
               <Library vault={vault} onSync={onSync} isAdmin={isAdmin} />
             </AppLayout>
           </ProtectedRoute>
@@ -158,9 +172,12 @@ function AppRoutes() {
         
         <Route path="/hearth" element={
           <ProtectedRoute>
-            <AppLayout currentTier={effectiveTier}>
-              <YourHearth vault={vault} onSync={onSync} onRefresh={onRefresh} onResumeSync={onResumeSync} isAdmin={isAdmin}
-                onNavigateToLibrary={() => navigate('/library')} onNavigateToEmbers={() => navigate('/embers')} onNavigateToHorizon={() => navigate('/horizon')}
+            <AppLayout currentTier={effectiveTier} onTabClick={handleTabClick}>
+              <YourHearth 
+                vault={vault} onSync={onSync} onRefresh={onRefresh} onResumeSync={onResumeSync} isAdmin={isAdmin}
+                onNavigateToLibrary={() => handleTabClick('/library')} 
+                onNavigateToEmbers={() => handleTabClick('/embers')} 
+                onNavigateToHorizon={() => handleTabClick('/horizon')}
               />
             </AppLayout>
           </ProtectedRoute>
@@ -168,7 +185,7 @@ function AppRoutes() {
 
         <Route path="/alignment" element={
           <ProtectedRoute>
-            <AppLayout currentTier={effectiveTier}>
+            <AppLayout currentTier={effectiveTier} onTabClick={handleTabClick}>
               <CulturalFit vault={vault} onSync={onSync} isAdmin={isAdmin} userTier={effectiveTier} />
             </AppLayout>
           </ProtectedRoute>
@@ -176,13 +193,20 @@ function AppRoutes() {
 
         <Route path="/embers" element={
           <ProtectedRoute>
-            <AppLayout currentTier={effectiveTier}>
+            <AppLayout currentTier={effectiveTier} onTabClick={handleTabClick}>
               <EmbersChat isAdmin={isAdmin} vault={vault} />
             </AppLayout>
           </ProtectedRoute>
         } />
         
-        <Route path="/contact" element={<ProtectedRoute><AppLayout currentTier={effectiveTier}><Contact /></AppLayout></ProtectedRoute>} />
+        <Route path="/contact" element={
+          <ProtectedRoute>
+            <AppLayout currentTier={effectiveTier} onTabClick={handleTabClick}>
+              <Contact />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
@@ -193,7 +217,9 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <HearthProvider>
-        <Router><AppRoutes /></Router>
+        <Router>
+          <AppRoutes />
+        </Router>
       </HearthProvider>
     </QueryClientProvider>
   );
