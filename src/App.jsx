@@ -27,7 +27,7 @@ export function useHearth() {
 function HearthProvider({ children }) {
   const queryClient = useQueryClient();
 
-  // 1. Fetch User Data from Cloud
+  // 1. AUTH & CLOUD DATA FETCHING
   const { data: user, isLoading: authLoading, refetch: refetchUser } = useQuery({
     queryKey: ['me'],
     queryFn: () => base44.auth.me(),
@@ -36,7 +36,7 @@ function HearthProvider({ children }) {
 
   const isAdmin = user && user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
-  const [sanctuaryState, setSanctuaryState] = useState({
+  const initialState = {
     name: "Traveler",
     tier: "Seedling",
     journey: "Professional Transition",
@@ -44,38 +44,29 @@ function HearthProvider({ children }) {
     pulses: [],
     resume: null,
     blueprints: [], 
-  });
+  };
 
-  // Sync state when user data arrives from cloud
+  const [sanctuaryState, setSanctuaryState] = useState(initialState);
+
+  // Sync state when user data arrives from the Cloud
   useEffect(() => {
     if (user && user.metadata?.vault) {
       setSanctuaryState(user.metadata.vault);
     }
   }, [user]);
 
-  // 2. THE REFRESH LOGIC (For Pull-to-Refresh)
+  // 2. REFRESH LOGIC (For Native Pull-to-Refresh)
   const handleManualRefresh = async () => {
-    // This forces React Query to fetch the 'me' query again from Base44
     await queryClient.invalidateQueries(['me']);
     await refetchUser();
   };
 
-  // 3. THE CLOUD SYNC & DELETION LOGIC
+  // 3. CLOUD SYNC & DELETION LOGIC
   const forceSync = async (updates) => {
-    // If updates is null, it's a "Delete All" signal
+    // If updates is null, we are performing the mandatory "Account Deletion" wipe
     const isDeletion = updates === null;
-    
-    const initialState = {
-      name: "Traveler",
-      tier: "Seedling",
-      journey: "Professional Transition",
-      isAligned: false,
-      pulses: [],
-      resume: null,
-      blueprints: [], 
-    };
-
     const newState = isDeletion ? initialState : { ...sanctuaryState, ...updates };
+    
     setSanctuaryState(newState);
 
     if (user?.id) {
@@ -110,7 +101,7 @@ function HearthProvider({ children }) {
     authLoading,
     vault: sanctuaryState,
     onSync: forceSync,
-    onRefresh: handleManualRefresh, // New function passed to YourHearth
+    onRefresh: handleManualRefresh,
     onResumeSync: handleResumeSync,
     effectiveTier: isAdmin ? 'Steward' : sanctuaryState.tier,
     activeLibraryTool,
@@ -120,6 +111,140 @@ function HearthProvider({ children }) {
   return <HearthContext.Provider value={value}>{children}</HearthContext.Provider>;
 }
 
-// ... Rest of your App.jsx (LoadingScreen, ProtectedRoute, AppRoutes) remains the same
-// Make sure to pass onRefresh to YourHearth inside AppRoutes:
-// <YourHearth vault={vault} onSync={onSync} onRefresh={onRefresh} ... />
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen bg-[#0A080D] flex items-center justify-center">
+      <div className="w-6 h-6 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
+
+function AdminRoute({ children }) {
+  const { user, isAdmin, authLoading } = useHearth();
+  if (authLoading) return <LoadingScreen />;
+  if (!user || !isAdmin) return <Navigate to="/" replace />;
+  return children;
+}
+
+function ProtectedRoute({ children }) {
+  const { user, authLoading } = useHearth();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const checkVipStatus = async () => {
+      if (!user || user.subscription_tier === 'Hearthkeeper' || user.subscription_tier === 'Steward') return;
+      try {
+        const vouchers = await base44.entities.VoucherPool.list();
+        const myVipTicket = vouchers.find(v => v.claimed_by?.toLowerCase() === user.email?.toLowerCase() && v.status === 'available');
+        if (myVipTicket) {
+          await base44.user.update(user.id, { subscription_tier: 'Hearthkeeper' });
+          await base44.entities.VoucherPool.update(myVipTicket.id, { 
+            status: 'claimed',
+            claimed_date: new Date().toISOString()
+          });
+          queryClient.invalidateQueries(['me']);
+        }
+      } catch (error) {
+        console.error("Sanctuary VIP check issue", error);
+      }
+    };
+    if (user) checkVipStatus();
+  }, [user, queryClient]);
+
+  if (authLoading) return <LoadingScreen />;
+  if (!user) return <Navigate to="/grove" replace />;
+  return children;
+}
+
+function AppRoutes() {
+  const { isAdmin, vault, onSync, onRefresh, onResumeSync, effectiveTier } = useHearth();
+  const navigate = useNavigate();
+
+  return (
+    <div className="min-h-screen bg-[#0A080D] text-white selection:bg-teal-500/30 font-sans">
+      <Routes>
+        {/* --- ADMIN --- */}
+        <Route path="/admin" element={
+          <AdminRoute>
+            <AdminDashboard vault={vault} onSync={onSync} />
+          </AdminRoute>
+        } />
+        
+        {/* --- PUBLIC ACCESS --- */}
+        <Route path="/" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
+        <Route path="/grove" element={<GroveTiers vault={vault} onSync={onSync} isAdmin={isAdmin} />} />
+        
+        <Route path="/horizon" element={
+          <AppLayout currentTier={effectiveTier}>
+            <Canopy vault={vault} onSync={onSync} isAdmin={isAdmin} userTier={effectiveTier} />
+          </AppLayout>
+        } />
+
+        <Route path="/library" element={
+          <AppLayout currentTier={effectiveTier}>
+            <Library vault={vault} onSync={onSync} isAdmin={isAdmin} />
+          </AppLayout>
+        } />
+        
+        <Route path="/launch" element={<Navigate to="/horizon" replace />} />
+        <Route path="/canopy" element={<Navigate to="/horizon" replace />} />
+
+        {/* --- PROTECTED ACCESS --- */}
+        <Route path="/hearth" element={
+          <ProtectedRoute>
+            <AppLayout currentTier={effectiveTier}>
+              <YourHearth 
+                vault={vault} 
+                onSync={onSync} 
+                onRefresh={onRefresh}
+                onResumeSync={onResumeSync}
+                isAdmin={isAdmin}
+                onNavigateToLibrary={() => navigate('/library')}
+                onNavigateToEmbers={() => navigate('/embers')}
+                onNavigateToHorizon={() => navigate('/horizon')}
+              />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/alignment" element={
+          <ProtectedRoute>
+            <AppLayout currentTier={effectiveTier}>
+              <CulturalFit vault={vault} onSync={onSync} isAdmin={isAdmin} />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/embers" element={
+          <ProtectedRoute>
+            <AppLayout currentTier={effectiveTier}>
+              <EmbersChat isAdmin={isAdmin} />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/contact" element={
+          <ProtectedRoute>
+            <AppLayout currentTier={effectiveTier}>
+              <Contact />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <HearthProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </HearthProvider>
+    </QueryClientProvider>
+  );
+}
