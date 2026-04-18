@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +13,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling" }) {
+  const navigate = useNavigate();
   const [isAnalyzing, setIsAnalyzing] = useState(null); 
   const [analysisResult, setAnalysisResult] = useState(null);
   const [apiJobs, setApiJobs] = useState([]);
@@ -55,12 +57,9 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
     }
   };
 
-  // NATIVE REFRESH LOGIC
   const handleManualRefresh = async () => {
     setIsRefreshing(true);
-    // Sync the Cloud Vault
     if (onRefresh) await onRefresh();
-    // Sync the Jobs Board
     await fetchJobs();
     setIsRefreshing(false);
   };
@@ -69,11 +68,11 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
 
   const handleAnalyze = (job) => {
     if (userTier === "Seedling") {
-      alert("Deep alignment analysis is reserved for Stewards and Sentinels.");
+      alert("Deep alignment analysis is reserved for Stewards.");
       return;
     }
     if (!vault?.resume) {
-      alert("The Hearth requires your professional legacy to calculate fit.");
+      alert("The Hearth requires your legacy profile to calculate fit.");
       return;
     }
 
@@ -91,19 +90,22 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
   return (
     <div className="max-w-7xl mx-auto py-8 px-6 space-y-12 animate-in fade-in duration-700 bg-[#0A080D]">
       
-      {/* PULL TO REFRESH UI */}
-      <div className="flex justify-center h-4">
-        <motion.div 
-          animate={isRefreshing ? { rotate: 360 } : { y: 0 }}
-          transition={isRefreshing ? { repeat: Infinity, duration: 1, ease: "linear" } : {}}
-          className="opacity-40 text-teal-500 cursor-pointer"
+      {/* 1. STANDARDIZED REFRESH TARGET (44px) */}
+      <div className="flex justify-center h-12">
+        <button 
           onClick={handleManualRefresh}
+          className="w-11 h-11 flex items-center justify-center rounded-full bg-white/5 text-teal-500/50 hover:text-teal-500 transition-all"
         >
-          <RefreshCw size={20} className={isRefreshing ? "" : "hover:scale-110 transition-transform"} />
-        </motion.div>
+          <motion.div 
+            animate={isRefreshing ? { rotate: 360 } : { rotate: 0 }}
+            transition={isRefreshing ? { repeat: Infinity, duration: 1, ease: "linear" } : {}}
+          >
+            <RefreshCw size={20} />
+          </motion.div>
+        </button>
       </div>
 
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pt-4">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-3 text-teal-500 mb-2">
             <Binoculars size={20} />
@@ -116,20 +118,24 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+          {/* Enhanced Search Input */}
           <div className="relative w-full sm:w-64">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" size={14} />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={14} />
             <Input 
               placeholder="Search by City..." 
               value={locationQuery}
               onChange={(e) => setLocationQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && setActiveLocation(locationQuery)}
-              className="pl-10 bg-white/5 border-white/5 text-white rounded-xl text-xs h-10 focus:border-teal-500/50 transition-all placeholder:text-zinc-700"
+              className="pl-10 bg-white/5 border-white/5 text-white rounded-xl text-xs h-12 focus:ring-1 focus:ring-teal-500/30 transition-all"
             />
           </div>
 
-          <div className="flex items-center gap-3 bg-white/5 border border-white/5 px-4 h-10 rounded-xl">
-            <Home size={14} className={isRemoteOnly ? "text-teal-400" : "text-zinc-700"} />
-            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest italic">Remote Only</span>
+          {/* Standardized Switch Target */}
+          <div className="flex items-center gap-4 bg-white/5 border border-white/5 px-4 h-12 rounded-xl w-full sm:w-auto justify-between sm:justify-start">
+            <div className="flex items-center gap-2">
+              <Home size={14} className={isRemoteOnly ? "text-teal-400" : "text-zinc-700"} />
+              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest italic">Remote</span>
+            </div>
             <Switch checked={isRemoteOnly} onCheckedChange={setIsRemoteOnly} className="data-[state=checked]:bg-teal-500" />
           </div>
         </div>
@@ -138,67 +144,48 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
       {isLoading ? (
         <div className="flex flex-col items-center py-20 gap-4">
           <Loader2 className="animate-spin text-teal-500" size={32} />
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 italic">Connecting to Global Survey...</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 italic">Syncing with Horizon...</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
           {apiJobs.map((job) => {
             const isMatched = analysisResult?.jobId === job.id;
             return (
-              <Card key={job.id} className="group p-8 bg-[#110E16] border-white/5 hover:border-teal-500/30 transition-all duration-500 rounded-[2.5rem] relative overflow-hidden flex flex-col justify-between shadow-2xl">
-                <div className="space-y-6 relative z-10">
+              <Card key={job.id} className="group p-8 bg-[#110E16] border-white/5 hover:border-teal-500/30 transition-all duration-500 rounded-[2.5rem] flex flex-col justify-between shadow-2xl">
+                <div className="space-y-6">
                   <div className="flex justify-between items-start">
-                    <div className="p-3 bg-black border border-white/5 rounded-2xl group-hover:border-teal-500/30 transition-all">
+                    <div className="w-11 h-11 flex items-center justify-center bg-black border border-white/5 rounded-2xl">
                       <Briefcase size={20} className="text-zinc-600 group-hover:text-teal-400" />
                     </div>
                     {isMatched && (
-                      <Badge className="bg-teal-500 text-black font-black text-[8px] tracking-[0.2em] px-3 py-1">
-                        {analysisResult.score}% ALIGNED
+                      <Badge className="bg-teal-500 text-black font-black text-[10px] tracking-[0.1em] px-3 py-1">
+                        {analysisResult.score}% FIT
                       </Badge>
                     )}
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-white group-hover:text-teal-400 transition-colors line-clamp-2 leading-tight">{job.title}</h3>
+                    <h3 className="text-xl font-bold text-white group-hover:text-teal-400 transition-colors line-clamp-2">{job.title}</h3>
                     <p className="text-[10px] text-teal-500/60 font-black uppercase tracking-[0.2em] mt-1 italic">{job.company}</p>
                   </div>
-                  <p className="text-xs text-zinc-500 leading-relaxed font-light italic line-clamp-3">"{job.desc}"</p>
-                  <div className="flex flex-wrap gap-4 pt-2">
-                    <div className="flex items-center gap-1.5 text-[9px] font-black text-zinc-600 uppercase tracking-widest italic"><MapPin size={12} /> {job.location}</div>
-                    <div className="flex items-center gap-1.5 text-[9px] font-black text-zinc-600 uppercase tracking-widest italic"><Clock size={12} /> {job.type}</div>
-                  </div>
+                  <p className="text-xs text-zinc-500 leading-relaxed italic line-clamp-3">"{job.desc}"</p>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-white/5 space-y-4 relative z-10">
-                  <div className="flex justify-between items-center text-lg font-black italic text-white/90 font-serif">{job.salary}</div>
+                <div className="mt-8 pt-6 border-t border-white/5 space-y-4">
+                  <div className="text-lg font-black italic text-white/90 font-serif">{job.salary}</div>
                   <div className="grid grid-cols-2 gap-3">
-                    <Button asChild className="h-12 bg-black border border-white/5 text-zinc-400 hover:text-white font-black rounded-xl text-[9px] uppercase tracking-widest transition-all">
-                      <a href={job.link} target="_blank" rel="noopener noreferrer">
-                         Inspect Role <ExternalLink size={12} className="ml-2" />
+                    <Button asChild className="h-12 bg-black border border-white/5 text-zinc-400 hover:text-white font-black rounded-xl text-[10px] uppercase tracking-widest">
+                      <a href={job.link} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
+                         Inspect <ExternalLink size={14} />
                       </a>
                     </Button>
                     <Button 
                       onClick={() => handleAnalyze(job)} 
                       disabled={isAnalyzing === job.id} 
-                      className="h-12 bg-teal-500/5 hover:bg-teal-500 border border-teal-500/20 text-teal-400 hover:text-black font-black rounded-xl text-[9px] uppercase tracking-widest transition-all"
+                      className="h-12 bg-teal-500/10 hover:bg-teal-500 border border-teal-500/20 text-teal-400 hover:text-black font-black rounded-xl text-[10px] uppercase tracking-widest"
                     >
-                      {isAnalyzing === job.id ? <Loader2 className="animate-spin" size={14} /> : (
-                        <span className="flex items-center gap-2">
-                          <Sparkles size={12} /> Translate Fit
-                        </span>
-                      )}
+                      {isAnalyzing === job.id ? <Loader2 className="animate-spin" size={14} /> : "Analyze"}
                     </Button>
                   </div>
-                  <AnimatePresence>
-                    {isMatched && (
-                      <motion.div 
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        className="p-4 bg-teal-500/5 border border-teal-500/20 rounded-2xl"
-                      >
-                        <p className="text-[10px] text-teal-400 italic leading-relaxed">{analysisResult.message}</p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
                 </div>
               </Card>
             );
@@ -206,16 +193,27 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
         </div>
       )}
 
-      <footer className="pt-12 border-t border-white/5 flex justify-between items-center pb-8">
-        <div className="flex items-center gap-3 bg-black px-5 py-2.5 rounded-full border border-white/5 shadow-inner">
-          <Globe size={12} className="text-teal-500 animate-pulse" />
-          <p className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.3em] italic">
-            Surveying Global Horizon
+      {/* 2. STANDARDIZED FOOTER (Unified Nav Fix) */}
+      <footer className="pt-12 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-6 pb-8">
+        <div className="flex items-center gap-3 bg-black px-5 py-3 rounded-full border border-white/5">
+          <Globe size={14} className="text-teal-500 animate-pulse" />
+          <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest italic">
+            Global Survey Live
           </p>
         </div>
         <div className="flex gap-8">
-          <span className="text-[9px] font-black text-teal-500/30 uppercase tracking-[0.3em] cursor-pointer hover:text-teal-400 transition-colors italic" onClick={() => window.location.href='/library'}>The Sanctuary</span>
-          <span className="text-[9px] font-black text-teal-500/30 uppercase tracking-[0.3em] cursor-pointer hover:text-teal-400 transition-colors italic" onClick={() => window.location.href='/hearth'}>Return to Hearth</span>
+          <button 
+            className="text-[10px] font-black text-teal-500/30 uppercase tracking-[0.2em] hover:text-teal-400 transition-colors italic py-2" 
+            onClick={() => navigate('/library')}
+          >
+            The Library
+          </button>
+          <button 
+            className="text-[10px] font-black text-teal-500/30 uppercase tracking-[0.2em] hover:text-teal-400 transition-colors italic py-2" 
+            onClick={() => navigate('/hearth')}
+          >
+            The Hearth
+          </button>
         </div>
       </footer>
     </div>
