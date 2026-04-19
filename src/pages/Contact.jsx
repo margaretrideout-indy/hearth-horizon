@@ -86,23 +86,19 @@ const Contact = ({ vault, isAdmin }) => {
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
 
-  // --- SECURITY DEBUGGING ---
-  console.log("--- CONTACT SECURITY CHECK ---");
-  console.log("Is Admin:", isAdmin);
-  console.log("Raw Tier:", vault?.tier);
-
-  // Normalizing rank logic to handle case-sensitivity from DB
+  // Normalizing rank logic: Founder identity grants Rank 3 (Full Access)
   const tiers = { 
     'none': 0,
     'traveler': 0, 
     'seedling': 1, 
+    'seedling free': 1,
     'hearthkeeper': 2, 
-    'steward': 3 
+    'steward': 3,
+    'founding steward': 3
   };
   
-  // The logic: If isAdmin is true, you get 3. Otherwise, look up the tier. Default to 0.
+  // PRIMARY OVERRIDE: Admin always gets highest access
   const userRank = isAdmin ? 3 : (tiers[vault?.tier?.toLowerCase()] || 0);
-  console.log("Calculated Rank:", userRank);
 
   const dynamicContent = generateDynamicScripts(vault);
 
@@ -130,6 +126,11 @@ const Contact = ({ vault, isAdmin }) => {
           <span className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-500/70 italic">
             Volume II: Tactical Arsenal
           </span>
+          {isAdmin && (
+             <span className="text-[10px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded bg-teal-500/10 text-teal-400 border border-teal-500/20">
+               Founder Access
+             </span>
+          )}
         </div>
         <h2 className="text-5xl md:text-7xl text-white font-serif italic mb-6 tracking-tighter">
           The Trail <span className="text-zinc-800 font-sans not-italic font-extralight uppercase">Kit</span>
@@ -142,7 +143,8 @@ const Contact = ({ vault, isAdmin }) => {
 
       <div className="grid grid-cols-1 gap-4">
         {trailKitResources.map((tool, idx) => {
-          const isLocked = userRank < tool.requiredTier;
+          // If you are admin, isLocked is always false
+          const isLocked = !isAdmin && userRank < tool.requiredTier;
           const isOpen = expandedCard === tool.id && !isLocked;
 
           return (
