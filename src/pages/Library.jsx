@@ -58,6 +58,18 @@ export default function Library({ vault, onRefresh, isAdmin }) {
       type: "Podcast",
       icon: Mic2,
       color: "text-teal-400"
+    },
+    {
+      title: "Mental Health for Life",
+      description: "A CMHA resource exploring how to nurture and protect your mental health throughout the stages of adult life.",
+      link: "https://cmha.ca/wp-content/uploads/2016/02/MH-for-Life-NTNL-brochure-2014-web.pdf",
+      type: "PDF Guide",
+      icon: FileText,
+      color: "text-purple-400",
+      crisis: {
+        line: "9-8-8",
+        label: "Suicide Crisis Helpline — call or text 9-8-8 anytime"
+      }
     }
   ];
 
@@ -94,7 +106,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {resources.map((item, idx) => (
                   <motion.div
                     key={idx}
@@ -119,6 +131,13 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                         <p className="text-sm leading-relaxed" style={{ color: '#686868' }}>
                           {item.description}
                         </p>
+
+                        {item.crisis && (
+                          <div className="mt-2 flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                            <span className="text-xl font-black text-purple-400">{item.crisis.line}</span>
+                            <span className="text-[10px] text-purple-300/70 font-bold uppercase tracking-wide">{item.crisis.label}</span>
+                          </div>
+                        )}
                       </div>
 
                       <Button
