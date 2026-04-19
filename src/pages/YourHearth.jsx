@@ -37,7 +37,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     setIsUploading(true);
     try {
       await onResumeSync?.(file);
@@ -68,9 +67,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
       emoji: selectedEmoji,
       text: reflection
     };
-    
     await onSync({ ...vault, pulses: [newPulse, ...(vault.pulses || [])] });
-    
     setReflection("");
     setSelectedEmoji(null);
     setShowSheet(false);
@@ -86,7 +83,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   return (
     <div className="max-w-6xl mx-auto space-y-12 pb-32 animate-in fade-in duration-1000 relative px-4 md:px-6">
       
-      {/* NATIVE TOAST */}
       <AnimatePresence>
         {showToast && (
           <motion.div 
@@ -103,7 +99,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
         )}
       </AnimatePresence>
 
-      {/* REFRESH CONTROL */}
       <div className="flex justify-center h-4 relative pt-4">
         <motion.div 
           animate={isRefreshing ? { rotate: 360 } : {}}
@@ -125,7 +120,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        {/* LEFT COL */}
         <div className="lg:col-span-5 space-y-8">
           <motion.div 
             whileHover={{ scale: 1.01 }} 
@@ -169,7 +163,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
           </div>
         </div>
 
-        {/* RIGHT COL */}
         <div className="lg:col-span-7 space-y-8">
           <Card className={`p-10 rounded-[3rem] border transition-all ${vault.archetype ? 'bg-teal-500/[0.07] border-teal-500/20' : 'bg-[#0D0B10] border-white/5'}`}>
             <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-left">
@@ -216,17 +209,28 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                   <h4 className="text-white font-bold uppercase text-xs tracking-widest">Legacy Secured</h4>
                   <p className="text-[10px] text-zinc-500 mt-2 italic">"{vault.resume.name}" is archived.</p>
                   
-                  <label className="mt-6 inline-flex items-center gap-2 text-[9px] font-black uppercase text-zinc-600 hover:text-white cursor-pointer transition-colors border border-white/10 px-4 py-2 rounded-full hover:border-teal-500/30">
-                    {isUploading ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />}
-                    {isUploading ? "Processing..." : "Update Record"}
-                    <input type="file" className="hidden" onChange={handleFileChange} disabled={isUploading} />
-                  </label>
+                  <div className="mt-6 flex flex-wrap justify-center gap-3">
+                    <label className="inline-flex items-center gap-2 text-[9px] font-black uppercase text-zinc-300 hover:text-white cursor-pointer transition-colors border border-white/10 px-4 py-2 rounded-full hover:bg-white/5">
+                      {isUploading ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />}
+                      Update
+                      <input type="file" className="hidden" onChange={handleFileChange} disabled={isUploading} />
+                    </label>
+                    <button 
+                      onClick={() => {
+                        onResumeSync?.(null);
+                        triggerToast("Legacy record cleared.");
+                      }}
+                      className="inline-flex items-center gap-2 text-[9px] font-black uppercase text-zinc-600 hover:text-rose-400 transition-colors border border-white/5 px-4 py-2 rounded-full hover:border-rose-500/20"
+                    >
+                      <Trash2 size={10} />
+                      Clear
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
           </Card>
 
-          {/* DANGER ZONE */}
           <div className="pt-20 text-center">
             {!isClosingHearth ? (
               <button onClick={() => setIsClosingHearth(true)} className="text-[10px] text-zinc-800 hover:text-rose-500 uppercase font-black tracking-widest flex items-center gap-2 mx-auto transition-colors"><Trash2 size={12} /> Extinguish Hearth</button>
@@ -244,7 +248,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
         </div>
       </div>
 
-      {/* BOTTOM SHEET */}
       <AnimatePresence>
         {showSheet && (
           <>
@@ -255,7 +258,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
               onClick={() => setShowSheet(false)} 
               className="fixed inset-0 bg-black/90 backdrop-blur-md z-[200] cursor-pointer" 
             />
-            
             <motion.div 
               initial={{ y: "100%" }} 
               animate={{ y: 0 }} 
@@ -273,13 +275,11 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                   <X size={20} />
                 </button>
               </div>
-
               <div className="max-w-xl mx-auto space-y-10">
                 <div className="text-center">
                   <h3 className="text-3xl font-serif italic text-white mb-2">Internal Weather</h3>
                   <p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest">Capture this moment</p>
                 </div>
-
                 <div className="grid grid-cols-5 gap-3">
                   {pulseOptions.map((p) => (
                     <button 
@@ -292,14 +292,12 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                     </button>
                   ))}
                 </div>
-
                 <Textarea 
                   placeholder="How does the journey feel? (Optional)" 
                   value={reflection} 
                   onChange={(e) => setReflection(e.target.value)}
                   className="bg-black/40 border-white/5 rounded-2xl p-6 text-white italic min-h-[150px] outline-none"
                 />
-
                 <div className="flex flex-col gap-4">
                   <Button 
                     onClick={handleSavePulse} 
@@ -308,13 +306,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                   >
                     Seal Pulse
                   </Button>
-                  
-                  <button 
-                    onClick={() => setShowSheet(false)}
-                    className="text-[10px] text-zinc-600 uppercase font-black tracking-widest py-2 hover:text-zinc-400 transition-colors"
-                  >
-                    Dismiss
-                  </button>
+                  <button onClick={() => setShowSheet(false)} className="text-[10px] text-zinc-600 uppercase font-black tracking-widest py-2 hover:text-zinc-400 transition-colors">Dismiss</button>
                 </div>
               </div>
             </motion.div>
