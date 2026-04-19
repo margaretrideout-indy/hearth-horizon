@@ -92,8 +92,8 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
   // SEEDLING CONTENT (LEXICON) IS ALWAYS UNLOCKED
   const canAccessVerbs = true; 
   
-  // HIGH TIER CONTENT REMAINS SECURED (OR BYPASS FOR ADMIN)
-  const canAccessHighTier = isAdmin || normalizedTier === 'hearthkeeper' || normalizedTier === 'steward' || normalizedTier === 'founding steward';
+  // FIXED HIGH TIER LOGIC: If isAdmin is true, this is ALWAYS true.
+  const canAccessHighTier = isAdmin || ['hearthkeeper', 'steward', 'founding steward', 'admin'].includes(normalizedTier);
 
   const dynamicContent = generateDynamicScripts(vault);
 
