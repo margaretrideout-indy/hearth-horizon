@@ -24,22 +24,19 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
   const [showLockSheet, setShowLockSheet] = useState(false);
   const [lockContext, setLockContext] = useState({ title: '', desc: '', target: 'Seedling' });
 
-  // --- REFINED TIER & ACCESS LOGIC ---
-  const isRegistered = !!vault && vault.tier && vault.tier !== 'none';
-  const normalizedTier = vault?.tier?.toLowerCase() || 'none';
+  // --- DEFINITIVE FOUNDER & TIER LOGIC ---
   
-  // Display Label
+  // 1. If you are Admin, we force your tier to 'steward' regardless of what the vault says.
+  const normalizedTier = isAdmin ? 'steward' : (vault?.tier?.toLowerCase() || 'none');
+  const isRegistered = !!vault && vault.tier && vault.tier !== 'none';
+
+  // 2. Display Label: Use "Founder" for you, otherwise use the vault tier.
   const userTierLabel = isAdmin ? 'Founder' : (isRegistered ? vault.tier : 'Traveler');
 
-  // ACCESS GATES
-  // 1. Seedlings+ (including HK and Steward) get the Strategy Deck and Vol II entrance
-  const isSeedlingPlus = isAdmin || isRegistered || normalizedTier === 'seedling';
-  
-  // 2. Hearthkeeper+ (Mid-tier and up)
-  const isHearthkeeperPlus = isAdmin || normalizedTier === 'hearthkeeper' || normalizedTier === 'steward';
-  
-  // 3. Steward Only (Highest tier)
-  const isSteward = isAdmin || normalizedTier === 'steward';
+  // 3. ACCESS GATES: These now rely on the forced 'steward' status for Admin.
+  const isSteward = normalizedTier === 'steward'; 
+  const isHearthkeeperPlus = isSteward || normalizedTier === 'hearthkeeper';
+  const isSeedlingPlus = isHearthkeeperPlus || normalizedTier === 'seedling' || isRegistered;
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
