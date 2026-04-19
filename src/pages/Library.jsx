@@ -6,7 +6,7 @@ import {
   Sparkles, Layers, ShieldCheck, Download
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Provisions from './Provisions'; // Ensure this exists
+import Provisions from './Contact'; // Ensure this exists
 
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1X-u9E_yH_yD0_vL8o_K4-Q4_jJ0z-H4/edit?usp=sharing";
 const AMZ_PROVISIONS_URL = "https://www.amazon.ca/shop/margaretpardy";
