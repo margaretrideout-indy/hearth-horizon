@@ -5,7 +5,7 @@ import {
   Flame, Upload, CheckCircle2, FileText, 
   ArrowRight, RefreshCw, Activity, History,
   Lock, Trash2, AlertTriangle, X, Sparkles, Compass,
-  Loader2 // Added for the loading state
+  Loader2 
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   const navigate = useNavigate();
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [isUploading, setIsUploading] = useState(false); // New state
+  const [isUploading, setIsUploading] = useState(false);
   const [reflection, setReflection] = useState("");
   const [selectedEmoji, setSelectedEmoji] = useState(null);
   const [showSheet, setShowSheet] = useState(false); 
@@ -34,15 +34,13 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  // --- REFINED RESUME HANDLER ---
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     setIsUploading(true);
     try {
-      // Assuming onResumeSync is the function passed from App.jsx
-      await onResumeSync(file);
+      await onResumeSync?.(file);
       triggerToast("Professional Legacy Secured.");
     } catch (error) {
       triggerToast("Sync failed. Try again.");
@@ -82,7 +80,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   const handleExtinguishHearth = async () => {
     await onSync({ ...vault, pulses: [], resume: null, archetype: null, alignmentScore: 0 }); 
     triggerToast("Hearth extinguished.");
-    setTimeout(() => navigate('/'), 1500); // Changed from /grove to / (landing)
+    setTimeout(() => navigate('/'), 1500);
   };
 
   return (
@@ -92,7 +90,9 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
       <AnimatePresence>
         {showToast && (
           <motion.div 
-            initial={{ y: 50, opacity: 0, x: "-50%" }} animate={{ y: 0, opacity: 1, x: "-50%" }} exit={{ y: 20, opacity: 0, x: "-50%" }}
+            initial={{ y: 50, opacity: 0, x: "-50%" }} 
+            animate={{ y: 0, opacity: 1, x: "-50%" }} 
+            exit={{ y: 20, opacity: 0, x: "-50%" }}
             className="fixed bottom-24 left-1/2 z-[300] bg-zinc-100 text-black px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-2xl flex items-center gap-3 border border-white/20"
           >
             <div className="w-5 h-5 rounded-full bg-teal-500 flex items-center justify-center">
@@ -128,7 +128,8 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
         {/* LEFT COL */}
         <div className="lg:col-span-5 space-y-8">
           <motion.div 
-            whileHover={{ scale: 1.01 }} onClick={() => setShowSheet(true)}
+            whileHover={{ scale: 1.01 }} 
+            onClick={() => setShowSheet(true)}
             className="bg-gradient-to-br from-[#16121D] to-[#0D0B10] border border-white/5 p-10 rounded-[2.5rem] relative overflow-hidden shadow-2xl cursor-pointer group"
           >
             <div className="relative z-10 flex flex-col gap-6">
@@ -186,7 +187,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
             </div>
           </Card>
 
-          {/* REFINED LEGACY ARCHIVE SECTION */}
           <Card className="bg-[#0D0B10] border-white/5 p-10 rounded-[3rem]">
             <div className="flex flex-col gap-8 text-left">
               <div className="flex items-center gap-3">
@@ -248,26 +248,74 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
       <AnimatePresence>
         {showSheet && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowSheet(false)} className="fixed inset-0 bg-black/90 backdrop-blur-md z-[200]" />
-            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3.5rem] z-[210] p-8 pb-16 shadow-2xl">
-              <div className="w-12 h-1 bg-zinc-800 rounded-full mx-auto mb-10" />
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }} 
+              onClick={() => setShowSheet(false)} 
+              className="fixed inset-0 bg-black/90 backdrop-blur-md z-[200] cursor-pointer" 
+            />
+            
+            <motion.div 
+              initial={{ y: "100%" }} 
+              animate={{ y: 0 }} 
+              exit={{ y: "100%" }} 
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3.5rem] z-[210] p-8 pb-16 shadow-2xl"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <div className="w-10" /> 
+                <div className="w-12 h-1.5 bg-zinc-800 rounded-full" />
+                <button 
+                  onClick={() => setShowSheet(false)}
+                  className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-zinc-500 hover:text-white transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
               <div className="max-w-xl mx-auto space-y-10">
-                <div className="text-center"><h3 className="text-3xl font-serif italic text-white mb-2">Internal Weather</h3><p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest">Capture this moment</p></div>
+                <div className="text-center">
+                  <h3 className="text-3xl font-serif italic text-white mb-2">Internal Weather</h3>
+                  <p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest">Capture this moment</p>
+                </div>
+
                 <div className="grid grid-cols-5 gap-3">
                   {pulseOptions.map((p) => (
-                    <button key={p.label} onClick={() => setSelectedEmoji(p.icon)} className={`flex flex-col items-center gap-2 p-4 rounded-2xl transition-all ${selectedEmoji === p.icon ? 'bg-rose-500 text-white shadow-lg' : 'bg-white/5 text-zinc-500'}`}>
+                    <button 
+                      key={p.label} 
+                      onClick={() => setSelectedEmoji(p.icon)} 
+                      className={`flex flex-col items-center gap-2 p-4 rounded-2xl transition-all ${selectedEmoji === p.icon ? 'bg-rose-500 text-white shadow-lg scale-105' : 'bg-white/5 text-zinc-500 hover:bg-white/10'}`}
+                    >
                       <span className="text-2xl">{p.icon}</span>
                       <span className="text-[8px] font-black uppercase">{p.label}</span>
                     </button>
                   ))}
                 </div>
+
                 <Textarea 
                   placeholder="How does the journey feel? (Optional)" 
                   value={reflection} 
                   onChange={(e) => setReflection(e.target.value)}
-                  className="bg-black/40 border-white/5 rounded-2xl p-6 text-white italic min-h-[150px]"
+                  className="bg-black/40 border-white/5 rounded-2xl p-6 text-white italic min-h-[150px] outline-none"
                 />
-                <Button onClick={handleSavePulse} disabled={!selectedEmoji && !reflection} className="w-full h-16 bg-teal-500 text-black font-black uppercase rounded-2xl shadow-xl">Seal Pulse</Button>
+
+                <div className="flex flex-col gap-4">
+                  <Button 
+                    onClick={handleSavePulse} 
+                    disabled={!selectedEmoji && !reflection} 
+                    className="w-full h-16 bg-teal-500 text-black font-black uppercase rounded-2xl shadow-xl hover:bg-teal-400 disabled:opacity-50"
+                  >
+                    Seal Pulse
+                  </Button>
+                  
+                  <button 
+                    onClick={() => setShowSheet(false)}
+                    className="text-[10px] text-zinc-600 uppercase font-black tracking-widest py-2 hover:text-zinc-400 transition-colors"
+                  >
+                    Dismiss
+                  </button>
+                </div>
               </div>
             </motion.div>
           </>
