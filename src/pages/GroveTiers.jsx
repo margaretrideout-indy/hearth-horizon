@@ -130,7 +130,7 @@ const GroveTiers = ({ vault, onSync }) => {
     <div className="relative min-h-screen bg-[#0A080D] text-slate-300 font-sans selection:bg-teal-500/30 overflow-x-hidden pb-20">
       <div className="absolute top-0 left-0 w-full h-[100vh] bg-[radial-gradient(circle_at_50%_0%,rgba(20,184,166,0.1),rgba(147,51,234,0.03)_40%,transparent_80%)] pointer-events-none" />
 
-      {/* NAVIGATION BAR - Fixed Mobile Layout */}
+      {/* NAVIGATION BAR */}
       <nav className="fixed top-0 left-0 w-full z-[100] bg-[#0A080D]/90 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           
@@ -260,22 +260,42 @@ const GroveTiers = ({ vault, onSync }) => {
         {/* LUMINARY REGISTRY */}
         <section className="mb-32 max-w-4xl mx-auto">
           <div className="p-[1px] bg-gradient-to-b from-teal-500/20 to-purple-500/20 rounded-[3rem]">
-            <div className="bg-[#0D0B12] rounded-[2.9rem] p-10 md:p-20 text-center">
-                <Star className="text-teal-400 mx-auto mb-8 animate-pulse" size={32} />
-                <h2 className="text-white font-serif italic text-3xl mb-12">Luminary Registry</h2>
+            <div className="bg-[#0D0B12] rounded-[2.9rem] p-8 md:p-16 text-center">
+                <Star className="text-teal-400 mx-auto mb-6 animate-pulse" size={32} />
+                <h2 className="text-white font-serif italic text-3xl mb-4">Luminary Registry</h2>
+                <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em] mb-10">Our Wall of Gratitude</p>
                 
-                <div className="mb-12">
-                  <p className="text-zinc-400 text-lg italic font-light leading-relaxed max-w-lg mx-auto">
-                    "To those who hold the map while we figure out which way our horizon is shifting."
+                <div className="mb-12 max-w-lg mx-auto">
+                  <p className="text-zinc-400 text-sm font-light leading-relaxed mb-6">
+                    Hearth & Horizon is built on reciprocity. Choose a contribution of any amount to help keep this sanctuary accessible for all travelers.
                   </p>
+                  <p className="text-teal-400/80 text-[11px] font-medium italic border-t border-white/5 pt-6">
+                    Donors are permanently recorded in the Registry below as a beacon for future migrators.
+                  </p>
+                </div>
+
+                {/* THE LIST (Placeholder for future names) */}
+                <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-12 opacity-40">
+                   {['Matthew P.', 'Joining Soon...', 'Joining Soon...', 'Joining Soon...'].map((name, i) => (
+                     <span key={i} className="text-[10px] font-black uppercase tracking-widest text-zinc-500 border-b border-white/10 pb-1">
+                       {name}
+                     </span>
+                   ))}
                 </div>
 
                 <button 
                     onClick={() => window.location.href = LINK_DONATION}
-                    className="group px-12 py-5 bg-teal-500 text-black rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:scale-105 shadow-xl shadow-teal-500/20 flex items-center gap-3 mx-auto"
+                    className="group px-12 py-5 bg-teal-500 text-black rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:scale-105 shadow-xl shadow-teal-500/20 flex items-center gap-3 mx-auto mb-12"
                 >
-                    Invest in the Hearth <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                    Choose Your Contribution <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </button>
+
+                {/* THE DEDICATION */}
+                <div className="pt-8 border-t border-white/5">
+                  <p className="text-zinc-600 text-[9px] italic font-light leading-relaxed max-w-xs mx-auto">
+                    Foundation Note: To Matthew—thank you for holding the map while I figured out which way my horizon was shifting.
+                  </p>
+                </div>
             </div>
           </div>
         </section>
