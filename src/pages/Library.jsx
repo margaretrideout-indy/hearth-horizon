@@ -38,7 +38,6 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
   };
 
   const triggerLock = (type) => {
-    // This only triggers for Hearthkeeper/Steward specific locks now
     setLockContext({
       title: 'Higher Standing Required',
       desc: 'This specific tactical asset is reserved for our Hearthkeeper and Steward community members.',
@@ -208,7 +207,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
           /* VOLUME II CONTENT - SEEDLING CARDS NOW UNLOCKED */
           <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="pb-32">
              <Provisions 
-               vault={{ ...vault, tier: 'seedling' }} 
+               vault={vault} 
                isAdmin={isAdmin} 
                isSeedlingPlus={true}
                onRefresh={onRefresh}
