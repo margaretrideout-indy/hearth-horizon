@@ -7,8 +7,8 @@ import { base44 } from '@/api/base44Client';
 
 const TOS_TEXT = "This is a sanctuary of reciprocity. We support, we don't vent. We build, we don't break.";
 
-// --- THE SPARK'S WEEKLY PROMPTS ---
-const WEEKLY_SPARKS = [
+// --- THE GLOW'S WEEKLY PROMPTS ---
+const WEEKLY_GLOWS = [
   "What is one legacy skill you are officially 'retiring' this month?",
   "Identify one person in this room you can advocate for today. Who is it?",
   "If your career was a 'migration', are you currently in the storm or the sun?",
@@ -74,14 +74,15 @@ export default function EmbersChat({ vault, isAdmin }) {
     created_date: new Date(0).toISOString()
   };
 
-  const THE_SPARK = {
+  const THE_GLOW = {
     id: 'weekly-spark-bot',
-    author_name: 'The Spark',
-    content: WEEKLY_SPARKS[getWeekIndex()],
+    author_name: 'The Glow',
+    content: WEEKLY_GLOWS[getWeekIndex()],
+    subscription_tier: 'Kindling', // This maps to the TierBadge
     author_email: 'spark@hearth.io',
     is_bot: true,
     created_date: new Date().toISOString()
-  };
+};
 
   const fetchPosts = async () => {
     try {
