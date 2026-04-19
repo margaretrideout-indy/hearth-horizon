@@ -25,7 +25,6 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
   const [isRemoteOnly, setIsRemoteOnly] = useState(true);
   const [activeLocation, setActiveLocation] = useState("");
 
-  // FIX: Use Environment Variables
   const appId = import.meta.env.VITE_ADZUNA_APP_ID || "fdbe8139";
   const appKey = import.meta.env.VITE_ADZUNA_APP_KEY || "bc73ecdb23eacf99b7cf1739dcaec883";
 
@@ -35,7 +34,6 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
     try {
       const what = isRemoteOnly ? "Remote" : "Professional";
       const where = activeLocation ? `&where=${encodeURIComponent(activeLocation)}` : "";
-      // Note: Change '/ca/' to your target country code if needed
       const url = `https://api.adzuna.com/v1/api/jobs/ca/search/1?app_id=${appId}&app_key=${appKey}&results_per_page=15&what=${what}${where}&content-type=application/json`;
 
       const response = await fetch(url);
@@ -78,7 +76,7 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
     setTimeout(() => {
       setAnalysisResult({
         jobId: job.id,
-        score: Math.floor(Math.random() * (98 - 70 + 1)) + 70, // Simulating a dynamic score
+        score: Math.floor(Math.random() * (98 - 70 + 1)) + 70,
         message: "Alignment calculated."
       });
       setIsAnalyzing(null);
@@ -114,12 +112,18 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
                 value={locationQuery} 
                 onChange={(e) => setLocationQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && setActiveLocation(locationQuery)}
-                className="pl-12 bg-white/5 border-white/10"
+                className="pl-12 bg-white/5 border-white/10 h-14 rounded-2xl focus:border-teal-500/50 transition-colors"
               />
             </div>
-            <div className="flex items-center gap-6 bg-white/5 border border-white/10 px-6 h-14 rounded-2xl">
-              <span className="text-[10px] font-black text-zinc-500 uppercase italic">Remote Only</span>
-              <Switch checked={isRemoteOnly} onCheckedChange={setIsRemoteOnly} />
+            
+            {/* VISIBILITY FIX: Enhanced Toggle Container */}
+            <div className="flex items-center justify-between gap-6 bg-white/[0.07] border border-white/20 px-6 h-14 rounded-2xl min-w-[180px] shadow-sm">
+              <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest italic">Remote Only</span>
+              <Switch 
+                checked={isRemoteOnly} 
+                onCheckedChange={setIsRemoteOnly} 
+                className="data-[state=checked]:bg-teal-500"
+              />
             </div>
           </motion.div>
         </header>
