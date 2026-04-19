@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { Flame, BookOpen, Globe, Activity, Compass, LayoutDashboard, LogOut } from 'lucide-react';
+import { Flame, BookOpen, Activity, Compass, LayoutDashboard, LogOut } from 'lucide-react';
 import { base44 } from '@/api/base44Client'; 
 
 import GroveTiers from './pages/GroveTiers';
@@ -15,7 +15,9 @@ import EmbersChat from './pages/EmbersChat';
 export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isAdmin, setIsAdmin] = useState(true);
+  
+  // Set to true if you need to force access while troubleshooting
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [vault, setVault] = useState(() => {
     const saved = localStorage.getItem('hearth_vault_data');
@@ -28,7 +30,7 @@ export default function App() {
       alignmentScore: 0, 
       resume: null, 
       standing: "Traveler", 
-      tier: "seedling",
+      tier: "none", // Guests have no tier
       lastSync: null 
     };
   });
@@ -38,14 +40,17 @@ export default function App() {
       try {
         const user = await base44.auth.me();
         if (user) {
+          // Identify Admin
           const isSystemAdmin = user.role === 'admin' || user.email === 'margaretpardy@gmail.com'; 
           setIsAdmin(isSystemAdmin);
           
+          // Map Tiers (Seedling, Hearthkeeper, Steward)
           if (user.tier) {
+            const currentTier = user.tier.toLowerCase();
             setVault(prev => ({ 
               ...prev, 
-              tier: user.tier.toLowerCase(),
-              standing: user.tier 
+              tier: currentTier,
+              standing: user.tier // This displays the pretty name: "Steward", etc.
             }));
           }
         }
@@ -61,7 +66,15 @@ export default function App() {
   }, [vault]);
 
   const handleAccountDeletion = () => {
-    setVault({ pulses: [], archetype: null, alignmentScore: 0, resume: null, standing: "Traveler", tier: "seedling", lastSync: null });
+    setVault({ 
+      pulses: [], 
+      archetype: null, 
+      alignmentScore: 0, 
+      resume: null, 
+      standing: "Traveler", 
+      tier: "none", 
+      lastSync: null 
+    });
     localStorage.clear();
     sessionStorage.clear();
     navigate('/grove');
@@ -133,7 +146,6 @@ export default function App() {
   return (
     <div className="h-screen w-full bg-[#0A080D] flex overflow-hidden">
       
-      {/* Sidebar hidden on landing page (/grove or /) */}
       {location.pathname !== '/grove' && location.pathname !== '/' && (
         <aside className="hidden md:flex flex-col w-64 border-r border-white/5 bg-[#08070B] pt-8">
           <div className="px-8 mb-10 flex items-center justify-between">
@@ -170,11 +182,10 @@ export default function App() {
               <Route path="/culture" element={<CulturalFit vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/contact" element={<Contact vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+              <Route path="/" element={<Navigate to="/grove" replace />} />
             </Routes>
           )}
         </div>
-
-        {location.pathname !== '/grove' && location.pathname !== '/' && <div className="h-24 shrink-0 md:hidden" />}
       </main>
 
       {location.pathname !== '/grove' && location.pathname !== '/' && (
