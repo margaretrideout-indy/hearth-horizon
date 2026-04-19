@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-
 import { Flame, BookOpen, Activity, Compass, LayoutDashboard, LogOut } from 'lucide-react';
 import { base44 } from '@/api/base44Client'; 
 
+// Hearth & Horizon Ecosystem Components
 import GroveTiers from './pages/GroveTiers';
 import YourHearth from './pages/YourHearth';
 import Library from './pages/Library';
@@ -41,21 +42,36 @@ export default function App() {
       try {
         const user = await base44.auth.me();
         if (user) {
-          // 1. Hard-code the Founder Identity with safety normalization
           const userEmail = user.email ? user.email.toLowerCase().trim() : '';
+          
+          // FOUNDER OVERRIDE: This bypasses tier restrictions across the app
           const isSystemAdmin = user.role === 'admin' || userEmail === 'margaretpardy@gmail.com'; 
           
           setIsAdmin(isSystemAdmin);
-          
-          // 2. Normalize Tier Strings
+
           const rawTier = user.tier ? user.tier.trim() : "Traveler";
           const normalizedTier = rawTier.toLowerCase();
+
+          const tierMapping = {
+            "seedling": "Seedling",
+            "seedling free": "Seedling",
+            "hearthkeeper": "Hearthkeeper",
+            "steward": "Steward",
+            "founding steward": "Steward",
+            "traveler": "Traveler"
+          };
+
+          let displayStanding = tierMapping[normalizedTier] || rawTier;
           
+          // Ensure the UI labels you correctly
+          if (isSystemAdmin) displayStanding = "Founder";
+
           setVault(prev => ({ 
             ...prev, 
             email: user.email,
-            tier: normalizedTier,
-            standing: isSystemAdmin ? 'Admin' : rawTier
+            tier: isSystemAdmin ? "admin" : normalizedTier, // Admin tier grants all permissions
+            standing: displayStanding,
+            archetype: user.archetype || prev.archetype
           }));
         }
       } catch (e) {
@@ -67,7 +83,6 @@ export default function App() {
     checkAuth();
   }, []);
 
-  // Persistent storage sync
   useEffect(() => {
     if (!isInitializing) {
       localStorage.setItem('hearth_vault_data', JSON.stringify(vault));
@@ -84,14 +99,13 @@ export default function App() {
     }
   };
 
-  const mainTabs = ['/hearth', '/library', '/horizon', '/embers'];
-  const isMainTab = mainTabs.includes(location.pathname);
+  const showNav = !['/grove', '/', '/contact'].includes(location.pathname);
 
   const NavLinks = ({ isDesktop = false }) => {
     const allLinks = [
       { label: 'Hearth', path: '/hearth', icon: Flame },
       { label: 'Alignment', path: '/culture', icon: Compass },
-      { label: 'Horizon Board', path: '/horizon', icon: LayoutDashboard },
+      { label: 'Horizon', path: '/horizon', icon: LayoutDashboard },
       { label: 'Library', path: '/library', icon: BookOpen },
       { label: 'Embers', path: '/embers', icon: Activity }
     ];
@@ -151,12 +165,12 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen w-full bg-[#0A080D] flex overflow-hidden">
+    <div className="h-screen w-full bg-[#0A080D] flex overflow-hidden font-sans text-zinc-200">
       
-      {location.pathname !== '/grove' && location.pathname !== '/' && (
+      {showNav && (
         <aside className="hidden md:flex flex-col w-64 border-r border-white/5 bg-[#08070B] pt-8">
           <div className="px-8 mb-10 flex items-center justify-between">
-            <span className="text-xs font-black uppercase tracking-[0.3em] text-zinc-700">Hearth Horizon</span>
+            <span className="text-xs font-black uppercase tracking-[0.3em] text-zinc-700">Hearth & Horizon</span>
           </div>
           <div className="flex-1 overflow-hidden">
             <NavLinks isDesktop />
@@ -166,36 +180,25 @@ export default function App() {
 
       <main className="flex-1 h-full relative overflow-y-auto custom-scrollbar flex flex-col">
         <div className="flex-1 w-full relative">
-          
-          <div className={location.pathname === '/hearth' ? 'block h-full' : 'hidden'}>
-            <YourHearth vault={vault} onSync={handleSync} isAdmin={isAdmin} onNavigateToHorizon={() => navigate('/horizon')} />
-          </div>
-          
-          <div className={location.pathname === '/library' ? 'block h-full' : 'hidden'}>
-            <Library vault={vault} onSync={handleSync} isAdmin={isAdmin} />
-          </div>
-          
-          <div className={location.pathname === '/horizon' ? 'block h-full' : 'hidden'}>
-            <Canopy vault={vault} onSync={handleSync} isAdmin={isAdmin} />
-          </div>
-          
-          <div className={location.pathname === '/embers' ? 'block h-full' : 'hidden'}>
-            <EmbersChat vault={vault} isAdmin={isAdmin} />
-          </div>
-
-          {!isMainTab && (
-            <Routes>
-              <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
-              <Route path="/culture" element={<CulturalFit vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
-              <Route path="/contact" element={<Contact vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
-              <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
-              <Route path="/" element={<Navigate to="/grove" replace />} />
-            </Routes>
-          )}
+          <Routes>
+            <Route path="/hearth" element={<YourHearth vault={vault} onSync={handleSync} isAdmin={isAdmin} onNavigateToHorizon={() => navigate('/horizon')} />} />
+            <Route path="/library" element={<Library vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+            <Route path="/horizon" element={<Canopy vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+            <Route path="/embers" element={<EmbersChat vault={vault} isAdmin={isAdmin} />} />
+            <Route path="/culture" element={<CulturalFit vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+            
+            <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+            <Route path="/contact" element={<Contact vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+            <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+            
+            <Route path="/" element={<Navigate to="/grove" replace />} />
+          </Routes>
         </div>
+        
+        {showNav && <div className="h-20 md:hidden" />}
       </main>
 
-      {location.pathname !== '/grove' && location.pathname !== '/' && (
+      {showNav && (
         <nav className="fixed bottom-0 left-0 right-0 z-[100] pb-[env(safe-area-inset-bottom)] bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 md:hidden">
           <div className="w-full h-20">
             <NavLinks />
