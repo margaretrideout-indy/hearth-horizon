@@ -6,7 +6,6 @@ import {
   Sparkles, Layers, ShieldCheck, Download
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Provisions from './Contact'; // Trail Kit (Volume II)
@@ -112,7 +111,7 @@ const Library = ({ vault, onRefresh, isAdmin }) => {
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500">The Lookout</h3>
                 <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
               </div>
-              <Card className="p-12 md:p-16 bg-gradient-to-br from-[#16121D] to-[#0D0B10] border-teal-500/20 rounded-[3.5rem] relative overflow-hidden group">
+              <div className="p-12 md:p-16 bg-gradient-to-br from-[#16121D] to-[#0D0B10] border border-teal-500/20 rounded-[3.5rem] relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity">
                    <Compass size={180} />
                 </div>
@@ -127,7 +126,7 @@ const Library = ({ vault, onRefresh, isAdmin }) => {
                     {isSeedlingPlus ? "Open Blueprint" : <><Lock size={14} className="mr-2" /> Unlock Blueprint</>}
                   </Button>
                 </div>
-              </Card>
+              </div>
             </section>
           </motion.div>
         ) : (
