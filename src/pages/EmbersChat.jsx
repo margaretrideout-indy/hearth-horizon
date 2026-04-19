@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Flame, Send, Sparkles, Loader2, Leaf, Mountain, Heart, RefreshCw, Reply, X } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { format, getWeek } from 'date-fns';
 

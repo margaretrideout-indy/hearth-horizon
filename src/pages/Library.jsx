@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import Provisions from './Contact';
+import Provisions from './Contact'; // Trail Kit (Volume II)
 
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1X-u9E_yH_yD0_vL8o_K4-Q4_jJ0z-H4/edit?usp=sharing";
 const AMZ_PROVISIONS_URL = "https://www.amazon.ca/shop/margaretpardy";

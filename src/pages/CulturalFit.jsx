@@ -39,6 +39,12 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
   const [ethicalPriorities, setEthicalPriorities] = useState(vault?.ethics || []);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
 
+  const toggleEthic = (id) => {
+    setEthicalPriorities((prev) =>
+      prev.includes(id) ? prev.filter((e) => e !== id) : [...prev, id]
+    );
+  };
+
   const universalPlaceholders = [
     "e.g., Managed a team of 15...",
     "e.g., Designed a sustainable system...",

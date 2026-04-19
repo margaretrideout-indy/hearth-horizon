@@ -6,6 +6,9 @@ import {
   ArrowRight, RefreshCw, Activity, History,
   Lock, Trash2, AlertTriangle, X, Sparkles, Compass
 } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   const navigate = useNavigate();

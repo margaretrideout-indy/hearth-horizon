@@ -6,6 +6,7 @@ import {
   MoreVertical, Star, Library as LibraryIcon, Compass, ArrowRight, LogIn 
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LINK_HEARTHKEEPER = 'https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03';
