@@ -86,14 +86,14 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
 
-  // --- ACCESS LOGIC OVERRIDE ---
+  // --- ACCESS LOGIC ---
   const normalizedTier = vault?.tier?.toLowerCase() || 'none';
   
-  // SEEDLING CONTENT (LEXICON) IS ALWAYS UNLOCKED
-  const canAccessVerbs = true; 
+  // SEEDLING CONTENT (LEXICON) ACCESS
+  const canAccessVerbs = !!isAdmin || isSeedlingPlus || ['seedling', 'hearthkeeper', 'steward', 'founding steward', 'admin'].includes(normalizedTier);
   
-  // FIXED HIGH TIER LOGIC: If isAdmin is true, this is ALWAYS true.
-  const canAccessHighTier = Boolean(isAdmin) || ['hearthkeeper', 'steward', 'founding steward', 'admin'].includes(normalizedTier);
+  // HIGH TIER ACCESS (MASTER BYPASS VIA isAdmin)
+  const canAccessHighTier = !!isAdmin || ['hearthkeeper', 'steward', 'founding steward', 'admin'].includes(normalizedTier);
 
   const dynamicContent = generateDynamicScripts(vault);
 
@@ -104,7 +104,7 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
   };
 
   const trailKitResources = [
-    { id: 'verbs', title: "Power Verb Lexicon", desc: "Strategic verbs to replace legacy language.", type: "Public Access", icon: <Zap className="text-teal-400" />, isUnlocked: canAccessVerbs },
+    { id: 'verbs', title: "Power Verb Lexicon", desc: "Strategic verbs to replace legacy language.", type: "Seedlings+", icon: <Zap className="text-teal-400" />, isUnlocked: canAccessVerbs },
     { id: 'ledger', title: "The Identity Ledger", desc: "Workbook & Deck to decouple your worth.", type: "Hearthkeepers+", icon: <Fingerprint className="text-teal-400" />, isUnlocked: canAccessHighTier },
     { id: 'resume', title: "Trailblazer's Blueprint", desc: "ATS-optimized resume layout.", type: "Hearthkeepers+", icon: <FileText className="text-purple-400" />, isUnlocked: canAccessHighTier },
     { id: 'outreach', title: "Sponsorship Outreach", desc: "Turn contacts into advocates.", type: "Stewards Only", icon: <Mail className="text-teal-400" />, isUnlocked: canAccessHighTier },
