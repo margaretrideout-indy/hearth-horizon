@@ -38,10 +38,10 @@ export default function App() {
   });
 
   // --- ACCESS CALCULATION ---
-  const isRegistered = !!vault && vault.tier && vault.tier !== 'none';
-  // Note: Library.jsx now hardcodes this to true for the public unlock, 
-  // but we keep the logic here for other potential uses.
-  const isSeedlingPlus = isAdmin || isRegistered;
+  // This recalculates on every render to ensure isAdmin overrides everything
+  const currentTier = vault?.tier?.toLowerCase() || 'none';
+  const isRegistered = currentTier !== 'none' && currentTier !== 'traveler';
+  const isSeedlingPlus = isAdmin || isRegistered || currentTier === 'admin';
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -50,6 +50,7 @@ export default function App() {
         if (user) {
           const userEmail = user.email ? user.email.toLowerCase().trim() : '';
           
+          // MASTER ADMIN CHECK
           const isSystemAdmin = user.role === 'admin' || userEmail === 'margaretpardy@gmail.com'; 
           
           setIsAdmin(isSystemAdmin);
@@ -86,6 +87,7 @@ export default function App() {
     checkAuth();
   }, []);
 
+  // Persist to local storage whenever vault changes
   useEffect(() => {
     if (!isInitializing) {
       localStorage.setItem('hearth_vault_data', JSON.stringify(vault));
@@ -93,11 +95,20 @@ export default function App() {
   }, [vault, isInitializing]);
 
   const handleSync = async () => {
-    // This function acts as the refresh trigger for child components
     try {
       const user = await base44.auth.me();
       if (user) {
-        setVault(prev => ({ ...prev, ...user, lastSync: new Date().toISOString() }));
+        const userEmail = user.email?.toLowerCase().trim() || '';
+        const isSystemAdmin = user.role === 'admin' || userEmail === 'margaretpardy@gmail.com';
+        
+        setIsAdmin(isSystemAdmin);
+        
+        setVault(prev => ({ 
+          ...prev, 
+          ...user, 
+          tier: isSystemAdmin ? "admin" : (user.tier?.trim().toLowerCase() || "none"),
+          lastSync: new Date().toISOString() 
+        }));
       }
     } catch (e) {
       console.error("Sync failed", e);
@@ -207,7 +218,7 @@ export default function App() {
                 vault={vault} 
                 onRefresh={handleSync} 
                 isAdmin={isAdmin} 
-                isSeedlingPlus={true} 
+                isSeedlingPlus={isSeedlingPlus} 
               />
             } />
 
