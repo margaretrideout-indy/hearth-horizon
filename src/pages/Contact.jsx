@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  FileText, ChevronDown, ChevronUp, Zap, 
+  FileText, ChevronDown, Zap, 
   Mail, ExternalLink, DollarSign, Download, Copy, Lock,
   Fingerprint, ClipboardList, Presentation, Check,
   Sword, Shield, BookOpen
@@ -86,6 +86,7 @@ const Contact = ({ vault, isAdmin }) => {
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
 
+  // Normalizing rank logic to handle case-sensitivity from DB
   const tiers = { 'traveler': 0, 'seedling': 1, 'hearthkeeper': 2, 'steward': 3 };
   const userRank = isAdmin ? 3 : (tiers[vault?.tier?.toLowerCase()] || 0);
 
@@ -98,7 +99,7 @@ const Contact = ({ vault, isAdmin }) => {
   };
 
   const trailKitResources = [
-    { id: 'verbs', title: "Power Verb Lexicon", desc: "Strategic verbs to replace legacy language.", type: "Seedlings+", icon: <Zap className="text-purple-400" />, requiredTier: 1 },
+    { id: 'verbs', title: "Power Verb Lexicon", desc: "Strategic verbs to replace legacy language.", type: "Seedlings+", icon: <Zap className="text-teal-400" />, requiredTier: 1 },
     { id: 'ledger', title: "The Identity Ledger", desc: "Workbook & Deck to decouple your worth.", type: "Hearthkeepers+", icon: <Fingerprint className="text-teal-400" />, requiredTier: 2 },
     { id: 'resume', title: "Trailblazer's Blueprint", desc: "ATS-optimized resume layout.", type: "Hearthkeepers+", icon: <FileText className="text-purple-400" />, requiredTier: 2 },
     { id: 'outreach', title: "Sponsorship Outreach", desc: "Turn contacts into advocates.", type: "Stewards Only", icon: <Mail className="text-teal-400" />, requiredTier: 3 },
