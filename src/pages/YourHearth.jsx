@@ -153,7 +153,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                     <div className="text-2xl">{p.emoji}</div>
                     <div className="flex-1">
                       <p className="text-xs text-zinc-300 italic line-clamp-2">{p.text}</p>
-                      <p className="text-[8px] text-zinc-600 uppercase font-black mt-2">{new Date(p.date).toLocaleDateString()}</p>
+                      <p className="text-[8px] text-zinc-500 uppercase font-black mt-2">{new Date(p.date).toLocaleDateString()}</p>
                     </div>
                   </div>
                 ))
@@ -228,7 +228,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                 <motion.button 
                   key="trigger" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                   onClick={() => setConfirmZone('all')} 
-                  className="text-[10px] text-zinc-800 hover:text-rose-500 uppercase font-black tracking-widest flex items-center gap-2 mx-auto transition-colors"
+                  className="text-[10px] text-zinc-500 hover:text-rose-500 uppercase font-black tracking-widest flex items-center gap-2 mx-auto transition-colors"
                 >
                   <Trash2 size={12} /> Extinguish Hearth
                 </motion.button>

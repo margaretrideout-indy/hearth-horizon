@@ -164,7 +164,7 @@ const GroveTiers = ({ vault, onSync }) => {
             </p>
             <div className="relative z-10 flex flex-col items-center gap-2">
               <span className="text-white font-serif italic text-xl"> Margaret, Founder </span>
-              <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600">BA, BEd, MEd | Indigenous Studies</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-400">BA, BEd, MEd | Indigenous Studies</span>
             </div>
           </motion.div>
         </header>
@@ -180,7 +180,7 @@ const GroveTiers = ({ vault, onSync }) => {
               <div key={i} className="p-8 rounded-3xl bg-[#110E16]/40 border border-white/5 hover:border-teal-500/20 transition-all">
                 <item.icon className={`${item.color} mb-6`} size={28} />
                 <h3 className="text-lg font-bold text-white mb-3">{item.title}</h3>
-                <p className="text-sm text-zinc-500 leading-relaxed font-light">{item.text}</p>
+                <p className="text-sm text-zinc-400 leading-relaxed font-light">{item.text}</p>
               </div>
             ))}
           </div>
@@ -199,7 +199,7 @@ const GroveTiers = ({ vault, onSync }) => {
                 <div className="mb-6">{tier.icon}</div>
                 <h4 className="text-white font-bold text-xl mb-1">{tier.name}</h4>
                 <div className="text-3xl font-bold text-white mb-1">{tier.price}</div>
-                <p className="text-[9px] font-black uppercase text-zinc-600 mb-8">{tier.period}</p>
+                <p className="text-[9px] font-black uppercase text-zinc-400 mb-8">{tier.period}</p>
                 <ul className="space-y-4 mb-10 flex-1">
                   {tier.features.map((feat, fIdx) => (
                     <li key={fIdx} className="flex items-start gap-3 text-[11px] text-zinc-400">

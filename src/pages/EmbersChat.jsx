@@ -148,7 +148,7 @@ export default function EmbersChat({ vault, isAdmin }) {
             {sending ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
           </Button>
         </div>
-        <p className="text-[8px] text-center text-zinc-700 font-bold uppercase tracking-[0.3em] mt-3">{TOS_TEXT}</p>
+        <p className="text-[8px] text-center text-zinc-500 font-bold uppercase tracking-[0.3em] mt-3">{TOS_TEXT}</p>
       </footer>
     </div>
   );

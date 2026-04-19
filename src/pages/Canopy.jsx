@@ -105,20 +105,20 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
               <span className="text-[10px] font-black uppercase tracking-[0.5em] italic">Global Horizon</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-serif italic text-white tracking-tighter leading-none">
-              Survey the <span className="text-zinc-700 font-sans not-italic font-extralight uppercase">World</span>
+              Survey the <span className="text-zinc-400 font-sans not-italic font-extralight uppercase">World</span>
             </h1>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
             {/* GLOBAL SEARCH INPUT */}
             <div className="relative w-full sm:w-80 group">
-              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-700" size={14} />
+              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={14} />
               <Input 
                 placeholder="City, State, or Country..." 
                 value={locationQuery} 
                 onChange={(e) => setLocationQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                className="pl-12 bg-white/5 border-white/10 h-14 rounded-2xl focus:border-teal-500/50 transition-colors placeholder:text-zinc-800"
+                className="pl-12 bg-white/5 border-white/10 h-14 rounded-2xl focus:border-teal-500/50 transition-colors placeholder:text-zinc-500"
               />
             </div>
             
@@ -137,7 +137,7 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
         {isLoading ? (
           <div className="flex flex-col items-center py-32 gap-6">
             <Loader2 className="animate-spin text-teal-500/20" size={64} />
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-600">Scanning World Markets...</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400">Scanning World Markets...</p>
           </div>
         ) : (
           <motion.div 
@@ -151,7 +151,7 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
                   <div className="space-y-6 relative z-10">
                     <div className="flex justify-between items-start">
                       <div className="w-12 h-12 flex items-center justify-center bg-black/40 border border-white/10 rounded-2xl">
-                        <Briefcase size={20} className="text-zinc-700 group-hover:text-teal-400 transition-all" />
+                        <Briefcase size={20} className="text-zinc-500 group-hover:text-teal-400 transition-all" />
                       </div>
                     </div>
                     <div>
@@ -164,7 +164,7 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
                   <div className="mt-10 pt-8 border-t border-white/5 space-y-6 relative z-10">
                     <div className="flex justify-between items-center">
                       <div className="text-2xl font-black italic text-white/80 font-serif">{job.salary}</div>
-                      <div className="text-[9px] font-black text-zinc-700 uppercase">{job.location}</div>
+                      <div className="text-[9px] font-black text-zinc-400 uppercase">{job.location}</div>
                     </div>
                     <Button asChild className="w-full h-12 bg-white/5 hover:bg-teal-500 hover:text-black rounded-xl text-[9px] uppercase font-black transition-all">
                       <a href={job.link} target="_blank" rel="noopener noreferrer">View Deployment <ExternalLink size={12} className="ml-2" /></a>
@@ -173,7 +173,7 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
                 </Card>
               </motion.div>
             )) : (
-              <div className="col-span-full py-20 text-center text-zinc-700 uppercase font-black text-xs tracking-widest">
+              <div className="col-span-full py-20 text-center text-zinc-500 uppercase font-black text-xs tracking-widest">
                 No openings found in this sector. Try broadening your terrain.
               </div>
             )}
