@@ -22,18 +22,39 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
   const [studyTab, setStudyTab] = useState('amazon');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showLockSheet, setShowLockSheet] = useState(false);
+  const [lockContext, setLockContext] = useState({ title: '', desc: '', target: 'Steward' });
 
   // --- TIER & ACCESS LOGIC ---
   const isRegistered = !!vault; 
   const userTier = isAdmin ? 'Steward' : (isRegistered ? vault.tier : 'Traveler');
-  const isHearthkeeper = isAdmin || (isRegistered && (userTier === 'Hearthkeeper' || userTier === 'Steward'));
+  
+  // Hearthkeeper + Steward can access the Strategy Deck
+  const isHearthkeeperPlus = isAdmin || (isRegistered && (userTier === 'Hearthkeeper' || userTier === 'Steward'));
+  
+  // Only Steward can access Volume II
   const isSteward = isAdmin || (isRegistered && userTier === 'Steward');
 
-  // --- NATIVE REFRESH LOGIC ---
   const handleRefresh = async () => {
     setIsRefreshing(true);
     if (onRefresh) await onRefresh();
     setTimeout(() => setIsRefreshing(false), 800);
+  };
+
+  const triggerLock = (type) => {
+    if (type === 'hearthkeeper') {
+      setLockContext({
+        title: 'Hearthkeeper Access Required',
+        desc: 'The Master Strategy Deck and Resignation Blueprints are reserved for our Hearthkeeper and Steward community members.',
+        target: 'Hearthkeeper'
+      });
+    } else {
+      setLockContext({
+        title: 'Steward Standing Required',
+        desc: 'Advanced tactical scripts and Volume II assets are reserved for our Steward-tier supporters.',
+        target: 'Steward'
+      });
+    }
+    setShowLockSheet(true);
   };
 
   return (
@@ -90,7 +111,6 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Burnout Card */}
                 <div className="bg-[#16121D] border border-white/5 p-8 rounded-[2.5rem] flex flex-col group hover:border-purple-500/20 transition-all">
                    <Heart className="text-purple-400/50 group-hover:text-purple-400 transition-colors mb-6" size={24} />
                    <h4 className="text-xl text-white font-serif italic mb-2">Burnout to Balance</h4>
@@ -98,7 +118,6 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
                    <a href="https://static1.squarespace.com/static/5d3080f196bac8000148b997/t/664cfc0539541d281b05c587/1716321288694/GKYMH+From+Burnout+to+Balance.pdf" target="_blank" rel="noreferrer" className="mt-auto py-4 bg-white/5 text-purple-400 rounded-2xl text-[9px] font-black uppercase text-center border border-purple-500/10 hover:bg-purple-500/10 transition-all">View PDF Resource</a>
                 </div>
 
-                {/* Podcast Card */}
                 <div className="bg-[#16121D] border border-white/5 p-8 rounded-[2.5rem] flex flex-col group hover:border-purple-500/20 transition-all">
                    <Headphones className="text-purple-400/50 group-hover:text-purple-400 transition-colors mb-6" size={24} />
                    <h4 className="text-xl text-white font-serif italic mb-2">Inner Advocate</h4>
@@ -106,7 +125,6 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
                    <a href="https://podcasts.apple.com/ca/podcast/your-inner-advocate/id1722984987" target="_blank" rel="noreferrer" className="mt-auto py-4 bg-white/5 text-purple-400 rounded-2xl text-[9px] font-black uppercase text-center border border-purple-500/10 hover:bg-purple-500/10 transition-all">Listen on Apple</a>
                 </div>
 
-                {/* Crisis Support Card */}
                 <div className="relative overflow-hidden bg-rose-500/[0.03] border border-rose-500/20 p-8 rounded-[2.5rem] flex flex-col group shadow-lg shadow-rose-500/5">
                    <div className="flex items-center gap-2 mb-6">
                        <div className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
@@ -130,7 +148,6 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
               </div>
               
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                  {/* Native Segmented Control */}
                   <div className="flex lg:flex-col gap-2 p-1.5 bg-[#16121D] border border-white/5 rounded-3xl overflow-x-auto scrollbar-hide">
                     <button 
                       onClick={() => setStudyTab('amazon')} 
@@ -196,25 +213,25 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
               
               <motion.div 
                 whileHover={{ y: -5 }}
-                onClick={() => !isHearthkeeper && setShowLockSheet(true)}
-                className={`relative w-full max-w-2xl bg-gradient-to-br from-[#16121D] to-[#0D0B10] border ${isHearthkeeper ? 'border-teal-500/20' : 'border-white/5'} p-10 md:p-16 rounded-[3rem] overflow-hidden shadow-2xl cursor-pointer group`}
+                onClick={() => !isHearthkeeperPlus && triggerLock('hearthkeeper')}
+                className={`relative w-full max-w-2xl bg-gradient-to-br from-[#16121D] to-[#0D0B10] border ${isHearthkeeperPlus ? 'border-teal-500/20' : 'border-white/5'} p-10 md:p-16 rounded-[3rem] overflow-hidden shadow-2xl cursor-pointer group`}
               >
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-10">
                     <div className="bg-teal-500/10 text-teal-400 px-4 py-1.5 rounded-full text-[9px] font-black uppercase italic border border-teal-500/20 shadow-lg">Member Gift</div>
-                    {!isHearthkeeper && <Lock size={20} className="text-zinc-700" />}
+                    {!isHearthkeeperPlus && <Lock size={20} className="text-zinc-700" />}
                   </div>
                   <h4 className="text-4xl text-white font-serif italic mb-6 leading-tight">Master Strategy Deck</h4>
                   <p className="text-sm text-zinc-400 italic mb-12 leading-relaxed max-w-md">The primary blueprint for your career migration and resignation protocol.</p>
                   
                   <button 
                     onClick={(e) => {
-                      if(isHearthkeeper) {
+                      if(isHearthkeeperPlus) {
                         e.stopPropagation();
                         window.open(STRATEGY_DECK_URL, '_blank');
                       }
                     }}
-                    className={`h-16 px-10 rounded-2xl flex items-center gap-4 transition-all uppercase text-[10px] tracking-widest font-black ${isHearthkeeper ? 'bg-teal-500 text-black shadow-xl shadow-teal-500/20' : 'bg-white/5 text-zinc-600 border border-white/5'}`}
+                    className={`h-16 px-10 rounded-2xl flex items-center gap-4 transition-all uppercase text-[10px] tracking-widest font-black ${isHearthkeeperPlus ? 'bg-teal-500 text-black shadow-xl shadow-teal-500/20' : 'bg-white/5 text-zinc-600 border border-white/5'}`}
                   >
                     Open Blueprint <Compass size={18} />
                   </button>
@@ -237,7 +254,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
           </motion.div>
         )}
 
-        {/* VOLUME NAV - NATIVE STICKY BAR */}
+        {/* VOLUME NAV - STICKY BAR */}
         <div className="fixed bottom-6 left-0 right-0 z-[110] px-6 pointer-events-none">
           <div className="max-w-md mx-auto pointer-events-auto">
             <div className="flex p-2 bg-[#16121D]/80 backdrop-blur-xl rounded-[2.5rem] border border-white/10 shadow-2xl">
@@ -253,7 +270,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
                     setCurrentVolume(2);
                     window.scrollTo({top: 0, behavior: 'smooth'});
                   } else {
-                    setShowLockSheet(true);
+                    triggerLock('steward');
                   }
                 }} 
                 className={`flex-1 py-4 rounded-[2rem] text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}
@@ -273,7 +290,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
         </footer>
       </div>
 
-      {/* NATIVE LOCK SHEET */}
+      {/* NATIVE LOCK SHEET (Universal for Hearthkeeper or Steward locks) */}
       <AnimatePresence>
         {showLockSheet && (
           <>
@@ -293,16 +310,16 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
                 <div className="w-20 h-20 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-purple-500/20 shadow-inner">
                   <Lock className="text-purple-400" size={32} />
                 </div>
-                <h3 className="text-3xl font-serif italic text-white mb-4">Elevated Standing Required</h3>
+                <h3 className="text-3xl font-serif italic text-white mb-4">{lockContext.title}</h3>
                 <p className="text-sm text-zinc-400 italic leading-relaxed mb-10 px-4">
-                   Tactical scripts, resignation blueprints, and advanced trail assets are reserved for our Steward-tier supporters.
+                    {lockContext.desc}
                 </p>
 
                 <button 
                   onClick={() => navigate('/grove')}
                   className="w-full py-6 rounded-2xl bg-purple-500 text-white font-black uppercase tracking-[0.2em] shadow-2xl shadow-purple-500/30 active:scale-95 transition-all mb-8"
                 >
-                   Become a Steward
+                    Become a {lockContext.target}
                 </button>
                 
                 <button onClick={() => setShowLockSheet(false)} className="text-[10px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-400 transition-colors">
