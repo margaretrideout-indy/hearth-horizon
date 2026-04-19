@@ -25,13 +25,12 @@ export default function RootSystem({ vault, onSync, isAdmin }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newUser, setNewUser] = useState({ name: '', email: '', tier: 'Tester' });
 
-  // SOVEREIGNTY LOGIC: Only the Founder/Admin can access the Roots
-  const isFounder = isAdmin || vault?.isAdmin;
+  // SOVEREIGNTY LOGIC: Enhanced to ensure you aren't locked out during load
+  const isFounder = isAdmin === true || vault?.standing === 'Admin';
   
   const B44_PROJECT_ID = window.BASE44_PROJECT_ID || ''; 
   const B44_TOKEN = window.BASE44_API_TOKEN || '';
 
-  // MOMENTUM LOGIC: Tracking the "heat" of the migration
   const getMomentum = (lastDate) => {
     if (!lastDate) return { label: 'New Seed', color: 'text-zinc-500', glow: 'bg-zinc-500' };
     const diff = (new Date() - new Date(lastDate)) / (1000 * 60 * 60 * 24);
@@ -41,7 +40,7 @@ export default function RootSystem({ vault, onSync, isAdmin }) {
   };
 
   const syncBase44 = async () => {
-    if (!B44_PROJECT_ID || !B44_TOKEN || !isFounder) {
+    if (!B44_PROJECT_ID || !B44_TOKEN) {
       setLoading(false);
       return;
     }
@@ -72,11 +71,17 @@ export default function RootSystem({ vault, onSync, isAdmin }) {
   };
 
   useEffect(() => {
-    syncBase44();
+    if (isFounder) {
+      syncBase44();
+    } else {
+      // Give the app 2 seconds to verify admin status before showing the lockout screen
+      const timer = setTimeout(() => setLoading(false), 2000);
+      return () => clearTimeout(timer);
+    }
   }, [isFounder]);
 
-  // Authorization Guard
-  if (!isFounder) {
+  // Authorization Guard: Only shows the "Denied" screen if we are SURE you aren't the admin
+  if (!isFounder && !loading) {
     return (
       <div className="min-h-screen bg-[#0D0B14] flex items-center justify-center p-6 text-center">
         <motion.div 
@@ -98,6 +103,15 @@ export default function RootSystem({ vault, onSync, isAdmin }) {
             Return to Hearth
           </button>
         </motion.div>
+      </div>
+    );
+  }
+
+  // Loading State
+  if (loading && !isFounder) {
+    return (
+      <div className="min-h-screen bg-[#0D0B14] flex items-center justify-center">
+        <RefreshCw className="text-emerald-500 animate-spin" size={32} />
       </div>
     );
   }
@@ -174,7 +188,7 @@ export default function RootSystem({ vault, onSync, isAdmin }) {
       </header>
 
       {/* VITALITY STRIP */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12 text-left">
         <VitalityCard label="Registry Size" value={members.length} icon={<Users size={20}/>} />
         <VitalityCard label="Active Migrations" value={members.filter(m => m.isAligned).length} icon={<Zap size={20}/>} highlight />
         <VitalityCard label="Stewards" value={members.filter(m => m.tier?.toLowerCase() === 'steward').length} icon={<Trees size={20}/>} />
