@@ -24,17 +24,12 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
   const [showLockSheet, setShowLockSheet] = useState(false);
   const [lockContext, setLockContext] = useState({ title: '', desc: '', target: 'Seedling' });
 
-  // --- DEFINITIVE FOUNDER & TIER LOGIC ---
-  
-  // 1. Logic Normalization
+  // --- LOGIC OVERRIDE: SEEDLING CONTENT IS NOW PUBLIC ---
   const isRegistered = !!vault && vault.tier && vault.tier !== 'none';
-  const normalizedTier = vault?.tier?.toLowerCase() || 'none';
-
-  // 2. Display Label: Explicitly show "Founder" for admins
   const userTierLabel = isAdmin ? 'Founder' : (isRegistered ? vault.tier : 'Traveler');
 
-  // 3. ACCESS GATES (The Keys)
-  const isSeedlingPlus = isAdmin || isRegistered || normalizedTier === 'seedling';
+  // FORCE UNLOCK: This makes Volume II and the Strategy Deck accessible to EVERYONE.
+  const isSeedlingPlus = true; 
   
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -43,25 +38,12 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
   };
 
   const triggerLock = (type) => {
-    if (type === 'seedling') {
-        setLockContext({
-          title: 'Registry Required',
-          desc: 'Identification is required to access the Strategy Deck and Volume II archives. Join the registry to proceed.',
-          target: 'Seedling'
-        });
-    } else if (type === 'hearthkeeper') {
-      setLockContext({
-        title: 'Hearthkeeper Access Required',
-        desc: 'The Master Strategy Deck and specialized blueprints are reserved for our Hearthkeeper and Steward community members.',
-        target: 'Hearthkeeper'
-      });
-    } else {
-      setLockContext({
-        title: 'Steward Standing Required',
-        desc: 'Advanced tactical scripts and executive assets are reserved for our Steward-tier supporters.',
-        target: 'Steward'
-      });
-    }
+    // This only triggers for Hearthkeeper/Steward specific locks now
+    setLockContext({
+      title: 'Higher Standing Required',
+      desc: 'This specific tactical asset is reserved for our Hearthkeeper and Steward community members.',
+      target: type === 'steward' ? 'Steward' : 'Hearthkeeper'
+    });
     setShowLockSheet(true);
   };
 
@@ -106,18 +88,13 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
         </header>
 
         {currentVolume === 1 ? (
-          <motion.div 
-            initial={{ opacity: 0, x: -10 }} 
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-20"
-          >
+          <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="space-y-20">
             {/* 1. THE SANCTUARY */}
             <section>
               <div className="mb-8 flex items-center gap-4 text-left">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400 whitespace-nowrap">The Sanctuary</h3>
                 <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
               </div>
-              
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-[#16121D] border border-white/5 p-8 rounded-[2.5rem] flex flex-col group hover:border-purple-500/20 transition-all">
                    <Heart className="text-purple-400/50 group-hover:text-purple-400 transition-colors mb-6" size={24} />
@@ -125,14 +102,12 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
                    <p className="text-xs text-zinc-500 italic mb-8 leading-relaxed">A guided roadmap for recovering energy during transition.</p>
                    <a href="https://static1.squarespace.com/static/5d3080f196bac8000148b997/t/664cfc0539541d281b05c587/1716321288694/GKYMH+From+Burnout+to+Balance.pdf" target="_blank" rel="noreferrer" className="mt-auto py-4 bg-white/5 text-purple-400 rounded-2xl text-[9px] font-black uppercase text-center border border-purple-500/10 hover:bg-purple-500/10 transition-all">View PDF Resource</a>
                 </div>
-
                 <div className="bg-[#16121D] border border-white/5 p-8 rounded-[2.5rem] flex flex-col group hover:border-purple-500/20 transition-all">
                    <Headphones className="text-purple-400/50 group-hover:text-purple-400 transition-colors mb-6" size={24} />
                    <h4 className="text-xl text-white font-serif italic mb-2">Inner Advocate</h4>
                    <p className="text-xs text-zinc-500 italic mb-8 leading-relaxed">Podcast series: Navigating professional upheaval and self-worth.</p>
                    <a href="https://podcasts.apple.com/ca/podcast/your-inner-advocate/id1722984987" target="_blank" rel="noreferrer" className="mt-auto py-4 bg-white/5 text-purple-400 rounded-2xl text-[9px] font-black uppercase text-center border border-purple-500/10 hover:bg-purple-500/10 transition-all">Listen on Apple</a>
                 </div>
-
                 <div className="relative overflow-hidden bg-rose-500/[0.03] border border-rose-500/20 p-8 rounded-[2.5rem] flex flex-col group shadow-lg shadow-rose-500/5">
                    <div className="flex items-center gap-2 mb-6">
                        <div className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
@@ -154,35 +129,26 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500 whitespace-nowrap">The Basecamp</h3>
                 <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
               </div>
-              
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                   <div className="flex lg:flex-col gap-2 p-1.5 bg-[#16121D] border border-white/5 rounded-3xl overflow-x-auto scrollbar-hide">
-                    <button 
-                      onClick={() => setStudyTab('amazon')} 
-                      className={`flex-1 lg:flex-none flex items-center justify-center lg:justify-start gap-4 p-4 rounded-2xl transition-all whitespace-nowrap ${studyTab === 'amazon' ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/10' : 'text-zinc-500 hover:bg-white/5'}`}
-                    >
+                    <button onClick={() => setStudyTab('amazon')} className={`flex-1 lg:flex-none flex items-center justify-center lg:justify-start gap-4 p-4 rounded-2xl transition-all ${studyTab === 'amazon' ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/10' : 'text-zinc-500 hover:bg-white/5'}`}>
                       <Package size={18} />
                       <span className="text-[10px] font-black uppercase tracking-widest">Wayfarer Provisions</span>
                     </button>
-                    <button 
-                      onClick={() => setStudyTab('reading')} 
-                      className={`flex-1 lg:flex-none flex items-center justify-center lg:justify-start gap-4 p-4 rounded-2xl transition-all whitespace-nowrap ${studyTab === 'reading' ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/10' : 'text-zinc-500 hover:bg-white/5'}`}
-                    >
+                    <button onClick={() => setStudyTab('reading')} className={`flex-1 lg:flex-none flex items-center justify-center lg:justify-start gap-4 p-4 rounded-2xl transition-all ${studyTab === 'reading' ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/10' : 'text-zinc-500 hover:bg-white/5'}`}>
                       <Book size={18} />
                       <span className="text-[10px] font-black uppercase tracking-widest">Reading List</span>
                     </button>
                   </div>
-
                   <div className="lg:col-span-3 bg-gradient-to-br from-[#110E16] to-[#0A080D] border border-white/5 p-8 md:p-16 rounded-[3rem] shadow-2xl relative overflow-hidden min-h-[400px]">
                     <div className="absolute top-0 right-0 p-12 text-teal-500/5 rotate-12 pointer-events-none">
                         {studyTab === 'amazon' ? <Package size={180} /> : <Book size={180} />}
                     </div>
-                    
                     <AnimatePresence mode="wait">
                       {studyTab === 'amazon' ? (
                         <motion.div key="amz" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="relative z-10 flex flex-col h-full">
                           <h4 className="text-4xl text-white font-serif italic mb-6 leading-tight">Provisions</h4>
-                          <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 italic max-w-lg">Curated ergonomic tools and analog systems selected to support the mental demands of professional migration.</p>
+                          <p className="text-sm text-zinc-400 font-light leading-relaxed mb-10 italic max-w-lg">Curated ergonomic tools and analog systems selected to support professional migration.</p>
                           <a href={AMZ_PROVISIONS_URL} target="_blank" rel="noreferrer" className="inline-flex items-center px-10 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] bg-teal-500 text-black hover:bg-teal-400 active:scale-95 transition-all w-fit shadow-2xl shadow-teal-500/20">
                             Visit Storefront <ExternalLink className="ml-3 w-4 h-4" />
                           </a>
@@ -212,34 +178,25 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
               </div>
             </section>
 
-            {/* 3. THE LOOKOUT (Strategy Deck Access) */}
+            {/* 3. THE LOOKOUT - FULLY UNLOCKED */}
             <section className="pb-32">
               <div className="mb-8 flex items-center gap-4">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500 whitespace-nowrap">The Lookout</h3>
                 <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
               </div>
-              
               <motion.div 
-                whileHover={isSeedlingPlus ? { y: -5 } : {}}
-                onClick={() => !isSeedlingPlus && triggerLock('seedling')}
-                className={`relative w-full max-w-2xl bg-gradient-to-br from-[#16121D] to-[#0D0B10] border ${isSeedlingPlus ? 'border-teal-500/20' : 'border-white/5'} p-10 md:p-16 rounded-[3rem] overflow-hidden shadow-2xl cursor-pointer group`}
+                whileHover={{ y: -5 }}
+                className="relative w-full max-w-2xl bg-gradient-to-br from-[#16121D] to-[#0D0B10] border border-teal-500/20 p-10 md:p-16 rounded-[3rem] overflow-hidden shadow-2xl cursor-pointer group"
               >
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-10">
-                    <div className="bg-teal-500/10 text-teal-400 px-4 py-1.5 rounded-full text-[9px] font-black uppercase italic border border-teal-500/20 shadow-lg">Member Gift</div>
-                    {!isSeedlingPlus && <Lock size={20} className="text-zinc-700" />}
+                    <div className="bg-teal-500/10 text-teal-400 px-4 py-1.5 rounded-full text-[9px] font-black uppercase italic border border-teal-500/20 shadow-lg">Public Resource</div>
                   </div>
                   <h4 className="text-4xl text-white font-serif italic mb-6 leading-tight">Master Strategy Deck</h4>
                   <p className="text-sm text-zinc-400 italic mb-12 leading-relaxed max-w-md">The primary blueprint for your career migration and resignation protocol.</p>
-                  
                   <button 
-                    onClick={(e) => {
-                      if(isSeedlingPlus) {
-                        e.stopPropagation();
-                        window.open(STRATEGY_DECK_URL, '_blank');
-                      }
-                    }}
-                    className={`h-16 px-10 rounded-2xl flex items-center gap-4 transition-all uppercase text-[10px] tracking-widest font-black ${isSeedlingPlus ? 'bg-teal-500 text-black shadow-xl shadow-teal-500/20' : 'bg-white/5 text-zinc-600 border border-white/5'}`}
+                    onClick={() => window.open(STRATEGY_DECK_URL, '_blank')}
+                    className="h-16 px-10 rounded-2xl flex items-center gap-4 transition-all uppercase text-[10px] tracking-widest font-black bg-teal-500 text-black shadow-xl shadow-teal-500/20"
                   >
                     Open Blueprint <Compass size={18} />
                   </button>
@@ -248,23 +205,18 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
             </section>
           </motion.div>
         ) : (
-          /* VOLUME II CONTENT */
-          <motion.div 
-            initial={{ opacity: 0, x: 10 }} 
-            animate={{ opacity: 1, x: 0 }}
-            className="pb-32"
-          >
-             {/* FORCED OVERRIDE: isAdmin and isSeedlingPlus are hard-coded to true here */}
+          /* VOLUME II CONTENT - SEEDLING CARDS NOW UNLOCKED */
+          <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="pb-32">
              <Provisions 
-               vault={vault} 
-               isAdmin={true} 
+               vault={{ ...vault, tier: 'seedling' }} 
+               isAdmin={isAdmin} 
                isSeedlingPlus={true}
                onRefresh={onRefresh}
              />
           </motion.div>
         )}
 
-        {/* VOLUME NAV - STICKY BAR */}
+        {/* VOLUME NAV - UNLOCKED FOR ALL */}
         <div className="fixed bottom-6 left-0 right-0 z-[110] px-6 pointer-events-none">
           <div className="max-w-md mx-auto pointer-events-auto">
             <div className="flex p-2 bg-[#16121D]/80 backdrop-blur-xl rounded-[2.5rem] border border-white/10 shadow-2xl">
@@ -276,16 +228,12 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
               </button>
               <button 
                 onClick={() => {
-                  if (isSeedlingPlus) {
-                    setCurrentVolume(2);
-                    window.scrollTo({top: 0, behavior: 'smooth'});
-                  } else {
-                    triggerLock('seedling');
-                  }
+                  setCurrentVolume(2);
+                  window.scrollTo({top: 0, behavior: 'smooth'});
                 }} 
                 className={`flex-1 py-4 rounded-[2rem] text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}
               >
-                Volume II {!isSeedlingPlus && <Lock size={12} className="opacity-50" />}
+                Volume II
               </button>
             </div>
           </div>
@@ -300,41 +248,22 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
         </footer>
       </div>
 
-      {/* ACCESS LOCK SHEET */}
       <AnimatePresence>
         {showLockSheet && (
           <>
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={() => setShowLockSheet(false)}
-              className="fixed inset-0 bg-black/90 backdrop-blur-md z-[120]"
-            />
-            <motion.div 
-              initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3rem] z-[130] p-8 pb-16 shadow-[0_-20px_50px_rgba(0,0,0,0.8)]"
-            >
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowLockSheet(false)} className="fixed inset-0 bg-black/90 backdrop-blur-md z-[120]" />
+            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3rem] z-[130] p-8 pb-16 shadow-[0_-20px_50px_rgba(0,0,0,0.8)]">
               <div className="w-12 h-1.5 bg-zinc-800 rounded-full mx-auto mb-10" />
-              
               <div className="max-w-md mx-auto text-center">
                 <div className="w-20 h-20 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-purple-500/20 shadow-inner">
                   <Lock className="text-purple-400" size={32} />
                 </div>
                 <h3 className="text-3xl font-serif italic text-white mb-4">{lockContext.title}</h3>
-                <p className="text-sm text-zinc-400 italic leading-relaxed mb-10 px-4">
-                    {lockContext.desc}
-                </p>
-
-                <button 
-                  onClick={() => navigate('/grove')}
-                  className="w-full py-6 rounded-2xl bg-purple-500 text-white font-black uppercase tracking-[0.2em] shadow-2xl shadow-purple-500/30 active:scale-95 transition-all mb-8"
-                >
-                  Become a {lockContext.target}
+                <p className="text-sm text-zinc-400 italic leading-relaxed mb-10 px-4">{lockContext.desc}</p>
+                <button onClick={() => navigate('/grove')} className="w-full py-6 rounded-2xl bg-purple-500 text-white font-black uppercase tracking-[0.2em] shadow-2xl shadow-purple-500/30 active:scale-95 transition-all mb-8">
+                  Check Standing
                 </button>
-                
-                <button onClick={() => setShowLockSheet(false)} className="text-[10px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-400 transition-colors">
-                  Keep Exploring Volume I
-                </button>
+                <button onClick={() => setShowLockSheet(false)} className="text-[10px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-400 transition-colors">Keep Exploring</button>
               </div>
             </motion.div>
           </>
