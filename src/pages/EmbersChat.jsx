@@ -78,7 +78,6 @@ export default function EmbersChat({ vault, isAdmin }) {
     id: 'weekly-spark-bot',
     author_name: 'The Spark',
     content: WEEKLY_SPARKS[getWeekIndex()],
-    subscription_tier: 'Steward',
     author_email: 'spark@hearth.io',
     is_bot: true,
     created_date: new Date().toISOString()
