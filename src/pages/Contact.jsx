@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { 
   FileText, ChevronDown, ChevronUp, Zap, 
   Mail, ExternalLink, DollarSign, Download, Copy, Lock,
-  Fingerprint, ClipboardList, Presentation, Check
+  Fingerprint, ClipboardList, Presentation, Check,
+  Sword, Shield, BookOpen
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // --- DATA: THE FULL 50 VERB LEXICON ---
-// (Kept your powerVerbs array as is)
 const powerVerbs = [
     { legacy: "Taught", horizon: "Facilitated", use: "Standardizing delivery for stakeholders." },
     { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
@@ -62,9 +62,9 @@ const powerVerbs = [
 ];
 
 const generateDynamicScripts = (vault) => {
-    const targetRole = vault?.selectedPath?.domain || "Target Role";
-    const salaryRange = vault?.selectedPath?.salary || "market competitive";
-    const topSkill = vault?.skills?.find(s => s.status === 'aligned')?.skill || "my core expertise";
+    const targetRole = vault?.selectedPath?.domain || "[Target Role]";
+    const salaryRange = vault?.selectedPath?.salary || "[Market Range]";
+    const topSkill = vault?.skills?.find(s => s.status === 'aligned')?.skill || "[Your Core Expertise]";
 
     return {
         outreach: [
@@ -106,57 +106,70 @@ const Contact = ({ vault, isAdmin }) => {
   ];
 
   return (
-    <div className="animate-in fade-in duration-500 pb-20 px-4 md:px-0 max-w-4xl mx-auto">
+    <div className="animate-in fade-in duration-700 pb-32 px-4 md:px-0 max-w-4xl mx-auto">
       
       {/* --- VOLUME HEADER --- */}
-      <header className="mb-12 border-b border-white/5 pb-12">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="h-[1px] w-12 bg-teal-500/50" />
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-teal-500/70">
-            Tactical Arsenal
+      <header className="mb-16 border-b border-white/5 pb-16 pt-8">
+        <div className="flex items-center gap-4 mb-6">
+          <Sword size={16} className="text-teal-500/50" />
+          <span className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-500/70 italic">
+            Volume II: Tactical Arsenal
           </span>
         </div>
-        <h2 className="text-4xl md:text-5xl text-white font-serif italic mb-4">
-          Volume II: The Trail Kit
+        <h2 className="text-5xl md:text-7xl text-white font-serif italic mb-6 tracking-tighter">
+          The Trail <span className="text-zinc-800 font-sans not-italic font-extralight uppercase">Kit</span>
         </h2>
-        <p className="max-w-xl text-zinc-500 text-sm leading-relaxed font-light italic">
+        <p className="max-w-xl text-zinc-500 text-sm leading-relaxed font-light italic border-l border-teal-500/20 pl-6">
           Strategic assets for the transition. From shifting your lexicon to 
-          securing your market value—these are the tools for planting new roots.
+          securing your market value—these are the tools for planting new roots in foreign soil.
         </p>
       </header>
 
-      <div className="grid grid-cols-1 gap-6">
-        {trailKitResources.map((tool) => {
+      <div className="grid grid-cols-1 gap-4">
+        {trailKitResources.map((tool, idx) => {
           const isLocked = userRank < tool.requiredTier;
           const isOpen = expandedCard === tool.id && !isLocked;
 
           return (
-            <div key={tool.id} className="flex flex-col group scroll-mt-24">
+            <motion.div 
+              key={tool.id} 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.1 }}
+              className="flex flex-col group"
+            >
               <button 
                 onClick={() => !isLocked && setExpandedCard(isOpen ? null : tool.id)}
                 disabled={isLocked}
-                className={`relative w-full text-left bg-[#16121D] border transition-all duration-300 ${
-                  isLocked ? 'opacity-30 cursor-not-allowed border-zinc-800' : 'cursor-pointer hover:border-teal-500/30'
-                } ${isOpen ? 'rounded-t-[2.5rem] border-teal-500/30 shadow-[0_0_30px_rgba(20,184,166,0.05)]' : 'rounded-[2.5rem] border-zinc-800'}`}
+                className={`relative w-full text-left bg-[#16121D]/40 backdrop-blur-sm border transition-all duration-500 ${
+                  isLocked ? 'opacity-40 cursor-not-allowed border-white/5' : 'cursor-pointer hover:border-teal-500/30'
+                } ${isOpen ? 'rounded-t-[2.5rem] border-teal-500/40 bg-[#1C1622]' : 'rounded-[2.5rem] border-white/5'}`}
               >
-                <div className="p-6 md:p-8 flex items-center justify-between gap-6">
-                  <div className="flex items-center gap-6">
-                    <div className="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-2xl bg-white/5 border border-white/5 group-hover:bg-teal-500/10 transition-colors shrink-0">
-                        {isLocked ? <Lock size={20} className="text-zinc-600" /> : tool.icon}
+                <div className="p-8 md:p-10 flex items-center justify-between gap-6">
+                  <div className="flex items-center gap-8">
+                    <div className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl bg-black/40 border border-white/10 group-hover:border-teal-500/30 transition-all overflow-hidden relative">
+                        {isLocked ? (
+                          <Lock size={20} className="text-zinc-700" />
+                        ) : (
+                          <>
+                            <div className="absolute inset-0 bg-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            {tool.icon}
+                          </>
+                        )}
                     </div>
                     <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${isLocked ? 'bg-zinc-800 text-zinc-500' : 'bg-teal-500/10 text-teal-500'}`}>
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className={`text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full border ${isLocked ? 'border-zinc-800 text-zinc-700' : 'border-teal-500/20 text-teal-500/60'}`}>
                             {tool.type}
                         </span>
+                        {isLocked && <Lock size={10} className="text-zinc-800" />}
                       </div>
-                      <h3 className="text-lg md:text-xl text-white font-serif italic">{tool.title}</h3>
-                      <p className="hidden md:block text-zinc-500 mt-1 max-w-md text-[11px] font-light italic leading-relaxed">{tool.desc}</p>
+                      <h3 className="text-xl md:text-2xl text-white font-serif italic tracking-tight">{tool.title}</h3>
                     </div>
                   </div>
                   {!isLocked && (
-                    <div className="text-zinc-600 group-hover:text-white transition-colors p-2">
-                      {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                    <div className={`transition-transform duration-500 ${isOpen ? 'rotate-180 text-teal-500' : 'text-zinc-700 group-hover:text-white'}`}>
+                      <ChevronDown size={24} strokeWidth={1} />
                     </div>
                   )}
                 </div>
@@ -168,60 +181,66 @@ const Contact = ({ vault, isAdmin }) => {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden bg-[#110E16] border-x border-b border-teal-500/30 rounded-b-[2.5rem]"
+                    className="overflow-hidden bg-[#1C1622] border-x border-b border-teal-500/40 rounded-b-[2.5rem] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
                   >
-                    <div className="p-6 md:p-10 pt-0 space-y-8">
+                    <div className="p-8 md:p-12 pt-4 space-y-10">
                       
                       {/* 1. POWER VERBS */}
                       {tool.id === 'verbs' && (
-                        <div className="space-y-6">
+                        <div className="space-y-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {(showAllVerbs ? powerVerbs : powerVerbs.slice(0, 9)).map((v, i) => (
-                                    <div key={i} className="bg-black/40 border border-white/5 p-5 rounded-2xl hover:border-teal-500/20 transition-all">
-                                        <div className="text-[9px] text-zinc-600 line-through uppercase tracking-tighter mb-1">{v.legacy}</div>
-                                        <div className="text-xl font-serif italic text-teal-400">{v.horizon}</div>
-                                        <div className="text-[10px] text-zinc-500 mt-3 italic opacity-80 leading-snug">"{v.use}"</div>
+                                    <div key={i} className="bg-black/40 border border-white/5 p-6 rounded-2xl hover:border-teal-500/20 transition-all group/verb">
+                                        <div className="text-[9px] text-zinc-700 line-through uppercase tracking-widest mb-2 group-hover:text-zinc-500 transition-colors">{v.legacy}</div>
+                                        <div className="text-2xl font-serif italic text-teal-400 mb-4 tracking-tighter">{v.horizon}</div>
+                                        <div className="text-[10px] text-zinc-500 italic opacity-80 leading-relaxed border-t border-white/5 pt-4">"{v.use}"</div>
                                     </div>
                                 ))}
                             </div>
                             <button 
                                 onClick={(e) => { e.stopPropagation(); setShowAllVerbs(!showAllVerbs); }} 
-                                className="w-full h-14 border border-dashed border-zinc-800 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 hover:border-teal-500/30 transition-all active:scale-[0.98]"
+                                className="w-full h-16 border border-dashed border-zinc-800 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 hover:text-teal-400 hover:border-teal-500/30 transition-all"
                             >
-                                {showAllVerbs ? "Collapse List" : "View Full Lexicon (50 Verbs)"}
+                                {showAllVerbs ? "Collapse Lexicon" : "Reveal Full Lexicon (50 Verbs)"}
                             </button>
                         </div>
                       )}
 
                       {/* 2. IDENTITY LEDGER */}
                       {tool.id === 'ledger' && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <a 
                               href="https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=sharing"
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="group/btn bg-teal-500/5 border border-teal-500/10 p-6 rounded-[2rem] flex flex-col justify-between hover:border-teal-500/40 transition-all"
+                              className="group/btn bg-black/40 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-teal-500/40 transition-all"
                             >
-                                <div>
-                                    <h4 className="text-white font-serif italic text-lg mb-1">The Identity Ledger</h4>
-                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-8">Master Class Slide Deck</p>
+                                <div className="mb-10">
+                                    <div className="w-10 h-10 bg-teal-500/10 rounded-xl flex items-center justify-center text-teal-500 mb-6">
+                                      <Presentation size={20} />
+                                    </div>
+                                    <h4 className="text-white font-serif italic text-xl mb-2 tracking-tight">The Identity Ledger</h4>
+                                    <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Master Class Slide Deck</p>
                                 </div>
-                                <div className="w-full h-12 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center justify-center gap-2 group-active/btn:scale-95 transition-transform">
-                                    <Presentation size={14} /> Open Presentation
+                                <div className="w-full h-14 bg-teal-500 text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3 group-hover/btn:scale-[1.02] transition-all">
+                                    Open Presentation <ExternalLink size={14} />
                                 </div>
                             </a>
                             <a 
                               href="https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=sharing"
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="group/btn bg-white/5 border border-white/5 p-6 rounded-[2rem] flex flex-col justify-between hover:border-white/20 transition-all"
+                              className="group/btn bg-black/40 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-white/20 transition-all"
                             >
-                                <div>
-                                    <h4 className="text-white font-serif italic text-lg mb-1">Implementation Guide</h4>
-                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-8">Personal Workbook (PDF)</p>
+                                <div className="mb-10">
+                                    <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-zinc-500 mb-6">
+                                      <ClipboardList size={20} />
+                                    </div>
+                                    <h4 className="text-white font-serif italic text-xl mb-2 tracking-tight">Implementation Guide</h4>
+                                    <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Personal Workbook (PDF)</p>
                                 </div>
-                                <div className="w-full h-12 border border-zinc-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center justify-center gap-2 group-active/btn:scale-95 transition-transform">
-                                    <ClipboardList size={14} /> Download Ledger
+                                <div className="w-full h-14 border border-zinc-800 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3 group-hover/btn:bg-white group-hover/btn:text-black transition-all">
+                                    <Download size={14} /> Download Ledger
                                 </div>
                             </a>
                         </div>
@@ -229,15 +248,18 @@ const Contact = ({ vault, isAdmin }) => {
 
                       {/* 3. RESUME BLUEPRINT */}
                       {tool.id === 'resume' && (
-                        <div className="bg-purple-500/5 border border-purple-500/20 p-8 md:p-12 rounded-[2.5rem] text-center">
-                            <p className="text-sm text-zinc-400 italic mb-8 max-w-sm mx-auto">A specialized ATS-optimized blueprint designed for complex career pivots.</p>
+                        <div className="bg-black/40 border border-white/5 p-12 md:p-16 rounded-[3rem] text-center relative overflow-hidden">
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-purple-500/5 blur-[100px]" />
+                            <p className="text-sm text-zinc-500 italic mb-10 max-w-sm mx-auto leading-relaxed relative z-10">
+                              "A specialized ATS-optimized blueprint designed for the weight of a complex career pivot."
+                            </p>
                             <a 
                               href="https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing"
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-3 px-10 h-14 bg-purple-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-400 active:scale-95 transition-all"
+                              className="inline-flex items-center gap-4 px-12 h-16 bg-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-purple-500 hover:scale-105 transition-all shadow-xl shadow-purple-900/20 relative z-10"
                             >
-                                <ExternalLink size={14} /> Get Blueprint (Google Doc)
+                                <FileText size={16} /> Secure Blueprint
                             </a>
                         </div>
                       )}
@@ -248,18 +270,20 @@ const Contact = ({ vault, isAdmin }) => {
                           {(tool.id === 'outreach' ? dynamicContent.outreach : dynamicContent.salary).map((item, i) => {
                             const uniqueKey = `${tool.id}-${i}`;
                             return (
-                                <div key={i} className="bg-black/40 border border-white/5 p-6 rounded-[2rem] group/script relative">
-                                    <div className="flex justify-between items-start mb-4">
-                                        <h4 className="text-[10px] font-black uppercase text-teal-500 tracking-widest">{item.title || item.label}</h4>
+                                <div key={i} className="bg-black/40 border border-white/5 p-8 rounded-[2.5rem] group/script relative">
+                                    <div className="flex justify-between items-start mb-6">
+                                        <div className="flex items-center gap-3">
+                                          <div className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+                                          <h4 className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">{item.title || item.label}</h4>
+                                        </div>
                                         <button 
                                             onClick={() => handleCopy(item.script, uniqueKey)}
-                                            className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl text-zinc-500 hover:text-white transition-all active:scale-90"
-                                            title="Copy to clipboard"
+                                            className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-2xl text-zinc-600 hover:text-teal-400 hover:bg-teal-500/10 transition-all active:scale-90"
                                         >
-                                            {copiedIndex === uniqueKey ? <Check size={16} className="text-teal-500" /> : <Copy size={16} />}
+                                            {copiedIndex === uniqueKey ? <Check size={18} className="text-teal-500" /> : <Copy size={18} />}
                                         </button>
                                     </div>
-                                    <div className="font-mono text-[12px] text-zinc-300 italic select-all leading-relaxed whitespace-pre-wrap pl-2 border-l border-teal-500/20">
+                                    <div className="font-mono text-[13px] text-zinc-400 italic leading-relaxed pl-6 border-l border-teal-500/20 py-2">
                                         "{item.script}"
                                     </div>
                                 </div>
@@ -271,7 +295,7 @@ const Contact = ({ vault, isAdmin }) => {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
           );
         })}
       </div>
