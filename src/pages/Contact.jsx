@@ -7,7 +7,6 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// --- DATA: THE FULL 50 VERB LEXICON ---
 const powerVerbs = [
     { legacy: "Taught", horizon: "Facilitated", use: "Standardizing delivery for stakeholders." },
     { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
@@ -86,25 +85,20 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
 
-  // --- REFINED RANK LOGIC ---
+  // Define tier mapping
   const tiers = { 
-    'none': 0,
-    'traveler': 0, 
-    'seedling': 1, 
-    'seedling free': 1,
+    'none': 0, 'traveler': 0, 
+    'seedling': 1, 'seedling free': 1,
     'hearthkeeper': 2, 
-    'steward': 3,
-    'founding steward': 3
+    'steward': 3, 'founding steward': 3
   };
   
-  // 1. Get base rank from tier
+  // Calculate raw rank
   let baseRank = tiers[vault?.tier?.toLowerCase()] || 0;
-  
-  // 2. Apply override for SeedlingPlus (entrance to Vol II)
   if (isSeedlingPlus && baseRank < 1) baseRank = 1;
 
-  // 3. MASTER OVERRIDE: If Admin/Founder, force max rank (3) to unlock EVERYTHING
-  const userRank = isAdmin ? 3 : baseRank;
+  // The final calculated rank for non-admins
+  const userRank = baseRank;
 
   const dynamicContent = generateDynamicScripts(vault);
 
@@ -115,17 +109,16 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
   };
 
   const trailKitResources = [
-    { id: 'verbs', title: "Power Verb Lexicon", desc: "Strategic verbs to replace legacy language.", type: "Seedlings+", icon: <Zap className="text-teal-400" />, requiredTier: 1 },
-    { id: 'ledger', title: "The Identity Ledger", desc: "Workbook & Deck to decouple your worth.", type: "Hearthkeepers+", icon: <Fingerprint className="text-teal-400" />, requiredTier: 2 },
-    { id: 'resume', title: "Trailblazer's Blueprint", desc: "ATS-optimized resume layout.", type: "Hearthkeepers+", icon: <FileText className="text-purple-400" />, requiredTier: 2 },
-    { id: 'outreach', title: "Sponsorship Outreach", desc: "Turn contacts into advocates.", type: "Stewards Only", icon: <Mail className="text-teal-400" />, requiredTier: 3 },
-    { id: 'scripts', title: "Salary Negotiations", desc: "Tactical word-for-word scripts.", type: "Stewards Only", icon: <DollarSign className="text-purple-400" />, requiredTier: 3 }
+    { id: 'verbs', title: "Power Verb Lexicon", type: "Seedlings+", icon: <Zap className="text-teal-400" />, requiredTier: 1 },
+    { id: 'ledger', title: "The Identity Ledger", type: "Hearthkeepers+", icon: <Fingerprint className="text-teal-400" />, requiredTier: 2 },
+    { id: 'resume', title: "Trailblazer's Blueprint", type: "Hearthkeepers+", icon: <FileText className="text-purple-400" />, requiredTier: 2 },
+    { id: 'outreach', title: "Sponsorship Outreach", type: "Stewards Only", icon: <Mail className="text-teal-400" />, requiredTier: 3 },
+    { id: 'scripts', title: "Salary Negotiations", type: "Stewards Only", icon: <DollarSign className="text-purple-400" />, requiredTier: 3 }
   ];
 
   return (
     <div className="animate-in fade-in duration-700 pb-32 px-4 md:px-0 max-w-4xl mx-auto">
       
-      {/* --- VOLUME HEADER --- */}
       <header className="mb-16 border-b border-white/5 pb-16 pt-8">
         <div className="flex items-center gap-4 mb-6">
           <Sword size={16} className="text-teal-500/50" />
@@ -149,16 +142,17 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
 
       <div className="grid grid-cols-1 gap-4">
         {trailKitResources.map((tool, idx) => {
-          // Logic check: if admin, it's NEVER locked. Otherwise check userRank vs requiredTier.
-          const isLocked = !isAdmin && userRank < tool.requiredTier;
+          
+          // --- THE UNBREAKABLE LOCK LOGIC ---
+          // If you are an Admin, isLocked is FORCE-FALSE. 
+          // Otherwise, check if userRank meets requirements.
+          const isLocked = isAdmin ? false : (userRank < tool.requiredTier);
+          
           const isOpen = expandedCard === tool.id && !isLocked;
 
           return (
             <motion.div 
               key={tool.id} 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1 }}
               className="flex flex-col group"
             >
               <button 
@@ -208,7 +202,6 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
                   >
                     <div className="p-8 md:p-12 pt-4 space-y-10">
                       
-                      {/* 1. POWER VERBS */}
                       {tool.id === 'verbs' && (
                         <div className="space-y-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -229,89 +222,48 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
                         </div>
                       )}
 
-                      {/* 2. IDENTITY LEDGER */}
                       {tool.id === 'ledger' && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <a 
-                              href="https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=sharing"
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="group/btn bg-black/40 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-teal-500/40 transition-all"
-                            >
+                            <a href="https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="group/btn bg-black/40 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-teal-500/40 transition-all">
                                 <div className="mb-10">
-                                    <div className="w-10 h-10 bg-teal-500/10 rounded-xl flex items-center justify-center text-teal-500 mb-6">
-                                      <Presentation size={20} />
-                                    </div>
+                                    <div className="w-10 h-10 bg-teal-500/10 rounded-xl flex items-center justify-center text-teal-500 mb-6"><Presentation size={20} /></div>
                                     <h4 className="text-white font-serif italic text-xl mb-2 tracking-tight">The Identity Ledger</h4>
                                     <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Master Class Slide Deck</p>
                                 </div>
-                                <div className="w-full h-14 bg-teal-500 text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3 group-hover/btn:scale-[1.02] transition-all">
-                                    Open Presentation <ExternalLink size={14} />
-                                </div>
+                                <div className="w-full h-14 bg-teal-500 text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3">Open Presentation <ExternalLink size={14} /></div>
                             </a>
-                            <a 
-                              href="https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=sharing"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="group/btn bg-black/40 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-white/20 transition-all"
-                            >
+                            <a href="https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="group/btn bg-black/40 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-white/20 transition-all">
                                 <div className="mb-10">
-                                    <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-zinc-500 mb-6">
-                                      <ClipboardList size={20} />
-                                    </div>
+                                    <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-zinc-500 mb-6"><ClipboardList size={20} /></div>
                                     <h4 className="text-white font-serif italic text-xl mb-2 tracking-tight">Implementation Guide</h4>
                                     <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Personal Workbook (PDF)</p>
                                 </div>
-                                <div className="w-full h-14 border border-zinc-800 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3 group-hover/btn:bg-white group-hover/btn:text-black transition-all">
-                                    <Download size={14} /> Download Ledger
-                                </div>
+                                <div className="w-full h-14 border border-zinc-800 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3"><Download size={14} /> Download Ledger</div>
                             </a>
                         </div>
                       )}
 
-                      {/* 3. RESUME BLUEPRINT */}
                       {tool.id === 'resume' && (
                         <div className="bg-black/40 border border-white/5 p-12 md:p-16 rounded-[3rem] text-center relative overflow-hidden">
                             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-purple-500/5 blur-[100px]" />
-                            <p className="text-sm text-zinc-500 italic mb-10 max-w-sm mx-auto leading-relaxed relative z-10">
-                              "A specialized ATS-optimized blueprint designed for the weight of a complex career pivot."
-                            </p>
-                            <a 
-                              href="https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-4 px-12 h-16 bg-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-purple-500 hover:scale-105 transition-all shadow-xl shadow-purple-900/20 relative z-10"
-                            >
-                                <FileText size={16} /> Secure Blueprint
-                            </a>
+                            <a href="https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-4 px-12 h-16 bg-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-purple-500 transition-all relative z-10"><FileText size={16} /> Secure Blueprint</a>
                         </div>
                       )}
 
-                      {/* 4. SCRIPTS (OUTREACH & SALARY) */}
                       {(tool.id === 'outreach' || tool.id === 'scripts') && (
                         <div className="space-y-4">
-                          {(tool.id === 'outreach' ? dynamicContent.outreach : dynamicContent.salary).map((item, i) => {
-                            const uniqueKey = `${tool.id}-${i}`;
-                            return (
+                          {(tool.id === 'outreach' ? dynamicContent.outreach : dynamicContent.salary).map((item, i) => (
                                 <div key={i} className="bg-black/40 border border-white/5 p-8 rounded-[2.5rem] group/script relative">
                                     <div className="flex justify-between items-start mb-6">
                                         <div className="flex items-center gap-3">
                                           <div className="w-1.5 h-1.5 rounded-full bg-teal-500" />
                                           <h4 className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">{item.title || item.label}</h4>
                                         </div>
-                                        <button 
-                                            onClick={() => handleCopy(item.script, uniqueKey)}
-                                            className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-2xl text-zinc-600 hover:text-teal-400 hover:bg-teal-500/10 transition-all active:scale-90"
-                                        >
-                                            {copiedIndex === uniqueKey ? <Check size={18} className="text-teal-500" /> : <Copy size={18} />}
-                                        </button>
+                                        <button onClick={() => handleCopy(item.script, `${tool.id}-${i}`)} className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-2xl text-zinc-600 hover:text-teal-400 transition-all">{copiedIndex === `${tool.id}-${i}` ? <Check size={18} className="text-teal-500" /> : <Copy size={18} />}</button>
                                     </div>
-                                    <div className="font-mono text-[13px] text-zinc-400 italic leading-relaxed pl-6 border-l border-teal-500/20 py-2">
-                                        "{item.script}"
-                                    </div>
+                                    <div className="font-mono text-[13px] text-zinc-400 italic leading-relaxed pl-6 border-l border-teal-500/20 py-2">"{item.script}"</div>
                                 </div>
-                            );
-                          })}
+                          ))}
                         </div>
                       )}
                     </div>
