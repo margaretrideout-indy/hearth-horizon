@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Flame, Send, Sparkles, Loader2, Leaf, Mountain, Heart, RefreshCw, Reply, X } from 'lucide-react';
+import { Flame, Send, Sparkles, Loader2, Leaf, Mountain, Heart, RefreshCw, Reply, X, Ghost } from 'lucide-react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { format, getWeek } from 'date-fns';
 
@@ -17,29 +17,29 @@ const HEARTH_PROMPTS = [
 const TOS_TEXT = "This is a sanctuary of reciprocity. We support, we don't vent. We build, we don't break.";
 
 // --- COMPONENT: INTENTIONAL REACTIONS ---
-// Polished for better thumb-targets and feedback
 const EmberReactions = ({ msgId }) => {
   const [counts, setCounts] = useState({ sparkle: 0, leaf: 0, heart: 0 });
   const react = (type) => setCounts(prev => ({ ...prev, [type]: prev[type] + 1 }));
 
   const reactionConfigs = [
-    { type: 'sparkle', icon: Sparkles, color: 'text-teal-400', border: 'hover:border-teal-400/30', label: 'Inspired' },
-    { type: 'leaf', icon: Leaf, color: 'text-green-500', border: 'hover:border-green-500/30', label: 'Growth' },
-    { type: 'heart', icon: Heart, color: 'text-purple-500', border: 'hover:border-purple-500/30', label: 'Love' },
+    { type: 'sparkle', icon: Sparkles, color: 'text-teal-400', glow: 'shadow-[0_0_10px_rgba(45,212,191,0.3)]', label: 'Inspired' },
+    { type: 'leaf', icon: Leaf, color: 'text-emerald-500', glow: 'shadow-[0_0_10px_rgba(16,185,129,0.3)]', label: 'Growth' },
+    { type: 'heart', icon: Heart, color: 'text-rose-500', glow: 'shadow-[0_0_10px_rgba(244,63,94,0.3)]', label: 'Love' },
   ];
 
   return (
-    <div className="flex gap-3 mt-3 ml-1">
-      {reactionConfigs.map(({ type, icon: Icon, color, border, label }) => (
-        <button 
+    <div className="flex gap-2 mt-3 ml-1">
+      {reactionConfigs.map(({ type, icon: Icon, color, glow, label }) => (
+        <motion.button 
           key={type}
+          whileTap={{ scale: 0.8 }}
           onClick={() => react(type)} 
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/5 ${border} transition-all active:scale-90 group`} 
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all ${counts[type] > 0 ? glow : ''}`}
           title={label}
         >
-          <Icon size={12} className={counts[type] > 0 ? color : 'text-zinc-600'} />
-          {counts[type] > 0 && <span className="text-[10px] text-zinc-400 font-bold">{counts[type]}</span>}
-        </button>
+          <Icon size={11} className={counts[type] > 0 ? color : 'text-zinc-700'} strokeWidth={3} />
+          {counts[type] > 0 && <span className="text-[9px] text-zinc-400 font-black">{counts[type]}</span>}
+        </motion.button>
       ))}
     </div>
   );
@@ -48,11 +48,11 @@ const EmberReactions = ({ msgId }) => {
 const TierBadge = ({ tier }) => {
   const normalizedTier = tier?.toLowerCase();
   switch (normalizedTier) {
-    case 'founder': return <span className="bg-purple-900/40 text-purple-300 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-purple-500/30 flex items-center gap-1 shadow-[0_0_15px_rgba(168,85,247,0.15)]"><Sparkles className="w-2.5 h-2.5" /> Founder</span>;
-    case 'hearth': return <Flame className="w-3.5 h-3.5 text-amber-500/90 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)]" />;
-    case 'seedling': return <span className="bg-green-900/10 text-green-500/60 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-green-500/10 flex items-center gap-1"><Leaf className="w-2.5 h-2.5" /> Seedling</span>;
-    case 'steward': return <span className="bg-slate-800/50 text-slate-300 text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-teal-500/20 flex items-center gap-1"><Mountain className="w-2.5 h-2.5 text-teal-500" /> Steward</span>;
-    default: return null;
+    case 'founder': return <span className="bg-purple-500/10 text-purple-400 text-[8px] font-black uppercase px-2 py-0.5 rounded-lg border border-purple-500/20 flex items-center gap-1.5"><Sparkles className="w-2.5 h-2.5" /> Founder</span>;
+    case 'hearth': return <div className="flex items-center gap-1.5 bg-orange-500/10 px-2 py-0.5 rounded-lg border border-orange-500/20"><Flame className="w-3 h-3 text-orange-500 animate-pulse" /> <span className="text-[8px] font-black text-orange-200 uppercase tracking-tighter">System</span></div>;
+    case 'seedling': return <span className="bg-emerald-500/5 text-emerald-500/60 text-[8px] font-black uppercase px-2 py-0.5 rounded-lg border border-emerald-500/10 flex items-center gap-1"><Leaf className="w-2.5 h-2.5" /> Seedling</span>;
+    case 'steward': return <span className="bg-teal-500/10 text-teal-400 text-[8px] font-black uppercase px-2 py-0.5 rounded-lg border border-teal-500/20 flex items-center gap-1"><Mountain className="w-2.5 h-2.5" /> Steward</span>;
+    default: return <span className="text-[8px] font-black text-zinc-700 uppercase">Traveler</span>;
   }
 };
 
@@ -65,7 +65,6 @@ export default function EmbersChat({ vault, isAdmin }) {
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Pull-to-refresh logic
   const y = useMotionValue(0);
   const opacity = useTransform(y, [0, 60], [0, 1]);
   const rotate = useTransform(y, [0, 100], [0, 360]);
@@ -77,7 +76,7 @@ export default function EmbersChat({ vault, isAdmin }) {
     {
       id: 'static-founder-welcome',
       author_name: 'Margaret',
-      content: "Welcome to the Hearth. I built this because I know how hard the 'translation' is. You aren't alone here.",
+      content: "Welcome to the Hearth. I built this because I know how hard the 'translation' is. You aren't alone here. Let's build.",
       subscription_tier: 'Founder',
       email: 'margaretpardy@gmail.com',
       created_date: new Date().toISOString()
@@ -108,7 +107,6 @@ export default function EmbersChat({ vault, isAdmin }) {
           email: d.email,
           reply_to: d.reply_to
         }));
-        // Remove hearth system messages from remote and sort
         const sorted = mapped
           .filter(m => m.email !== 'system@hearth')
           .sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
@@ -133,7 +131,6 @@ export default function EmbersChat({ vault, isAdmin }) {
       reply_to: replyTarget ? { author: replyTarget.author_name, content: replyTarget.content } : null
     };
 
-    // Optimistic Update
     setRemotePosts(prev => [...prev, { ...messageData, id: tempId, content: input, subscription_tier: messageData.tier, created_date: messageData.timestamp, isPending: true }]);
     setInput('');
     setReplyTarget(null);
@@ -172,12 +169,12 @@ export default function EmbersChat({ vault, isAdmin }) {
   useEffect(() => { scrollToBottom(); }, [remotePosts]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#0A080D] md:rounded-t-[2.5rem] overflow-hidden relative touch-none overscroll-none">
+    <div className="flex flex-col h-full w-full bg-[#0D0B14] md:rounded-[3rem] border border-white/5 overflow-hidden relative shadow-2xl">
       
       {/* Pull-to-refresh Indicator */}
-      <motion.div style={{ y, opacity }} className="absolute top-4 left-0 w-full flex justify-center z-50 pointer-events-none">
-        <motion.div style={{ rotate }} className="bg-teal-500/20 p-2 rounded-full border border-teal-500/40 backdrop-blur-md">
-          <RefreshCw size={16} className={`text-teal-400 ${refreshing ? 'animate-spin' : ''}`} />
+      <motion.div style={{ y, opacity }} className="absolute top-6 left-0 w-full flex justify-center z-50 pointer-events-none">
+        <motion.div style={{ rotate }} className="bg-teal-500/20 p-3 rounded-full border border-teal-500/40 backdrop-blur-xl shadow-lg">
+          <RefreshCw size={18} className={`text-teal-400 ${refreshing ? 'animate-spin' : ''}`} />
         </motion.div>
       </motion.div>
 
@@ -185,11 +182,11 @@ export default function EmbersChat({ vault, isAdmin }) {
         ref={scrollRef}
         drag="y"
         dragConstraints={{ top: 0, bottom: 0 }}
-        dragElastic={0.4}
-        onDragEnd={(e, info) => { if (info.offset.y > 80) onRefresh(); }}
-        className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 scrollbar-hide z-10 touch-pan-y"
+        dragElastic={0.5}
+        onDragEnd={(e, info) => { if (info.offset.y > 100) onRefresh(); }}
+        className="flex-1 overflow-y-auto px-6 py-10 space-y-12 scrollbar-hide z-10 touch-pan-y"
       >
-        <div className="space-y-10 pb-12">
+        <div className="space-y-12 pb-24">
             {[...FIXED_STARTERS, ...remotePosts].map((msg, idx) => {
                 const isOwn = msg.email === vault?.email;
                 const isSystem = msg.subscription_tier === 'Hearth';
@@ -197,12 +194,12 @@ export default function EmbersChat({ vault, isAdmin }) {
                 return (
                     <motion.div 
                         key={msg.id || idx} 
-                        initial={{ opacity: 0, y: 10 }} 
-                        animate={{ opacity: 1, y: 0 }} 
+                        initial={{ opacity: 0, x: isOwn ? 20 : -20 }} 
+                        animate={{ opacity: 1, x: 0 }} 
                         className={`flex flex-col group ${isOwn ? 'items-end' : 'items-start'}`}
                     >
-                        <div className={`flex items-center gap-2 mb-2 text-[10px] font-black uppercase tracking-widest text-zinc-500 ${isOwn ? 'flex-row-reverse' : ''}`}>
-                            {isOwn ? 'You' : msg.author_name}
+                        <div className={`flex items-center gap-3 mb-2.5 text-[9px] font-black uppercase tracking-[0.2em] text-zinc-600 ${isOwn ? 'flex-row-reverse' : ''}`}>
+                            <span className={isOwn ? 'text-teal-500' : 'text-zinc-400'}>{isOwn ? 'Me' : msg.author_name}</span>
                             <TierBadge tier={msg.subscription_tier} />
                             {!isOwn && !isSystem && (
                               <button 
@@ -210,31 +207,31 @@ export default function EmbersChat({ vault, isAdmin }) {
                                     setReplyTarget(msg);
                                     inputRef.current?.focus();
                                 }} 
-                                className="md:opacity-0 group-hover:opacity-100 transition-opacity ml-2 flex items-center gap-1 text-teal-500/60 hover:text-teal-400 active:scale-95"
+                                className="opacity-0 group-hover:opacity-100 transition-all flex items-center gap-1.5 text-zinc-500 hover:text-teal-400"
                               >
-                                <Reply size={10} /> Reply
+                                <Reply size={10} /> <span className="tracking-tighter">REPLY</span>
                               </button>
                             )}
                         </div>
 
                         {msg.reply_to && (
-                          <div className={`mb-1 px-3 py-1.5 border-l-2 border-white/10 text-[10px] text-zinc-500 italic bg-white/[0.01] rounded-r-lg max-w-[75%] ${isOwn ? 'text-right ml-auto' : ''}`}>
-                            <span className="font-bold text-zinc-600 mr-1">{msg.reply_to.author}:</span>
-                            "{msg.reply_to.content.substring(0, 45)}..."
+                          <div className={`mb-2 px-4 py-2 border-l border-white/10 text-[10px] text-zinc-500 italic bg-white/[0.01] rounded-r-xl max-w-[80%] ${isOwn ? 'text-right mr-2' : 'ml-2'}`}>
+                            <span className="font-bold text-zinc-600 mr-2">{msg.reply_to.author}</span>
+                            <span className="opacity-60">"{msg.reply_to.content.substring(0, 50)}..."</span>
                           </div>
                         )}
 
-                        <div className={`max-w-[85%] p-4 rounded-2xl border transition-all ${
-                            isOwn ? 'bg-teal-500/10 border-teal-500/20 text-white shadow-[0_4px_12px_rgba(20,184,166,0.1)]' 
-                            : isSystem ? 'bg-[#1A1423] border-amber-500/20 italic shadow-[0_0_20px_rgba(245,158,11,0.05)] text-amber-100/90' 
-                            : 'bg-white/[0.03] border-white/5 text-zinc-300'
-                        } ${msg.isPending ? 'opacity-50 grayscale' : ''}`}>
-                            <p className="text-sm leading-relaxed font-light">{msg.content}</p>
+                        <div className={`max-w-[85%] p-5 rounded-[1.8rem] border transition-all duration-500 ${
+                            isOwn ? 'bg-teal-500/10 border-teal-500/30 text-zinc-100 shadow-[0_10px_30px_rgba(20,184,166,0.05)]' 
+                            : isSystem ? 'bg-[#1C1622] border-orange-500/20 italic shadow-inner text-orange-100/80 leading-relaxed' 
+                            : 'bg-white/[0.03] border-white/5 text-zinc-400'
+                        } ${msg.isPending ? 'animate-pulse grayscale' : ''}`}>
+                            <p className="text-[15px] leading-relaxed font-serif tracking-tight">{msg.content}</p>
                         </div>
                         
                         {!isSystem && <EmberReactions msgId={msg.id} />}
                         
-                        <span className="text-[9px] text-zinc-700 mt-2 font-bold uppercase tracking-tighter">
+                        <span className="text-[8px] text-zinc-800 mt-3 font-black uppercase tracking-[0.2em]">
                           {format(new Date(msg.created_date), 'h:mm a')}
                         </span>
                     </motion.div>
@@ -243,53 +240,55 @@ export default function EmbersChat({ vault, isAdmin }) {
         </div>
       </motion.div>
 
-      {/* Input bar with Reply Preview */}
-      <footer className="p-4 pb-8 md:pb-12 bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 relative z-30">
+      {/* Input bar with Floating Reply Preview */}
+      <footer className="p-6 md:p-10 bg-[#0D0B14]/95 backdrop-blur-3xl border-t border-white/5 relative z-30">
         <AnimatePresence>
           {replyTarget && (
             <motion.div 
                 initial={{ y: 20, opacity: 0 }} 
                 animate={{ y: 0, opacity: 1 }} 
                 exit={{ y: 20, opacity: 0 }} 
-                className="absolute bottom-full left-0 w-full p-4 bg-[#110E16] border-t border-teal-500/20 flex items-center justify-between"
+                className="absolute bottom-full left-0 w-full p-6 bg-[#16121D] border-t border-teal-500/30 flex items-center justify-between shadow-2xl"
             >
-              <div className="flex items-center gap-3 text-xs text-zinc-400">
-                <Reply size={14} className="text-teal-500" />
+              <div className="flex items-center gap-4">
+                <div className="p-2 bg-teal-500/10 rounded-lg text-teal-400"><Reply size={14} /></div>
                 <div className="flex flex-col">
-                    <span className="text-[9px] uppercase font-black text-teal-500/60">Replying to</span>
-                    <span className="text-white font-serif italic">{replyTarget.author_name}</span>
+                    <span className="text-[9px] uppercase font-black tracking-widest text-teal-500/60">Responding to</span>
+                    <span className="text-zinc-200 font-serif italic text-sm">{replyTarget.author_name}</span>
                 </div>
               </div>
               <button 
                 onClick={() => setReplyTarget(null)} 
-                className="w-8 h-8 flex items-center justify-center bg-white/5 rounded-full text-zinc-500 hover:text-white"
+                className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-full text-zinc-500 hover:text-white transition-colors"
               >
-                <X size={14} />
+                <X size={16} />
               </button>
             </motion.div>
           )}
         </AnimatePresence>
 
-        <div className="relative flex items-center gap-3 max-w-4xl mx-auto">
+        <div className="relative flex items-center gap-4 max-w-5xl mx-auto">
           <input
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder={replyTarget ? `Reply to ${replyTarget.author_name}...` : "Share an ember..."}
-            className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-teal-500/40 transition-all placeholder:text-zinc-700 shadow-inner"
+            placeholder={replyTarget ? `Message ${replyTarget.author_name}...` : "Release an ember..."}
+            className="w-full bg-black/40 border border-white/5 rounded-[1.5rem] px-8 py-5 text-base text-white focus:outline-none focus:border-teal-500/30 transition-all placeholder:text-zinc-800 shadow-inner"
           />
           <button 
             onClick={handleSend} 
             disabled={!input.trim() || sending} 
-            className="w-14 h-14 shrink-0 bg-teal-500 text-black flex items-center justify-center rounded-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale shadow-lg shadow-teal-500/20"
+            className="w-16 h-16 shrink-0 bg-teal-500 text-black flex items-center justify-center rounded-[1.5rem] hover:bg-teal-400 active:scale-90 transition-all disabled:opacity-30 shadow-[0_10px_40px_rgba(20,184,166,0.3)]"
           >
-            {sending ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
+            {sending ? <Loader2 className="animate-spin" size={24} /> : <Send size={24} />}
           </button>
         </div>
         
-        <div className="flex flex-col items-center mt-4">
-           <p className="text-[8px] text-zinc-700 italic text-center max-w-[280px] leading-relaxed uppercase tracking-widest">{TOS_TEXT}</p>
+        <div className="flex justify-center mt-6">
+           <p className="text-[9px] text-zinc-800 italic text-center max-w-[320px] leading-relaxed uppercase tracking-[0.3em] font-bold border-t border-white/5 pt-4">
+              {TOS_TEXT}
+           </p>
         </div>
       </footer>
     </div>
