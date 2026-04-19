@@ -1,4 +1,3 @@
-jsx
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Flame, BookOpen, Activity, Compass, LayoutDashboard, LogOut } from 'lucide-react';
