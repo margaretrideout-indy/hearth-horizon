@@ -94,13 +94,15 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
     'seedling free': 1,
     'hearthkeeper': 2, 
     'steward': 3,
-    'founding steward': 3
+    'founding steward': 3,
+    'admin': 3
   };
   
-  // Rank determined by Tier OR isAdmin OR isSeedlingPlus override
-  let userRank = tiers[vault?.tier?.toLowerCase()] || 0;
+  // Rank logic - If Founder, give max rank immediately.
+  let userRank = isAdmin ? 3 : (tiers[vault?.tier?.toLowerCase()] || 0);
+  
+  // SeedlingPlus override (ensures Lexicon is open)
   if (isSeedlingPlus && userRank < 1) userRank = 1;
-  if (isAdmin) userRank = 3; // Absolute power
 
   const dynamicContent = generateDynamicScripts(vault);
 
@@ -145,7 +147,7 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
 
       <div className="grid grid-cols-1 gap-4">
         {trailKitResources.map((tool, idx) => {
-          // If you are admin, isLocked is explicitly false
+          // Bypassing logic for Founder (isAdmin)
           const isLocked = isAdmin ? false : userRank < tool.requiredTier;
           const isOpen = expandedCard === tool.id && !isLocked;
 
