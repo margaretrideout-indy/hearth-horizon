@@ -77,11 +77,11 @@ export default function EmbersChat({ vault, isAdmin }) {
   };
 
   const THE_GLOW = {
-    id: 'weekly-spark-bot',
+    id: 'weekly-glow-bot',
     author_name: 'The Glow',
     content: WEEKLY_GLOWS[getWeekIndex()],
     subscription_tier: 'Kindling', // This maps to the TierBadge
-    author_email: 'spark@hearth.io',
+    author_email: 'glows@hearth.io',
     is_bot: true,
     created_date: new Date().toISOString()
 };
@@ -132,7 +132,7 @@ export default function EmbersChat({ vault, isAdmin }) {
     }
   };
 
-  const allPosts = [FIXED_STARTER, THE_SPARK, ...posts];
+  const allPosts = [FIXED_STARTER, THE_GLOW, ...posts];
 
   return (
     <div className="flex flex-col h-full w-full bg-[#0A080D] overflow-hidden relative border border-white/5 shadow-2xl">
