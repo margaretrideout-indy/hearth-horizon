@@ -8,7 +8,8 @@ import { Switch } from '@/components/ui/switch';
 import { 
   Binoculars, MapPin, Briefcase, 
   Clock, Loader2, Home, 
-  ExternalLink, Globe, Search, Sparkles, RefreshCw
+  ExternalLink, Globe, Search, Sparkles, RefreshCw,
+  Compass
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -61,161 +62,215 @@ export default function Canopy({ vault, onSync, onRefresh, userTier = "Seedling"
     setIsRefreshing(true);
     if (onRefresh) await onRefresh();
     await fetchJobs();
-    setIsRefreshing(false);
+    setTimeout(() => setIsRefreshing(false), 800);
   };
 
   useEffect(() => { fetchJobs(); }, [activeLocation, isRemoteOnly]);
 
   const handleAnalyze = (job) => {
     if (userTier === "Seedling") {
-      alert("Deep alignment analysis is reserved for Stewards.");
-      return;
+       // Future: Trigger a beautiful upgrade modal
+       return;
     }
-    if (!vault?.resume) {
-      alert("The Hearth requires your legacy profile to calculate fit.");
-      return;
-    }
-
     setIsAnalyzing(job.id);
+    // Simulating the "Calculation"
     setTimeout(() => {
       setAnalysisResult({
         jobId: job.id,
-        score: vault.isAligned ? 94 : 72,
-        message: "Alignment calculated. Your legacy experience translates with high affinity to this role."
+        score: vault?.isAligned ? 94 : 72,
+        message: "Alignment calculated."
       });
       setIsAnalyzing(null);
-    }, 1200);
+    }, 1500);
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-8 px-6 space-y-12 animate-in fade-in duration-700 bg-[#0A080D]">
-      
-      {/* 1. STANDARDIZED REFRESH TARGET (44px) */}
-      <div className="flex justify-center h-12">
-        <button 
-          onClick={handleManualRefresh}
-          className="w-11 h-11 flex items-center justify-center rounded-full bg-white/5 text-teal-500/50 hover:text-teal-500 transition-all"
-        >
+    <div className="min-h-screen bg-[#0A080D] text-white font-sans selection:bg-teal-500/30">
+      <div className="max-w-7xl mx-auto py-12 px-6 space-y-16">
+        
+        {/* REFRESH CONTROL */}
+        <div className="flex justify-center h-12">
+          <button 
+            onClick={handleManualRefresh}
+            className="group w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/5 text-teal-500/40 hover:text-teal-400 hover:border-teal-500/20 transition-all hover:scale-110 active:scale-90"
+          >
+            <RefreshCw size={18} className={isRefreshing ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-700'} />
+          </button>
+        </div>
+
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
           <motion.div 
-            animate={isRefreshing ? { rotate: 360 } : { rotate: 0 }}
-            transition={isRefreshing ? { repeat: Infinity, duration: 1, ease: "linear" } : {}}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="space-y-4"
           >
-            <RefreshCw size={20} />
-          </motion.div>
-        </button>
-      </div>
-
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3 text-teal-500 mb-2">
-            <Binoculars size={20} />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] italic">The Horizon Board</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-serif italic text-white tracking-tight">Survey the Terrain</h1>
-          <p className="text-zinc-500 text-sm max-w-md italic font-light">
-            Live opportunities from across the global forest, calibrated to your current standing.
-          </p>
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-          {/* Enhanced Search Input */}
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={14} />
-            <Input 
-              placeholder="Search by City..." 
-              value={locationQuery}
-              onChange={(e) => setLocationQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && setActiveLocation(locationQuery)}
-              className="pl-10 bg-white/5 border-white/5 text-white rounded-xl text-xs h-12 focus:ring-1 focus:ring-teal-500/30 transition-all"
-            />
-          </div>
-
-          {/* Standardized Switch Target */}
-          <div className="flex items-center gap-4 bg-white/5 border border-white/5 px-4 h-12 rounded-xl w-full sm:w-auto justify-between sm:justify-start">
-            <div className="flex items-center gap-2">
-              <Home size={14} className={isRemoteOnly ? "text-teal-400" : "text-zinc-700"} />
-              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest italic">Remote</span>
+            <div className="flex items-center gap-3 text-teal-500/80">
+              <Compass size={22} className="animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.5em] italic">The Horizon Board</span>
             </div>
-            <Switch checked={isRemoteOnly} onCheckedChange={setIsRemoteOnly} className="data-[state=checked]:bg-teal-500" />
+            <h1 className="text-5xl md:text-7xl font-serif italic text-white tracking-tighter leading-none">
+              Survey the <span className="text-zinc-700 font-sans not-italic font-extralight uppercase">Terrain</span>
+            </h1>
+            <p className="text-zinc-500 text-sm max-w-md italic font-light border-l border-white/10 pl-4 leading-relaxed">
+              Live opportunities from across the global forest, calibrated for your career migration.
+            </p>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto"
+          >
+            <div className="relative w-full sm:w-72 group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-700 group-focus-within:text-teal-500 transition-colors" size={14} />
+              <Input 
+                placeholder="Search by City..." 
+                value={locationQuery}
+                onChange={(e) => setLocationQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && setActiveLocation(locationQuery)}
+                className="pl-12 bg-white/5 border-white/10 text-white rounded-2xl text-xs h-14 focus:ring-2 focus:ring-teal-500/20 transition-all placeholder:text-zinc-800"
+              />
+            </div>
+
+            <div className="flex items-center gap-6 bg-white/5 border border-white/10 px-6 h-14 rounded-2xl w-full sm:w-auto justify-between">
+              <div className="flex items-center gap-3">
+                <Home size={16} className={isRemoteOnly ? "text-teal-400" : "text-zinc-700"} />
+                <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest italic">Remote Only</span>
+              </div>
+              <Switch checked={isRemoteOnly} onCheckedChange={setIsRemoteOnly} className="data-[state=checked]:bg-teal-500" />
+            </div>
+          </motion.div>
+        </header>
+
+        {isLoading ? (
+          <div className="flex flex-col items-center py-32 gap-6">
+            <div className="relative">
+               <Loader2 className="animate-spin text-teal-500/20" size={64} strokeWidth={1} />
+               <RefreshCw className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-teal-500 animate-pulse" size={24} />
+            </div>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-600 italic">Reading the Winds...</p>
           </div>
-        </div>
-      </header>
+        ) : (
+          <motion.div 
+            initial="hidden"
+            animate="show"
+            variants={{
+              hidden: { opacity: 0 },
+              show: { opacity: 1, transition: { staggerChildren: 0.08 } }
+            }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-32"
+          >
+            {apiJobs.map((job) => {
+              const isMatched = analysisResult?.jobId === job.id;
+              const isLocked = userTier === "Seedling";
+              
+              return (
+                <motion.div
+                  key={job.id}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    show: { opacity: 1, y: 0 }
+                  }}
+                >
+                  <Card className="group relative h-full p-8 bg-[#110E16] border-white/5 hover:border-teal-500/20 transition-all duration-700 rounded-[2.5rem] flex flex-col justify-between shadow-2xl overflow-hidden">
+                    {/* Subtle Glow Effect */}
+                    <div className="absolute -top-24 -right-24 w-48 h-48 bg-teal-500/5 blur-[80px] group-hover:bg-teal-500/10 transition-all duration-700" />
 
-      {isLoading ? (
-        <div className="flex flex-col items-center py-20 gap-4">
-          <Loader2 className="animate-spin text-teal-500" size={32} />
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 italic">Syncing with Horizon...</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
-          {apiJobs.map((job) => {
-            const isMatched = analysisResult?.jobId === job.id;
-            return (
-              <Card key={job.id} className="group p-8 bg-[#110E16] border-white/5 hover:border-teal-500/30 transition-all duration-500 rounded-[2.5rem] flex flex-col justify-between shadow-2xl">
-                <div className="space-y-6">
-                  <div className="flex justify-between items-start">
-                    <div className="w-11 h-11 flex items-center justify-center bg-black border border-white/5 rounded-2xl">
-                      <Briefcase size={20} className="text-zinc-600 group-hover:text-teal-400" />
+                    <div className="space-y-6 relative z-10">
+                      <div className="flex justify-between items-start">
+                        <div className="w-12 h-12 flex items-center justify-center bg-black/40 border border-white/10 rounded-2xl group-hover:border-teal-500/30 transition-all">
+                          <Briefcase size={20} className="text-zinc-700 group-hover:text-teal-400 group-hover:scale-110 transition-all" />
+                        </div>
+                        <AnimatePresence>
+                          {isMatched && (
+                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+                              <Badge className="bg-teal-500 text-black font-black text-[10px] tracking-widest px-4 py-1.5 shadow-[0_0_15px_rgba(20,184,166,0.4)]">
+                                {analysisResult.score}% FIT
+                              </Badge>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      <div>
+                        <h3 className="text-xl font-serif italic text-white/90 group-hover:text-white transition-colors line-clamp-2 leading-tight">{job.title}</h3>
+                        <p className="text-[10px] text-teal-500/50 font-black uppercase tracking-[0.2em] mt-2 italic flex items-center gap-2">
+                          <span className="w-1 h-1 bg-teal-500 rounded-full" />
+                          {job.company}
+                        </p>
+                      </div>
+                      
+                      <p className="text-xs text-zinc-500 leading-relaxed italic font-light line-clamp-3 group-hover:text-zinc-400 transition-colors">
+                        "{job.desc}"
+                      </p>
                     </div>
-                    {isMatched && (
-                      <Badge className="bg-teal-500 text-black font-black text-[10px] tracking-[0.1em] px-3 py-1">
-                        {analysisResult.score}% FIT
-                      </Badge>
-                    )}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white group-hover:text-teal-400 transition-colors line-clamp-2">{job.title}</h3>
-                    <p className="text-[10px] text-teal-500/60 font-black uppercase tracking-[0.2em] mt-1 italic">{job.company}</p>
-                  </div>
-                  <p className="text-xs text-zinc-500 leading-relaxed italic line-clamp-3">"{job.desc}"</p>
-                </div>
 
-                <div className="mt-8 pt-6 border-t border-white/5 space-y-4">
-                  <div className="text-lg font-black italic text-white/90 font-serif">{job.salary}</div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <Button asChild className="h-12 bg-black border border-white/5 text-zinc-400 hover:text-white font-black rounded-xl text-[10px] uppercase tracking-widest">
-                      <a href={job.link} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
-                         Inspect <ExternalLink size={14} />
-                      </a>
-                    </Button>
-                    <Button 
-                      onClick={() => handleAnalyze(job)} 
-                      disabled={isAnalyzing === job.id} 
-                      className="h-12 bg-teal-500/10 hover:bg-teal-500 border border-teal-500/20 text-teal-400 hover:text-black font-black rounded-xl text-[10px] uppercase tracking-widest"
-                    >
-                      {isAnalyzing === job.id ? <Loader2 className="animate-spin" size={14} /> : "Analyze"}
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-      )}
+                    <div className="mt-10 pt-8 border-t border-white/5 space-y-6 relative z-10">
+                      <div className="flex justify-between items-center">
+                        <div className="text-2xl font-black italic text-white/80 font-serif tracking-tighter">{job.salary}</div>
+                        <div className="text-[9px] font-black text-zinc-700 uppercase tracking-widest">{job.location}</div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-3">
+                        <Button asChild className="h-14 bg-black/40 border border-white/5 text-zinc-500 hover:text-white hover:bg-black font-black rounded-2xl text-[9px] uppercase tracking-widest transition-all">
+                          <a href={job.link} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
+                            Inspect <ExternalLink size={14} />
+                          </a>
+                        </Button>
+                        
+                        <Button 
+                          onClick={() => handleAnalyze(job)} 
+                          disabled={isAnalyzing === job.id} 
+                          className={`h-14 border font-black rounded-2xl text-[9px] uppercase tracking-widest transition-all ${
+                            isLocked 
+                            ? 'bg-zinc-900/50 border-white/5 text-zinc-700 cursor-not-allowed' 
+                            : 'bg-teal-500/5 hover:bg-teal-500 border-teal-500/20 text-teal-400 hover:text-black'
+                          }`}
+                        >
+                          {isAnalyzing === job.id ? (
+                            <Loader2 className="animate-spin" size={14} />
+                          ) : (
+                            <span className="flex items-center gap-2">
+                              {isLocked && <Clock size={12} />}
+                              Analyze
+                            </span>
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        )}
 
-      {/* 2. STANDARDIZED FOOTER (Unified Nav Fix) */}
-      <footer className="pt-12 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-6 pb-8">
-        <div className="flex items-center gap-3 bg-black px-5 py-3 rounded-full border border-white/5">
-          <Globe size={14} className="text-teal-500 animate-pulse" />
-          <p className="text-[10px] font-black text-zinc-600 uppercase tracking-widest italic">
-            Global Survey Live
-          </p>
-        </div>
-        <div className="flex gap-8">
-          <button 
-            className="text-[10px] font-black text-teal-500/30 uppercase tracking-[0.2em] hover:text-teal-400 transition-colors italic py-2" 
-            onClick={() => navigate('/library')}
-          >
-            The Library
-          </button>
-          <button 
-            className="text-[10px] font-black text-teal-500/30 uppercase tracking-[0.2em] hover:text-teal-400 transition-colors italic py-2" 
-            onClick={() => navigate('/hearth')}
-          >
-            The Hearth
-          </button>
-        </div>
-      </footer>
+        {/* FOOTER NAV */}
+        <footer className="pt-12 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-8 pb-12">
+          <div className="flex items-center gap-4 bg-black/40 px-6 py-4 rounded-3xl border border-white/5">
+            <Globe size={16} className="text-teal-500 animate-pulse" />
+            <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] italic">
+              Horizon Survey: <span className="text-zinc-400">Live</span>
+            </p>
+          </div>
+          
+          <nav className="flex gap-12">
+            {[
+              { label: 'The Library', path: '/library' },
+              { label: 'The Hearth', path: '/hearth' }
+            ].map((link) => (
+              <button 
+                key={link.path}
+                className="group relative text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] hover:text-teal-400 transition-colors italic py-2" 
+                onClick={() => navigate(link.path)}
+              >
+                {link.label}
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-teal-500 group-hover:w-full transition-all duration-500" />
+              </button>
+            ))}
+          </nav>
+        </footer>
+      </div>
     </div>
   );
 }
