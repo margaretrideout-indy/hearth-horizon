@@ -86,7 +86,7 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
 
-  // Normalizing rank logic
+  // --- REFINED RANK LOGIC ---
   const tiers = { 
     'none': 0,
     'traveler': 0, 
@@ -94,15 +94,17 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
     'seedling free': 1,
     'hearthkeeper': 2, 
     'steward': 3,
-    'founding steward': 3,
-    'admin': 3
+    'founding steward': 3
   };
   
-  // Rank logic - If Founder, give max rank immediately.
-  let userRank = isAdmin ? 3 : (tiers[vault?.tier?.toLowerCase()] || 0);
+  // 1. Get base rank from tier
+  let baseRank = tiers[vault?.tier?.toLowerCase()] || 0;
   
-  // SeedlingPlus override (ensures Lexicon is open)
-  if (isSeedlingPlus && userRank < 1) userRank = 1;
+  // 2. Apply override for SeedlingPlus (entrance to Vol II)
+  if (isSeedlingPlus && baseRank < 1) baseRank = 1;
+
+  // 3. MASTER OVERRIDE: If Admin/Founder, force max rank (3) to unlock EVERYTHING
+  const userRank = isAdmin ? 3 : baseRank;
 
   const dynamicContent = generateDynamicScripts(vault);
 
@@ -147,8 +149,8 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
 
       <div className="grid grid-cols-1 gap-4">
         {trailKitResources.map((tool, idx) => {
-          // Bypassing logic for Founder (isAdmin)
-          const isLocked = isAdmin ? false : userRank < tool.requiredTier;
+          // Logic check: if admin, it's NEVER locked. Otherwise check userRank vs requiredTier.
+          const isLocked = !isAdmin && userRank < tool.requiredTier;
           const isOpen = expandedCard === tool.id && !isLocked;
 
           return (
