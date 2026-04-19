@@ -17,46 +17,62 @@ export default function App() {
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // Initialize Vault with sensible defaults
   const [vault, setVault] = useState(() => {
     const saved = localStorage.getItem('hearth_vault_data');
     if (saved) {
       try { return JSON.parse(saved); } catch (e) { return null; }
     }
-    return { pulses: [], archetype: null, alignmentScore: 0, resume: null, standing: "Traveler", tier: "Seedling", lastSync: null };
+    return { 
+      pulses: [], 
+      archetype: null, 
+      alignmentScore: 0, 
+      resume: null, 
+      standing: "Traveler", 
+      tier: "seedling", // Default to lower-case seedling
+      lastSync: null 
+    };
   });
 
-  // Admin Check Logic
+  // Admin & Tier Sync Logic
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const user = await base44.auth.me();
         if (user) {
-          // Identify you as the Master Admin
+          // 1. Identify Admin Status
           const isSystemAdmin = user.role === 'admin' || user.email === 'margaretpardy@gmail.com'; 
           setIsAdmin(isSystemAdmin);
           
+          // 2. Sync Tier from DB (Normalize to lowercase for Contact/Library logic)
           if (user.tier) {
-            setVault(prev => ({ ...prev, tier: user.tier }));
+            setVault(prev => ({ 
+              ...prev, 
+              tier: user.tier.toLowerCase(),
+              standing: user.tier // Sync standing string with tier
+            }));
           }
         }
       } catch (e) {
-        console.log("Not logged in or guest session");
+        console.log("Guest session active.");
       }
     };
     checkAuth();
   }, []);
 
+  // Persist Vault to LocalStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('hearth_vault_data', JSON.stringify(vault));
   }, [vault]);
 
   const handleAccountDeletion = () => {
-    setVault({ pulses: [], archetype: null, alignmentScore: 0, resume: null, standing: "Traveler", tier: "Seedling", lastSync: null });
+    setVault({ pulses: [], archetype: null, alignmentScore: 0, resume: null, standing: "Traveler", tier: "seedling", lastSync: null });
     localStorage.clear();
     sessionStorage.clear();
     navigate('/');
   };
 
+  // Central Sync Function
   const handleSync = (newData) => {
     if (newData === null) handleAccountDeletion();
     else setVault(prev => ({ ...prev, ...newData }));
@@ -65,6 +81,7 @@ export default function App() {
   const mainTabs = ['/hearth', '/library', '/horizon', '/embers'];
   const isMainTab = mainTabs.includes(location.pathname);
 
+  // NAVIGATION COMPONENT
   const NavLinks = ({ isDesktop = false }) => {
     const allLinks = [
       { label: 'Hearth', path: '/hearth', icon: Flame },
@@ -123,6 +140,7 @@ export default function App() {
   return (
     <div className="h-screen w-full bg-[#0A080D] flex overflow-hidden">
       
+      {/* SIDEBAR (Desktop) */}
       {location.pathname !== '/' && (
         <aside className="hidden md:flex flex-col w-64 border-r border-white/5 bg-[#08070B] pt-8">
           <div className="px-8 mb-10 flex items-center justify-between">
@@ -134,42 +152,44 @@ export default function App() {
         </aside>
       )}
 
+      {/* MAIN CONTENT AREA */}
       <main className="flex-1 h-full relative overflow-y-auto custom-scrollbar flex flex-col">
         <div className="flex-1 w-full relative">
           
-          {/* PERSISTENT MAIN TABS (HEARTH, LIBRARY, CANOPY, EMBERS) */}
+          {/* PERSISTENT MAIN TABS */}
           <div className={location.pathname === '/hearth' ? 'block h-full' : 'hidden'}>
             <YourHearth vault={vault} onSync={handleSync} isAdmin={isAdmin} onNavigateToHorizon={() => navigate('/horizon')} />
           </div>
           
           <div className={location.pathname === '/library' ? 'block h-full' : 'hidden'}>
-            <Library vault={vault} isAdmin={isAdmin} />
+            {/* Added handleSync to Library */}
+            <Library vault={vault} onSync={handleSync} isAdmin={isAdmin} />
           </div>
           
           <div className={location.pathname === '/horizon' ? 'block h-full' : 'hidden'}>
-            <Canopy vault={vault} isAdmin={isAdmin} />
+            <Canopy vault={vault} onSync={handleSync} isAdmin={isAdmin} />
           </div>
           
           <div className={location.pathname === '/embers' ? 'block h-full' : 'hidden'}>
             <EmbersChat vault={vault} isAdmin={isAdmin} />
           </div>
 
-          {/* DYNAMIC ROUTES (GROVE TIERS, CULTURE, CONTACT, ADMIN) */}
+          {/* DYNAMIC ROUTES */}
           {!isMainTab && (
             <Routes>
-              {/* This is your Landing Page/Grove Tiers */}
               <Route path="/" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
-              
-              <Route path="/culture" element={<CulturalFit vault={vault} isAdmin={isAdmin} />} />
-              <Route path="/contact" element={<Contact vault={vault} isAdmin={isAdmin} />} />
+              <Route path="/culture" element={<CulturalFit vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+              <Route path="/contact" element={<Contact vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             </Routes>
           )}
         </div>
 
+        {/* Padding for Mobile Nav */}
         {location.pathname !== '/' && <div className="h-24 shrink-0 md:hidden" />}
       </main>
 
+      {/* MOBILE NAV BAR */}
       {location.pathname !== '/' && (
         <nav className="fixed bottom-0 left-0 right-0 z-[100] pb-[env(safe-area-inset-bottom)] bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 md:hidden">
           <div className="w-full h-20">
