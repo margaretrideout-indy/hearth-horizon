@@ -86,9 +86,23 @@ const Contact = ({ vault, isAdmin }) => {
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
 
+  // --- SECURITY DEBUGGING ---
+  console.log("--- CONTACT SECURITY CHECK ---");
+  console.log("Is Admin:", isAdmin);
+  console.log("Raw Tier:", vault?.tier);
+
   // Normalizing rank logic to handle case-sensitivity from DB
-  const tiers = { 'traveler': 0, 'seedling': 1, 'hearthkeeper': 2, 'steward': 3 };
+  const tiers = { 
+    'none': 0,
+    'traveler': 0, 
+    'seedling': 1, 
+    'hearthkeeper': 2, 
+    'steward': 3 
+  };
+  
+  // The logic: If isAdmin is true, you get 3. Otherwise, look up the tier. Default to 0.
   const userRank = isAdmin ? 3 : (tiers[vault?.tier?.toLowerCase()] || 0);
+  console.log("Calculated Rank:", userRank);
 
   const dynamicContent = generateDynamicScripts(vault);
 
