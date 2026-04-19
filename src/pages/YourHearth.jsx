@@ -174,7 +174,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
               {!vault.resume ? (
                 <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/5 hover:border-teal-500/20 rounded-[2rem] bg-black/40 cursor-pointer group transition-all">
                   <Upload className="text-zinc-600 mb-3 group-hover:text-teal-500 transition-colors" />
-                  <span className="text-[10px] font-black uppercase text-zinc-500">Upload Professional Legacy</span>
+                  <span className="text-[10px] font-black uppercase text-zinc-500">Upload Résumé or CV</span>
                   <input type="file" className="hidden" onChange={(e) => onResumeSync?.(e.target.files[0])} />
                 </label>
               ) : (
