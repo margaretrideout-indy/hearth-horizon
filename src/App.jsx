@@ -37,6 +37,11 @@ export default function App() {
     };
   });
 
+  // --- ACCESS CALCULATION ---
+  // This is the "Master Key" logic. We define it once here so it stays consistent.
+  const isRegistered = !!vault && vault.tier && vault.tier !== 'none';
+  const isSeedlingPlus = isAdmin || isRegistered;
+
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -44,7 +49,7 @@ export default function App() {
         if (user) {
           const userEmail = user.email ? user.email.toLowerCase().trim() : '';
           
-          // FOUNDER OVERRIDE: This bypasses tier restrictions across the app
+          // FOUNDER OVERRIDE
           const isSystemAdmin = user.role === 'admin' || userEmail === 'margaretpardy@gmail.com'; 
           
           setIsAdmin(isSystemAdmin);
@@ -62,14 +67,12 @@ export default function App() {
           };
 
           let displayStanding = tierMapping[normalizedTier] || rawTier;
-          
-          // Ensure the UI labels you correctly
           if (isSystemAdmin) displayStanding = "Founder";
 
           setVault(prev => ({ 
             ...prev, 
             email: user.email,
-            tier: isSystemAdmin ? "admin" : normalizedTier, // Admin tier grants all permissions
+            tier: isSystemAdmin ? "admin" : normalizedTier,
             standing: displayStanding,
             archetype: user.archetype || prev.archetype
           }));
@@ -182,13 +185,33 @@ export default function App() {
         <div className="flex-1 w-full relative">
           <Routes>
             <Route path="/hearth" element={<YourHearth vault={vault} onSync={handleSync} isAdmin={isAdmin} onNavigateToHorizon={() => navigate('/horizon')} />} />
-            <Route path="/library" element={<Library vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+            
+            {/* 1. LIBRARY: Pass down the Access Keys */}
+            <Route path="/library" element={
+              <Library 
+                vault={vault} 
+                onSync={handleSync} 
+                isAdmin={isAdmin} 
+                isSeedlingPlus={isSeedlingPlus} 
+              />
+            } />
+
             <Route path="/horizon" element={<Canopy vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             <Route path="/embers" element={<EmbersChat vault={vault} isAdmin={isAdmin} />} />
             <Route path="/culture" element={<CulturalFit vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             
             <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
-            <Route path="/contact" element={<Contact vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+            
+            {/* 2. CONTACT: Also pass down isSeedlingPlus here so the standalone page works */}
+            <Route path="/contact" element={
+              <Contact 
+                vault={vault} 
+                onSync={handleSync} 
+                isAdmin={isAdmin} 
+                isSeedlingPlus={isSeedlingPlus} 
+              />
+            } />
+
             <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             
             <Route path="/" element={<Navigate to="/grove" replace />} />
