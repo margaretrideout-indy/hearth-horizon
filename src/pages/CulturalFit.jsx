@@ -70,21 +70,17 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
   const handleDecode = () => {
     if (!manualInput) return;
     setIsGenerating(true);
-    
-    // Process input
-    const core = manualInput.trim().toLowerCase()
-      .replace(/^(managed|led|taught|designed|created|organized|facilitated|coordinated|developed|ran)\s+/i, "");
 
     setTimeout(() => {
       setBridgeData({
-        pm: `Strategic orchestration of ${core}, focusing on high-velocity milestone delivery and cross-functional stakeholder alignment.`,
-        data: `Quantitative synthesis of ${core} ecosystems to derive actionable, data-driven intelligence for leadership.`,
-        ops: `Architecting scalable, resilient systems for ${core} to maximize operational efficiency and reduce overhead.`,
-        exec: `High-level visioning and governance of ${core} initiatives to drive long-term enterprise value and growth.`,
-        creative: `Narrative-driven reimagining of ${core}, blending aesthetic innovation with user-centric functionality.`
+        pm: `Strategic orchestration of multi-stakeholder initiatives, focusing on high-velocity milestone delivery and cross-functional alignment.`,
+        data: `Quantitative synthesis of complex ecosystems to derive actionable, data-driven intelligence for senior leadership.`,
+        ops: `Architecting scalable, resilient operational systems to maximize organizational efficiency and reduce structural overhead.`,
+        exec: `High-level visioning and governance of enterprise-wide initiatives to drive long-term value and sustainable growth.`,
+        creative: `Narrative-driven reimagining of organizational priorities, blending innovative thinking with user-centric functionality.`
       });
       
-      setManualInput(""); // CLEAR INPUT AFTER GENERATION
+      setManualInput("");
       setIsGenerating(false);
     }, 1800);
   };
@@ -146,8 +142,8 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="grid grid-cols-1 lg:grid-cols-12 gap-16">
               <div className="lg:col-span-4 space-y-6 pt-10 text-left">
                 <div className="w-16 h-16 rounded-[2rem] bg-teal-500/10 flex items-center justify-center text-teal-400 border border-teal-500/20"><Microscope size={32} /></div>
-                <h1 className="text-5xl md:text-6xl font-serif italic text-white leading-tight tracking-tighter">Legacy<br /><span className="text-zinc-800 not-italic uppercase font-sans font-black">Reframed</span></h1>
-                <p className="text-[11px] text-zinc-600 uppercase tracking-[0.4em] font-bold border-l border-teal-500/30 pl-6">Refining the lexicon of the past into the currency of the future.</p>
+                <h1 className="text-5xl md:text-6xl font-serif italic text-white leading-tight tracking-tighter">Legacy<br /><span className="text-zinc-400 not-italic uppercase font-sans font-black">Reframed</span></h1>
+                <p className="text-[11px] text-zinc-400 uppercase tracking-[0.4em] font-bold border-l border-teal-500/30 pl-6">Refining the lexicon of the past into the currency of the future.</p>
               </div>
               <div className="lg:col-span-8 space-y-8">
                 <Card className="p-8 md:p-10 bg-[#16121D] border-white/5 rounded-[3rem]">
@@ -196,14 +192,14 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-16 py-10">
               <div className="text-center max-w-2xl mx-auto space-y-6">
                 <div className="w-20 h-20 rounded-[2.5rem] bg-orange-500/10 flex items-center justify-center text-orange-400 border border-orange-500/20 mx-auto"><ShieldCheck size={32} /></div>
-                <h2 className="text-5xl font-serif italic text-white">The Hearth <span className="text-zinc-800 not-italic uppercase font-black">Ethics</span></h2>
-                <p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest">Declare your non-negotiables</p>
+                <h2 className="text-5xl font-serif italic text-white">The Hearth <span className="text-zinc-400 not-italic uppercase font-black">Ethics</span></h2>
+                <p className="text-[10px] text-zinc-400 uppercase font-black tracking-widest">Declare your non-negotiables</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                 {ethicsOptions.map((opt) => (
                   <Card key={opt.id} onClick={() => toggleEthic(opt.id)} className={`p-10 rounded-[3rem] cursor-pointer transition-all duration-700 border-2 text-left ${ethicalPriorities.includes(opt.id) ? 'bg-teal-500/10 border-teal-500/50 scale-[1.02]' : 'bg-[#16121D] border-white/5'}`}>
                     <div className="flex items-center gap-6">
-                      <div className={`p-5 rounded-2xl ${ethicalPriorities.includes(opt.id) ? 'bg-teal-500 text-black' : 'bg-white/5 text-zinc-700'}`}><opt.icon size={28} /></div>
+                      <div className={`p-5 rounded-2xl ${ethicalPriorities.includes(opt.id) ? 'bg-teal-500 text-black' : 'bg-white/5 text-zinc-400'}`}><opt.icon size={28} /></div>
                       <div>
                         <h4 className="font-black uppercase tracking-tight text-xl text-zinc-200">{opt.label}</h4>
                         <p className="text-xs text-zinc-500 italic mt-1">{opt.desc}</p>
@@ -223,7 +219,7 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-12">
               <div className="text-left space-y-4">
                 <Badge className="bg-teal-500/10 text-teal-400">Pathfinder Mode</Badge>
-                <h2 className="text-5xl font-serif italic text-white">High-Probability <span className="text-zinc-800 not-italic uppercase font-black">Paths</span></h2>
+                <h2 className="text-5xl font-serif italic text-white">High-Probability <span className="text-zinc-400 not-italic uppercase font-black">Paths</span></h2>
               </div>
               <div className="grid gap-6">
                 {trajectories.map((path) => (
@@ -235,7 +231,7 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
                       </div>
                       <div className="text-right">
                         <div className="text-teal-400 font-black text-2xl">{path.fit}%</div>
-                        <div className="text-[10px] text-zinc-600 uppercase font-black tracking-widest">Alignment Fit</div>
+                        <div className="text-[10px] text-zinc-400 uppercase font-black tracking-widest">Alignment Fit</div>
                       </div>
                     </div>
                   </Card>
@@ -254,7 +250,7 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
                 <div className="absolute top-0 left-0 w-full h-1 bg-teal-500" />
                 <div className="space-y-4">
                   <Badge className="bg-teal-500 text-black">Blueprint Finalized</Badge>
-                  <h3 className="text-5xl font-serif italic text-white">Your New <span className="text-zinc-800 not-italic uppercase font-black">Architecture</span></h3>
+                  <h3 className="text-5xl font-serif italic text-white">Your New <span className="text-zinc-400 not-italic uppercase font-black">Architecture</span></h3>
                 </div>
                 <div className="p-10 bg-black/40 rounded-[2rem] border border-white/5 text-left italic font-serif text-2xl text-zinc-300">
                     "{bridgeData[selectedPath.key]}"
