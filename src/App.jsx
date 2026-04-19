@@ -1,14 +1,15 @@
+jsx
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Flame, BookOpen, Activity, Compass, LayoutDashboard, LogOut } from 'lucide-react';
-import { base44 } from '@/api/base44Client'; 
+import { base44 } from '@/api/base44Client';
 
 // Hearth & Horizon Ecosystem Components
 import GroveTiers from './pages/GroveTiers';
 import YourHearth from './pages/YourHearth';
 import Library from './pages/Library';
 import AdminDashboard from './pages/AdminDashboard';
-import Canopy from './pages/Canopy'; 
+import Canopy from './pages/Canopy';
 import Contact from './pages/Contact';
 import CulturalFit from './pages/CulturalFit';
 import EmbersChat from './pages/EmbersChat';
@@ -16,24 +17,24 @@ import EmbersChat from './pages/EmbersChat';
 export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const [isAdmin, setIsAdmin] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
-  
+
   const [vault, setVault] = useState(() => {
     const saved = localStorage.getItem('hearth_vault_data');
     if (saved) {
       try { return JSON.parse(saved); } catch (e) { return null; }
     }
-    return { 
-      pulses: [], 
-      archetype: null, 
-      alignmentScore: 0, 
-      resume: null, 
-      standing: "Traveler", 
-      tier: "none", 
+    return {
+      pulses: [],
+      archetype: null,
+      alignmentScore: 0,
+      resume: null,
+      standing: "Traveler",
+      tier: "none",
       email: null,
-      lastSync: null 
+      lastSync: null
     };
   });
 
@@ -48,10 +49,10 @@ export default function App() {
         const user = await base44.auth.me();
         if (user) {
           const userEmail = user.email ? user.email.toLowerCase().trim() : '';
-          
-          // MASTER ADMIN CHECK
-          const isSystemAdmin = user.role === 'admin' || userEmail === 'margaretpardy@gmail.com'; 
-          
+
+          // MASTER ADMIN CHECK (Note: Move Margaret's email to backend role check later)
+          const isSystemAdmin = user.role === 'admin' || userEmail === 'margaretpardy@gmail.com';
+
           setIsAdmin(isSystemAdmin);
 
           const rawTier = user.tier ? user.tier.trim() : "Traveler";
@@ -69,10 +70,9 @@ export default function App() {
           let displayStanding = tierMapping[normalizedTier] || rawTier;
           if (isSystemAdmin) displayStanding = "Founder";
 
-          setVault(prev => ({ 
-            ...prev, 
+          setVault((prev) => ({
+            ...prev,
             email: user.email,
-            // FORCE STEWARD TIER FOR ADMINS
             tier: isSystemAdmin ? "steward" : normalizedTier,
             standing: displayStanding,
             archetype: user.archetype || prev.archetype
@@ -99,15 +99,14 @@ export default function App() {
       if (user) {
         const userEmail = user.email?.toLowerCase().trim() || '';
         const isSystemAdmin = user.role === 'admin' || userEmail === 'margaretpardy@gmail.com';
-        
+
         setIsAdmin(isSystemAdmin);
-        
-        setVault(prev => ({ 
-          ...prev, 
-          ...user, 
-          // FORCE STEWARD TIER ON SYNC FOR ADMINS
-          tier: isSystemAdmin ? "steward" : (user.tier?.trim().toLowerCase() || "none"),
-          lastSync: new Date().toISOString() 
+
+        setVault((prev) => ({
+          ...prev,
+          ...user,
+          tier: isSystemAdmin ? "steward" : user.tier?.trim().toLowerCase() || "none",
+          lastSync: new Date().toISOString()
         }));
       }
     } catch (e) {
@@ -132,13 +131,13 @@ export default function App() {
           {allLinks.map((tab) => {
             const isActive = location.pathname === tab.path;
             return (
-              <button 
-                key={tab.label} 
-                onClick={() => navigate(tab.path)} 
+              <button
+                key={tab.label}
+                onClick={() => navigate(tab.path)}
                 className={`flex transition-all active:scale-95 ${
-                  isDesktop 
-                    ? `items-center gap-4 px-6 py-4 rounded-xl mx-2 ${isActive ? 'bg-zinc-800 text-teal-400 font-bold' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'}` 
-                    : `flex-col items-center gap-1 min-w-[64px] justify-center ${isActive ? 'text-teal-400' : 'text-zinc-600'}`
+                  isDesktop ?
+                  `items-center gap-4 px-6 py-4 rounded-xl mx-2 ${isActive ? 'bg-zinc-800 text-teal-400 font-bold' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'}` :
+                  `flex-col items-center gap-1 min-w-[64px] justify-center ${isActive ? 'text-teal-400' : 'text-zinc-600'}`
                 }`}
               >
                 <tab.icon size={isDesktop ? 22 : 18} strokeWidth={isActive ? 2.5 : 2} />
@@ -151,22 +150,22 @@ export default function App() {
         </div>
 
         <div className={isDesktop ? 'mt-auto pt-4 border-t border-white/5' : 'hidden'}>
-            {isAdmin && (
-              <button 
-                onClick={() => navigate('/admin')}
-                className="flex items-center gap-4 px-6 py-4 rounded-xl mx-2 w-[calc(100%-16px)] text-purple-400 hover:bg-purple-400/5 transition-all mb-2"
-              >
-                <LayoutDashboard size={20} />
-                <span className="text-sm tracking-wide font-medium">Registry Admin</span>
-              </button>
-            )}
-            <button 
-              onClick={() => navigate('/grove')}
-              className="flex items-center gap-4 px-6 py-4 rounded-xl mx-2 w-[calc(100%-16px)] text-zinc-500 hover:text-red-400 hover:bg-red-400/5 transition-all"
+          {isAdmin &&
+            <button
+              onClick={() => navigate('/admin')}
+              className="flex items-center gap-4 px-6 py-4 rounded-xl mx-2 w-[calc(100%-16px)] text-purple-400 hover:bg-purple-400/5 transition-all mb-2"
             >
-              <LogOut size={20} />
-              <span className="text-sm tracking-wide font-medium">Exit to Grove</span>
+              <LayoutDashboard size={20} />
+              <span className="text-sm tracking-wide font-medium">Registry Admin</span>
             </button>
+          }
+          <button
+            onClick={() => navigate('/grove')}
+            className="flex items-center gap-4 px-6 py-4 rounded-xl mx-2 w-[calc(100%-16px)] text-zinc-500 hover:text-red-400 hover:bg-red-400/5 transition-all"
+          >
+            <LogOut size={20} />
+            <span className="text-sm tracking-wide font-medium">Exit to Grove</span>
+          </button>
         </div>
       </div>
     );
@@ -182,8 +181,7 @@ export default function App() {
 
   return (
     <div className="h-screen w-full bg-[#0A080D] flex overflow-hidden font-sans text-zinc-200">
-      
-      {showNav && (
+      {showNav &&
         <aside className="hidden md:flex flex-col w-64 border-r border-white/5 bg-[#08070B] pt-8">
           <div className="px-8 mb-10 flex items-center justify-between">
             <span className="text-xs font-black uppercase tracking-[0.3em] text-zinc-700">Hearth & Horizon</span>
@@ -192,42 +190,23 @@ export default function App() {
             <NavLinks isDesktop />
           </div>
         </aside>
-      )}
+      }
 
       <main className="flex-1 h-full relative overflow-y-auto custom-scrollbar flex flex-col">
         <div className="flex-1 w-full relative">
           <Routes>
             <Route path="/hearth" element={<YourHearth vault={vault} onSync={handleSync} isAdmin={isAdmin} onNavigateToHorizon={() => navigate('/horizon')} />} />
-            
-            <Route path="/library" element={
-              <Library 
-                vault={vault} 
-                onRefresh={handleSync} 
-                isAdmin={isAdmin} 
-              />
-            } />
-
+            <Route path="/library" element={<Library vault={vault} onRefresh={handleSync} isAdmin={isAdmin} />} />
             <Route path="/horizon" element={<Canopy vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             <Route path="/embers" element={<EmbersChat vault={vault} isAdmin={isAdmin} />} />
             <Route path="/culture" element={<CulturalFit vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
-            
             <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
-            
-            <Route path="/contact" element={
-              <Contact 
-                vault={vault} 
-                onRefresh={handleSync} 
-                isAdmin={isAdmin} 
-                isSeedlingPlus={isSeedlingPlus} 
-              />
-            } />
-
+            <Route path="/contact" element={<Contact vault={vault} onRefresh={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} />} />
             <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
-            
             <Route path="/" element={<Navigate to="/grove" replace />} />
+            <Route path="*" element={<Navigate to="/grove" replace />} />
           </Routes>
         </div>
-        
         {showNav && <div className="h-20 md:hidden" />}
       </main>
 
