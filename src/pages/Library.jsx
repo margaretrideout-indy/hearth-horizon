@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Component import for Volume II
+// Component import for Volume II content
 import Provisions from './Contact';
 
 // --- CONFIGURATION ---
@@ -22,17 +22,24 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
   const [studyTab, setStudyTab] = useState('amazon');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showLockSheet, setShowLockSheet] = useState(false);
-  const [lockContext, setLockContext] = useState({ title: '', desc: '', target: 'Steward' });
+  const [lockContext, setLockContext] = useState({ title: '', desc: '', target: 'Seedling' });
 
-  // --- TIER & ACCESS LOGIC ---
-  const isRegistered = !!vault; 
-  const userTier = isAdmin ? 'Steward' : (isRegistered ? vault.tier : 'Traveler');
+  // --- REFINED TIER & ACCESS LOGIC ---
+  const isRegistered = !!vault && vault.tier && vault.tier !== 'none';
+  const normalizedTier = vault?.tier?.toLowerCase() || 'none';
   
-  // Hearthkeeper + Steward can access the Strategy Deck
-  const isHearthkeeperPlus = isAdmin || isRegistered;
+  // Display Label
+  const userTierLabel = isAdmin ? 'Founder' : (isRegistered ? vault.tier : 'Traveler');
+
+  // ACCESS GATES
+  // 1. Seedlings+ (including HK and Steward) get the Strategy Deck and Vol II entrance
+  const isSeedlingPlus = isAdmin || isRegistered || normalizedTier === 'seedling';
   
-  // Only Steward can access Volume II
-  const isSteward = isAdmin || (isRegistered && userTier === 'Steward');
+  // 2. Hearthkeeper+ (Mid-tier and up)
+  const isHearthkeeperPlus = isAdmin || normalizedTier === 'hearthkeeper' || normalizedTier === 'steward';
+  
+  // 3. Steward Only (Highest tier)
+  const isSteward = isAdmin || normalizedTier === 'steward';
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -41,16 +48,22 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
   };
 
   const triggerLock = (type) => {
-    if (type === 'hearthkeeper') {
+    if (type === 'seedling') {
+        setLockContext({
+          title: 'Registry Required',
+          desc: 'Identification is required to access the Strategy Deck and Volume II archives. Join the registry to proceed.',
+          target: 'Seedling'
+        });
+    } else if (type === 'hearthkeeper') {
       setLockContext({
         title: 'Hearthkeeper Access Required',
-        desc: 'The Master Strategy Deck and Resignation Blueprints are reserved for our Hearthkeeper and Steward community members.',
+        desc: 'The Master Strategy Deck and specialized blueprints are reserved for our Hearthkeeper and Steward community members.',
         target: 'Hearthkeeper'
       });
     } else {
       setLockContext({
         title: 'Steward Standing Required',
-        desc: 'Advanced tactical scripts and Volume II assets are reserved for our Steward-tier supporters.',
+        desc: 'Advanced tactical scripts and executive assets are reserved for our Steward-tier supporters.',
         target: 'Steward'
       });
     }
@@ -59,9 +72,9 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
 
   return (
     <div className="min-h-screen bg-[#0A080D] text-zinc-300 font-sans overflow-x-hidden relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-8 relative z-10 text-left">
 
-        {/* GESTURE REFRESH UI */}
+        {/* REFRESH ICON */}
         <div className="flex justify-center h-8 mb-4">
           <motion.div 
             animate={isRefreshing ? { rotate: 360 } : { y: 0 }}
@@ -92,8 +105,8 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
           </div>
           
           <div className="px-4 py-2 rounded-2xl border border-white/5 bg-[#16121D]/50 backdrop-blur-sm flex items-center gap-3">
-             <div className={`w-2 h-2 rounded-full ${isRegistered ? 'bg-teal-500 shadow-[0_0_8px_rgba(20,184,166,0.5)]' : 'bg-zinc-600'}`} />
-             <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">{userTier} Standing</span>
+             <div className={`w-2 h-2 rounded-full ${isAdmin || isRegistered ? 'bg-teal-500 shadow-[0_0_8px_rgba(20,184,166,0.5)]' : 'bg-zinc-600'}`} />
+             <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">{userTierLabel} Standing</span>
           </div>
         </header>
 
@@ -105,7 +118,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
           >
             {/* 1. THE SANCTUARY */}
             <section>
-              <div className="mb-8 flex items-center gap-4">
+              <div className="mb-8 flex items-center gap-4 text-left">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400 whitespace-nowrap">The Sanctuary</h3>
                 <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
               </div>
@@ -204,7 +217,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
               </div>
             </section>
 
-            {/* 3. THE LOOKOUT */}
+            {/* 3. THE LOOKOUT (Strategy Deck Access) */}
             <section className="pb-32">
               <div className="mb-8 flex items-center gap-4">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500 whitespace-nowrap">The Lookout</h3>
@@ -213,25 +226,25 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
               
               <motion.div 
                 whileHover={{ y: -5 }}
-                onClick={() => !isHearthkeeperPlus && triggerLock('hearthkeeper')}
-                className={`relative w-full max-w-2xl bg-gradient-to-br from-[#16121D] to-[#0D0B10] border ${isHearthkeeperPlus ? 'border-teal-500/20' : 'border-white/5'} p-10 md:p-16 rounded-[3rem] overflow-hidden shadow-2xl cursor-pointer group`}
+                onClick={() => !isSeedlingPlus && triggerLock('seedling')}
+                className={`relative w-full max-w-2xl bg-gradient-to-br from-[#16121D] to-[#0D0B10] border ${isSeedlingPlus ? 'border-teal-500/20' : 'border-white/5'} p-10 md:p-16 rounded-[3rem] overflow-hidden shadow-2xl cursor-pointer group`}
               >
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-10">
                     <div className="bg-teal-500/10 text-teal-400 px-4 py-1.5 rounded-full text-[9px] font-black uppercase italic border border-teal-500/20 shadow-lg">Member Gift</div>
-                    {!isHearthkeeperPlus && <Lock size={20} className="text-zinc-700" />}
+                    {!isSeedlingPlus && <Lock size={20} className="text-zinc-700" />}
                   </div>
                   <h4 className="text-4xl text-white font-serif italic mb-6 leading-tight">Master Strategy Deck</h4>
                   <p className="text-sm text-zinc-400 italic mb-12 leading-relaxed max-w-md">The primary blueprint for your career migration and resignation protocol.</p>
                   
                   <button 
                     onClick={(e) => {
-                      if(isHearthkeeperPlus) {
+                      if(isSeedlingPlus) {
                         e.stopPropagation();
                         window.open(STRATEGY_DECK_URL, '_blank');
                       }
                     }}
-                    className={`h-16 px-10 rounded-2xl flex items-center gap-4 transition-all uppercase text-[10px] tracking-widest font-black ${isHearthkeeperPlus ? 'bg-teal-500 text-black shadow-xl shadow-teal-500/20' : 'bg-white/5 text-zinc-600 border border-white/5'}`}
+                    className={`h-16 px-10 rounded-2xl flex items-center gap-4 transition-all uppercase text-[10px] tracking-widest font-black ${isSeedlingPlus ? 'bg-teal-500 text-black shadow-xl shadow-teal-500/20' : 'bg-white/5 text-zinc-600 border border-white/5'}`}
                   >
                     Open Blueprint <Compass size={18} />
                   </button>
@@ -240,6 +253,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
             </section>
           </motion.div>
         ) : (
+          /* VOLUME II CONTENT */
           <motion.div 
             initial={{ opacity: 0, x: 10 }} 
             animate={{ opacity: 1, x: 0 }}
@@ -266,16 +280,16 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
               </button>
               <button 
                 onClick={() => {
-                  if (isSteward) {
+                  if (isSeedlingPlus) {
                     setCurrentVolume(2);
                     window.scrollTo({top: 0, behavior: 'smooth'});
                   } else {
-                    triggerLock('steward');
+                    triggerLock('seedling');
                   }
                 }} 
                 className={`flex-1 py-4 rounded-[2rem] text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}
               >
-                Volume II {!isSteward && <Lock size={12} className="opacity-50" />}
+                Volume II {!isSeedlingPlus && <Lock size={12} className="opacity-50" />}
               </button>
             </div>
           </div>
@@ -290,7 +304,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
         </footer>
       </div>
 
-      {/* NATIVE LOCK SHEET (Universal for Hearthkeeper or Steward locks) */}
+      {/* ACCESS LOCK SHEET */}
       <AnimatePresence>
         {showLockSheet && (
           <>
