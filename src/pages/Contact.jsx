@@ -207,7 +207,7 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
                       {tool.id === 'resume' && (
                         <div className="bg-black/40 border border-white/5 p-12 md:p-16 rounded-[3rem] text-center relative overflow-hidden">
                           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-purple-500/5 blur-[100px]" />
-                          <a href="https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPy rQoQF7o-rgYo5nw/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-4 px-12 h-16 bg-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-purple-500 transition-all relative z-10"><FileText size={16} /> Secure Blueprint</a>
+                          <a href="https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-4 px-12 h-16 bg-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-purple-500 transition-all relative z-10"><FileText size={16} /> Secure Blueprint</a>
                         </div>
                       )}
 

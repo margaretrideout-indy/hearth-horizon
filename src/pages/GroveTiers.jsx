@@ -66,16 +66,15 @@ const GroveTiers = ({ vault, onSync }) => {
     e.preventDefault();
     setContactStatus('sending');
     try {
-      await base44.entities.ContactMessages.create({
-        sender_name: formData.name,
-        sender_email: formData.email,
-        message: formData.message,
-        timestamp: new Date().toISOString(),
-        status: 'unread'
+      await base44.entities.SeatRequest.create({
+        name: formData.name,
+        email: formData.email,
+        field: 'Other',
+        status: 'pending'
       });
       setContactStatus('success');
     } catch (error) {
-      window.location.href = `mailto:margaretpardy@gmail.com?subject=Hearth Inquiry&body=${formData.message}`;
+      window.location.href = `mailto:margaretpardy@gmail.com?subject=Hearth Inquiry&body=${encodeURIComponent(formData.message)}`;
       setContactStatus('success');
     }
   };
