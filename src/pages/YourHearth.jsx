@@ -7,10 +7,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Flame, Upload, CheckCircle2, FileText, 
   ArrowRight, RefreshCw, Activity, History,
-  Lock, Globe, BookOpen, Trash2, AlertTriangle, X, Sparkles, Compass
+  Lock, Trash2, AlertTriangle, X, Sparkles, Compass
 } from 'lucide-react';
 
-export default function YourHearth({ vault, onSync, onRefresh, onResumeSync, onNavigateToHorizon }) {
+export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   const navigate = useNavigate();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [reflection, setReflection] = useState("");
@@ -33,6 +33,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync, onN
   };
 
   const handleRefresh = async () => {
+    if (isRefreshing) return;
     setIsRefreshing(true);
     if (onRefresh) {
       await onRefresh();
@@ -60,9 +61,10 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync, onN
   };
 
   const handleExtinguishHearth = async () => {
-    await onSync(null); 
+    // Clear local storage and vault via parent
+    await onSync({ ...vault, pulses: [], resume: null, archetype: null, alignmentScore: 0 }); 
     triggerToast("Hearth extinguished.");
-    setTimeout(() => navigate('/'), 1500);
+    setTimeout(() => navigate('/grove'), 1500);
   };
 
   return (
@@ -72,10 +74,8 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync, onN
       <AnimatePresence>
         {showToast && (
           <motion.div 
-            initial={{ y: 50, opacity: 0, x: "-50%" }} 
-            animate={{ y: 0, opacity: 1, x: "-50%" }} 
-            exit={{ y: 20, opacity: 0, x: "-50%" }}
-            className="fixed bottom-24 left-1/2 z-[200] bg-zinc-100 text-black px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center gap-3 border border-white/20"
+            initial={{ y: 50, opacity: 0, x: "-50%" }} animate={{ y: 0, opacity: 1, x: "-50%" }} exit={{ y: 20, opacity: 0, x: "-50%" }}
+            className="fixed bottom-24 left-1/2 z-[300] bg-zinc-100 text-black px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-2xl flex items-center gap-3 border border-white/20"
           >
             <div className="w-5 h-5 rounded-full bg-teal-500 flex items-center justify-center">
                 <CheckCircle2 size={12} className="text-white" />
@@ -85,15 +85,15 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync, onN
         )}
       </AnimatePresence>
 
-      {/* SYNC INDICATOR */}
+      {/* REFRESH CONTROL */}
       <div className="flex justify-center h-4 relative pt-4">
         <motion.div 
-          animate={isRefreshing ? { rotate: 360 } : { y: 0 }}
+          animate={isRefreshing ? { rotate: 360 } : {}}
           transition={isRefreshing ? { repeat: Infinity, duration: 1, ease: "linear" } : {}}
           className="text-teal-500/40 hover:text-teal-500 transition-colors"
           onClick={handleRefresh}
         >
-          <RefreshCw size={22} className={isRefreshing ? "" : "cursor-pointer active:scale-90 transition-transform"} />
+          <RefreshCw size={22} className="cursor-pointer active:scale-90" />
         </motion.div>
       </div>
 
@@ -102,247 +102,146 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync, onN
             <Flame size={12} className="text-orange-500 animate-pulse" />
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-orange-200">Fire is Lit</span>
         </div>
-        <h1 className="text-5xl md:text-7xl font-serif italic text-white tracking-tighter">Your Hearth</h1>
+        <h1 className="text-5xl md:text-7xl font-serif italic text-white tracking-tighter leading-tight">Your Hearth</h1>
         <p className="text-zinc-500 text-sm font-light italic max-w-md mx-auto">A digital sanctuary for reflection, legacy archiving, and internal alignment.</p>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        
-        {/* LEFT: THE PULSE & RECORDS */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        {/* LEFT COL */}
         <div className="lg:col-span-5 space-y-8">
           <motion.div 
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setShowSheet(true)}
+            whileHover={{ scale: 1.01 }} onClick={() => setShowSheet(true)}
             className="bg-gradient-to-br from-[#16121D] to-[#0D0B10] border border-white/5 p-10 rounded-[2.5rem] relative overflow-hidden shadow-2xl cursor-pointer group"
           >
-            <div className="absolute -top-6 -right-6 w-32 h-32 bg-rose-500/5 rounded-full blur-3xl group-hover:bg-rose-500/10 transition-colors" />
-            
             <div className="relative z-10 flex flex-col gap-6">
               <div className="flex justify-between items-start">
-                <div className="w-14 h-14 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-400 border border-rose-500/10">
-                    <Activity size={28} />
-                </div>
-                <div className="flex items-center gap-1.5 opacity-40">
-                  <Lock size={10} className="text-rose-400" />
-                  <span className="text-[7px] font-black uppercase tracking-[0.2em] text-rose-400">Encrypted</span>
-                </div>
+                <div className="w-14 h-14 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-400 border border-rose-500/10"><Activity size={28} /></div>
+                <Lock size={12} className="text-rose-400 opacity-40" />
               </div>
-              
               <div>
                 <h3 className="text-2xl font-bold text-white tracking-tight mb-1">Etch a Pulse</h3>
-                <p className="text-[10px] text-zinc-500 uppercase tracking-[0.2em] font-black italic">Check your internal weather</p>
+                <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-black italic">Check your internal weather</p>
               </div>
             </div>
           </motion.div>
 
           <div className="space-y-6">
-            <div className="flex items-center justify-between px-2">
-              <div className="flex items-center gap-2 text-zinc-500">
-                <History size={14} />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em]">Hearth Records</span>
-              </div>
-              <span className="text-[9px] font-bold text-zinc-700 italic">Showing last 3</span>
+            <div className="flex items-center justify-between px-2 text-zinc-500">
+                <div className="flex items-center gap-2">
+                    <History size={14} />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Hearth Records</span>
+                </div>
             </div>
-            
             <div className="space-y-4">
               {vault.pulses?.length > 0 ? (
                 vault.pulses.slice(0, 3).map((p, i) => (
-                  <motion.div 
-                    initial={{ opacity: 0, x: -10 }} 
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    key={i} 
-                    className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 flex gap-5 items-center group hover:bg-white/[0.04] transition-all"
-                  >
-                    <div className="w-12 h-12 rounded-2xl bg-black/40 flex items-center justify-center text-2xl shadow-inner border border-white/5">
-                        {p.emoji}
+                  <div key={i} className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 flex gap-5 items-center">
+                    <div className="text-2xl">{p.emoji}</div>
+                    <div className="flex-1">
+                      <p className="text-xs text-zinc-300 italic line-clamp-2">{p.text}</p>
+                      <p className="text-[8px] text-zinc-600 uppercase font-black mt-2">{new Date(p.date).toLocaleDateString()}</p>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-zinc-300 italic leading-relaxed line-clamp-2">{p.text || "Silent reflection captured."}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                         <div className="w-1 h-1 rounded-full bg-teal-500/50" />
-                         <p className="text-[8px] text-zinc-600 font-black uppercase tracking-tighter">{new Date(p.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</p>
-                      </div>
-                    </div>
-                  </motion.div>
+                  </div>
                 ))
               ) : (
-                <div className="py-12 text-center border border-dashed border-white/5 rounded-[2rem]">
-                    <Sparkles className="mx-auto text-zinc-800 mb-3" size={20} />
-                    <p className="text-[10px] text-zinc-700 font-bold uppercase tracking-widest">No pulses etched yet.</p>
-                </div>
+                <div className="py-12 text-center border border-dashed border-white/5 rounded-[2rem] text-zinc-700 uppercase font-black text-[10px]">No pulses captured yet.</div>
               )}
             </div>
           </div>
         </div>
 
-        {/* RIGHT: ALIGNMENT & LEGACY */}
+        {/* RIGHT COL */}
         <div className="lg:col-span-7 space-y-8">
-          
-          {/* Dynamic Alignment / Horizon CTA */}
-          <Card className={`p-10 rounded-[3rem] shadow-2xl relative overflow-hidden transition-all border ${vault.archetype ? 'bg-teal-500/[0.07] border-teal-500/20' : 'bg-[#0D0B10] border-white/5'}`}>
-            <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12">
-                <Compass size={120} className="text-teal-500" />
-            </div>
-            
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
-              <div className="space-y-3">
-                <div className="px-3 py-1 bg-teal-500/10 border border-teal-500/20 rounded-full w-fit">
-                    <span className="text-[9px] text-teal-400 font-black uppercase tracking-widest">Alignment Ledger</span>
-                </div>
-                <h4 className="text-white font-bold text-3xl tracking-tight leading-none">
-                  {vault.archetype || "Calibrating..."}
-                </h4>
-                <p className="text-[11px] text-zinc-500 italic max-w-xs leading-relaxed">
-                  {vault.archetype 
-                    ? "Your path is clear. View your full trajectory and current standings on the Horizon Board."
-                    : "Your internal weather is still shifting. Complete your Alignment to unlock your trajectory."}
-                </p>
+          <Card className={`p-10 rounded-[3rem] border transition-all ${vault.archetype ? 'bg-teal-500/[0.07] border-teal-500/20' : 'bg-[#0D0B10] border-white/5'}`}>
+            <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-left">
+              <div className="space-y-4 flex-1">
+                <Badge className="bg-teal-500/10 text-teal-400 uppercase">Alignment Ledger</Badge>
+                <h4 className="text-white font-bold text-3xl">{vault.archetype || "Calibrating..."}</h4>
+                <p className="text-xs text-zinc-500 italic leading-relaxed">{vault.archetype ? "Path clear. View trajectory on the Horizon Board." : "Complete alignment to unlock."}</p>
               </div>
-
-              <div className="flex flex-col items-center md:items-end gap-4 w-full md:w-auto">
-                <div className="text-6xl font-serif italic text-white drop-shadow-[0_0_15px_rgba(20,184,166,0.3)]">
-                  {vault.alignmentScore || "0"}%
-                </div>
-                <button 
-                  onClick={() => navigate(vault.archetype ? '/horizon' : '/culture')}
-                  className="w-full md:w-auto px-8 py-4 rounded-2xl bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest hover:bg-teal-400 transition-all flex items-center justify-center gap-3 shadow-lg shadow-teal-500/10"
-                >
-                  {vault.archetype ? "Horizon Board" : "Begin Alignment"} <ArrowRight size={14} />
-                </button>
+              <div className="text-center md:text-right">
+                <div className="text-6xl font-serif italic text-white mb-4">{vault.alignmentScore || 0}%</div>
+                <Button onClick={() => navigate(vault.archetype ? '/horizon' : '/culture')} className="bg-teal-500 text-black font-black uppercase rounded-xl px-8 h-14">
+                  {vault.archetype ? "Horizon Board" : "Begin Alignment"} <ArrowRight size={16} className="ml-2" />
+                </Button>
               </div>
             </div>
           </Card>
 
-          {/* Legacy Sync (Resume) with Success State */}
-          <Card className="bg-[#0D0B10] border-white/5 p-10 rounded-[3rem] shadow-2xl">
-              <div className="flex flex-col gap-8">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <FileText className="text-teal-500" size={24} />
-                        <h3 className="text-xl font-bold text-white tracking-tight">Legacy Archive</h3>
-                    </div>
+          <Card className="bg-[#0D0B10] border-white/5 p-10 rounded-[3rem]">
+            <div className="flex flex-col gap-8 text-left">
+              <div className="flex items-center gap-3"><FileText className="text-teal-500" size={24} /><h3 className="text-xl font-bold text-white">Legacy Archive</h3></div>
+              {!vault.resume ? (
+                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/5 hover:border-teal-500/20 rounded-[2rem] bg-black/40 cursor-pointer group transition-all">
+                  <Upload className="text-zinc-600 mb-3 group-hover:text-teal-500 transition-colors" />
+                  <span className="text-[10px] font-black uppercase text-zinc-500">Upload Professional Legacy</span>
+                  <input type="file" className="hidden" onChange={(e) => onResumeSync?.(e.target.files[0])} />
+                </label>
+              ) : (
+                <div className="p-8 rounded-[2rem] bg-teal-500/5 border border-teal-500/20 text-center">
+                  <CheckCircle2 className="text-teal-500 mx-auto mb-4" size={32} />
+                  <h4 className="text-white font-bold uppercase text-xs">Legacy Secured</h4>
+                  <p className="text-[10px] text-zinc-500 mt-2 italic">"{vault.resume.name}" is archived.</p>
+                  <label className="mt-6 block text-[9px] font-black uppercase text-zinc-600 hover:text-white cursor-pointer transition-colors">
+                    Update Record
+                    <input type="file" className="hidden" onChange={(e) => onResumeSync?.(e.target.files[0])} />
+                  </label>
                 </div>
-
-                {!vault.resume ? (
-                    <label className="group flex flex-col items-center justify-center w-full h-56 border-2 border-dashed border-white/5 hover:border-teal-500/30 rounded-[2rem] bg-black/40 cursor-pointer transition-all hover:bg-teal-500/[0.02]">
-                        <div className="w-14 h-14 rounded-full bg-zinc-900 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <Upload className="text-zinc-600 group-hover:text-teal-400" size={24} />
-                        </div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover:text-white">Upload Professional Legacy</p>
-                        <p className="text-[8px] text-zinc-700 mt-2 font-bold uppercase">PDF, DOCX up to 5MB</p>
-                        <input type="file" className="hidden" onChange={(e) => onResumeSync(e.target.files[0])} />
-                    </label>
-                ) : (
-                    <div className="p-10 rounded-[2rem] bg-teal-500/[0.03] border border-teal-500/20 flex flex-col items-center text-center group animate-in zoom-in duration-500">
-                        <div className="w-20 h-20 bg-teal-500/20 rounded-full flex items-center justify-center mb-6 border border-teal-500/30">
-                          <CheckCircle2 size={40} className="text-teal-400" />
-                        </div>
-                        <h4 className="text-white font-bold text-lg uppercase tracking-widest">Legacy Secured</h4>
-                        <p className="text-zinc-500 text-xs mt-2 italic max-w-[200px]">
-                          "{vault.resume.name}" has been successfully etched into the vault.
-                        </p>
-                        <label className="mt-8 cursor-pointer text-[10px] text-zinc-600 font-black uppercase tracking-widest hover:text-white transition-colors border-b border-white/10 pb-1">
-                          Update Record
-                          <input type="file" className="hidden" onChange={(e) => onResumeSync(e.target.files[0])} />
-                        </label>
-                    </div>
-                )}
-              </div>
+              )}
+            </div>
           </Card>
 
           {/* DANGER ZONE */}
-          <div className="pt-20 text-center pb-10">
+          <div className="pt-20 text-center">
             {!isClosingHearth ? (
-                <button 
-                  onClick={() => setIsClosingHearth(true)} 
-                  className="text-[10px] text-zinc-800 hover:text-rose-500 font-black uppercase tracking-[0.3em] transition-all flex items-center gap-3 mx-auto px-6 py-3 rounded-full hover:bg-rose-500/5"
-                >
-                    <Trash2 size={14} /> Extinguish the Hearth
-                </button>
+              <button onClick={() => setIsClosingHearth(true)} className="text-[10px] text-zinc-800 hover:text-rose-500 uppercase font-black tracking-widest flex items-center gap-2 mx-auto transition-colors"><Trash2 size={12} /> Extinguish Hearth</button>
             ) : (
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-rose-500/[0.02] border border-rose-500/20 p-10 rounded-[2.5rem] flex flex-col items-center gap-6 max-w-md mx-auto">
-                    <div className="w-16 h-16 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-500 mb-2">
-                        <AlertTriangle size={32} />
-                    </div>
-                    <div className="space-y-2">
-                        <p className="text-sm text-white font-bold uppercase tracking-widest">Permanent Deletion</p>
-                        <p className="text-xs text-zinc-500 italic leading-relaxed">
-                            This action will permanently wipe your legacy docs and pulse records from the cloud. This cannot be undone.
-                        </p>
-                    </div>
-                    <div className="flex flex-col w-full gap-3">
-                        <button onClick={handleExtinguishHearth} className="w-full py-4 rounded-2xl bg-rose-500 text-white text-[10px] font-black uppercase tracking-widest shadow-xl shadow-rose-500/20">Wipe All Records</button>
-                        <button onClick={() => setIsClosingHearth(false)} className="w-full py-4 rounded-2xl bg-white/5 text-zinc-500 text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">Keep Fire Burning</button>
-                    </div>
-                </motion.div>
+              <div className="p-10 bg-rose-500/[0.02] border border-rose-500/20 rounded-[2.5rem] max-w-sm mx-auto space-y-6">
+                <AlertTriangle className="text-rose-500 mx-auto" size={32} />
+                <p className="text-xs text-zinc-500 italic">This will wipe all records. This cannot be undone.</p>
+                <div className="flex flex-col gap-3">
+                  <Button onClick={handleExtinguishHearth} className="bg-rose-500 text-white font-black uppercase w-full rounded-xl">Wipe Records</Button>
+                  <Button onClick={() => setIsClosingHearth(false)} variant="ghost" className="text-zinc-500 uppercase text-[10px] font-black">Cancel</Button>
+                </div>
+              </div>
             )}
           </div>
         </div>
       </div>
 
-      {/* PULSE SHEET (BOTTOM SHEET) */}
+      {/* BOTTOM SHEET */}
       <AnimatePresence>
         {showSheet && (
           <>
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={() => setShowSheet(false)}
-              className="fixed inset-0 bg-black/95 backdrop-blur-md z-[200]"
-            />
-            <motion.div 
-              initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3.5rem] z-[210] p-8 pb-16 shadow-[0_-20px_80px_rgba(0,0,0,1)]"
-            >
-              <div className="w-12 h-1.5 bg-zinc-800 rounded-full mx-auto mb-10" />
-              
-              <div className="max-w-xl mx-auto">
-                  <div className="flex justify-between items-center mb-10 px-4">
-                    <div className="space-y-1">
-                        <h3 className="text-3xl font-serif italic text-white tracking-tight">Internal Weather</h3>
-                        <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest italic leading-none">Capture this moment in time</p>
-                    </div>
-                    <button onClick={() => setShowSheet(false)} className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center text-zinc-500 hover:text-white transition-colors"><X size={24} /></button>
-                  </div>
-
-                  <div className="grid grid-cols-5 gap-3 mb-10">
-                    {pulseOptions.map((p) => (
-                      <button 
-                        key={p.label} 
-                        onClick={() => setSelectedEmoji(p.icon)}
-                        className={`flex flex-col items-center gap-3 py-6 rounded-3xl transition-all active:scale-90 ${
-                          selectedEmoji === p.icon ? "bg-rose-500 text-white shadow-2xl shadow-rose-500/40 scale-105" : "bg-white/[0.03] text-zinc-500 hover:bg-white/[0.06]"
-                        }`}
-                      >
-                        <span className="text-3xl">{p.icon}</span>
-                        <span className="text-[7px] font-black uppercase tracking-widest">{p.label}</span>
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="space-y-6 px-2">
-                    <Textarea 
-                      placeholder="How does the journey feel today? (Optional)"
-                      value={reflection}
-                      onChange={(e) => setReflection(e.target.value)}
-                      className="bg-black/60 border-white/10 rounded-3xl text-base italic text-white p-6 min-h-[160px] focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500/30 resize-none transition-all placeholder:text-zinc-700"
-                    />
-                    <Button 
-                        onClick={handleSavePulse} 
-                        disabled={!selectedEmoji && !reflection}
-                        className="w-full h-20 rounded-[2rem] bg-rose-500 hover:bg-rose-600 text-white font-black uppercase tracking-[0.3em] text-xs shadow-2xl shadow-rose-500/20 disabled:opacity-20 transition-all active:scale-[0.98]"
-                    >
-                        Etch to Vault
-                    </Button>
-                  </div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowSheet(false)} className="fixed inset-0 bg-black/90 backdrop-blur-md z-[200]" />
+            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3.5rem] z-[210] p-8 pb-16 shadow-2xl">
+              <div className="w-12 h-1 bg-zinc-800 rounded-full mx-auto mb-10" />
+              <div className="max-w-xl mx-auto space-y-10">
+                <div className="text-center"><h3 className="text-3xl font-serif italic text-white mb-2">Internal Weather</h3><p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest">Capture this moment</p></div>
+                <div className="grid grid-cols-5 gap-3">
+                  {pulseOptions.map((p) => (
+                    <button key={p.label} onClick={() => setSelectedEmoji(p.icon)} className={`flex flex-col items-center gap-2 p-4 rounded-2xl transition-all ${selectedEmoji === p.icon ? 'bg-rose-500 text-white shadow-lg' : 'bg-white/5 text-zinc-500'}`}>
+                      <span className="text-2xl">{p.icon}</span>
+                      <span className="text-[8px] font-black uppercase">{p.label}</span>
+                    </button>
+                  ))}
+                </div>
+                <Textarea 
+                  placeholder="How does the journey feel? (Optional)" 
+                  value={reflection} 
+                  onChange={(e) => setReflection(e.target.value)}
+                  className="bg-black/40 border-white/5 rounded-2xl p-6 text-white italic min-h-[150px]"
+                />
+                <Button onClick={handleSavePulse} disabled={!selectedEmoji && !reflection} className="w-full h-16 bg-teal-500 text-black font-black uppercase rounded-2xl shadow-xl">Seal Pulse</Button>
               </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
-
     </div>
   );
 }
+
+const Badge = ({ children, className }) => (
+  <span className={`text-[9px] font-black tracking-widest px-3 py-1 rounded-full border ${className}`}>{children}</span>
+);
