@@ -16,9 +16,9 @@ export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Set to true if you need to force access while troubleshooting
+  // States
   const [isAdmin, setIsAdmin] = useState(false);
-
+  const [isInitializing, setIsInitializing] = useState(true);
   const [vault, setVault] = useState(() => {
     const saved = localStorage.getItem('hearth_vault_data');
     if (saved) {
@@ -30,32 +30,35 @@ export default function App() {
       alignmentScore: 0, 
       resume: null, 
       standing: "Traveler", 
-      tier: "none", // Guests have no tier
+      tier: "none", 
       lastSync: null 
     };
   });
 
+  // Auth & Identity Check
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const user = await base44.auth.me();
         if (user) {
-          // Identify Admin
+          // Absolute Founder Authority
           const isSystemAdmin = user.role === 'admin' || user.email === 'margaretpardy@gmail.com'; 
           setIsAdmin(isSystemAdmin);
           
-          // Map Tiers (Seedling, Hearthkeeper, Steward)
           if (user.tier) {
             const currentTier = user.tier.toLowerCase();
             setVault(prev => ({ 
               ...prev, 
               tier: currentTier,
-              standing: user.tier // This displays the pretty name: "Steward", etc.
+              standing: user.tier 
             }));
           }
         }
       } catch (e) {
         console.log("Guest session active.");
+      } finally {
+        // This ensures we don't render the UI until we know the user's status
+        setIsInitializing(false);
       }
     };
     checkAuth();
@@ -142,6 +145,15 @@ export default function App() {
       </div>
     );
   };
+
+  // BLOCK RENDERING UNTIL AUTH IS RESOLVED
+  if (isInitializing) {
+    return (
+      <div className="h-screen w-full bg-[#0A080D] flex items-center justify-center">
+        <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse shadow-[0_0_8px_#39FFCA]" />
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen w-full bg-[#0A080D] flex overflow-hidden">
