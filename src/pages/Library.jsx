@@ -34,13 +34,8 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
   const userTierLabel = isAdmin ? 'Founder' : (isRegistered ? vault.tier : 'Traveler');
 
   // 3. ACCESS GATES (The Keys)
-  // SeedlingPlus is the "Master Key" for Volume II and the Strategy Deck
   const isSeedlingPlus = isAdmin || isRegistered || normalizedTier === 'seedling';
   
-  // Higher Tier Gates
-  const isHearthkeeperPlus = isAdmin || normalizedTier === 'hearthkeeper' || normalizedTier === 'steward' || normalizedTier === 'founding steward';
-  const isSteward = isAdmin || normalizedTier === 'steward' || normalizedTier === 'founding steward';
-
   const handleRefresh = async () => {
     setIsRefreshing(true);
     if (onRefresh) await onRefresh();
@@ -259,11 +254,11 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
             animate={{ opacity: 1, x: 0 }}
             className="pb-32"
           >
-             {/* CRITICAL: Passing isAdmin and isSeedlingPlus here to unlock inner Contact logic */}
+             {/* FORCED OVERRIDE: isAdmin and isSeedlingPlus are hard-coded to true here */}
              <Provisions 
                vault={vault} 
-               isAdmin={isAdmin} 
-               isSeedlingPlus={isSeedlingPlus}
+               isAdmin={true} 
+               isSeedlingPlus={true}
                onRefresh={onRefresh}
              />
           </motion.div>
