@@ -23,7 +23,7 @@ const getWeekIndex = () => {
   const start = new Date(now.getFullYear(), 0, 1);
   const diff = now - start;
   const oneWeek = 1000 * 60 * 60 * 24 * 7;
-  return Math.floor(diff / oneWeek) % WEEKLY_SPARKS.length;
+  return Math.floor(diff / oneWeek) % WEEKLY_GLOWS.length;
 };
 
 const EmberReactions = () => {
