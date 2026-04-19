@@ -19,14 +19,14 @@ import {
 
 export default function RootSystem({ vault, onSync, isAdmin }) {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  
+  // FOUNDER OVERRIDE: If isAdmin is true, we don't need to "wait" for a loading state
+  const isFounder = isAdmin === true || vault?.standing === 'Admin';
+  const [loading, setLoading] = useState(!isFounder); // Only start loading if NOT confirmed admin
   const [members, setMembers] = useState([]);
   const [intentions, setIntentions] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newUser, setNewUser] = useState({ name: '', email: '', tier: 'Tester' });
-
-  // SOVEREIGNTY LOGIC: Enhanced to ensure you aren't locked out during load
-  const isFounder = isAdmin === true || vault?.standing === 'Admin';
   
   const B44_PROJECT_ID = window.BASE44_PROJECT_ID || ''; 
   const B44_TOKEN = window.BASE44_API_TOKEN || '';
@@ -74,7 +74,7 @@ export default function RootSystem({ vault, onSync, isAdmin }) {
     if (isFounder) {
       syncBase44();
     } else {
-      // Give the app 2 seconds to verify admin status before showing the lockout screen
+      // Security fallback: if not confirmed admin, wait 2s for state to catch up
       const timer = setTimeout(() => setLoading(false), 2000);
       return () => clearTimeout(timer);
     }
@@ -107,41 +107,6 @@ export default function RootSystem({ vault, onSync, isAdmin }) {
     );
   }
 
-  // Loading State
-  if (loading && !isFounder) {
-    return (
-      <div className="min-h-screen bg-[#0D0B14] flex items-center justify-center">
-        <RefreshCw className="text-emerald-500 animate-spin" size={32} />
-      </div>
-    );
-  }
-
-  const handleAddUser = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(`https://api.base44.io/v1/projects/${B44_PROJECT_ID}/collections/dwellers/documents`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${B44_TOKEN}`
-        },
-        body: JSON.stringify({ 
-          ...newUser, 
-          isAligned: false, 
-          joinedAt: new Date().toISOString(),
-          lastPulse: new Date().toISOString()
-        })
-      });
-      if (response.ok) {
-        setIsModalOpen(false);
-        setNewUser({ name: '', email: '', tier: 'Tester' });
-        syncBase44();
-      }
-    } catch (err) {
-      console.error("Addition Error:", err);
-    }
-  };
-
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -159,7 +124,7 @@ export default function RootSystem({ vault, onSync, isAdmin }) {
           
           <div className="flex items-center gap-3 mb-2">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
-            <p className="text-emerald-500/60 text-[10px] font-black uppercase tracking-[0.4em]">Founder's Sovereignty</p>
+            <p className="text-emerald-500/60 text-[10px] font-black uppercase tracking-[0.4em]">Founder's Sovereignty {isAdmin && <span className="text-[8px] opacity-40 ml-2">(Override Active)</span>}</p>
           </div>
           <h1 className="text-5xl md:text-7xl font-serif text-white italic tracking-tighter">
             The Root <span className="text-zinc-700 font-sans not-italic font-extralight uppercase tracking-widest text-4xl ml-2">System</span>
