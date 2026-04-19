@@ -26,19 +26,20 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
 
   // --- DEFINITIVE FOUNDER & TIER LOGIC ---
   
-  // 1. Admin/Founder Override: If isAdmin is true, they are effectively a 'steward' (max rank)
-  const normalizedTier = isAdmin ? 'steward' : (vault?.tier?.toLowerCase() || 'none');
+  // 1. Logic Normalization
   const isRegistered = !!vault && vault.tier && vault.tier !== 'none';
+  const normalizedTier = vault?.tier?.toLowerCase() || 'none';
 
   // 2. Display Label: Explicitly show "Founder" for admins
   const userTierLabel = isAdmin ? 'Founder' : (isRegistered ? vault.tier : 'Traveler');
 
-  // 3. ACCESS GATES: 
-  // Seedlings (and higher) now have access to Volume II and the Strategy Deck.
-  const isSteward = normalizedTier === 'steward' || isAdmin; 
-  const isHearthkeeperPlus = isSteward || normalizedTier === 'hearthkeeper';
-  // Seedling Plus includes the base registered user (Seedling) or any higher tier.
-  const isSeedlingPlus = isHearthkeeperPlus || normalizedTier === 'seedling' || isRegistered;
+  // 3. ACCESS GATES (The Keys)
+  // SeedlingPlus is the "Master Key" for Volume II and the Strategy Deck
+  const isSeedlingPlus = isAdmin || isRegistered || normalizedTier === 'seedling';
+  
+  // Higher Tier Gates
+  const isHearthkeeperPlus = isAdmin || normalizedTier === 'hearthkeeper' || normalizedTier === 'steward' || normalizedTier === 'founding steward';
+  const isSteward = isAdmin || normalizedTier === 'steward' || normalizedTier === 'founding steward';
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -224,7 +225,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
               </div>
               
               <motion.div 
-                whileHover={{ y: -5 }}
+                whileHover={isSeedlingPlus ? { y: -5 } : {}}
                 onClick={() => !isSeedlingPlus && triggerLock('seedling')}
                 className={`relative w-full max-w-2xl bg-gradient-to-br from-[#16121D] to-[#0D0B10] border ${isSeedlingPlus ? 'border-teal-500/20' : 'border-white/5'} p-10 md:p-16 rounded-[3rem] overflow-hidden shadow-2xl cursor-pointer group`}
               >
@@ -258,12 +259,12 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
             animate={{ opacity: 1, x: 0 }}
             className="pb-32"
           >
+             {/* CRITICAL: Passing isAdmin and isSeedlingPlus here to unlock inner Contact logic */}
              <Provisions 
                vault={vault} 
                isAdmin={isAdmin} 
-               currentVolume={currentVolume}
+               isSeedlingPlus={isSeedlingPlus}
                onRefresh={onRefresh}
-               isSeedlingPlus={isSeedlingPlus} // Pass this down to unlock the Lexicon
              />
           </motion.div>
         )}
