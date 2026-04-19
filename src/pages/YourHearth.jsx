@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Flame, Upload, CheckCircle2, FileText, 
   ArrowRight, RefreshCw, Activity, History,
-  Lock, Trash2, AlertTriangle, X, Sparkles, Compass
+  Lock, Trash2, AlertTriangle, X, Sparkles, Compass,
+  Loader2 // Added for the loading state
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   const navigate = useNavigate();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isUploading, setIsUploading] = useState(false); // New state
   const [reflection, setReflection] = useState("");
   const [selectedEmoji, setSelectedEmoji] = useState(null);
   const [showSheet, setShowSheet] = useState(false); 
@@ -30,6 +32,23 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   const triggerToast = (msg) => {
     setShowToast(msg);
     setTimeout(() => setShowToast(false), 3000);
+  };
+
+  // --- REFINED RESUME HANDLER ---
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      // Assuming onResumeSync is the function passed from App.jsx
+      await onResumeSync(file);
+      triggerToast("Professional Legacy Secured.");
+    } catch (error) {
+      triggerToast("Sync failed. Try again.");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleRefresh = async () => {
@@ -61,10 +80,9 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   };
 
   const handleExtinguishHearth = async () => {
-    // Clear local storage and vault via parent
     await onSync({ ...vault, pulses: [], resume: null, archetype: null, alignmentScore: 0 }); 
     triggerToast("Hearth extinguished.");
-    setTimeout(() => navigate('/grove'), 1500);
+    setTimeout(() => navigate('/'), 1500); // Changed from /grove to / (landing)
   };
 
   return (
@@ -168,23 +186,40 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
             </div>
           </Card>
 
+          {/* REFINED LEGACY ARCHIVE SECTION */}
           <Card className="bg-[#0D0B10] border-white/5 p-10 rounded-[3rem]">
             <div className="flex flex-col gap-8 text-left">
-              <div className="flex items-center gap-3"><FileText className="text-teal-500" size={24} /><h3 className="text-xl font-bold text-white">Legacy Archive</h3></div>
+              <div className="flex items-center gap-3">
+                <FileText className="text-teal-500" size={24} />
+                <h3 className="text-xl font-bold text-white">Legacy Archive</h3>
+              </div>
+              
               {!vault.resume ? (
-                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/5 hover:border-teal-500/20 rounded-[2rem] bg-black/40 cursor-pointer group transition-all">
-                  <Upload className="text-zinc-600 mb-3 group-hover:text-teal-500 transition-colors" />
-                  <span className="text-[10px] font-black uppercase text-zinc-500">Upload Professional Legacy</span>
-                  <input type="file" className="hidden" onChange={(e) => onResumeSync?.(e.target.files[0])} />
+                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/5 hover:border-teal-500/20 rounded-[2rem] bg-black/40 cursor-pointer group transition-all relative overflow-hidden">
+                  {isUploading ? (
+                    <div className="flex flex-col items-center gap-3">
+                      <Loader2 className="text-teal-500 animate-spin" size={32} />
+                      <span className="text-[10px] font-black uppercase text-teal-500 tracking-widest animate-pulse">Archiving...</span>
+                    </div>
+                  ) : (
+                    <>
+                      <Upload className="text-zinc-600 mb-3 group-hover:text-teal-500 transition-colors" />
+                      <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">Upload Resume / CV</span>
+                      <p className="text-[8px] text-zinc-700 uppercase mt-2 font-black">PDF, DOCX supported</p>
+                    </>
+                  )}
+                  <input type="file" className="hidden" onChange={handleFileChange} disabled={isUploading} />
                 </label>
               ) : (
-                <div className="p-8 rounded-[2rem] bg-teal-500/5 border border-teal-500/20 text-center">
+                <div className="p-8 rounded-[2rem] bg-teal-500/5 border border-teal-500/20 text-center relative">
                   <CheckCircle2 className="text-teal-500 mx-auto mb-4" size={32} />
-                  <h4 className="text-white font-bold uppercase text-xs">Legacy Secured</h4>
+                  <h4 className="text-white font-bold uppercase text-xs tracking-widest">Legacy Secured</h4>
                   <p className="text-[10px] text-zinc-500 mt-2 italic">"{vault.resume.name}" is archived.</p>
-                  <label className="mt-6 block text-[9px] font-black uppercase text-zinc-600 hover:text-white cursor-pointer transition-colors">
-                    Update Record
-                    <input type="file" className="hidden" onChange={(e) => onResumeSync?.(e.target.files[0])} />
+                  
+                  <label className="mt-6 inline-flex items-center gap-2 text-[9px] font-black uppercase text-zinc-600 hover:text-white cursor-pointer transition-colors border border-white/10 px-4 py-2 rounded-full hover:border-teal-500/30">
+                    {isUploading ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />}
+                    {isUploading ? "Processing..." : "Update Record"}
+                    <input type="file" className="hidden" onChange={handleFileChange} disabled={isUploading} />
                   </label>
                 </div>
               )}
