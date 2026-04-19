@@ -15,7 +15,7 @@ import EmbersChat from './pages/EmbersChat';
 export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
 
   const [vault, setVault] = useState(() => {
     const saved = localStorage.getItem('hearth_vault_data');
