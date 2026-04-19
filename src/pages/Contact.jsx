@@ -86,14 +86,15 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
 
-  // --- ACCESS LOGIC ---
+  // --- REBUILT ACCESS LOGIC ---
   const normalizedTier = vault?.tier?.toLowerCase() || 'none';
   
-  // SEEDLING CONTENT (LEXICON) ACCESS
-  const canAccessVerbs = !!isAdmin || isSeedlingPlus || ['seedling', 'hearthkeeper', 'steward', 'founding steward', 'admin'].includes(normalizedTier);
-  
-  // HIGH TIER ACCESS (MASTER BYPASS VIA isAdmin)
-  const canAccessHighTier = !!isAdmin || ['hearthkeeper', 'steward', 'founding steward', 'admin'].includes(normalizedTier);
+  // The Admin/Founder bypass
+  const isMasterAdmin = isAdmin === true || normalizedTier === 'admin' || vault?.standing === 'Founder';
+
+  // Content Unlock Checks
+  const canAccessVerbs = isMasterAdmin || isSeedlingPlus || ['seedling', 'hearthkeeper', 'steward', 'founding steward'].includes(normalizedTier);
+  const canAccessHighTier = isMasterAdmin || ['hearthkeeper', 'steward', 'founding steward'].includes(normalizedTier);
 
   const dynamicContent = generateDynamicScripts(vault);
 
