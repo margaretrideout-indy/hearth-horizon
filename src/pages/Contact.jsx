@@ -81,12 +81,12 @@ const generateDynamicScripts = (vault) => {
     };
 };
 
-const Contact = ({ vault, isAdmin }) => {
+const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
 
-  // Normalizing rank logic: Founder identity grants Rank 3 (Full Access)
+  // Normalizing rank logic
   const tiers = { 
     'none': 0,
     'traveler': 0, 
@@ -97,8 +97,10 @@ const Contact = ({ vault, isAdmin }) => {
     'founding steward': 3
   };
   
-  // PRIMARY OVERRIDE: Admin always gets highest access
-  const userRank = isAdmin ? 3 : (tiers[vault?.tier?.toLowerCase()] || 0);
+  // Rank determined by Tier OR isAdmin OR isSeedlingPlus override
+  let userRank = tiers[vault?.tier?.toLowerCase()] || 0;
+  if (isSeedlingPlus && userRank < 1) userRank = 1;
+  if (isAdmin) userRank = 3; // Absolute power
 
   const dynamicContent = generateDynamicScripts(vault);
 
@@ -143,8 +145,8 @@ const Contact = ({ vault, isAdmin }) => {
 
       <div className="grid grid-cols-1 gap-4">
         {trailKitResources.map((tool, idx) => {
-          // If you are admin, isLocked is always false
-          const isLocked = !isAdmin && userRank < tool.requiredTier;
+          // If you are admin, isLocked is explicitly false
+          const isLocked = isAdmin ? false : userRank < tool.requiredTier;
           const isOpen = expandedCard === tool.id && !isLocked;
 
           return (
