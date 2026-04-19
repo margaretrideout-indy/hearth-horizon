@@ -20,9 +20,9 @@ import {
 export default function RootSystem({ vault, onSync, isAdmin }) {
   const navigate = useNavigate();
   
-  // FOUNDER OVERRIDE: If isAdmin is true, we don't need to "wait" for a loading state
+  // FOUNDER OVERRIDE
   const isFounder = isAdmin === true || vault?.standing === 'Admin';
-  const [loading, setLoading] = useState(!isFounder); // Only start loading if NOT confirmed admin
+  const [loading, setLoading] = useState(!isFounder);
   const [members, setMembers] = useState([]);
   const [intentions, setIntentions] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,38 +74,40 @@ export default function RootSystem({ vault, onSync, isAdmin }) {
     if (isFounder) {
       syncBase44();
     } else {
-      // Security fallback: if not confirmed admin, wait 2s for state to catch up
       const timer = setTimeout(() => setLoading(false), 2000);
       return () => clearTimeout(timer);
     }
   }, [isFounder]);
 
-  // Authorization Guard: Only shows the "Denied" screen if we are SURE you aren't the admin
-  if (!isFounder && !loading) {
-    return (
-      <div className="min-h-screen bg-[#0D0B14] flex items-center justify-center p-6 text-center">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="space-y-6 max-w-sm"
-        >
-          <div className="w-20 h-20 bg-emerald-500/5 border border-emerald-500/10 rounded-[2rem] flex items-center justify-center text-emerald-500/40 mx-auto">
-            <ShieldAlert size={40} />
-          </div>
-          <h2 className="text-3xl font-serif italic text-white">Deep Roots</h2>
-          <p className="text-zinc-500 text-sm leading-relaxed">
-            These grounds are reserved for the Founder. <br/>Stewards belong in the Canopy.
-          </p>
-          <button 
-            onClick={() => navigate('/hearth', { replace: true })} 
-            className="w-full h-11 flex items-center justify-center text-[#39FFCA] text-[10px] font-black uppercase tracking-widest border-b border-[#39FFCA]/20"
-          >
-            Return to Hearth
-          </button>
-        </motion.div>
-      </div>
-    );
-  }
+  const handleAddUser = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`https://api.base44.io/v1/projects/${B44_PROJECT_ID}/collections/dwellers/documents`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${B44_TOKEN}`
+        },
+        body: JSON.stringify({ 
+          ...newUser, 
+          isAligned: false, 
+          joinedAt: new Date().toISOString(),
+          lastPulse: new Date().toISOString()
+        })
+      });
+      if (response.ok) {
+        setIsModalOpen(false);
+        setNewUser({ name: '', email: '', tier: 'Tester' });
+        syncBase44();
+      }
+    } catch (err) {
+      console.error("Addition Error:", err);
+    }
+  };
+
+  // LOCKOUT GUARD REMOVED
+  // We no longer return the "Deep Roots" screen here.
+  // This ensures that as long as App.jsx allows the route, you see the UI.
 
   return (
     <motion.div 
