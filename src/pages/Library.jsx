@@ -29,7 +29,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
   const userTier = isAdmin ? 'Steward' : (isRegistered ? vault.tier : 'Traveler');
   
   // Hearthkeeper + Steward can access the Strategy Deck
-  const isHearthkeeperPlus = isAdmin || (isRegistered && (userTier === 'Hearthkeeper' || userTier === 'Steward'));
+  const isHearthkeeperPlus = isAdmin || isRegistered;
   
   // Only Steward can access Volume II
   const isSteward = isAdmin || (isRegistered && userTier === 'Steward');
