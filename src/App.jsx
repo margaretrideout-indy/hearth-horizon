@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Flame, BookOpen, Globe, Activity, Compass, LayoutDashboard, LogOut } from 'lucide-react';
 import { base44 } from '@/api/base44Client'; 
 
@@ -17,7 +17,6 @@ export default function App() {
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // Initialize Vault with sensible defaults
   const [vault, setVault] = useState(() => {
     const saved = localStorage.getItem('hearth_vault_data');
     if (saved) {
@@ -29,27 +28,24 @@ export default function App() {
       alignmentScore: 0, 
       resume: null, 
       standing: "Traveler", 
-      tier: "seedling", // Default to lower-case seedling
+      tier: "seedling",
       lastSync: null 
     };
   });
 
-  // Admin & Tier Sync Logic
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const user = await base44.auth.me();
         if (user) {
-          // 1. Identify Admin Status
           const isSystemAdmin = user.role === 'admin' || user.email === 'margaretpardy@gmail.com'; 
           setIsAdmin(isSystemAdmin);
           
-          // 2. Sync Tier from DB (Normalize to lowercase for Contact/Library logic)
           if (user.tier) {
             setVault(prev => ({ 
               ...prev, 
               tier: user.tier.toLowerCase(),
-              standing: user.tier // Sync standing string with tier
+              standing: user.tier 
             }));
           }
         }
@@ -60,7 +56,6 @@ export default function App() {
     checkAuth();
   }, []);
 
-  // Persist Vault to LocalStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('hearth_vault_data', JSON.stringify(vault));
   }, [vault]);
@@ -69,10 +64,9 @@ export default function App() {
     setVault({ pulses: [], archetype: null, alignmentScore: 0, resume: null, standing: "Traveler", tier: "seedling", lastSync: null });
     localStorage.clear();
     sessionStorage.clear();
-    navigate('/');
+    navigate('/grove');
   };
 
-  // Central Sync Function
   const handleSync = (newData) => {
     if (newData === null) handleAccountDeletion();
     else setVault(prev => ({ ...prev, ...newData }));
@@ -81,7 +75,6 @@ export default function App() {
   const mainTabs = ['/hearth', '/library', '/horizon', '/embers'];
   const isMainTab = mainTabs.includes(location.pathname);
 
-  // NAVIGATION COMPONENT
   const NavLinks = ({ isDesktop = false }) => {
     const allLinks = [
       { label: 'Hearth', path: '/hearth', icon: Flame },
@@ -126,7 +119,7 @@ export default function App() {
               </button>
             )}
             <button 
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/grove')}
               className="flex items-center gap-4 px-6 py-4 rounded-xl mx-2 w-[calc(100%-16px)] text-zinc-500 hover:text-red-400 hover:bg-red-400/5 transition-all"
             >
               <LogOut size={20} />
@@ -140,8 +133,8 @@ export default function App() {
   return (
     <div className="h-screen w-full bg-[#0A080D] flex overflow-hidden">
       
-      {/* SIDEBAR (Desktop) */}
-      {location.pathname !== '/' && (
+      {/* Sidebar hidden on landing page (/grove or /) */}
+      {location.pathname !== '/grove' && location.pathname !== '/' && (
         <aside className="hidden md:flex flex-col w-64 border-r border-white/5 bg-[#08070B] pt-8">
           <div className="px-8 mb-10 flex items-center justify-between">
             <span className="text-xs font-black uppercase tracking-[0.3em] text-zinc-700">Hearth Horizon</span>
@@ -152,17 +145,14 @@ export default function App() {
         </aside>
       )}
 
-      {/* MAIN CONTENT AREA */}
       <main className="flex-1 h-full relative overflow-y-auto custom-scrollbar flex flex-col">
         <div className="flex-1 w-full relative">
           
-          {/* PERSISTENT MAIN TABS */}
           <div className={location.pathname === '/hearth' ? 'block h-full' : 'hidden'}>
             <YourHearth vault={vault} onSync={handleSync} isAdmin={isAdmin} onNavigateToHorizon={() => navigate('/horizon')} />
           </div>
           
           <div className={location.pathname === '/library' ? 'block h-full' : 'hidden'}>
-            {/* Added handleSync to Library */}
             <Library vault={vault} onSync={handleSync} isAdmin={isAdmin} />
           </div>
           
@@ -174,10 +164,9 @@ export default function App() {
             <EmbersChat vault={vault} isAdmin={isAdmin} />
           </div>
 
-          {/* DYNAMIC ROUTES */}
           {!isMainTab && (
             <Routes>
-              <Route path="/" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+              <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/culture" element={<CulturalFit vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/contact" element={<Contact vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
@@ -185,12 +174,10 @@ export default function App() {
           )}
         </div>
 
-        {/* Padding for Mobile Nav */}
-        {location.pathname !== '/' && <div className="h-24 shrink-0 md:hidden" />}
+        {location.pathname !== '/grove' && location.pathname !== '/' && <div className="h-24 shrink-0 md:hidden" />}
       </main>
 
-      {/* MOBILE NAV BAR */}
-      {location.pathname !== '/' && (
+      {location.pathname !== '/grove' && location.pathname !== '/' && (
         <nav className="fixed bottom-0 left-0 right-0 z-[100] pb-[env(safe-area-inset-bottom)] bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 md:hidden">
           <div className="w-full h-20">
             <NavLinks />
