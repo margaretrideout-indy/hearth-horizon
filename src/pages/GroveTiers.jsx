@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Flame, Heart, Sprout, Globe, ShieldCheck, Check, Leaf, Mountain, UserPlus,
   Smartphone, Share2, PlusSquare, Sparkles, Send, Zap, FileText, Map, MessageSquare, Briefcase,
-  MoreVertical, Star, Library as LibraryIcon, Compass, ArrowRight
+  MoreVertical, Star, Library as LibraryIcon, Compass, ArrowRight, LogIn
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -130,35 +130,34 @@ const GroveTiers = ({ vault, onSync }) => {
     <div className="relative min-h-screen bg-[#0A080D] text-slate-300 font-sans selection:bg-teal-500/30 overflow-x-hidden pb-20">
       <div className="absolute top-0 left-0 w-full h-[100vh] bg-[radial-gradient(circle_at_50%_0%,rgba(20,184,166,0.1),rgba(147,51,234,0.03)_40%,transparent_80%)] pointer-events-none" />
 
-      {/* NAVIGATION BAR */}
-      <nav className="fixed top-0 left-0 w-full z-[100] bg-[#0A080D]/80 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+      {/* NAVIGATION BAR - Fixed Mobile Layout */}
+      <nav className="fixed top-0 left-0 w-full z-[100] bg-[#0A080D]/90 backdrop-blur-xl border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           
-          {/* Left Group */}
-          <div className="flex items-center gap-6">
-            <button onClick={() => navigate('/library')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all">
-              <LibraryIcon size={16} />
-              <span className="text-[9px] font-black uppercase tracking-widest hidden sm:block">Library</span>
+          <div className="flex items-center gap-4 md:gap-6">
+            <button onClick={() => navigate('/library')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all p-2">
+              <LibraryIcon size={18} />
+              <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">Library</span>
             </button>
-            <button onClick={() => navigate('/horizon')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all">
-              <Compass size={16} />
-              <span className="text-[9px] font-black uppercase tracking-widest hidden sm:block">Horizon</span>
+            <button onClick={() => navigate('/horizon')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all p-2">
+              <Compass size={18} />
+              <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">Horizon</span>
             </button>
           </div>
           
-          {/* Right Group (The Login Button) */}
           <div className="flex items-center">
             <button 
               onClick={handleMemberLogin} 
-              className="flex items-center gap-2 text-white hover:text-teal-400 transition-all bg-white/5 px-4 py-2 rounded-full border border-white/10 hover:border-teal-500/50 shadow-sm"
+              className="flex items-center gap-2 text-white bg-white/5 px-4 py-2 rounded-full border border-white/10 hover:border-teal-500/50 transition-all active:scale-95"
             >
-              <span className="text-[9px] font-black uppercase tracking-widest">Log In</span>
+              <LogIn size={14} className="text-teal-400" />
+              <span className="text-[10px] font-black uppercase tracking-widest">Log In</span>
             </button>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-6 pt-32 pb-12 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 pt-24 md:pt-32 pb-12 relative z-10">
         <header className="mb-20 text-center">
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
@@ -192,7 +191,7 @@ const GroveTiers = ({ vault, onSync }) => {
         <section className="mb-32">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { icon: Zap, title: "The Reframing Engine", color: "text-teal-400", text: "Flip public-sector jargon into the outcome-based language corporate recruiters value most." },
+              { icon: Zap, title: "The Reframing Engine", color: "text-teal-400", text: "Flip your current experience into the outcome-based language recruiters value most." },
               { icon: FileText, title: "Wayfarer's Tools", color: "text-purple-400", text: "ATS-optimized resume templates and salary negotiation scripts designed for the Canadian market." },
               { icon: Map, title: "Market Topography", color: "text-amber-400", text: "Navigate RRSP matching, vacation negotiation, and provincial credential translation." }
             ].map((item, i) => (
@@ -267,7 +266,7 @@ const GroveTiers = ({ vault, onSync }) => {
                 
                 <div className="mb-12">
                   <p className="text-zinc-400 text-lg italic font-light leading-relaxed max-w-lg mx-auto">
-                    "To Matthew—thank you for holding the map while I figured out which way my horizon was shifting."
+                    "To those who hold the map while we figure out which way our horizon is shifting."
                   </p>
                 </div>
 
