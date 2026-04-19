@@ -85,21 +85,17 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
-  console.log("--- CONTACT COMPONENT RENDER CHECK ---");
-  console.log("isAdmin prop:", isAdmin);
-  console.log("vault tier:", vault?.tier);
-  console.log("MasterAdmin Logic Result:", (isAdmin === true || vault?.tier?.toLowerCase() === 'admin'));
-
 
   // --- REBUILT ACCESS LOGIC ---
   const normalizedTier = vault?.tier?.toLowerCase() || 'none';
   
-  // The Admin/Founder bypass
+  // Master bypass: If you're Admin, you're a god. 
+  // If not, we check for 'steward' or 'founding steward'.
   const isMasterAdmin = isAdmin === true || normalizedTier === 'admin' || vault?.standing === 'Founder';
 
   // Content Unlock Checks
-  const canAccessVerbs = isMasterAdmin || isSeedlingPlus || ['seedling', 'hearthkeeper', 'steward', 'founding steward'].includes(normalizedTier);
-  const canAccessHighTier = isMasterAdmin || ['hearthkeeper', 'steward', 'founding steward'].includes(normalizedTier);
+  const canAccessVerbs = isMasterAdmin || isSeedlingPlus || normalizedTier !== 'none';
+  const canAccessHighTier = isMasterAdmin || ['steward', 'founding steward'].includes(normalizedTier);
 
   const dynamicContent = generateDynamicScripts(vault);
 
