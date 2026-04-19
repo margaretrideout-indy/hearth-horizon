@@ -24,13 +24,18 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
   const [showLockSheet, setShowLockSheet] = useState(false);
   const [lockContext, setLockContext] = useState({ title: '', desc: '', target: 'Seedling' });
 
-  // --- LOGIC OVERRIDE: SEEDLING CONTENT IS NOW PUBLIC ---
-  const isRegistered = !!vault && vault.tier && vault.tier !== 'none';
-  const userTierLabel = isAdmin ? 'Founder' : (isRegistered ? vault.tier : 'Traveler');
-
-  // FORCE UNLOCK: This makes Volume II and the Strategy Deck accessible to EVERYONE.
-  const isSeedlingPlus = true; 
+  // --- REBUILT ACCESS LOGIC ---
+  const normalizedTier = vault?.tier?.toLowerCase() || 'none';
+  const isRegistered = !!vault && normalizedTier !== 'none';
   
+  // MASTER BYPASS: If you are Admin or Founder, all gates open.
+  const isMasterAdmin = isAdmin === true || normalizedTier === 'admin' || vault?.standing === 'Founder';
+  
+  // Tier Check for Volume 2
+  const isSeedlingPlus = isMasterAdmin || isRegistered; 
+
+  const userTierLabel = isMasterAdmin ? 'Founder' : (isRegistered ? vault.tier : 'Traveler');
+
   const handleRefresh = async () => {
     setIsRefreshing(true);
     if (onRefresh) await onRefresh();
@@ -81,7 +86,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
           </div>
           
           <div className="px-4 py-2 rounded-2xl border border-white/5 bg-[#16121D]/50 backdrop-blur-sm flex items-center gap-3">
-             <div className={`w-2 h-2 rounded-full ${isAdmin || isRegistered ? 'bg-teal-500 shadow-[0_0_8px_rgba(20,184,166,0.5)]' : 'bg-zinc-600'}`} />
+             <div className={`w-2 h-2 rounded-full ${isMasterAdmin || isRegistered ? 'bg-teal-500 shadow-[0_0_8px_rgba(20,184,166,0.5)]' : 'bg-zinc-600'}`} />
              <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">{userTierLabel} Standing</span>
           </div>
         </header>
@@ -177,7 +182,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
               </div>
             </section>
 
-            {/* 3. THE LOOKOUT - FULLY UNLOCKED */}
+            {/* 3. THE LOOKOUT */}
             <section className="pb-32">
               <div className="mb-8 flex items-center gap-4">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500 whitespace-nowrap">The Lookout</h3>
@@ -189,7 +194,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
               >
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-10">
-                    <div className="bg-teal-500/10 text-teal-400 px-4 py-1.5 rounded-full text-[9px] font-black uppercase italic border border-teal-500/20 shadow-lg">Public Resource</div>
+                    <div className="bg-teal-500/10 text-teal-400 px-4 py-1.5 rounded-full text-[9px] font-black uppercase italic border border-teal-500/20 shadow-lg">Strategic Resource</div>
                   </div>
                   <h4 className="text-4xl text-white font-serif italic mb-6 leading-tight">Master Strategy Deck</h4>
                   <p className="text-sm text-zinc-400 italic mb-12 leading-relaxed max-w-md">The primary blueprint for your career migration and resignation protocol.</p>
@@ -204,18 +209,18 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
             </section>
           </motion.div>
         ) : (
-          /* VOLUME II CONTENT - SEEDLING CARDS NOW UNLOCKED */
+          /* VOLUME II CONTENT */
           <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="pb-32">
              <Provisions 
                vault={vault} 
                isAdmin={isAdmin} 
-               isSeedlingPlus={true}
+               isSeedlingPlus={isSeedlingPlus}
                onRefresh={onRefresh}
              />
           </motion.div>
         )}
 
-        {/* VOLUME NAV - UNLOCKED FOR ALL */}
+        {/* VOLUME NAV */}
         <div className="fixed bottom-6 left-0 right-0 z-[110] px-6 pointer-events-none">
           <div className="max-w-md mx-auto pointer-events-auto">
             <div className="flex p-2 bg-[#16121D]/80 backdrop-blur-xl rounded-[2.5rem] border border-white/10 shadow-2xl">
