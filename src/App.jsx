@@ -38,10 +38,9 @@ export default function App() {
   });
 
   // --- ACCESS CALCULATION ---
-  // This recalculates on every render to ensure isAdmin overrides everything
   const currentTier = vault?.tier?.toLowerCase() || 'none';
   const isRegistered = currentTier !== 'none' && currentTier !== 'traveler';
-  const isSeedlingPlus = isAdmin || isRegistered || currentTier === 'admin';
+  const isSeedlingPlus = isAdmin || isRegistered || currentTier === 'admin' || currentTier === 'steward';
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -73,7 +72,8 @@ export default function App() {
           setVault(prev => ({ 
             ...prev, 
             email: user.email,
-            tier: isSystemAdmin ? "admin" : normalizedTier,
+            // FORCE STEWARD TIER FOR ADMINS
+            tier: isSystemAdmin ? "steward" : normalizedTier,
             standing: displayStanding,
             archetype: user.archetype || prev.archetype
           }));
@@ -87,7 +87,6 @@ export default function App() {
     checkAuth();
   }, []);
 
-  // Persist to local storage whenever vault changes
   useEffect(() => {
     if (!isInitializing) {
       localStorage.setItem('hearth_vault_data', JSON.stringify(vault));
@@ -106,7 +105,8 @@ export default function App() {
         setVault(prev => ({ 
           ...prev, 
           ...user, 
-          tier: isSystemAdmin ? "admin" : (user.tier?.trim().toLowerCase() || "none"),
+          // FORCE STEWARD TIER ON SYNC FOR ADMINS
+          tier: isSystemAdmin ? "steward" : (user.tier?.trim().toLowerCase() || "none"),
           lastSync: new Date().toISOString() 
         }));
       }
