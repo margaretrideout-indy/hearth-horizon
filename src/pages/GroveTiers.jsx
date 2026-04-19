@@ -6,7 +6,7 @@ import {
   MoreVertical, Star, Library as LibraryIcon, Compass, ArrowRight, LogIn 
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { Input } from '@/components/ui/input';
+
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LINK_HEARTHKEEPER = 'https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03';
@@ -242,8 +242,8 @@ const GroveTiers = ({ vault, onSync }) => {
             ) : (
               <form onSubmit={handleContactSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input required placeholder="Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="bg-white/5 border-white/10" />
-                  <Input required type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="bg-white/5 border-white/10" />
+                  <input required placeholder="Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-teal-500/50" />
+                  <input required type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-teal-500/50" />
                 </div>
                 <textarea required rows="4" placeholder="Your inquiry..." value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm text-white focus:outline-none focus:border-teal-500/50" />
                 <button type="submit" className="w-full py-5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-2xl text-[10px] font-black uppercase hover:bg-teal-500 hover:text-black transition-all">
