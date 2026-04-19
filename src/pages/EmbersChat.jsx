@@ -1,30 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Flame, Send, Sparkles, Loader2, Leaf, Heart, X, Zap } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Send, Sparkles, Loader2, Leaf, Heart, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 
 const TOS_TEXT = "This is a sanctuary of reciprocity. We support, we don't vent. We build, we don't break.";
-
-// --- THE GLOW'S WEEKLY PROMPTS ---
-const WEEKLY_GLOWS = [
-  "What is one legacy skill you are officially 'retiring' this month?",
-  "Identify one person in this room you can advocate for today. Who is it?",
-  "If your career was a 'migration', are you currently in the storm or the sun?",
-  "What is the 'unwritten rule' in your target industry that surprised you most?",
-  "What is one 'small win' from the last 48 hours that felt bigger than it was?",
-  "Who in your network is currently 'stuck', and how can you nudge them today?",
-  "Describe your ideal work-day in 2027 using only three power verbs."
-];
-
-const getWeekIndex = () => {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 1);
-  const diff = now - start;
-  const oneWeek = 1000 * 60 * 60 * 24 * 7;
-  return Math.floor(diff / oneWeek) % WEEKLY_GLOWS.length;
-};
 
 const EmberReactions = () => {
   const [counts, setCounts] = useState({ sparkle: 0, leaf: 0, heart: 0 });
@@ -52,8 +34,6 @@ const TierBadge = ({ tier }) => {
     founder: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
     steward: 'bg-teal-500/20 text-teal-400 border-teal-500/30',
     hearthkeeper: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
-    // Add this one for the bot
-    kindling: 'bg-yellow-400/10 text-yellow-500 border-yellow-500/20 animate-pulse', 
   };
   const style = configs[t] || 'bg-zinc-800 text-zinc-500 border-white/5';
   const label = t ? (t.charAt(0).toUpperCase() + t.slice(1)) : 'Seedling';
@@ -75,16 +55,6 @@ export default function EmbersChat({ vault, isAdmin }) {
     author_email: 'founder@hearth.io',
     created_date: new Date(0).toISOString()
   };
-
-  const THE_GLOW = {
-    id: 'weekly-glow-bot',
-    author_name: 'The Glow',
-    content: WEEKLY_GLOWS[getWeekIndex()],
-    subscription_tier: 'Kindling', // This maps to the TierBadge
-    author_email: 'glows@hearth.io',
-    is_bot: true,
-    created_date: new Date().toISOString()
-};
 
   const fetchPosts = async () => {
     try {
@@ -132,30 +102,22 @@ export default function EmbersChat({ vault, isAdmin }) {
     }
   };
 
-  const allPosts = [FIXED_STARTER, THE_GLOW, ...posts];
+  const allPosts = [FIXED_STARTER, ...posts];
 
   return (
     <div className="flex flex-col h-full w-full bg-[#0A080D] overflow-hidden relative border border-white/5 shadow-2xl">
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar pb-36">
         {allPosts.map((msg, idx) => {
           const isOwn = msg.author_email === vault?.email;
-          const isSpark = msg.author_email === 'spark@hearth.io';
 
           return (
             <motion.div key={msg.id || idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'}`}>
               <div className="flex items-center gap-2 mb-2">
-                <span className={`text-[10px] font-black uppercase tracking-widest ${isSpark ? 'text-teal-400 animate-pulse' : 'text-zinc-500'}`}>
-                   {isSpark && <Zap size={8} className="inline mr-1 mb-0.5" />}
-                   {msg.author_name}
-                </span>
+                <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{msg.author_name}</span>
                 <TierBadge tier={msg.subscription_tier} />
               </div>
-              <div className={`max-w-[80%] p-4 rounded-2xl border transition-all ${
-                isOwn ? 'bg-teal-500/10 border-teal-500/20 text-white' : 
-                isSpark ? 'bg-gradient-to-br from-teal-500/20 to-purple-500/20 border-teal-500/30 text-teal-50 shadow-[0_0_20px_rgba(20,184,166,0.15)]' :
-                'bg-white/5 border-white/5 text-zinc-300'
-              }`}>
-                <p className={`text-sm leading-relaxed ${isSpark ? 'font-medium italic' : ''}`}>{msg.content}</p>
+              <div className={`max-w-[80%] p-4 rounded-2xl border ${isOwn ? 'bg-teal-500/10 border-teal-500/20 text-white' : 'bg-white/5 border-white/5 text-zinc-300'}`}>
+                <p className="text-sm leading-relaxed">{msg.content}</p>
               </div>
               <div className="flex items-center gap-3 mt-1">
                 <button onClick={() => setReplyTarget(msg)} className="text-[9px] font-black text-zinc-600 hover:text-teal-400 uppercase tracking-widest transition-colors">Reply</button>
@@ -180,7 +142,7 @@ export default function EmbersChat({ vault, isAdmin }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Add to the glow..."
-            className="flex-1 bg-white/5 border-white/10 h-14 rounded-2xl text-white"
+            className="flex-1 bg-white/5 border-white/10 h-14 rounded-2xl"
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           />
           <Button onClick={handleSend} disabled={!input.trim() || sending} className="w-14 h-14 bg-teal-500 text-black rounded-2xl shadow-lg shadow-teal-500/20">
