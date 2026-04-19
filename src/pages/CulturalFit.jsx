@@ -34,7 +34,7 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
   const [manualInput, setManualInput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [bridgeData, setBridgeData] = useState(null);
-  const [copied, setCopied] = useState(false);
+  const [copiedKey, setCopiedKey] = useState(null);
   const [selectedPath, setSelectedPath] = useState(null);
   const [ethicalPriorities, setEthicalPriorities] = useState(vault?.ethics || []);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
@@ -70,10 +70,12 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
   const handleDecode = () => {
     if (!manualInput) return;
     setIsGenerating(true);
-    setTimeout(() => {
-      const core = manualInput.trim().toLowerCase()
-        .replace(/^(managed|led|taught|designed|created|organized|facilitated|coordinated|developed|ran)\s+/i, "");
+    
+    // Process input
+    const core = manualInput.trim().toLowerCase()
+      .replace(/^(managed|led|taught|designed|created|organized|facilitated|coordinated|developed|ran)\s+/i, "");
 
+    setTimeout(() => {
       setBridgeData({
         pm: `Strategic orchestration of ${core}, focusing on high-velocity milestone delivery and cross-functional stakeholder alignment.`,
         data: `Quantitative synthesis of ${core} ecosystems to derive actionable, data-driven intelligence for leadership.`,
@@ -81,6 +83,8 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
         exec: `High-level visioning and governance of ${core} initiatives to drive long-term enterprise value and growth.`,
         creative: `Narrative-driven reimagining of ${core}, blending aesthetic innovation with user-centric functionality.`
       });
+      
+      setManualInput(""); // CLEAR INPUT AFTER GENERATION
       setIsGenerating(false);
     }, 1800);
   };
@@ -91,10 +95,10 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
     { domain: "Strategy & Implementation", salary: "$95k - $155k", fit: 88, velocity: "Emerging", desc: "Translating complex visions into reality.", key: 'data' }
   ];
 
-  const handleCopy = (text) => {
+  const handleCopy = (text, key) => {
     navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2000);
   };
 
   const canNavigateTo = (step) => {
@@ -164,9 +168,19 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
                     </div>
                     <div className="grid gap-4">
                       {['pm', 'data', 'ops'].map((key) => (
-                        <div key={key} className={`p-6 rounded-[2rem] border transition-all ${bridgeData ? 'border-teal-500/30 bg-teal-500/5' : 'border-white/5 opacity-40'} text-left`}>
-                          <span className="text-[9px] font-black text-teal-500/60 uppercase tracking-widest">{key === 'pm' ? 'Strategy' : key === 'data' ? 'Analysis' : 'Operations'}</span>
-                          <p className="text-zinc-300 italic font-serif mt-2">{bridgeData ? bridgeData[key] : 'Waiting for input...'}</p>
+                        <div key={key} className={`p-6 rounded-[2rem] border transition-all relative group ${bridgeData ? 'border-teal-500/30 bg-teal-500/5' : 'border-white/5 opacity-40'} text-left`}>
+                          <div className="flex justify-between items-start">
+                            <span className="text-[9px] font-black text-teal-500/60 uppercase tracking-widest">{key === 'pm' ? 'Strategy' : key === 'data' ? 'Analysis' : 'Operations'}</span>
+                            {bridgeData && (
+                              <button 
+                                onClick={() => handleCopy(bridgeData[key], key)}
+                                className="text-zinc-500 hover:text-teal-400 transition-colors"
+                              >
+                                {copiedKey === key ? <Check size={14} className="text-teal-400" /> : <Copy size={14} />}
+                              </button>
+                            )}
+                          </div>
+                          <p className="text-zinc-300 italic font-serif mt-2 pr-8">{bridgeData ? bridgeData[key] : 'Waiting for input...'}</p>
                         </div>
                       ))}
                     </div>
@@ -243,11 +257,11 @@ export default function CulturalFit({ vault, onSync, isAdmin }) {
                   <h3 className="text-5xl font-serif italic text-white">Your New <span className="text-zinc-800 not-italic uppercase font-black">Architecture</span></h3>
                 </div>
                 <div className="p-10 bg-black/40 rounded-[2rem] border border-white/5 text-left italic font-serif text-2xl text-zinc-300">
-                   "{bridgeData[selectedPath.key]}"
+                    "{bridgeData[selectedPath.key]}"
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button onClick={() => handleCopy(bridgeData[selectedPath.key])} className="h-20 flex-1 bg-white/5 text-white font-black uppercase rounded-2xl gap-3">
-                    {copied ? <Check /> : <Copy />} {copied ? "Copied" : "Copy Translation"}
+                  <Button onClick={() => handleCopy(bridgeData[selectedPath.key], 'final')} className="h-20 flex-1 bg-white/5 text-white font-black uppercase rounded-2xl gap-3">
+                    {copiedKey === 'final' ? <Check /> : <Copy />} {copiedKey === 'final' ? "Copied" : "Copy Translation"}
                   </Button>
                   <Button 
                     onClick={() => {
