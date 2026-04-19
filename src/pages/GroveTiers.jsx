@@ -178,7 +178,7 @@ const GroveTiers = ({ vault, onSync }) => {
           >
              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-teal-500/20 to-transparent" />
             <p className="relative z-10 text-base md:text-lg text-zinc-300 font-light leading-relaxed mb-10 italic">
-              "As an Indigenous educator with 13 years in the classroom, I’ve learned that a professional shift is more than a move—it's a migration of the self. This is the sanctuary for those ready to anchor themselves in community while they write their next chapter."
+              "As an Indigenous educator with 13 years in the classroom, I’ve learned that a professional shift is more than a move- it's a migration of the self. This is the sanctuary for those ready to anchor themselves in community while they write their next chapter."
             </p>
             <div className="relative z-10 flex flex-col items-center gap-3">
               <span className="text-white font-serif italic text-xl md:text-2xl">— Margaret, Founder</span>
@@ -276,7 +276,7 @@ const GroveTiers = ({ vault, onSync }) => {
 
                 {/* THE LIST (Placeholder for future names) */}
                 <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-12 opacity-40">
-                   {['Matthew P.', 'Joining Soon...', 'Joining Soon...', 'Joining Soon...'].map((name, i) => (
+                   {['Matthew R.', 'Joining Soon...', 'Joining Soon...', 'Joining Soon...'].map((name, i) => (
                      <span key={i} className="text-[10px] font-black uppercase tracking-widest text-zinc-500 border-b border-white/10 pb-1">
                        {name}
                      </span>
