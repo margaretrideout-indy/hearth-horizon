@@ -93,7 +93,7 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
   const canAccessVerbs = true; 
   
   // FIXED HIGH TIER LOGIC: If isAdmin is true, this is ALWAYS true.
-  const canAccessHighTier = isAdmin || ['hearthkeeper', 'steward', 'founding steward', 'admin'].includes(normalizedTier);
+  const canAccessHighTier = Boolean(isAdmin) || ['hearthkeeper', 'steward', 'founding steward', 'admin'].includes(normalizedTier);
 
   const dynamicContent = generateDynamicScripts(vault);
 
