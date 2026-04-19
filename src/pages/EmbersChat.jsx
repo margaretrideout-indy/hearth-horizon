@@ -1,11 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Flame, Send, Sparkles, Loader2, Leaf, Heart, X } from 'lucide-react';
+import { Flame, Send, Sparkles, Loader2, Leaf, Heart, X, Zap } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 
 const TOS_TEXT = "This is a sanctuary of reciprocity. We support, we don't vent. We build, we don't break.";
+
+// --- DATA: THE SPARKS ---
+const SPARKS = [
+  "What's one win today?",
+  "Seeking perspective on...",
+  "Gratitude for this group.",
+  "New milestone reached!",
+  "Just listening in."
+];
 
 const EmberReactions = () => {
   const [counts, setCounts] = useState({ sparkle: 0, leaf: 0, heart: 0 });
@@ -78,16 +87,18 @@ export default function EmbersChat({ vault, isAdmin }) {
     }
   }, [posts]);
 
-  const handleSend = async () => {
-    if (!input.trim() || sending) return;
+  const handleSend = async (forcedContent) => {
+    const contentToSend = forcedContent || input;
+    if (!contentToSend.trim() || sending) return;
+    
     setSending(true);
     try {
       await base44.entities.EmberPost.create({
         author_name: vault?.email?.split('@')[0] || 'Traveler',
         author_email: vault?.email || 'anonymous',
         content: replyTarget
-          ? `↩ @${replyTarget.author_name}: "${replyTarget.content.substring(0, 40)}..." — ${input}`
-          : input,
+          ? `↩ @${replyTarget.author_name}: "${replyTarget.content.substring(0, 40)}..." — ${contentToSend}`
+          : contentToSend,
         subscription_tier: isAdmin ? 'Founder' : (vault?.standing || 'Seedling'),
         is_bot: false,
       });
@@ -105,7 +116,8 @@ export default function EmbersChat({ vault, isAdmin }) {
 
   return (
     <div className="flex flex-col h-full w-full bg-[#0A080D] overflow-hidden relative border border-white/5 shadow-2xl">
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar pb-36">
+      {/* CHAT AREA */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar pb-48">
         {allPosts.map((msg, idx) => {
           const isOwn = msg.author_email === vault?.email;
           return (
@@ -126,7 +138,10 @@ export default function EmbersChat({ vault, isAdmin }) {
         })}
       </div>
 
+      {/* INPUT FOOTER */}
       <footer className="absolute bottom-0 left-0 right-0 p-4 bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 z-50">
+        
+        {/* REPLY PREVIEW */}
         <AnimatePresence>
           {replyTarget && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="mb-3 p-3 bg-teal-500/5 border border-teal-500/20 rounded-xl flex justify-between items-center">
@@ -135,6 +150,22 @@ export default function EmbersChat({ vault, isAdmin }) {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* SPARK PROMPTS (Hidden if user is typing) */}
+        {!input && !replyTarget && (
+          <div className="flex gap-2 overflow-x-auto pb-3 no-scrollbar">
+            {SPARKS.map((spark, i) => (
+              <button 
+                key={i} 
+                onClick={() => handleSend(spark)}
+                className="whitespace-nowrap px-3 py-1.5 rounded-full bg-teal-500/5 border border-teal-500/10 text-[9px] font-black text-teal-400/70 uppercase tracking-tighter hover:bg-teal-500/10 hover:text-teal-400 transition-all flex items-center gap-1"
+              >
+                <Zap size={8} /> {spark}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className="flex gap-2 max-w-4xl mx-auto">
           <Input
             value={input}
@@ -143,7 +174,7 @@ export default function EmbersChat({ vault, isAdmin }) {
             className="flex-1 bg-white/5 border-white/10 h-14 rounded-2xl"
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           />
-          <Button onClick={handleSend} disabled={!input.trim() || sending} className="w-14 h-14 bg-teal-500 text-black rounded-2xl shadow-lg shadow-teal-500/20">
+          <Button onClick={() => handleSend()} disabled={!input.trim() || sending} className="w-14 h-14 bg-teal-500 text-black rounded-2xl shadow-lg shadow-teal-500/20">
             {sending ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
           </Button>
         </div>
