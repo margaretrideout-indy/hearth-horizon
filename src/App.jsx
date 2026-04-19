@@ -41,8 +41,10 @@ export default function App() {
       try {
         const user = await base44.auth.me();
         if (user) {
-          // 1. Hard-code the Founder Identity
-          const isSystemAdmin = user.role === 'admin' || user.email === 'margaretpardy@gmail.com'; 
+          // 1. Hard-code the Founder Identity with safety normalization
+          const userEmail = user.email ? user.email.toLowerCase().trim() : '';
+          const isSystemAdmin = user.role === 'admin' || userEmail === 'margaretpardy@gmail.com'; 
+          
           setIsAdmin(isSystemAdmin);
           
           // 2. Normalize Tier Strings
@@ -65,6 +67,7 @@ export default function App() {
     checkAuth();
   }, []);
 
+  // Persistent storage sync
   useEffect(() => {
     if (!isInitializing) {
       localStorage.setItem('hearth_vault_data', JSON.stringify(vault));
@@ -184,7 +187,6 @@ export default function App() {
             <Routes>
               <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/culture" element={<CulturalFit vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
-              {/* Ensure isAdmin and vault are passed correctly here */}
               <Route path="/contact" element={<Contact vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/" element={<Navigate to="/grove" replace />} />
