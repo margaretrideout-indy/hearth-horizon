@@ -16,9 +16,9 @@ export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // States
   const [isAdmin, setIsAdmin] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
+  
   const [vault, setVault] = useState(() => {
     const saved = localStorage.getItem('hearth_vault_data');
     if (saved) {
@@ -31,61 +31,58 @@ export default function App() {
       resume: null, 
       standing: "Traveler", 
       tier: "none", 
+      email: null,
       lastSync: null 
     };
   });
 
-  // Auth & Identity Check
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const user = await base44.auth.me();
         if (user) {
-          // Absolute Founder Authority
+          // 1. Hard-code the Founder Identity
           const isSystemAdmin = user.role === 'admin' || user.email === 'margaretpardy@gmail.com'; 
           setIsAdmin(isSystemAdmin);
           
-          if (user.tier) {
-            const currentTier = user.tier.toLowerCase();
-            setVault(prev => ({ 
-              ...prev, 
-              tier: currentTier,
-              standing: user.tier 
-            }));
-          }
+          // 2. Normalize Tier Strings
+          // This prevents the "Hearthkeeper" vs "hearthkeeper" mismatch
+          const rawTier = user.tier ? user.tier.trim() : "Traveler";
+          const normalizedTier = rawTier.toLowerCase();
+          
+          setVault(prev => ({ 
+            ...prev, 
+            email: user.email,
+            tier: normalizedTier,
+            // Standing is the 'Display Name' of the rank
+            standing: isSystemAdmin ? 'Admin' : rawTier
+          }));
         }
       } catch (e) {
-        console.log("Guest session active.");
+        console.warn("Guest session active.");
       } finally {
-        // This ensures we don't render the UI until we know the user's status
+        // Only allow the app to render once we have finished the auth check
         setIsInitializing(false);
       }
     };
     checkAuth();
   }, []);
 
+  // Persistent storage sync
   useEffect(() => {
-    localStorage.setItem('hearth_vault_data', JSON.stringify(vault));
-  }, [vault]);
-
-  const handleAccountDeletion = () => {
-    setVault({ 
-      pulses: [], 
-      archetype: null, 
-      alignmentScore: 0, 
-      resume: null, 
-      standing: "Traveler", 
-      tier: "none", 
-      lastSync: null 
-    });
-    localStorage.clear();
-    sessionStorage.clear();
-    navigate('/grove');
-  };
+    if (!isInitializing) {
+      localStorage.setItem('hearth_vault_data', JSON.stringify(vault));
+    }
+  }, [vault, isInitializing]);
 
   const handleSync = (newData) => {
-    if (newData === null) handleAccountDeletion();
-    else setVault(prev => ({ ...prev, ...newData }));
+    if (newData === null) {
+      setVault({ pulses: [], standing: "Traveler", tier: "none", email: null });
+      localStorage.clear();
+      navigate('/grove');
+    } else {
+      setVault(prev => ({ ...prev, ...newData }));
+    }
   };
 
   const mainTabs = ['/hearth', '/library', '/horizon', '/embers'];
@@ -146,7 +143,7 @@ export default function App() {
     );
   };
 
-  // BLOCK RENDERING UNTIL AUTH IS RESOLVED
+  // Hard Authentication Guard
   if (isInitializing) {
     return (
       <div className="h-screen w-full bg-[#0A080D] flex items-center justify-center">
