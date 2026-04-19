@@ -46,7 +46,6 @@ export default function App() {
           setIsAdmin(isSystemAdmin);
           
           // 2. Normalize Tier Strings
-          // This prevents the "Hearthkeeper" vs "hearthkeeper" mismatch
           const rawTier = user.tier ? user.tier.trim() : "Traveler";
           const normalizedTier = rawTier.toLowerCase();
           
@@ -54,21 +53,18 @@ export default function App() {
             ...prev, 
             email: user.email,
             tier: normalizedTier,
-            // Standing is the 'Display Name' of the rank
             standing: isSystemAdmin ? 'Admin' : rawTier
           }));
         }
       } catch (e) {
         console.warn("Guest session active.");
       } finally {
-        // Only allow the app to render once we have finished the auth check
         setIsInitializing(false);
       }
     };
     checkAuth();
   }, []);
 
-  // Persistent storage sync
   useEffect(() => {
     if (!isInitializing) {
       localStorage.setItem('hearth_vault_data', JSON.stringify(vault));
@@ -143,7 +139,6 @@ export default function App() {
     );
   };
 
-  // Hard Authentication Guard
   if (isInitializing) {
     return (
       <div className="h-screen w-full bg-[#0A080D] flex items-center justify-center">
@@ -189,6 +184,7 @@ export default function App() {
             <Routes>
               <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/culture" element={<CulturalFit vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+              {/* Ensure isAdmin and vault are passed correctly here */}
               <Route path="/contact" element={<Contact vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/" element={<Navigate to="/grove" replace />} />
