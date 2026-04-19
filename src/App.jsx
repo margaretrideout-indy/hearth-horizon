@@ -38,8 +38,9 @@ export default function App() {
   });
 
   // --- ACCESS CALCULATION ---
-  // This is the "Master Key" logic. We define it once here so it stays consistent.
   const isRegistered = !!vault && vault.tier && vault.tier !== 'none';
+  // Note: Library.jsx now hardcodes this to true for the public unlock, 
+  // but we keep the logic here for other potential uses.
   const isSeedlingPlus = isAdmin || isRegistered;
 
   useEffect(() => {
@@ -49,7 +50,6 @@ export default function App() {
         if (user) {
           const userEmail = user.email ? user.email.toLowerCase().trim() : '';
           
-          // FOUNDER OVERRIDE
           const isSystemAdmin = user.role === 'admin' || userEmail === 'margaretpardy@gmail.com'; 
           
           setIsAdmin(isSystemAdmin);
@@ -92,13 +92,15 @@ export default function App() {
     }
   }, [vault, isInitializing]);
 
-  const handleSync = (newData) => {
-    if (newData === null) {
-      setVault({ pulses: [], standing: "Traveler", tier: "none", email: null });
-      localStorage.clear();
-      navigate('/grove');
-    } else {
-      setVault(prev => ({ ...prev, ...newData }));
+  const handleSync = async () => {
+    // This function acts as the refresh trigger for child components
+    try {
+      const user = await base44.auth.me();
+      if (user) {
+        setVault(prev => ({ ...prev, ...user, lastSync: new Date().toISOString() }));
+      }
+    } catch (e) {
+      console.error("Sync failed", e);
     }
   };
 
@@ -186,13 +188,11 @@ export default function App() {
           <Routes>
             <Route path="/hearth" element={<YourHearth vault={vault} onSync={handleSync} isAdmin={isAdmin} onNavigateToHorizon={() => navigate('/horizon')} />} />
             
-            {/* 1. LIBRARY: Pass down the Access Keys */}
             <Route path="/library" element={
               <Library 
                 vault={vault} 
-                onSync={handleSync} 
+                onRefresh={handleSync} 
                 isAdmin={isAdmin} 
-                isSeedlingPlus={isSeedlingPlus} 
               />
             } />
 
@@ -202,13 +202,12 @@ export default function App() {
             
             <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             
-            {/* 2. CONTACT: Also pass down isSeedlingPlus here so the standalone page works */}
             <Route path="/contact" element={
               <Contact 
                 vault={vault} 
-                onSync={handleSync} 
+                onRefresh={handleSync} 
                 isAdmin={isAdmin} 
-                isSeedlingPlus={isSeedlingPlus} 
+                isSeedlingPlus={true} 
               />
             } />
 
