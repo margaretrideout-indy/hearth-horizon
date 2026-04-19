@@ -51,7 +51,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync, onN
       text: reflection
     };
     
-    await onSync({ pulses: [newPulse, ...(vault.pulses || [])] });
+    await onSync({ ...vault, pulses: [newPulse, ...(vault.pulses || [])] });
     
     setReflection("");
     setSelectedEmoji(null);
