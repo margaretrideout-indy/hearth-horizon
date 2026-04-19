@@ -202,19 +202,34 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                       {studyTab === 'amazon' ? (
                         <motion.div key="amz" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                           <h4 className="text-3xl text-white font-serif italic mb-4">Curated Gear</h4>
-                          <p className="text-zinc-500 mb-8 max-w-lg">Hand-picked ergonomic and organizational tools specifically for professional migrants.</p>
-                          <a href={AMZ_PROVISIONS_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-teal-500 text-black px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-teal-400 transition-all">
-                            Visit Storefront <ExternalLink size={14} />
-                          </a>
-                          <p className="mt-8 text-[8px] text-zinc-700 uppercase italic font-bold">{AMZ_LEGAL}</p>
+                          <p className="text-zinc-500 mb-6 max-w-lg">Hand-picked ergonomic and organizational tools specifically for professional migrants.</p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                            {[
+                              { label: "The Desk Set", url: "https://www.amazon.ca/hz/wishlist/ls/3MQJ7V1EQV93P?ref_=wl_share" },
+                              { label: "The Toolkit", url: "https://www.amazon.ca/hz/wishlist/ls/WUQBYPAD7FSN?ref_=wl_share" },
+                              { label: "The Study", url: "https://www.amazon.ca/hz/wishlist/ls/2WS5M8FIVKJBV?ref_=wl_share" },
+                              { label: "The Wardrobe", url: "https://www.amazon.ca/hz/wishlist/ls/2BZUUE2ZJL0EL?ref_=wl_share" }
+                            ].map((list) => (
+                              <a key={list.label} href={list.url} target="_blank" rel="noreferrer"
+                                className="flex items-center justify-between gap-3 bg-black/40 border border-white/10 px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-300 hover:border-teal-500/40 hover:text-teal-400 transition-all">
+                                {list.label} <ExternalLink size={12} />
+                              </a>
+                            ))}
+                          </div>
+                          <p className="text-[8px] text-zinc-700 uppercase italic font-bold">{AMZ_LEGAL}</p>
                         </motion.div>
                       ) : (
                         <motion.div key="books" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                           <h4 className="text-3xl text-white font-serif italic mb-4">The Bookshop</h4>
                           <p className="text-zinc-500 mb-8 max-w-lg">Literature and deep-dives into industry culture, ethics, and transition strategy.</p>
-                          <a href={BOOKSHOP_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-purple-500 text-white px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-400 transition-all">
-                            View Archives <ArrowRight size={14} />
-                          </a>
+                          <div className="flex flex-col sm:flex-row gap-4">
+                            <a href={BOOKSHOP_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-purple-500 text-white px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-400 transition-all">
+                              Bookshop.org <ArrowRight size={14} />
+                            </a>
+                            <button disabled className="inline-flex items-center gap-3 bg-white/5 border border-white/10 text-zinc-600 px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest cursor-not-allowed opacity-50">
+                              Indigo — Coming Soon
+                            </button>
+                          </div>
                         </motion.div>
                       )}
                     </AnimatePresence>
