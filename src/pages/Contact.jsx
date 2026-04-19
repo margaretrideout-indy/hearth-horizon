@@ -1,7 +1,3 @@
-console.log("--- CONTACT COMPONENT RENDER CHECK ---");
-  console.log("isAdmin prop:", isAdmin);
-  console.log("vault tier:", vault?.tier);
-  console.log("MasterAdmin Logic Result:", (isAdmin === true || vault?.tier?.toLowerCase() === 'admin'));
 import React, { useState } from 'react';
 import { 
   FileText, ChevronDown, Zap, 
