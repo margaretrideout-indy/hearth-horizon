@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import React, { useState, useEffect, useRef } from 'react';
 import { Send, Sparkles, Loader2, Leaf, Heart, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
