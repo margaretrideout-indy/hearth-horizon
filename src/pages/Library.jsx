@@ -26,16 +26,18 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
 
   // --- DEFINITIVE FOUNDER & TIER LOGIC ---
   
-  // 1. If you are Admin, we force your tier to 'steward' regardless of what the vault says.
+  // 1. Admin/Founder Override: If isAdmin is true, they are effectively a 'steward' (max rank)
   const normalizedTier = isAdmin ? 'steward' : (vault?.tier?.toLowerCase() || 'none');
   const isRegistered = !!vault && vault.tier && vault.tier !== 'none';
 
-  // 2. Display Label: Use "Founder" for you, otherwise use the vault tier.
+  // 2. Display Label: Explicitly show "Founder" for admins
   const userTierLabel = isAdmin ? 'Founder' : (isRegistered ? vault.tier : 'Traveler');
 
-  // 3. ACCESS GATES: These now rely on the forced 'steward' status for Admin.
-  const isSteward = normalizedTier === 'steward'; 
+  // 3. ACCESS GATES: 
+  // Seedlings (and higher) now have access to Volume II and the Strategy Deck.
+  const isSteward = normalizedTier === 'steward' || isAdmin; 
   const isHearthkeeperPlus = isSteward || normalizedTier === 'hearthkeeper';
+  // Seedling Plus includes the base registered user (Seedling) or any higher tier.
   const isSeedlingPlus = isHearthkeeperPlus || normalizedTier === 'seedling' || isRegistered;
 
   const handleRefresh = async () => {
@@ -261,6 +263,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
                isAdmin={isAdmin} 
                currentVolume={currentVolume}
                onRefresh={onRefresh}
+               isSeedlingPlus={isSeedlingPlus} // Pass this down to unlock the Lexicon
              />
           </motion.div>
         )}
@@ -330,7 +333,7 @@ const Library = ({ vault, isAdmin, onRefresh }) => {
                   onClick={() => navigate('/grove')}
                   className="w-full py-6 rounded-2xl bg-purple-500 text-white font-black uppercase tracking-[0.2em] shadow-2xl shadow-purple-500/30 active:scale-95 transition-all mb-8"
                 >
-                    Become a {lockContext.target}
+                  Become a {lockContext.target}
                 </button>
                 
                 <button onClick={() => setShowLockSheet(false)} className="text-[10px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-400 transition-colors">
