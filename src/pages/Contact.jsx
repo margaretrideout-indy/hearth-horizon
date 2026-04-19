@@ -85,6 +85,11 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
+  console.log("--- CONTACT COMPONENT RENDER CHECK ---");
+  console.log("isAdmin prop:", isAdmin);
+  console.log("vault tier:", vault?.tier);
+  console.log("MasterAdmin Logic Result:", (isAdmin === true || vault?.tier?.toLowerCase() === 'admin'));
+
 
   // --- REBUILT ACCESS LOGIC ---
   const normalizedTier = vault?.tier?.toLowerCase() || 'none';
