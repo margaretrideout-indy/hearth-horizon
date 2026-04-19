@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// --- DATA: THE FULL 50 VERB LEXICON ---
 const powerVerbs = [
     { legacy: "Taught", horizon: "Facilitated", use: "Standardizing delivery for stakeholders." },
     { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
@@ -85,20 +86,14 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
 
-  // Define tier mapping
-  const tiers = { 
-    'none': 0, 'traveler': 0, 
-    'seedling': 1, 'seedling free': 1,
-    'hearthkeeper': 2, 
-    'steward': 3, 'founding steward': 3
-  };
+  // --- ACCESS LOGIC OVERRIDE ---
+  const normalizedTier = vault?.tier?.toLowerCase() || 'none';
   
-  // Calculate raw rank
-  let baseRank = tiers[vault?.tier?.toLowerCase()] || 0;
-  if (isSeedlingPlus && baseRank < 1) baseRank = 1;
-
-  // The final calculated rank for non-admins
-  const userRank = baseRank;
+  // SEEDLING CONTENT (LEXICON) IS ALWAYS UNLOCKED
+  const canAccessVerbs = true; 
+  
+  // HIGH TIER CONTENT REMAINS SECURED (OR BYPASS FOR ADMIN)
+  const canAccessHighTier = isAdmin || normalizedTier === 'hearthkeeper' || normalizedTier === 'steward' || normalizedTier === 'founding steward';
 
   const dynamicContent = generateDynamicScripts(vault);
 
@@ -109,11 +104,11 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
   };
 
   const trailKitResources = [
-    { id: 'verbs', title: "Power Verb Lexicon", type: "Seedlings+", icon: <Zap className="text-teal-400" />, requiredTier: 1 },
-    { id: 'ledger', title: "The Identity Ledger", type: "Hearthkeepers+", icon: <Fingerprint className="text-teal-400" />, requiredTier: 2 },
-    { id: 'resume', title: "Trailblazer's Blueprint", type: "Hearthkeepers+", icon: <FileText className="text-purple-400" />, requiredTier: 2 },
-    { id: 'outreach', title: "Sponsorship Outreach", type: "Stewards Only", icon: <Mail className="text-teal-400" />, requiredTier: 3 },
-    { id: 'scripts', title: "Salary Negotiations", type: "Stewards Only", icon: <DollarSign className="text-purple-400" />, requiredTier: 3 }
+    { id: 'verbs', title: "Power Verb Lexicon", desc: "Strategic verbs to replace legacy language.", type: "Public Access", icon: <Zap className="text-teal-400" />, isUnlocked: canAccessVerbs },
+    { id: 'ledger', title: "The Identity Ledger", desc: "Workbook & Deck to decouple your worth.", type: "Hearthkeepers+", icon: <Fingerprint className="text-teal-400" />, isUnlocked: canAccessHighTier },
+    { id: 'resume', title: "Trailblazer's Blueprint", desc: "ATS-optimized resume layout.", type: "Hearthkeepers+", icon: <FileText className="text-purple-400" />, isUnlocked: canAccessHighTier },
+    { id: 'outreach', title: "Sponsorship Outreach", desc: "Turn contacts into advocates.", type: "Stewards Only", icon: <Mail className="text-teal-400" />, isUnlocked: canAccessHighTier },
+    { id: 'scripts', title: "Salary Negotiations", desc: "Tactical word-for-word scripts.", type: "Stewards Only", icon: <DollarSign className="text-purple-400" />, isUnlocked: canAccessHighTier }
   ];
 
   return (
@@ -143,16 +138,15 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
       <div className="grid grid-cols-1 gap-4">
         {trailKitResources.map((tool, idx) => {
           
-          // --- THE UNBREAKABLE LOCK LOGIC ---
-          // If you are an Admin, isLocked is FORCE-FALSE. 
-          // Otherwise, check if userRank meets requirements.
-          const isLocked = isAdmin ? false : (userRank < tool.requiredTier);
-          
-          const isOpen = expandedCard === tool.id && !isLocked;
+          const isOpen = expandedCard === tool.id && tool.isUnlocked;
+          const isLocked = !tool.isUnlocked;
 
           return (
             <motion.div 
               key={tool.id} 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.1 }}
               className="flex flex-col group"
             >
               <button 
