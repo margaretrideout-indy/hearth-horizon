@@ -52,6 +52,8 @@ const TierBadge = ({ tier }) => {
     founder: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
     steward: 'bg-teal-500/20 text-teal-400 border-teal-500/30',
     hearthkeeper: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+    // Add this one for the bot
+    kindling: 'bg-yellow-400/10 text-yellow-500 border-yellow-500/20 animate-pulse', 
   };
   const style = configs[t] || 'bg-zinc-800 text-zinc-500 border-white/5';
   const label = t ? (t.charAt(0).toUpperCase() + t.slice(1)) : 'Seedling';
