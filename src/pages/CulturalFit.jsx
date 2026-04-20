@@ -83,8 +83,9 @@ export default function CulturalFit({ vault, onComplete }) {
         last_alignment_date: new Date().toISOString()
       });
       if (onComplete) onComplete({ ethics, lexicon: savedLexicon });
-      // Verified path for navigation
-      navigate("/horizon"); 
+      
+      // Points to Canopy (The Horizon Board)
+      navigate("/canopy"); 
     } catch (err) {
       console.error("Vault Sync Error:", err);
     } finally {
@@ -97,7 +98,7 @@ export default function CulturalFit({ vault, onComplete }) {
   return (
     <div className="max-w-4xl mx-auto py-12 px-6 bg-[#08070B] min-h-screen selection:bg-teal-500/30">
       
-      {/* TABS HEADER */}
+      {/* TABS HEADER - Consistent naming */}
       <div className="flex gap-10 mb-16 border-b border-white/5 relative">
         <button onClick={() => setActiveTab('lexicon')} className={`pb-5 text-[10px] font-black uppercase tracking-[0.4em] transition-all relative ${activeTab === 'lexicon' ? 'text-teal-400' : 'text-zinc-600 hover:text-zinc-400'}`}>
           Lexicon Alchemist
@@ -114,9 +115,9 @@ export default function CulturalFit({ vault, onComplete }) {
           <motion.div key="lexicon" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12 pb-20">
             <div className="space-y-4">
               <h2 className="text-5xl font-serif italic text-white tracking-tight leading-tight">Lexicon Alchemist</h2>
-              <p className="text-zinc-500 text-sm font-light italic">Enter your old-world responsibilities. Copy an alchemy to save it to your Hearth lexicon.</p>
+              <p className="text-zinc-500 text-sm font-light italic">Enter your old-world responsibilities to synthesize your Hearth lexicon.</p>
               <div className="relative group max-w-2xl mt-8">
-                <Input value={inputPhrase} onChange={(e) => setInputPhrase(e.target.value)} placeholder="e.g. Managed IEPs for high-schoolers..." className="bg-white/[0.03] border-white/10 h-20 rounded-3xl pl-16 text-xl text-zinc-200 focus:border-teal-500/40" />
+                <Input value={inputPhrase} onChange={(e) => setInputPhrase(e.target.value)} placeholder="e.g. Managed IEPs for 25 students..." className="bg-white/[0.03] border-white/10 h-20 rounded-3xl pl-16 text-xl text-zinc-200 focus:border-teal-500/40" />
                 <RefreshCw size={24} className={`absolute left-6 top-7 text-teal-500/30 transition-all duration-700 ${isAlchemizing ? 'animate-spin text-teal-400' : 'group-hover:rotate-180'}`} />
               </div>
             </div>
@@ -143,7 +144,7 @@ export default function CulturalFit({ vault, onComplete }) {
                 <div className="flex-1">
                     {savedLexicon.length > 0 && (
                         <div className="space-y-4">
-                            <span className="text-[10px] font-black uppercase text-teal-500/60 tracking-[0.4em] block">Stored Alchemies</span>
+                            <span className="text-[10px] font-black uppercase text-teal-500/60 tracking-[0.4em] block">Your Lexicon</span>
                             <div className="flex flex-wrap gap-3">
                                 {savedLexicon.map((word, idx) => (
                                     <span key={idx} className="px-4 py-2 bg-teal-500/10 border border-teal-500/20 text-teal-400 text-xs rounded-full font-bold">{word}</span>
@@ -153,10 +154,10 @@ export default function CulturalFit({ vault, onComplete }) {
                     )}
                 </div>
                 
-                {/* NAVIGATION TO NEXT STEP */}
+                {/* CLEAR PATH TO ETHICS CALCULATOR */}
                 <Button 
                     onClick={() => setActiveTab('ethics')} 
-                    className="group bg-white/5 border border-white/10 hover:border-purple-500/50 text-white font-black uppercase tracking-[0.2em] px-8 h-20 rounded-3xl transition-all"
+                    className="group bg-white/5 border border-white/10 hover:border-purple-500/50 text-white font-black uppercase tracking-[0.2em] px-10 h-20 rounded-3xl transition-all"
                 >
                     Next: Ethics Calculator <ArrowRight className="ml-3 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -180,7 +181,6 @@ export default function CulturalFit({ vault, onComplete }) {
               ))}
             </div>
             
-            {/* UPDATED BUTTON */}
             <Button 
                 onClick={handleFinalSync} 
                 disabled={isSyncing} 
