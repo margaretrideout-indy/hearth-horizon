@@ -192,7 +192,7 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
                             </div>
                             <div className="w-full h-14 bg-teal-500 text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3">Open Presentation <ExternalLink size={14} /></div>
                           </a>
-                          <a href="https://drive.google.com/file/d/1_OchgdOvWFJ6gbBWhnoSNwSiwUvo6-dmp/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="group/btn bg-black/40 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-white/20 transition-all">
+                          <a href="https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="group/btn bg-black/40 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-white/20 transition-all">
                             <div className="mb-10">
                               <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-zinc-500 mb-6"><ClipboardList size={20} /></div>
                               <h4 className="text-white font-serif italic text-xl mb-2 tracking-tight">Implementation Guide</h4>
