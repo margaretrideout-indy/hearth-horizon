@@ -41,12 +41,12 @@ const EmberReactions = () => {
           <button 
             key={type} 
             onClick={(e) => { e.stopPropagation(); react(type); }} 
-            className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all active:scale-90 group"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all active:scale-90 group"
           >
             <Icon 
               size={10} 
               className={`transition-all duration-300 ${
-                hasVotes ? `${color} opacity-100 scale-110` : 'text-zinc-400 opacity-30 group-hover:opacity-70'
+                hasVotes ? `${color} opacity-100 scale-110` : 'text-zinc-400 opacity-20 group-hover:opacity-60'
               }`} 
             />
             {hasVotes && <span className={`text-[9px] font-bold ${color}`}>{counts[type]}</span>}
@@ -79,25 +79,21 @@ export default function EmbersChat({ vault, isAdmin }) {
 
   const fetchPosts = async () => {
     try {
-      // Ensure your base44 entity name is exactly "EmberPost"
       const data = await base44.entities.EmberPost.list('-created_date', 50);
       setPosts(data.reverse());
     } catch (err) { 
-      console.error("Base44 Fetch Error:", err); 
+      console.error("Connection error:", err); 
     }
   };
 
   useEffect(() => {
     fetchPosts();
-    // Real-time subscription
     try {
       const unsubscribe = base44.entities.EmberPost.subscribe((e) => {
         if (e.type === 'create') setPosts(prev => [...prev, e.data]);
       });
       return unsubscribe;
-    } catch (err) {
-      console.error("Base44 Subscription Error:", err);
-    }
+    } catch (err) { console.error(err); }
   }, []);
 
   useEffect(() => {
@@ -117,26 +113,21 @@ export default function EmbersChat({ vault, isAdmin }) {
         reply_to_name: replyTarget?.author_name || null,
         reply_to_content: replyTarget?.content || null,
         subscription_tier: isAdmin ? 'Founder' : (vault?.standing || 'Seedling'),
-        created_date: new Date().toISOString()
       });
       setInput('');
       setReplyTarget(null);
-    } catch (err) { 
-      console.error("Base44 Send Error:", err); 
-    } finally { 
-      setSending(false); 
-    }
+    } catch (err) { console.error(err); } finally { setSending(false); }
   };
 
   const STATIC_POSTS = [
-    { id: 'glow', is_glow: true, content: getWeeklyPrompt(), author_name: 'The Glow', subscription_tier: 'Prompt' },
+    { id: 'glow', is_glow: true, content: getWeeklyPrompt(), author_name: 'The Hearth', subscription_tier: 'Hearth' },
     { id: 'welcome', author_name: 'Margaret', subscription_tier: 'Founder', content: "Welcome to the Embers Chat. This is our shared space to navigate the shifting winds of career migration. How are you arriving today?", author_email: 'founder@hearth.io' }
   ];
 
   const allMessages = [...STATIC_POSTS, ...posts];
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#070508] border border-white/5 overflow-hidden relative">
+    <div className="flex flex-col h-full w-full bg-[#070508] border border-white/5 overflow-hidden">
       
       {/* HEADER & LEGEND */}
       <div className="p-4 border-b border-white/5 bg-[#0A080D]/80 backdrop-blur-md shrink-0 z-20">
@@ -148,15 +139,15 @@ export default function EmbersChat({ vault, isAdmin }) {
           <Flame size={14} className="text-orange-500" />
         </div>
         <div className="flex items-center gap-4 border-t border-white/5 pt-3">
-          <div className="flex items-center gap-1.5 opacity-50">
+          <div className="flex items-center gap-1.5 opacity-40">
             <Sparkles size={10} className="text-teal-400" />
             <span className="text-[9px] uppercase font-bold tracking-tighter text-zinc-400">Inspiration</span>
           </div>
-          <div className="flex items-center gap-1.5 opacity-50">
+          <div className="flex items-center gap-1.5 opacity-40">
             <Leaf size={10} className="text-green-500" />
             <span className="text-[9px] uppercase font-bold tracking-tighter text-zinc-400">Growth</span>
           </div>
-          <div className="flex items-center gap-1.5 opacity-50">
+          <div className="flex items-center gap-1.5 opacity-40">
             <Heart size={10} className="text-rose-500" />
             <span className="text-[9px] uppercase font-bold tracking-tighter text-zinc-400">Connection</span>
           </div>
@@ -171,8 +162,7 @@ export default function EmbersChat({ vault, isAdmin }) {
           const isOwn = msg.author_email === vault?.email;
 
           return (
-            <motion.div key={msg.id || idx} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'}`}>
-              
+            <motion.div key={msg.id || idx} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'}`}>
               <div className="flex items-center gap-2 mb-1.5 px-1">
                 <span className={`text-[10px] font-black uppercase tracking-tighter ${isFounder ? 'text-purple-400' : isHearth ? 'text-orange-400' : 'text-zinc-500'}`}>
                   {msg.author_name}
@@ -191,13 +181,13 @@ export default function EmbersChat({ vault, isAdmin }) {
                     <span className="font-bold not-italic text-teal-400">@{msg.reply_to_name}:</span> {msg.reply_to_content}
                   </div>
                 )}
-                <p className={`text-sm leading-relaxed ${isHearth ? 'font-serif italic' : ''}`}>
+                <p className={`text-sm leading-relaxed ${isHearth ? 'font-serif italic text-md' : ''}`}>
                   {msg.content}
                 </p>
               </div>
 
               <div className={`flex items-center gap-3 mt-1 px-1 ${isOwn ? 'flex-row-reverse' : ''}`}>
-                <button onClick={() => setReplyTarget(msg)} className="text-[9px] font-black text-zinc-600 hover:text-teal-400 uppercase tracking-widest transition-colors flex items-center gap-1">
+                <button onClick={() => setReplyTarget(msg)} className="text-[9px] font-black text-zinc-600 hover:text-teal-400 uppercase tracking-widest flex items-center gap-1 transition-colors">
                   <MessageSquare size={10} /> Reply
                 </button>
                 <EmberReactions />
@@ -218,14 +208,8 @@ export default function EmbersChat({ vault, isAdmin }) {
           )}
         </AnimatePresence>
         <div className="flex gap-2 max-w-5xl mx-auto">
-          <Input 
-            value={input} 
-            onChange={(e) => setInput(e.target.value)} 
-            placeholder={replyTarget ? `Reply to ${replyTarget.author_name}...` : "Add to the embers..."} 
-            className="bg-white/5 border-white/10 h-12 rounded-xl focus-visible:ring-0 focus-visible:border-teal-500/50" 
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()} 
-          />
-          <Button onClick={handleSend} disabled={!input.trim() || sending} className="h-12 w-12 bg-teal-500 text-black rounded-xl hover:bg-teal-400 transition-all">
+          <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Add to the embers..." className="bg-white/5 border-white/10 h-12 rounded-xl focus-visible:ring-0 focus-visible:border-teal-500/50" onKeyDown={(e) => e.key === 'Enter' && handleSend()} />
+          <Button onClick={handleSend} disabled={!input.trim() || sending} className="h-12 w-12 bg-teal-500 text-black rounded-xl hover:bg-teal-400">
             {sending ? <Loader2 className="animate-spin" size={18} /> : <Send size={18} />}
           </Button>
         </div>
