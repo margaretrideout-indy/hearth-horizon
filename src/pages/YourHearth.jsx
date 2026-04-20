@@ -269,48 +269,55 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
           </Card>
 
           {/* DANGER ZONES: CONDITIONAL MODALS */}
-          <div className="pt-20">
-            <AnimatePresence mode="wait">
-              {!confirmZone ? (
-                <motion.button 
-                  key="trigger" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                  onClick={() => setConfirmZone('all')} 
-                  className="text-[10px] text-zinc-500 hover:text-rose-500 uppercase font-black tracking-widest flex items-center gap-2 mx-auto transition-colors"
-                >
-                  <Trash2 size={12} /> Extinguish Hearth
-                </motion.button>
-              ) : (
-                <motion.div 
-                  key="confirm" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
-                  className="p-10 bg-rose-500/[0.02] border border-rose-500/20 rounded-[2.5rem] max-w-sm mx-auto space-y-6"
-                >
-                  <AlertTriangle className="text-rose-500 mx-auto" size={32} />
-                  <div className="space-y-2 text-center">
-                    <h5 className="text-white font-black uppercase text-xs tracking-tighter">
-                      {confirmZone === 'archive' ? "Clear Legacy Archive?" : "Extinguish the Hearth?"}
-                    </h5>
-                    <p className="text-[10px] text-zinc-500 italic leading-relaxed">
-                      {confirmZone === 'archive' 
-                        ? "This will remove your Resume. You can re-upload at any time." 
-                        : "This will wipe EVERYTHING. Your alignment, your pulses, and your archive will be lost to the wind."}
-                    </p>
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    <Button 
-                      onClick={confirmZone === 'archive' 
-                        ? () => { onSync({ ...vault, resume: null }); setConfirmZone(null); triggerToast("Archive cleared."); } 
-                        : handleFullWipe
-                      } 
-                      className="bg-rose-500 text-white font-black uppercase w-full rounded-xl"
-                    >
-                      {confirmZone === 'archive' ? "Confirm Delete" : "Wipe Everything"}
-                    </Button>
-                    <button onClick={() => setConfirmZone(null)} className="text-zinc-500 uppercase text-[10px] font-black py-2">Cancel</button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+<div className="pt-20">
+  <AnimatePresence mode="wait">
+    {!confirmZone ? (
+      <div className="flex flex-col items-center gap-4">
+        <motion.button 
+          key="trigger" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          onClick={() => setConfirmZone('all')} 
+          className="text-[10px] text-zinc-500 hover:text-rose-500 uppercase font-black tracking-widest flex items-center gap-2 transition-colors"
+        >
+          <Trash2 size={12} /> Extinguish Hearth
+        </motion.button>
+        
+        {/* NEW TRANSPARENCY NOTE */}
+        <p className="text-[9px] text-zinc-600 italic max-w-[240px] text-center leading-relaxed">
+          Your data is yours. Extinguishing the hearth permanently deletes all pulses, files, and alignment data from our servers.
+        </p>
+      </div>
+    ) : (
+      <motion.div 
+        key="confirm" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
+        className="p-10 bg-rose-500/[0.02] border border-rose-500/20 rounded-[2.5rem] max-w-sm mx-auto space-y-6"
+      >
+        <AlertTriangle className="text-rose-500 mx-auto" size={32} />
+        <div className="space-y-2 text-center">
+          <h5 className="text-white font-black uppercase text-xs tracking-tighter">
+            {confirmZone === 'archive' ? "Clear Legacy Archive?" : "Extinguish the Hearth?"}
+          </h5>
+          <p className="text-[10px] text-zinc-500 italic leading-relaxed">
+            {confirmZone === 'archive' 
+              ? "This will remove your Resume. You can re-upload at any time." 
+              : "This will wipe EVERYTHING. Your alignment, your pulses, and your archive will be lost to the wind."}
+          </p>
+        </div>
+        <div className="flex flex-col gap-3">
+          <Button 
+            onClick={confirmZone === 'archive' 
+              ? () => { onSync({ ...vault, resume: null }); setConfirmZone(null); triggerToast("Archive cleared."); } 
+              : handleFullWipe
+            } 
+            className="bg-rose-500 text-white font-black uppercase w-full rounded-xl h-12"
+          >
+            {confirmZone === 'archive' ? "Confirm Delete" : "Wipe Everything"}
+          </Button>
+          <button onClick={() => setConfirmZone(null)} className="text-zinc-500 uppercase text-[10px] font-black py-2">Cancel</button>
+        </div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+</div>
         </div>
       </div>
     </div>
