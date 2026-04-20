@@ -241,32 +241,33 @@ const GroveTiers = ({ vault, onSync }) => {
         </section>
 
         {/* LUMINARY REGISTRY - ADDED MATT'S NOTE */}
-        <section className="mb-32 max-w-4xl mx-auto text-center">
-          <div className="p-[1px] bg-gradient-to-b from-teal-500/20 to-purple-500/20 rounded-[3rem]">
-            <div className="bg-[#0D0B12] rounded-[2.9rem] p-12 md:p-16">
-              <Star className="text-teal-400 mx-auto mb-6 animate-pulse" size={32} />
-              <h2 className="text-white font-serif italic text-3xl mb-4">Luminary Registry</h2>
-              <p className="text-zinc-400 text-sm font-light mb-8 italic">
-                Hearth & Horizon is built on reciprocity. Your contributions help keep this sanctuary accessible for all travellers.
-              </p>
-              
-              <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-6 opacity-40">
-                {['Matthew R.', 'Joining Soon...', 'Joining Soon...'].map((name, i) => (
-                  <span key={i} className="text-[10px] font-black uppercase tracking-widest text-zinc-500 border-b border-white/10 pb-1">{name}</span>
-                ))}
-              </div>
+        {/* LUMINARY REGISTRY */}
+<section className="mb-32 max-w-4xl mx-auto text-center">
+  <div className="p-[1px] bg-gradient-to-b from-teal-500/20 to-purple-500/20 rounded-[3rem]">
+    <div className="bg-[#0D0B12] rounded-[2.9rem] p-12 md:p-16">
+      <Star className="text-teal-400 mx-auto mb-6 animate-pulse" size={32} />
+      <h2 className="text-white font-serif italic text-3xl mb-4">Luminary Registry</h2>
+      <p className="text-zinc-400 text-sm font-light mb-8 italic">
+        Hearth & Horizon is built on reciprocity. Your contributions help keep this sanctuary accessible for all travellers.
+      </p>
+      
+      <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-6 opacity-40">
+        {['Matthew R.', 'Joining Soon...', 'Joining Soon...'].map((name, i) => (
+          <span key={i} className="text-[10px] font-black uppercase tracking-widest text-zinc-500 border-b border-white/10 pb-1">{name}</span>
+        ))}
+      </div>
 
-              {/* The "Small Note" to Matt */}
-              <div className="mb-12">
-                <p className="text-[10px] text-teal-400/60 font-light tracking-wide italic">
-                  To Matt: Thank you for holding the map while I was navigating my way.
-                </p>
-              </div>
+      {/* The Refined Note to Matt */}
+      <div className="mb-12">
+        <p className="text-[10px] text-teal-400/50 font-light tracking-wide italic max-w-xs mx-auto">
+          To Matt: For holding the map steady while I found my way through the trees.
+        </p>
+      </div>
 
-              <button onClick={() => window.location.href = LINK_DONATION} className="px-10 py-4 bg-teal-500 text-black rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-teal-500/20">Choose Your Contribution</button>
-            </div>
-          </div>
-        </section>
+      <button onClick={() => window.location.href = LINK_DONATION} className="px-10 py-4 bg-teal-500 text-black rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-teal-500/20">Choose Your Contribution</button>
+    </div>
+  </div>
+</section>
 
         {/* CONTACT SECTION */}
         <section className="mb-32 max-w-4xl mx-auto">
