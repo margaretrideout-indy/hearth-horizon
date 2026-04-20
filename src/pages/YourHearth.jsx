@@ -75,7 +75,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   };
 
   const handleFullWipe = async () => {
-    // Wipes everything from the vault
     await onSync({ ...vault, pulses: [], resume: null, archetype: null, alignmentScore: 0 }); 
     triggerToast("Hearth extinguished.");
     setConfirmZone(null);
@@ -122,24 +121,42 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        {/* LEFT COL: PULSES */}
+        
+        {/* LEFT COL: PULSES & WEATHER */}
         <div className="lg:col-span-5 space-y-8">
-          <motion.div 
-            whileHover={{ scale: 1.01 }} onClick={() => setShowSheet(true)}
-            className="bg-gradient-to-br from-[#16121D] to-[#0D0B10] border border-white/5 p-10 rounded-[2.5rem] relative overflow-hidden shadow-2xl cursor-pointer group"
-          >
-            <div className="relative z-10 flex flex-col gap-6">
-              <div className="flex justify-between items-start">
-                <div className="w-14 h-14 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-400 border border-rose-500/10"><Activity size={28} /></div>
+          {/* IMMEDIATE INTERNAL WEATHER SELECTION */}
+          <section className="bg-gradient-to-br from-[#16121D] to-[#0D0B10] border border-white/5 p-8 rounded-[2.5rem] shadow-2xl space-y-6">
+            <div className="flex justify-between items-start px-2">
+                <div className="flex items-center gap-2">
+                    <Activity size={18} className="text-rose-400" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Internal Weather</span>
+                </div>
                 <Lock size={12} className="text-rose-400 opacity-40" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold text-white tracking-tight mb-1">Etch a Pulse</h3>
-                <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-black italic">Check your internal weather</p>
-              </div>
             </div>
-          </motion.div>
+            
+            <div className="grid grid-cols-5 gap-2">
+              {pulseOptions.map((p) => (
+                <button 
+                  key={p.label} 
+                  onClick={() => {
+                    setSelectedEmoji(p.icon);
+                    setShowSheet(true);
+                  }}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-2xl transition-all border ${
+                    selectedEmoji === p.icon 
+                      ? 'bg-rose-500/20 border-rose-500 text-white' 
+                      : 'bg-white/5 border-transparent text-zinc-500 hover:bg-white/10 group'
+                  }`}
+                >
+                  <span className="text-2xl group-hover:scale-110 transition-transform">{p.icon}</span>
+                  <span className="text-[7px] font-black uppercase tracking-tighter">{p.label}</span>
+                </button>
+              ))}
+            </div>
+            <p className="text-center text-[9px] text-zinc-600 font-black uppercase tracking-widest italic">Tap to etch a pulse</p>
+          </section>
 
+          {/* HEARTH RECORDS */}
           <div className="space-y-6">
             <div className="flex items-center justify-between px-2 text-zinc-500">
                 <div className="flex items-center gap-2">
@@ -183,10 +200,11 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
             </div>
           </Card>
 
-          {/* LEGACY ARCHIVE CARD */}
+          {/* LEGACY ARCHIVE CARD (DELETE/REPLACE INCLUDED) */}
           <Card className="bg-[#0D0B10] border-white/5 p-10 rounded-[3rem]">
             <div className="flex flex-col gap-8 text-left">
               <div className="flex items-center gap-3"><FileText className="text-teal-500" size={24} /><h3 className="text-xl font-bold text-white">Legacy Archive</h3></div>
+              
               {!vault?.resume ? (
                 <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/5 hover:border-teal-500/20 rounded-[2rem] bg-black/40 cursor-pointer group transition-all relative overflow-hidden">
                   {isUploading ? (
@@ -208,12 +226,17 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                   <CheckCircle2 className="text-teal-500 mx-auto mb-4" size={32} />
                   <h4 className="text-white font-bold uppercase text-xs tracking-widest">Legacy Secured</h4>
                   <p className="text-[10px] text-zinc-500 mt-2 italic">"{vault.resume.name}" is archived.</p>
+                  
+                  {/* DELETE & REPLACE OPTIONS */}
                   <div className="mt-6 flex justify-center gap-3">
                     <label className="inline-flex items-center gap-2 text-[9px] font-black uppercase text-zinc-300 hover:text-white cursor-pointer transition-colors border border-white/10 px-4 py-2 rounded-full">
                       <RefreshCw size={10} /> Replace
                       <input type="file" className="hidden" onChange={handleFileChange} />
                     </label>
-                    <button onClick={() => setConfirmZone('archive')} className="inline-flex items-center gap-2 text-[9px] font-black uppercase text-zinc-500 hover:text-rose-400 transition-colors border border-white/5 px-4 py-2 rounded-full">
+                    <button 
+                      onClick={() => setConfirmZone('archive')} 
+                      className="inline-flex items-center gap-2 text-[9px] font-black uppercase text-zinc-500 hover:text-rose-400 transition-colors border border-white/5 px-4 py-2 rounded-full"
+                    >
                       <Trash2 size={10} /> Delete Resume
                     </button>
                   </div>
@@ -222,7 +245,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
             </div>
           </Card>
 
-          {/* DANGER ZONES: MODALS */}
+          {/* DANGER ZONES */}
           <div className="pt-20">
             <AnimatePresence mode="wait">
               {!confirmZone ? (
@@ -236,17 +259,17 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
               ) : (
                 <motion.div 
                   key="confirm" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
-                  className="p-10 bg-rose-500/[0.02] border border-rose-500/20 rounded-[2.5rem] max-w-sm mx-auto space-y-6"
+                  className="p-10 bg-rose-500/[0.02] border border-rose-500/20 rounded-[2.5rem] max-w-sm mx-auto space-y-6 text-center"
                 >
                   <AlertTriangle className="text-rose-500 mx-auto" size={32} />
-                  <div className="space-y-2 text-center">
+                  <div className="space-y-2">
                     <h5 className="text-white font-black uppercase text-xs tracking-tighter">
                       {confirmZone === 'archive' ? "Delete Resume?" : "Delete Account?"}
                     </h5>
                     <p className="text-[10px] text-zinc-500 italic">
                       {confirmZone === 'archive' 
-                        ? "This only removes your Resume/CV artifacts. Your Alignment and Pulses remain safe." 
-                        : "This will wipe EVERYTHING: Resume, Alignment, and all Pulses. This cannot be undone."}
+                        ? "This removes your CV artifact. Alignment remains safe." 
+                        : "Wipe EVERYTHING. This cannot be undone."}
                     </p>
                   </div>
                   <div className="flex flex-col gap-3">
@@ -257,7 +280,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                       } 
                       className="bg-rose-500 text-white font-black uppercase w-full rounded-xl"
                     >
-                      {confirmZone === 'archive' ? "Confirm Deletion" : "Confirm Full Wipe"}
+                      {confirmZone === 'archive' ? "Delete Resume" : "Delete Account"}
                     </Button>
                     <Button onClick={() => setConfirmZone(null)} variant="ghost" className="text-zinc-500 uppercase text-[10px] font-black">Cancel</Button>
                   </div>
@@ -268,7 +291,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
         </div>
       </div>
 
-      {/* PULSE BOTTOM SHEET */}
+      {/* PULSE REFLECTION SHEET (NOW OPTIONAL) */}
       <AnimatePresence>
         {showSheet && (
           <>
@@ -278,20 +301,16 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                 <div className="w-10" /> <div className="w-12 h-1.5 bg-zinc-800 rounded-full" />
                 <button onClick={() => setShowSheet(false)} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-zinc-500 hover:text-white transition-colors"><X size={20} /></button>
               </div>
-              <div className="max-w-xl mx-auto space-y-10">
-                <div className="text-center"><h3 className="text-3xl font-serif italic text-white mb-2">Internal Weather</h3><p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest">Capture this moment</p></div>
-                <div className="grid grid-cols-5 gap-3">
-                  {pulseOptions.map((p) => (
-                    <button key={p.label} onClick={() => setSelectedEmoji(p.icon)} className={`flex flex-col items-center gap-2 p-4 rounded-2xl transition-all ${selectedEmoji === p.icon ? 'bg-rose-500 text-white shadow-lg' : 'bg-white/5 text-zinc-500'}`}>
-                      <span className="text-2xl">{p.icon}</span>
-                      <span className="text-[8px] font-black uppercase">{p.label}</span>
-                    </button>
-                  ))}
+              <div className="max-w-xl mx-auto space-y-10 text-center">
+                <div className="space-y-2">
+                    <span className="text-5xl">{selectedEmoji}</span>
+                    <h3 className="text-3xl font-serif italic text-white">Adding Depth</h3>
+                    <p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest">Detail the pulse (Optional)</p>
                 </div>
-                <Textarea placeholder="How does the journey feel? (Optional)" value={reflection} onChange={(e) => setReflection(e.target.value)} className="bg-black/40 border-white/5 rounded-2xl p-6 text-white italic min-h-[150px] outline-none" />
+                <Textarea placeholder="How does the journey feel?" value={reflection} onChange={(e) => setReflection(e.target.value)} className="bg-black/40 border-white/5 rounded-2xl p-6 text-white italic min-h-[150px] outline-none" />
                 <div className="flex flex-col gap-4">
-                  <Button onClick={handleSavePulse} disabled={!selectedEmoji && !reflection} className="w-full h-16 bg-teal-500 text-black font-black uppercase rounded-2xl shadow-xl">Seal Pulse</Button>
-                  <button onClick={() => setShowSheet(false)} className="text-[10px] text-zinc-500 uppercase font-black tracking-widest py-2 hover:text-zinc-400 transition-colors">Dismiss</button>
+                  <Button onClick={handleSavePulse} className="w-full h-16 bg-teal-500 text-black font-black uppercase rounded-2xl shadow-xl">Seal Pulse</Button>
+                  <button onClick={() => setShowSheet(false)} className="text-[10px] text-zinc-500 uppercase font-black tracking-widest py-2 hover:text-zinc-400 transition-colors">Cancel</button>
                 </div>
               </div>
             </motion.div>
