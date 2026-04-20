@@ -26,19 +26,40 @@ const getWeeklyPrompt = () => {
 const EmberReactions = () => {
   const [counts, setCounts] = useState({ sparkle: 0, leaf: 0, heart: 0 });
   const react = (type) => setCounts((prev) => ({ ...prev, [type]: prev[type] + 1 }));
+  
   const configs = [
     { type: 'sparkle', icon: Sparkles, color: 'text-teal-400' },
     { type: 'leaf', icon: Leaf, color: 'text-green-500' },
     { type: 'heart', icon: Heart, color: 'text-rose-500' }
   ];
+
   return (
     <div className="flex gap-1.5 mt-2">
-      {configs.map(({ type, icon: Icon, color }) => (
-        <button key={type} onClick={(e) => { e.stopPropagation(); react(type); }} className="flex items-center gap-1 px-2 py-1 rounded-full bg-white/5 border border-white/5 hover:border-white/10 transition-all active:scale-90">
-          <Icon size={10} className={counts[type] > 0 ? color : 'text-zinc-600'} />
-          {counts[type] > 0 && <span className="text-[9px] text-zinc-400 font-bold">{counts[type]}</span>}
-        </button>
-      ))}
+      {configs.map(({ type, icon: Icon, color }) => {
+        const hasVotes = counts[type] > 0;
+        
+        return (
+          <button 
+            key={type} 
+            onClick={(e) => { e.stopPropagation(); react(type); }} 
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] hover:border-teal-500/30 transition-all active:scale-90 group"
+          >
+            <Icon 
+              size={11} 
+              className={`transition-all duration-300 ${
+                hasVotes 
+                  ? `${color} opacity-100 scale-110` 
+                  : 'text-zinc-400 opacity-30 group-hover:opacity-70'
+              }`} 
+            />
+            {hasVotes && (
+              <span className={`text-[10px] font-bold ${color}`}>
+                {counts[type]}
+              </span>
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 };
