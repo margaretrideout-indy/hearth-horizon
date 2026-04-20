@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Copy, Check, Calculator, Search, Shield, Zap, RefreshCw, Layers } from 'lucide-react';
+import { Sparkles, Copy, Check, Calculator, Search, Shield, Zap, RefreshCw, Layers, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
@@ -23,15 +23,12 @@ export default function CulturalFit({ vault, onComplete }) {
   const [isSyncing, setIsSyncing] = useState(false);
   const [ethics, setEthics] = useState(vault?.ethics || { reciprocity: 50, transparency: 50, agency: 50 });
 
-  // --- DEBOUNCE LOGIC ---
-  // This prevents the results from flickering while typing.
   useEffect(() => {
     if (inputPhrase) setIsAlchemizing(true);
     const handler = setTimeout(() => {
       setDebouncedPhrase(inputPhrase);
       setIsAlchemizing(false);
-    }, 600); // Waits 0.6 seconds after last keystroke
-
+    }, 600);
     return () => clearTimeout(handler);
   }, [inputPhrase]);
 
@@ -86,7 +83,8 @@ export default function CulturalFit({ vault, onComplete }) {
         last_alignment_date: new Date().toISOString()
       });
       if (onComplete) onComplete({ ethics, lexicon: savedLexicon });
-      navigate("/horizon-board"); 
+      // Verified path for navigation
+      navigate("/horizon"); 
     } catch (err) {
       console.error("Vault Sync Error:", err);
     } finally {
@@ -113,9 +111,10 @@ export default function CulturalFit({ vault, onComplete }) {
 
       <AnimatePresence mode="wait">
         {activeTab === 'lexicon' ? (
-          <motion.div key="lexicon" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12">
+          <motion.div key="lexicon" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12 pb-20">
             <div className="space-y-4">
-              <h2 className="text-5xl font-serif italic text-white tracking-tight leading-tight">The Translation Engine</h2>
+              <h2 className="text-5xl font-serif italic text-white tracking-tight leading-tight">Lexicon Alchemist</h2>
+              <p className="text-zinc-500 text-sm font-light italic">Enter your old-world responsibilities. Copy an alchemy to save it to your Hearth lexicon.</p>
               <div className="relative group max-w-2xl mt-8">
                 <Input value={inputPhrase} onChange={(e) => setInputPhrase(e.target.value)} placeholder="e.g. Managed IEPs for high-schoolers..." className="bg-white/[0.03] border-white/10 h-20 rounded-3xl pl-16 text-xl text-zinc-200 focus:border-teal-500/40" />
                 <RefreshCw size={24} className={`absolute left-6 top-7 text-teal-500/30 transition-all duration-700 ${isAlchemizing ? 'animate-spin text-teal-400' : 'group-hover:rotate-180'}`} />
@@ -140,20 +139,32 @@ export default function CulturalFit({ vault, onComplete }) {
               )}
             </div>
 
-            {savedLexicon.length > 0 && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-20 p-8 bg-teal-500/[0.02] border border-teal-500/10 rounded-[3rem]">
-                <span className="text-[10px] font-black uppercase text-teal-500/60 tracking-[0.4em] mb-6 block">Your Synthesized Identity</span>
-                <div className="flex flex-wrap gap-3">
-                  {savedLexicon.map((word, idx) => (
-                    <span key={idx} className="px-4 py-2 bg-teal-500/10 border border-teal-500/20 text-teal-400 text-xs rounded-full font-bold">{word}</span>
-                  ))}
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8 pt-10 border-t border-white/5">
+                <div className="flex-1">
+                    {savedLexicon.length > 0 && (
+                        <div className="space-y-4">
+                            <span className="text-[10px] font-black uppercase text-teal-500/60 tracking-[0.4em] block">Stored Alchemies</span>
+                            <div className="flex flex-wrap gap-3">
+                                {savedLexicon.map((word, idx) => (
+                                    <span key={idx} className="px-4 py-2 bg-teal-500/10 border border-teal-500/20 text-teal-400 text-xs rounded-full font-bold">{word}</span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
-              </motion.div>
-            )}
+                
+                {/* NAVIGATION TO NEXT STEP */}
+                <Button 
+                    onClick={() => setActiveTab('ethics')} 
+                    className="group bg-white/5 border border-white/10 hover:border-purple-500/50 text-white font-black uppercase tracking-[0.2em] px-8 h-20 rounded-3xl transition-all"
+                >
+                    Next: Ethics Calculator <ArrowRight className="ml-3 group-hover:translate-x-1 transition-transform" />
+                </Button>
+            </div>
           </motion.div>
         ) : (
           <motion.div key="ethics" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-16 max-w-2xl">
-            <h2 className="text-5xl font-serif italic text-white tracking-tight">Values Alignment</h2>
+            <h2 className="text-5xl font-serif italic text-white tracking-tight">Ethics Calculator</h2>
             <div className="space-y-14">
               {VALUE_DIMENSIONS.map((dim) => (
                 <div key={dim.id} className="space-y-6">
@@ -168,8 +179,14 @@ export default function CulturalFit({ vault, onComplete }) {
                 </div>
               ))}
             </div>
-            <Button onClick={handleFinalSync} disabled={isSyncing} className="w-full bg-purple-600 text-white font-black uppercase tracking-[0.3em] py-9 rounded-[2.5rem] hover:bg-purple-500 shadow-[0_20px_50px_#a855f726] transition-all active:scale-[0.98]">
-              {isSyncing ? <RefreshCw className="animate-spin" size={24} /> : "Sync to Horizon Board"}
+            
+            {/* UPDATED BUTTON */}
+            <Button 
+                onClick={handleFinalSync} 
+                disabled={isSyncing} 
+                className="w-full bg-purple-600 text-white font-black uppercase tracking-[0.2em] py-9 rounded-[2.5rem] hover:bg-purple-500 shadow-[0_20px_50px_#a855f726] transition-all active:scale-[0.98]"
+            >
+              {isSyncing ? <RefreshCw className="animate-spin" size={24} /> : "Sync and go to Horizon Board"}
             </Button>
           </motion.div>
         )}
