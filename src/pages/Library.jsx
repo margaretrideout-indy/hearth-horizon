@@ -129,7 +129,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                           <div className={`p-4 rounded-2xl bg-black/40 border border-white/5 ${item.color}`}>
                             <item.icon size={24} />
                           </div>
-                          <span className={`text-[9px] font-black uppercase tracking-tighter px-3 py-1 rounded-full ${item.crisis ? 'bg-rose-500 text-white' : 'text-zinc-600 bg-white/5'}`}>
+                          <span className={`text-[9px] font-black uppercase tracking-tighter px-3 py-1 rounded-full ${item.crisis ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'text-zinc-600 bg-white/5'}`}>
                             {item.type}
                           </span>
                         </div>
@@ -141,9 +141,14 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                         </p>
 
                         {item.crisis && (
-                          <div className="mt-4 flex items-center gap-4 px-5 py-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
-                            <span className="text-2xl font-black text-rose-500">{item.crisis.line}</span>
-                            <span className="text-[9px] text-rose-200/70 font-bold uppercase tracking-widest leading-tight">{item.crisis.label}</span>
+                          <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 px-5 py-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
+                            <span className="text-2xl font-black text-rose-500 whitespace-nowrap tracking-tight">
+                              {item.crisis.line}
+                            </span>
+                            <div className="hidden sm:block w-[1px] h-6 bg-rose-500/20" />
+                            <span className="text-[9px] text-rose-200/70 font-bold uppercase tracking-widest leading-tight">
+                              {item.crisis.label}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -151,7 +156,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                       <Button
                         asChild
                         variant="ghost"
-                        className={`mt-8 w-full rounded-xl border transition-all ${item.crisis ? 'bg-rose-500 text-white hover:bg-rose-600 border-transparent' : 'bg-white/5 border-white/5 text-zinc-400 hover:text-white'}`}
+                        className={`mt-8 w-full rounded-xl border transition-all ${item.crisis ? 'bg-rose-500 text-white hover:bg-rose-600 border-transparent shadow-lg shadow-rose-500/10' : 'bg-white/5 border-white/5 text-zinc-400 hover:text-white'}`}
                       >
                         <a href={item.link} target="_blank" rel="noopener noreferrer">
                           {item.crisis ? 'Get Help Now' : 'Open Resource'} <ExternalLink size={14} className="ml-2" />
@@ -166,12 +171,13 @@ export default function Library({ vault, onRefresh, isAdmin }) {
               <motion.div
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
                 className="p-8 rounded-[2.5rem] bg-teal-500/[0.02] border border-teal-500/10 flex flex-col md:flex-row items-center gap-6"
               >
                 <div className="text-teal-500 shrink-0">
                   <ShieldAlert size={32} />
                 </div>
-                <p className="text-xs text-zinc-400 italic font-serif text-center md:text-left leading-relaxed">
+                <p className="text-xs text-zinc-400 italic font-serif text-center md:text-left leading-relaxed max-w-2xl">
                   "The Hearth is a tool for navigation, but your internal compass is the final authority. If the weight of the journey feels too heavy, please seek direct support from a licensed professional."
                 </p>
               </motion.div>
@@ -188,14 +194,14 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                   <div className="lg:col-span-4 flex gap-4 md:flex-col">
                     <button
                       onClick={() => setStudyTab('amazon')}
-                      className={`p-6 rounded-2xl border transition-all text-left flex-1 ${studyTab === 'amazon' ? 'bg-teal-500/10 border-teal-500/30 shadow-lg' : 'bg-black/20 border-white/5 opacity-40'}`}
+                      className={`p-6 rounded-2xl border transition-all text-left flex-1 ${studyTab === 'amazon' ? 'bg-teal-500/10 border-teal-500/30 shadow-lg' : 'bg-black/20 border-white/5 opacity-40 hover:opacity-60'}`}
                     >
                       <Package size={24} className={`mb-4 ${studyTab === 'amazon' ? 'text-teal-400' : 'text-zinc-600'}`} />
                       <span className="text-[10px] font-black uppercase tracking-widest block">Provisions</span>
                     </button>
                     <button
                       onClick={() => setStudyTab('books')}
-                      className={`p-6 rounded-2xl border transition-all text-left flex-1 ${studyTab === 'books' ? 'bg-purple-500/10 border-purple-500/30 shadow-lg' : 'bg-black/20 border-white/5 opacity-40'}`}
+                      className={`p-6 rounded-2xl border transition-all text-left flex-1 ${studyTab === 'books' ? 'bg-purple-500/10 border-purple-500/30 shadow-lg' : 'bg-black/20 border-white/5 opacity-40 hover:opacity-60'}`}
                     >
                       <Book size={24} className={`mb-4 ${studyTab === 'books' ? 'text-purple-400' : 'text-zinc-600'}`} />
                       <span className="text-[10px] font-black uppercase tracking-widest block">Archives</span>
@@ -282,13 +288,13 @@ export default function Library({ vault, onRefresh, isAdmin }) {
           <div className="bg-[#16121D]/80 backdrop-blur-xl rounded-full border border-white/10 p-2 shadow-2xl flex gap-2">
             <button
               onClick={() => setCurrentVolume(1)}
-              className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 1 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500'}`}
+              className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 1 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}
             >
               Volume I
             </button>
             <button
               onClick={() => setCurrentVolume(2)}
-              className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500'}`}
+              className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}
             >
               Volume II
             </button>
@@ -301,13 +307,13 @@ export default function Library({ vault, onRefresh, isAdmin }) {
         {showLockSheet && (
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowLockSheet(false)} className="fixed inset-0 bg-black/90 backdrop-blur-md z-[120]" />
-            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25 }} className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3rem] z-[130] p-10 shadow-2xl">
+            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3rem] z-[130] p-10 shadow-2xl">
               <div className="max-w-md mx-auto text-center space-y-6">
-                <div className="w-20 h-20 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-8"><Lock className="text-purple-400" size={32} /></div>
+                <div className="w-20 h-20 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner"><Lock className="text-purple-400" size={32} /></div>
                 <h3 className="text-3xl font-serif italic text-white">{lockContext.title}</h3>
                 <p className="text-sm text-zinc-500 italic leading-relaxed">{lockContext.desc}</p>
-                <Button onClick={() => navigate('/grove')} className="w-full h-16 bg-purple-600 text-white font-black uppercase tracking-widest rounded-2xl">View Tiers</Button>
-                <button onClick={() => setShowLockSheet(false)} className="text-[10px] font-black text-zinc-700 uppercase tracking-widest mt-4 block mx-auto py-2">Keep Exploring</button>
+                <Button onClick={() => navigate('/grove')} className="w-full h-16 bg-purple-600 text-white font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-purple-600/20">View Tiers</Button>
+                <button onClick={() => setShowLockSheet(false)} className="text-[10px] font-black text-zinc-700 hover:text-zinc-500 uppercase tracking-widest mt-4 block mx-auto py-2 transition-colors">Keep Exploring</button>
               </div>
             </motion.div>
           </>
