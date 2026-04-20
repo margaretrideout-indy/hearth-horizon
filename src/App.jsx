@@ -37,7 +37,6 @@ export default function App() {
     };
   });
 
-  // --- ACCESS CALCULATION ---
   const currentTier = vault?.tier?.toLowerCase() || 'none';
   const isRegistered = currentTier !== 'none' && currentTier !== 'traveler';
   const isSeedlingPlus = isAdmin || isRegistered || currentTier === 'admin' || currentTier === 'steward';
@@ -48,10 +47,7 @@ export default function App() {
         const user = await base44.auth.me();
         if (user) {
           const userEmail = user.email ? user.email.toLowerCase().trim() : '';
-
-          // MASTER ADMIN CHECK (Note: Move Margaret's email to backend role check later)
           const isSystemAdmin = user.role === 'admin' || userEmail === 'margaretpardy@gmail.com';
-
           setIsAdmin(isSystemAdmin);
 
           const rawTier = user.tier ? user.tier.trim() : "Traveler";
@@ -74,7 +70,9 @@ export default function App() {
             email: user.email,
             tier: isSystemAdmin ? "steward" : normalizedTier,
             standing: displayStanding,
-            archetype: user.archetype || prev.archetype
+            archetype: user.archetype || prev.archetype,
+            // Sync resume metadata if it exists in the cloud
+            resume: user.resume_metadata || prev.resume 
           }));
         }
       } catch (e) {
@@ -92,29 +90,45 @@ export default function App() {
     }
   }, [vault, isInitializing]);
 
-  const handleResumeSync = async (file) => {
-  // 1. Create a reference for the UI (name and a mock URL)
-  const resumeData = {
-    name: file.name,
-    lastModified: new Date().toISOString(),
-    size: file.size
+  const handleSync = async (updatedData = null) => {
+    try {
+      if (updatedData) {
+        setVault(updatedData);
+      } else {
+        const user = await base44.auth.me();
+        if (user) {
+          setVault((prev) => ({
+            ...prev,
+            ...user,
+            lastSync: new Date().toISOString()
+          }));
+        }
+      }
+    } catch (e) {
+      console.error("Sync failed", e);
+    }
   };
 
-  // 2. Update the Vault State immediately
-  setVault(prev => ({
-    ...prev,
-    resume: resumeData
-  }));
+  const handleResumeSync = async (file) => {
+    const resumeData = {
+      name: file.name,
+      lastModified: new Date().toISOString(),
+      size: file.size
+    };
 
-  // 3. Optional: If you use the base44 API to save it permanently
-  try {
-    await base44.entities.Vault.update(vault.id, {
-      resume_metadata: resumeData 
-    });
-  } catch (e) {
-    console.error("Cloud sync failed, but local state updated.", e);
-  }
-};
+    setVault(prev => ({
+      ...prev,
+      resume: resumeData
+    }));
+
+    try {
+      await base44.entities.Vault.update(vault.id, {
+        resume_metadata: resumeData 
+      });
+    } catch (e) {
+      console.error("Cloud sync failed.", e);
+    }
+  };
 
   const showNav = !['/grove', '/', '/contact'].includes(location.pathname);
 
@@ -150,36 +164,9 @@ export default function App() {
             );
           })}
         </div>
-
-        <div className={isDesktop ? 'mt-auto pt-4 border-t border-white/5' : 'hidden'}>
-          {isAdmin &&
-            <button
-              onClick={() => navigate('/admin')}
-              className="flex items-center gap-4 px-6 py-4 rounded-xl mx-2 w-[calc(100%-16px)] text-purple-400 hover:bg-purple-400/5 transition-all mb-2"
-            >
-              <LayoutDashboard size={20} />
-              <span className="text-sm tracking-wide font-medium">Registry Admin</span>
-            </button>
-          }
-          <button
-            onClick={() => navigate('/grove')}
-            className="flex items-center gap-4 px-6 py-4 rounded-xl mx-2 w-[calc(100%-16px)] text-zinc-500 hover:text-red-400 hover:bg-red-400/5 transition-all"
-          >
-            <LogOut size={20} />
-            <span className="text-sm tracking-wide font-medium">Exit to Grove</span>
-          </button>
-        </div>
       </div>
     );
   };
-
-  if (isInitializing) {
-    return (
-      <div className="h-screen w-full bg-[#0A080D] flex items-center justify-center">
-        <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse shadow-[0_0_8px_#39FFCA]" />
-      </div>
-    );
-  }
 
   return (
     <div className="h-screen w-full bg-[#0A080D] flex overflow-hidden font-sans text-zinc-200">
@@ -197,7 +184,18 @@ export default function App() {
       <main className="flex-1 h-full relative overflow-y-auto custom-scrollbar flex flex-col">
         <div className="flex-1 w-full relative">
           <Routes>
-            <Route path="/hearth" element={<YourHearth vault={vault} onSync={handleSync} isAdmin={isAdmin} onNavigateToHorizon={() => navigate('/horizon')} />} />
+            <Route 
+              path="/hearth" 
+              element={
+                <YourHearth 
+                  vault={vault} 
+                  onSync={handleSync} 
+                  onResumeSync={handleResumeSync} // CRITICAL FIX: Passing the function here
+                  isAdmin={isAdmin} 
+                  onNavigateToHorizon={() => navigate('/horizon')} 
+                />
+              } 
+            />
             <Route path="/library" element={<Library vault={vault} onRefresh={handleSync} isAdmin={isAdmin} />} />
             <Route path="/horizon" element={<Canopy vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             <Route path="/embers" element={<EmbersChat vault={vault} isAdmin={isAdmin} />} />
@@ -209,16 +207,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/grove" replace />} />
           </Routes>
         </div>
-        {showNav && <div className="h-20 md:hidden" />}
       </main>
-
-      {showNav && (
-        <nav className="fixed bottom-0 left-0 right-0 z-[100] pb-[env(safe-area-inset-bottom)] bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5 md:hidden">
-          <div className="w-full h-20">
-            <NavLinks />
-          </div>
-        </nav>
-      )}
     </div>
   );
 }
