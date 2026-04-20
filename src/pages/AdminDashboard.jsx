@@ -124,9 +124,11 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
 
   // ── Sorted + filtered members ─────────────────────────────────────────────────
   const displayMembers = useMemo(() => {
+    const q = searchQuery.toLowerCase();
     let list = members.filter(m =>
-      m.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      m.email?.toLowerCase().includes(searchQuery.toLowerCase())
+      m.full_name?.toLowerCase().includes(q) ||
+      m.email?.toLowerCase().includes(q) ||
+      (m.tier || 'traveler').toLowerCase().includes(q)
     );
     list = [...list].sort((a, b) => {
       let va = a[sortKey] || '';
@@ -160,17 +162,22 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
     }
   };
 
-  // ── Tier change ───────────────────────────────────────────────────────────────
+  // ── Tier change — optimistic local update + graceful failure ─────────────────
   const handleTierSave = async (userId, tier) => {
     setTierSaving(true);
+    // Optimistic update so the table reflects instantly
+    setMembers(prev => prev.map(m => m.id === userId ? { ...m, tier } : m));
+    setEditingTier(null);
     try {
       await base44.functions.invoke('setUserTier', { target_user_id: userId, tier });
       setTierToast(`Tier updated to ${tier}`);
       setTimeout(() => setTierToast(null), 3000);
-      setEditingTier(null);
-      syncData();
     } catch (err) {
       console.error('Tier error:', err);
+      // Revert on failure and re-sync
+      syncData();
+      setTierToast('Update failed — changes reverted');
+      setTimeout(() => setTierToast(null), 3000);
     } finally {
       setTierSaving(false);
     }
@@ -237,7 +244,7 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
         <VitalityCard label="Registry" value={members.length} icon={<Users size={18} />} />
         <VitalityCard label="Admins" value={members.filter(m => m.role === 'admin').length} icon={<Shield size={18} />} highlight />
-        <VitalityCard label="Seedlings+" value={members.filter(m => m.tier && m.tier !== 'traveler').length} icon={<Trees size={18} />} />
+        <VitalityCard label="Seedlings+" value={members.filter(m => m.tier && m.tier.toLowerCase() !== 'traveler').length} icon={<Trees size={18} />} />
         <VitalityCard label="Logged Events" value={logs.length} icon={<Activity size={18} />} />
         <VitalityCard label="Embers Posts" value={posts.length} icon={<Wind size={18} />} />
       </div>
@@ -254,42 +261,46 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
             </button>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
+          {/* Horizontal scroll on mobile, full view on desktop */}
+          <div className="overflow-x-auto -mx-2 px-2">
+            <table className="w-full text-left min-w-[520px]">
               <thead>
                 <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-700 border-b border-white/5">
                   <th className="pb-6 cursor-pointer hover:text-zinc-400" onClick={() => toggleSort('full_name')}>
                     <span className="flex items-center gap-1">Dweller <SortIcon col="full_name" /></span>
                   </th>
-                  <th className="pb-6 cursor-pointer hover:text-zinc-400" onClick={() => toggleSort('created_date')}>
+                  <th className="pb-6 cursor-pointer hover:text-zinc-400 hidden sm:table-cell" onClick={() => toggleSort('created_date')}>
                     <span className="flex items-center gap-1">Joined <SortIcon col="created_date" /></span>
                   </th>
                   <th className="pb-6">Tier</th>
-                  <th className="pb-6">Momentum</th>
-                  <th className="pb-6 text-right">Manage</th>
+                  <th className="pb-6 hidden md:table-cell">Momentum</th>
+                  <th className="pb-6 text-right hidden sm:table-cell">Last Active</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/[0.02]">
                 {displayMembers.map((m) => {
                   const momentum = getMomentum(m.updated_date || m.created_date);
                   const isEditing = editingTier?.userId === m.id;
+                  // Resolve tier: prefer explicit tier field, fall back to role display
+                  const resolvedTier = m.tier ? m.tier.toLowerCase() : (m.role === 'admin' ? 'admin' : 'traveler');
                   return (
                     <tr key={m.id} className="group hover:bg-white/[0.015] transition-colors">
-                      <td className="py-5">
+                      <td className="py-5 pr-4">
                         <div>
-                          <p className="text-sm font-bold text-zinc-200">{m.full_name || 'Unknown'}</p>
-                          <p className="text-[10px] text-zinc-600 font-mono">{m.email}</p>
+                          <p className="text-sm font-bold text-zinc-200 whitespace-nowrap">{m.full_name || 'Unknown'}</p>
+                          <p className="text-[10px] text-zinc-600 font-mono truncate max-w-[180px]">{m.email}</p>
                         </div>
                       </td>
-                      <td className="py-5">
-                        <span className="text-[10px] text-zinc-500 font-black tabular-nums">
+                      <td className="py-5 pr-4 hidden sm:table-cell">
+                        <span className="text-[10px] text-zinc-500 font-black tabular-nums whitespace-nowrap">
                           {m.created_date ? new Date(m.created_date).toLocaleDateString('en-CA') : '—'}
                         </span>
                       </td>
-                      <td className="py-5">
+                      <td className="py-5 pr-4">
                         {isEditing ? (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <select
+                              autoFocus
                               value={editingTier.tier}
                               onChange={(e) => setEditingTier({ userId: m.id, tier: e.target.value })}
                               className="bg-black/60 border border-[#39FFCA]/20 rounded-xl px-3 py-1.5 text-[10px] font-black text-[#39FFCA] outline-none"
@@ -299,32 +310,35 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
                             <button
                               onClick={() => handleTierSave(m.id, editingTier.tier)}
                               disabled={tierSaving}
-                              className="w-8 h-8 bg-[#39FFCA]/10 text-[#39FFCA] rounded-lg flex items-center justify-center hover:bg-[#39FFCA] hover:text-black transition-all"
+                              className="w-8 h-8 bg-[#39FFCA]/10 text-[#39FFCA] rounded-lg flex items-center justify-center hover:bg-[#39FFCA] hover:text-black transition-all disabled:opacity-40"
                             >
                               <Check size={12} />
                             </button>
-                            <button onClick={() => setEditingTier(null)} className="w-8 h-8 bg-white/5 text-zinc-500 rounded-lg flex items-center justify-center hover:text-white transition-all">
+                            <button
+                              onClick={() => setEditingTier(null)}
+                              className="w-8 h-8 bg-white/5 text-zinc-500 rounded-lg flex items-center justify-center hover:text-white transition-all"
+                            >
                               <X size={12} />
                             </button>
                           </div>
                         ) : (
                           <button
-                            onClick={() => setEditingTier({ userId: m.id, tier: (m.tier || 'traveler').toLowerCase() })}
-                            className="group/tier"
+                            onClick={() => setEditingTier({ userId: m.id, tier: resolvedTier })}
                             title="Click to change tier"
+                            className="hover:opacity-80 transition-opacity active:scale-95"
                           >
-                            <TierBadge tier={m.tier || m.role} />
+                            <TierBadge tier={resolvedTier} />
                           </button>
                         )}
                       </td>
-                      <td className="py-5">
-                        <div className={`flex items-center gap-2 text-[10px] font-black uppercase ${momentum.color}`}>
-                          <div className={`w-1.5 h-1.5 rounded-full ${momentum.dot}`} />
+                      <td className="py-5 pr-4 hidden md:table-cell">
+                        <div className={`flex items-center gap-2 text-[10px] font-black uppercase ${momentum.color} whitespace-nowrap`}>
+                          <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${momentum.dot}`} />
                           {momentum.label}
                         </div>
                       </td>
-                      <td className="py-5 text-right">
-                        <span className="text-[9px] text-zinc-700 font-mono">
+                      <td className="py-5 text-right hidden sm:table-cell">
+                        <span className="text-[9px] text-zinc-700 font-mono whitespace-nowrap">
                           {m.updated_date ? new Date(m.updated_date).toLocaleDateString('en-CA') : '—'}
                         </span>
                       </td>
@@ -353,13 +367,15 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
             <div className="space-y-3 overflow-y-auto max-h-[360px] custom-scrollbar pr-1">
               {logs.length > 0 ? logs.slice(0, 20).map((log, idx) => {
                 const colorClass = ACTION_COLORS[log.action_type] || 'text-zinc-400';
+                // Enrich tier: use logged tier first, fall back to current member data
+                const enrichedTier = log.tier || members.find(m => m.email === log.user_email)?.tier || 'traveler';
                 return (
                   <div key={idx} className="bg-black/30 p-4 rounded-[1.5rem] border border-white/[0.04] space-y-1.5">
-                    <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
                       <span className={`text-[10px] font-black uppercase tracking-wider ${colorClass}`}>
                         {log.action_type}
                       </span>
-                      <TierBadge tier={log.tier} />
+                      <TierBadge tier={enrichedTier} />
                     </div>
                     <p className="text-[10px] text-zinc-600 font-mono truncate">{log.user_email}</p>
                     <p className="text-[9px] text-zinc-700 font-black uppercase">
