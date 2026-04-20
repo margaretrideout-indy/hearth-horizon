@@ -92,26 +92,29 @@ export default function App() {
     }
   }, [vault, isInitializing]);
 
-  const handleSync = async () => {
-    try {
-      const user = await base44.auth.me();
-      if (user) {
-        const userEmail = user.email?.toLowerCase().trim() || '';
-        const isSystemAdmin = user.role === 'admin' || userEmail === 'margaretpardy@gmail.com';
-
-        setIsAdmin(isSystemAdmin);
-
-        setVault((prev) => ({
-          ...prev,
-          ...user,
-          tier: isSystemAdmin ? "steward" : user.tier?.trim().toLowerCase() || "none",
-          lastSync: new Date().toISOString()
-        }));
-      }
-    } catch (e) {
-      console.error("Sync failed", e);
-    }
+  const handleResumeSync = async (file) => {
+  // 1. Create a reference for the UI (name and a mock URL)
+  const resumeData = {
+    name: file.name,
+    lastModified: new Date().toISOString(),
+    size: file.size
   };
+
+  // 2. Update the Vault State immediately
+  setVault(prev => ({
+    ...prev,
+    resume: resumeData
+  }));
+
+  // 3. Optional: If you use the base44 API to save it permanently
+  try {
+    await base44.entities.Vault.update(vault.id, {
+      resume_metadata: resumeData 
+    });
+  } catch (e) {
+    console.error("Cloud sync failed, but local state updated.", e);
+  }
+};
 
   const showNav = !['/grove', '/', '/contact'].includes(location.pathname);
 
