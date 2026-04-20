@@ -1,0 +1,48 @@
+{
+  "name": "SystemLog",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "ID of the acting user"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the acting user"
+    },
+    "action_type": {
+      "type": "string",
+      "description": "e.g. Resume Uploaded, Lexicon Alchemized, Job Clicked, Alignment Synced"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Any additional context for this action"
+    },
+    "tier": {
+      "type": "string",
+      "description": "User's subscription tier at time of action"
+    }
+  },
+  "required": [
+    "user_email",
+    "action_type"
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
