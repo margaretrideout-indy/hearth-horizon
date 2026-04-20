@@ -184,7 +184,7 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
                       {/* LEDGER CONTENT */}
                       {tool.id === 'ledger' && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <a href="https://docs.google.com/presentation/d/1GBzN0ClbJGFf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="group/btn bg-black/40 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-teal-500/40 transition-all">
+                          <a href="https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link" target="_blank" rel="noopener noreferrer" className="group/btn bg-black/40 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-teal-500/40 transition-all">
                             <div className="mb-10">
                               <div className="w-10 h-10 bg-teal-500/10 rounded-xl flex items-center justify-center text-teal-500 mb-6"><Presentation size={20} /></div>
                               <h4 className="text-white font-serif italic text-xl mb-2 tracking-tight">The Identity Ledger</h4>
