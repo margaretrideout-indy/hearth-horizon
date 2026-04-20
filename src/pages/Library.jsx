@@ -22,7 +22,7 @@ import Contact from './Contact';
 
 const AMZ_PROVISIONS_URL = "https://www.amazon.ca/shop/margaretpardy";
 const BOOKSHOP_URL = "https://bookshop.org/shop/hearthandhorizon";
-const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1X-u9E_yH_yD0_vL8o_K4-Q4_jJ0z-H4/edit?usp=sharing";
+const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/edit?slide=id.p1#slide=id.p1";
 const AMZ_LEGAL = "As an Amazon Associate I earn from qualifying purchases.";
 
 export default function Library({ vault, onRefresh, isAdmin }) {
