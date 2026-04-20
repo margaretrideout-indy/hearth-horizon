@@ -232,7 +232,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
           </Card>
 
           {/* ALIGNMENT SNAPSHOT — Path to Alignment Roadmap */}
-          <AlignmentRoadmap vault={vault} navigate={navigate} />
+          <AlignmentRoadmap vault={vault} navigate={navigate} onSync={onSync} triggerToast={triggerToast} />
 
       {/* DANGER ZONES */}
           <div className="pt-20">
@@ -314,13 +314,28 @@ const Badge = ({ children, className }) => (
   <span className={`text-[9px] font-black tracking-widest px-3 py-1 rounded-full border ${className}`}>{children}</span>
 );
 
-function AlignmentRoadmap({ vault, navigate }) {
+function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
+  const [showRealignConfirm, setShowRealignConfirm] = useState(false);
+
   const hasLexicon = !!(vault?.archetype || (vault?.lexicon && vault.lexicon.length > 0));
   const hasEthics  = !!vault?.ethics;
   const hasHorizon = hasLexicon && hasEthics;
 
   const completedCount = [hasLexicon, hasEthics, hasHorizon].filter(Boolean).length;
   const progressPct = Math.round((completedCount / 3) * 100);
+
+  // Distilled summaries
+  const topLexicon = vault?.lexicon?.slice(0, 3) || [];
+  const ethicsEntries = vault?.ethics
+    ? Object.entries(vault.ethics).sort(([, a], [, b]) => b - a).slice(0, 3)
+    : [];
+
+  const handleRealign = async () => {
+    await onSync({ ...vault, archetype: null, ethics: null, lexicon: [], alignment_complete: false });
+    setShowRealignConfirm(false);
+    triggerToast('Alignment cleared. Begin your new ritual.');
+    navigate('/culture');
+  };
 
   const steps = [
     {
@@ -330,6 +345,15 @@ function AlignmentRoadmap({ vault, navigate }) {
       icon: FlaskConical,
       complete: hasLexicon,
       route: '/culture',
+      summary: hasLexicon && topLexicon.length > 0 ? (
+        <div className="flex flex-wrap gap-1.5 mt-2">
+          {topLexicon.map((phrase, i) => (
+            <span key={i} className="px-2 py-0.5 bg-teal-500/10 border border-teal-500/15 text-teal-300 text-[9px] rounded-full font-semibold">
+              {phrase.length > 22 ? phrase.slice(0, 22) + '…' : phrase}
+            </span>
+          ))}
+        </div>
+      ) : null,
     },
     {
       id: 'ethics',
@@ -338,6 +362,16 @@ function AlignmentRoadmap({ vault, navigate }) {
       icon: Compass,
       complete: hasEthics,
       route: '/culture',
+      summary: hasEthics && ethicsEntries.length > 0 ? (
+        <div className="flex gap-3 mt-2">
+          {ethicsEntries.map(([key, val]) => (
+            <div key={key} className="text-center">
+              <div className="text-[10px] font-black" style={{ color: '#39FFCA' }}>{val}%</div>
+              <div className="text-[8px] text-zinc-600 uppercase font-black capitalize">{key}</div>
+            </div>
+          ))}
+        </div>
+      ) : null,
     },
     {
       id: 'horizon',
@@ -346,30 +380,23 @@ function AlignmentRoadmap({ vault, navigate }) {
       icon: Zap,
       complete: hasHorizon,
       route: '/horizon',
+      summary: null,
     },
   ];
 
-  // Next incomplete step determines the CTA destination
   const nextStep = steps.find(s => !s.complete);
   const ctaRoute = nextStep ? nextStep.route : '/horizon';
   const ctaLabel = hasHorizon ? 'Enter the Horizon' : 'Continue the Ritual';
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="space-y-4"
-    >
-      {/* Section header with progress % */}
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+      {/* Section header */}
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-2">
           <Compass size={14} className="text-purple-400" />
           <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Alignment Snapshot</span>
         </div>
-        <span
-          className="text-[10px] font-black tabular-nums"
-          style={{ color: '#39FFCA' }}
-        >
+        <span className="text-[10px] font-black tabular-nums" style={{ color: '#39FFCA' }}>
           {progressPct}% complete
         </span>
       </div>
@@ -396,12 +423,9 @@ function AlignmentRoadmap({ vault, navigate }) {
               <div
                 key={step.id}
                 className={`flex items-start gap-5 p-5 rounded-[1.5rem] border transition-all ${
-                  step.complete
-                    ? 'bg-teal-500/[0.04] border-teal-500/15'
-                    : 'bg-white/[0.02] border-white/5'
+                  step.complete ? 'bg-teal-500/[0.04] border-teal-500/15' : 'bg-white/[0.02] border-white/5'
                 }`}
               >
-                {/* Step icon / status */}
                 <div className="shrink-0 mt-0.5">
                   {step.complete ? (
                     <div className="w-8 h-8 rounded-full bg-teal-500/20 border border-teal-500/40 flex items-center justify-center shadow-[0_0_10px_#14b8a640]">
@@ -413,8 +437,6 @@ function AlignmentRoadmap({ vault, navigate }) {
                     </div>
                   )}
                 </div>
-
-                {/* Text */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
                     <Icon size={12} className={step.complete ? 'text-teal-400' : 'text-zinc-600'} />
@@ -423,9 +445,9 @@ function AlignmentRoadmap({ vault, navigate }) {
                     </span>
                   </div>
                   <p className="text-[10px] text-zinc-600 italic leading-relaxed">{step.description}</p>
+                  {/* Distilled data summary */}
+                  {step.summary}
                 </div>
-
-                {/* Step number */}
                 <span className="shrink-0 text-[9px] font-black text-zinc-700 tabular-nums mt-1">0{idx + 1}</span>
               </div>
             );
@@ -437,9 +459,7 @@ function AlignmentRoadmap({ vault, navigate }) {
           onClick={() => navigate(ctaRoute)}
           className="w-full flex items-center justify-center gap-3 py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-widest transition-all active:scale-[0.98]"
           style={{
-            background: hasHorizon
-              ? 'linear-gradient(135deg, #14b8a6, #39FFCA)'
-              : 'rgba(20,184,166,0.08)',
+            background: hasHorizon ? 'linear-gradient(135deg, #14b8a6, #39FFCA)' : 'rgba(20,184,166,0.08)',
             color: hasHorizon ? '#0A080D' : '#39FFCA',
             border: hasHorizon ? 'none' : '1px solid rgba(20,184,166,0.2)',
             boxShadow: hasHorizon ? '0 10px 30px rgba(57,255,202,0.2)' : 'none',
@@ -448,6 +468,50 @@ function AlignmentRoadmap({ vault, navigate }) {
           {ctaLabel}
           <ArrowRight size={14} />
         </button>
+
+        {/* Realign link */}
+        {(hasLexicon || hasEthics) && !showRealignConfirm && (
+          <div className="text-center pt-2">
+            <button
+              onClick={() => setShowRealignConfirm(true)}
+              className="text-[9px] font-black uppercase tracking-widest text-zinc-700 hover:text-zinc-400 transition-colors"
+            >
+              ↺ Begin New Ritual
+            </button>
+          </div>
+        )}
+
+        {/* Realign confirmation */}
+        <AnimatePresence>
+          {showRealignConfirm && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
+              className="p-6 bg-amber-500/[0.03] border border-amber-500/20 rounded-[1.5rem] space-y-4 text-center"
+            >
+              <AlertTriangle size={22} className="text-amber-500 mx-auto" />
+              <div className="space-y-1">
+                <p className="text-[11px] font-black text-white uppercase tracking-wider">Clear Alignment?</p>
+                <p className="text-[10px] text-zinc-500 italic">
+                  Your Lexicon and Ethics will be cleared. Your resume and Hearth records remain safe.
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={handleRealign}
+                  className="flex-1 py-3 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-black uppercase hover:bg-amber-500 hover:text-black transition-all"
+                >
+                  Yes, Realign
+                </button>
+                <button
+                  onClick={() => setShowRealignConfirm(false)}
+                  className="flex-1 py-3 rounded-xl bg-white/5 text-zinc-500 text-[10px] font-black uppercase hover:text-white transition-all"
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );

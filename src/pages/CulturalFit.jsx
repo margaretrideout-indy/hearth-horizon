@@ -92,6 +92,7 @@ export default function CulturalFit({ vault, onComplete, onSync }) {
       try {
         await base44.auth.updateMe({ lexicon: savedLexicon, ethics });
         if (onSync) onSync({ ...vault, lexicon: savedLexicon, ethics });
+        showToast("Data synced to Hearth.");
       } catch { /* silent */ }
     }, 2000);
     return () => clearTimeout(autoSaveTimer.current);
@@ -127,8 +128,8 @@ export default function CulturalFit({ vault, onComplete, onSync }) {
     try {
       await base44.auth.updateMe({ lexicon: savedLexicon, ethics, alignment_complete: true });
       if (onSync) onSync({ ...vault, lexicon: savedLexicon, ethics, alignment_complete: true });
-      showToast("Alignment synced to Hearth.");
-      setTimeout(() => navigate('/horizon'), 1200);
+      showToast("✦ Alignment mirrored to your Hearth.");
+      setTimeout(() => navigate('/hearth'), 1400);
     } catch (err) {
       console.error("Vault Sync Error:", err);
     } finally {
