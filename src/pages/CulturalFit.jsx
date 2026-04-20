@@ -79,16 +79,16 @@ export default function CulturalFit({ vault, onComplete }) {
       await base44.entities.Vault.update(vault.id, {
         ethics: ethics,
         lexicon: savedLexicon,
-        alignment_complete: true,
-        last_alignment_date: new Date().toISOString()
+        alignment_complete: true
       });
-      if (onComplete) onComplete({ ethics, lexicon: savedLexicon });
-      
-      navigate("/horizon");
+      // Use the onSync prop from App.jsx to update the global vault state
+      if (onSync) onSync(); 
     } catch (err) {
       console.error("Vault Sync Error:", err);
     } finally {
       setIsSyncing(false);
+      // This MUST match the path in App.jsx (which is /horizon)
+      navigate("/horizon"); 
     }
   };
 
