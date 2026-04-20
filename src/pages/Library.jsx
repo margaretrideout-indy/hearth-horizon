@@ -15,7 +15,8 @@ import {
   Book,
   Compass,
   Lock,
-  ArrowRight
+  ArrowRight,
+  PhoneCall
 } from 'lucide-react';
 import Contact from './Contact';
 
@@ -44,6 +45,18 @@ export default function Library({ vault, onRefresh, isAdmin }) {
 
   const resources = [
     {
+      title: "Immediate Support",
+      description: "If the journey feels too heavy right now, help is available. You don't have to navigate this path alone.",
+      type: "24/7 Helpline",
+      icon: PhoneCall,
+      color: "text-rose-400",
+      link: "tel:988",
+      crisis: {
+        line: "9-8-8",
+        label: "Suicide Crisis Helpline — Call or text anytime"
+      }
+    },
+    {
       title: "From Burnout to Balance",
       description: "A comprehensive guide to reclaiming your energy and setting sustainable boundaries in a high-pressure world.",
       link: "https://static1.squarespace.com/static/5d3080f196bac8000148b997/t/664cfc0539541d281b05c587/1716321288694/GKYMH+From+Burnout+to+Balance.pdf",
@@ -65,11 +78,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
       link: "https://cmha.ca/wp-content/uploads/2016/02/MH-for-Life-NTNL-brochure-2014-web.pdf",
       type: "PDF Guide",
       icon: FileText,
-      color: "text-purple-400",
-      crisis: {
-        line: "9-8-8",
-        label: "Suicide Crisis Helpline — call or text 9-8-8 anytime"
-      }
+      color: "text-purple-400"
     }
   ];
 
@@ -114,28 +123,27 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.1 }}
                   >
-                    <Card className="group relative p-8 bg-[#110E16] border-white/5 rounded-[2.5rem] hover:border-white/10 transition-all h-full flex flex-col justify-between overflow-hidden">
+                    <Card className={`group relative p-8 bg-[#110E16] border-white/5 rounded-[2.5rem] hover:border-white/10 transition-all h-full flex flex-col justify-between overflow-hidden ${item.crisis ? 'ring-1 ring-rose-500/20 shadow-lg shadow-rose-500/5' : ''}`}>
                       <div className="space-y-4">
                         <div className="flex justify-between items-start">
                           <div className={`p-4 rounded-2xl bg-black/40 border border-white/5 ${item.color}`}>
                             <item.icon size={24} />
                           </div>
-                          <span className="text-[9px] font-black uppercase tracking-tighter text-zinc-600 bg-white/5 px-3 py-1 rounded-full">
+                          <span className={`text-[9px] font-black uppercase tracking-tighter px-3 py-1 rounded-full ${item.crisis ? 'bg-rose-500 text-white' : 'text-zinc-600 bg-white/5'}`}>
                             {item.type}
                           </span>
                         </div>
 
                         <h3 className="text-2xl font-serif italic text-zinc-200">{item.title}</h3>
 
-                        {/* REQUESTED COLOR #686868 */}
                         <p className="text-sm leading-relaxed" style={{ color: '#686868' }}>
                           {item.description}
                         </p>
 
                         {item.crisis && (
-                          <div className="mt-2 flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-500/10 border border-purple-500/20">
-                            <span className="text-xl font-black text-purple-400">{item.crisis.line}</span>
-                            <span className="text-[10px] text-purple-300/70 font-bold uppercase tracking-wide">{item.crisis.label}</span>
+                          <div className="mt-4 flex items-center gap-4 px-5 py-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
+                            <span className="text-2xl font-black text-rose-500">{item.crisis.line}</span>
+                            <span className="text-[9px] text-rose-200/70 font-bold uppercase tracking-widest leading-tight">{item.crisis.label}</span>
                           </div>
                         )}
                       </div>
@@ -143,14 +151,12 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                       <Button
                         asChild
                         variant="ghost"
-                        className="mt-8 w-full group-hover:bg-white/5 rounded-xl border border-white/5 text-zinc-400 hover:text-white transition-all"
+                        className={`mt-8 w-full rounded-xl border transition-all ${item.crisis ? 'bg-rose-500 text-white hover:bg-rose-600 border-transparent' : 'bg-white/5 border-white/5 text-zinc-400 hover:text-white'}`}
                       >
                         <a href={item.link} target="_blank" rel="noopener noreferrer">
-                          Open Resource <ExternalLink size={14} className="ml-2" />
+                          {item.crisis ? 'Get Help Now' : 'Open Resource'} <ExternalLink size={14} className="ml-2" />
                         </a>
                       </Button>
-
-                      <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-white/5 blur-[50px] rounded-full group-hover:bg-teal-500/10 transition-all duration-700" />
                     </Card>
                   </motion.div>
                 ))}
@@ -159,14 +165,13 @@ export default function Library({ vault, onRefresh, isAdmin }) {
               {/* GUIDANCE NOTE */}
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="p-8 rounded-[2rem] bg-teal-500/5 border border-teal-500/10 flex flex-col md:flex-row items-center gap-6"
+                whileInView={{ opacity: 1 }}
+                className="p-8 rounded-[2.5rem] bg-teal-500/[0.02] border border-teal-500/10 flex flex-col md:flex-row items-center gap-6"
               >
                 <div className="text-teal-500 shrink-0">
                   <ShieldAlert size={32} />
                 </div>
-                <p className="text-xs text-zinc-400 italic font-serif text-center md:text-left">
+                <p className="text-xs text-zinc-400 italic font-serif text-center md:text-left leading-relaxed">
                   "The Hearth is a tool for navigation, but your internal compass is the final authority. If the weight of the journey feels too heavy, please seek direct support from a licensed professional."
                 </p>
               </motion.div>
@@ -183,16 +188,16 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                   <div className="lg:col-span-4 flex gap-4 md:flex-col">
                     <button
                       onClick={() => setStudyTab('amazon')}
-                      className={`p-6 rounded-2xl border transition-all text-left flex-1 ${studyTab === 'amazon' ? 'bg-teal-500/10 border-teal-500/30' : 'bg-black/20 border-white/5 opacity-40'}`}
+                      className={`p-6 rounded-2xl border transition-all text-left flex-1 ${studyTab === 'amazon' ? 'bg-teal-500/10 border-teal-500/30 shadow-lg' : 'bg-black/20 border-white/5 opacity-40'}`}
                     >
-                      <Package size={24} className="mb-4 text-teal-400" />
+                      <Package size={24} className={`mb-4 ${studyTab === 'amazon' ? 'text-teal-400' : 'text-zinc-600'}`} />
                       <span className="text-[10px] font-black uppercase tracking-widest block">Provisions</span>
                     </button>
                     <button
                       onClick={() => setStudyTab('books')}
-                      className={`p-6 rounded-2xl border transition-all text-left flex-1 ${studyTab === 'books' ? 'bg-purple-500/10 border-purple-500/30' : 'bg-black/20 border-white/5 opacity-40'}`}
+                      className={`p-6 rounded-2xl border transition-all text-left flex-1 ${studyTab === 'books' ? 'bg-purple-500/10 border-purple-500/30 shadow-lg' : 'bg-black/20 border-white/5 opacity-40'}`}
                     >
-                      <Book size={24} className="mb-4 text-purple-400" />
+                      <Book size={24} className={`mb-4 ${studyTab === 'books' ? 'text-purple-400' : 'text-zinc-600'}`} />
                       <span className="text-[10px] font-black uppercase tracking-widest block">Archives</span>
                     </button>
                   </div>
@@ -200,9 +205,9 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                   <div className="lg:col-span-8">
                     <AnimatePresence mode="wait">
                       {studyTab === 'amazon' ? (
-                        <motion.div key="amz" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <motion.div key="amz" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}>
                           <h4 className="text-3xl text-white font-serif italic mb-4">Curated Gear</h4>
-                          <p className="text-zinc-500 mb-6 max-w-lg">Hand-picked ergonomic and organizational tools specifically for professional migrants.</p>
+                          <p className="text-zinc-500 mb-6 max-w-lg italic">Hand-picked ergonomic and organizational tools specifically for professional migrants.</p>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
                             {[
                               { label: "Horizon Library", url: "https://www.amazon.ca/hz/wishlist/ls/3MQJ7V1EQV93P?ref_=wl_share" },
@@ -216,14 +221,14 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                               </a>
                             ))}
                           </div>
-                          <p className="text-[8px] text-zinc-700 uppercase italic font-bold">{AMZ_LEGAL}</p>
+                          <p className="text-[8px] text-zinc-700 uppercase italic font-bold tracking-widest">{AMZ_LEGAL}</p>
                         </motion.div>
                       ) : (
-                        <motion.div key="books" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <motion.div key="books" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}>
                           <h4 className="text-3xl text-white font-serif italic mb-4">The Bookshop</h4>
-                          <p className="text-zinc-500 mb-8 max-w-lg">Literature and deep-dives into industry culture, ethics, and transition strategy.</p>
+                          <p className="text-zinc-500 mb-8 max-w-lg italic">Literature and deep-dives into industry culture, ethics, and transition strategy.</p>
                           <div className="flex flex-col sm:flex-row gap-4">
-                            <a href={BOOKSHOP_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-purple-500 text-white px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-400 transition-all">
+                            <a href={BOOKSHOP_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-purple-600 text-white px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-500 transition-all shadow-xl shadow-purple-500/20">
                               Bookshop.org <ArrowRight size={14} />
                             </a>
                             <button disabled className="inline-flex items-center gap-3 bg-white/5 border border-white/10 text-zinc-600 px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest cursor-not-allowed opacity-50">
@@ -249,9 +254,9 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                   <Compass size={180} />
                 </div>
                 <div className="relative z-10 space-y-8">
-                  <Badge className="bg-teal-500/10 text-teal-400 uppercase font-black px-4 py-1">Premium Resource</Badge>
+                  <Badge className="bg-teal-500/10 text-teal-400 uppercase font-black px-4 py-1 border-teal-500/20">Premium Resource</Badge>
                   <h4 className="text-4xl md:text-5xl text-white font-serif italic leading-tight max-w-lg">Master Strategy Deck</h4>
-                  <p className="text-zinc-400 italic max-w-md">The complete architectural blueprint for career migration and resignation protocols.</p>
+                  <p className="text-zinc-400 italic max-w-md text-sm leading-relaxed">The complete architectural blueprint for career migration and resignation protocols.</p>
                   <Button
                     onClick={() => handleResourceClick("Strategy Deck", "Unlock full oversight of your career migration path.", isSeedlingPlus)}
                     className="h-16 px-12 bg-teal-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-teal-500/20"
@@ -296,13 +301,13 @@ export default function Library({ vault, onRefresh, isAdmin }) {
         {showLockSheet && (
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowLockSheet(false)} className="fixed inset-0 bg-black/90 backdrop-blur-md z-[120]" />
-            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3rem] z-[130] p-10 shadow-2xl">
+            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25 }} className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3rem] z-[130] p-10 shadow-2xl">
               <div className="max-w-md mx-auto text-center space-y-6">
                 <div className="w-20 h-20 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-8"><Lock className="text-purple-400" size={32} /></div>
                 <h3 className="text-3xl font-serif italic text-white">{lockContext.title}</h3>
                 <p className="text-sm text-zinc-500 italic leading-relaxed">{lockContext.desc}</p>
                 <Button onClick={() => navigate('/grove')} className="w-full h-16 bg-purple-600 text-white font-black uppercase tracking-widest rounded-2xl">View Tiers</Button>
-                <button onClick={() => setShowLockSheet(false)} className="text-[10px] font-black text-zinc-700 uppercase tracking-widest mt-4 block mx-auto">Keep Exploring</button>
+                <button onClick={() => setShowLockSheet(false)} className="text-[10px] font-black text-zinc-700 uppercase tracking-widest mt-4 block mx-auto py-2">Keep Exploring</button>
               </div>
             </motion.div>
           </>
