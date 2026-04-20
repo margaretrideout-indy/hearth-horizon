@@ -84,8 +84,7 @@ export default function CulturalFit({ vault, onComplete }) {
       });
       if (onComplete) onComplete({ ethics, lexicon: savedLexicon });
       
-      // Points to Canopy (The Horizon Board)
-      navigate("/canopy"); 
+      navigate("/horizon");
     } catch (err) {
       console.error("Vault Sync Error:", err);
     } finally {
