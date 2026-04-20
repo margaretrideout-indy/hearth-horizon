@@ -85,7 +85,13 @@ const GroveTiers = ({ vault, onSync }) => {
       price: "FREE",
       period: "ALWAYS OPEN",
       desc: "A quiet space for those beginning to look toward a new horizon.",
-      features: ["Seedling Badge", "1 Horizon Analysis/Mo", "Horizon Job Board", "Embers Community Chat", "Public Library"],
+      features: [
+        "Seedling Badge", 
+        "1 Horizon Analysis/Mo", 
+        "Horizon Job Board", 
+        "Embers Community Chat", 
+        "Public Library"
+      ],
       button: "GET STARTED",
       onClick: handleSeedling,
       icon: <Leaf className="w-5 h-5 text-teal-400" />
@@ -95,7 +101,13 @@ const GroveTiers = ({ vault, onSync }) => {
       price: "$3",
       period: "$5/MO AFTER FIRST MONTH",
       desc: "Removing the noise to keep your creative fires burning bright.",
-      features: ["Hearthkeeper Badge", "Unlimited Hearth Syncing", "Full Ecosystem Alignment", "Unlimited Horizon Analysis"],
+      features: [
+        "Everything in Seedling, plus:",
+        "Hearthkeeper Badge", 
+        "Unlimited Hearth Syncing", 
+        "Full Ecosystem Alignment", 
+        "Unlimited Horizon Analysis"
+      ],
       button: "SELECT PLAN",
       onClick: () => handlePaid(LINK_HEARTHKEEPER, 'Hearthkeeper'),
       highlight: true,
@@ -106,7 +118,12 @@ const GroveTiers = ({ vault, onSync }) => {
       price: "$5",
       period: "$8/MO AFTER FIRST MONTH",
       desc: "Full oversight and total access to the entire landscape.",
-      features: ["Founding Forest Badge", "Scholarship Sponsorship", "Priority Resource Requests", "Everything in Hearthkeeper"],
+      features: [
+        "Everything in Hearthkeeper, plus:",
+        "Founding Forest Badge", 
+        "Scholarship Sponsorship", 
+        "Priority Resource Requests"
+      ],
       button: "SELECT PLAN",
       onClick: () => handlePaid(LINK_STEWARD, 'Steward'),
       icon: <Mountain className="w-5 h-5 text-teal-400" />
@@ -116,7 +133,11 @@ const GroveTiers = ({ vault, onSync }) => {
       price: "WAITLIST",
       period: "EQUITY BASIS",
       desc: "For those in deep transition seeking support and sanctuary.",
-      features: ["Full Hearthkeeper Access", "Community Support", "Direct Navigation Aid"],
+      features: [
+        "Full Hearthkeeper Access", 
+        "Community Support", 
+        "Direct Navigation Aid"
+      ],
       button: requestStatus === 'success' ? "REQUESTED" : "REQUEST SEAT",
       onClick: handleRequestSeat,
       isSpecial: true,
