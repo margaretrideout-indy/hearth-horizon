@@ -260,7 +260,7 @@ const GroveTiers = ({ vault, onSync }) => {
       {/* The Refined Note to Matt */}
       <div className="mb-12">
         <p className="text-[10px] text-teal-400/50 font-light tracking-wide italic max-w-xs mx-auto">
-          To Matt: For holding the map steady while I found my way through the trees.
+          To Matt: Thank you for holding the map steady while I found my way through the trees.
         </p>
       </div>
 
