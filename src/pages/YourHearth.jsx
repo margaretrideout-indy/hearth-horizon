@@ -75,6 +75,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   };
 
   const handleFullWipe = async () => {
+    // Wipes everything from the vault
     await onSync({ ...vault, pulses: [], resume: null, archetype: null, alignmentScore: 0 }); 
     triggerToast("Hearth extinguished.");
     setConfirmZone(null);
@@ -221,7 +222,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
             </div>
           </Card>
 
-          {/* DANGER ZONES: CONDITIONAL MODALS */}
+          {/* DANGER ZONES: MODALS */}
           <div className="pt-20">
             <AnimatePresence mode="wait">
               {!confirmZone ? (
@@ -244,7 +245,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                     </h5>
                     <p className="text-[10px] text-zinc-500 italic">
                       {confirmZone === 'archive' 
-                        ? "This only removes your Resume/CV. Your Alignment and Pulses remain safe." 
+                        ? "This only removes your Resume/CV artifacts. Your Alignment and Pulses remain safe." 
                         : "This will wipe EVERYTHING: Resume, Alignment, and all Pulses. This cannot be undone."}
                     </p>
                   </div>
@@ -256,7 +257,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                       } 
                       className="bg-rose-500 text-white font-black uppercase w-full rounded-xl"
                     >
-                      {confirmZone === 'archive' ? "Delete Resume" : "Delete Account"}
+                      {confirmZone === 'archive' ? "Confirm Deletion" : "Confirm Full Wipe"}
                     </Button>
                     <Button onClick={() => setConfirmZone(null)} variant="ghost" className="text-zinc-500 uppercase text-[10px] font-black">Cancel</Button>
                   </div>
