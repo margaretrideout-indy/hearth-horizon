@@ -10,6 +10,7 @@ import {
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import AlignmentWidgets from '@/components/hearth/AlignmentWidgets';
 
 export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   const navigate = useNavigate();
@@ -245,7 +246,18 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
             </div>
           </Card>
 
-          {/* DANGER ZONES */}
+          {/* ALIGNMENT WIDGETS — Ethics Radar + Lexicon List */}
+      {(vault?.ethics || (vault?.lexicon && vault.lexicon.length > 0)) && (
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 px-2">
+            <Compass size={14} className="text-purple-400" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Alignment Snapshot</span>
+          </div>
+          <AlignmentWidgets vault={vault} />
+        </div>
+      )}
+
+      {/* DANGER ZONES */}
           <div className="pt-20">
             <AnimatePresence mode="wait">
               {!confirmZone ? (
