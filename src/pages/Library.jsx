@@ -45,19 +45,19 @@ export default function Library({ vault, onRefresh, isAdmin }) {
 
   const resources = [
     {
-      title: "Immediate Support",
-      description: "If the journey feels too heavy right now, help is available. You don't have to navigate this path alone.",
-      type: "24/7 Helpline",
+      title: "Sanctuary Lifeline",
+      description: "A CMHA resource for nurturing mental health through adult life, paired with immediate crisis support.",
+      type: "Priority Access",
       icon: PhoneCall,
       color: "text-rose-400",
-      link: "tel:988",
+      link: "https://cmha.ca/wp-content/uploads/2016/02/MH-for-Life-NTNL-brochure-2014-web.pdf",
       crisis: {
         line: "9-8-8",
         label: "Suicide Crisis Helpline — Call or text anytime"
       }
     },
     {
-      title: "From Burnout to Balance",
+      title: "Burnout to Balance",
       description: "A comprehensive guide to reclaiming your energy and setting sustainable boundaries in a high-pressure world.",
       link: "https://static1.squarespace.com/static/5d3080f196bac8000148b997/t/664cfc0539541d281b05c587/1716321288694/GKYMH+From+Burnout+to+Balance.pdf",
       type: "PDF Guide",
@@ -71,14 +71,6 @@ export default function Library({ vault, onRefresh, isAdmin }) {
       type: "Podcast",
       icon: Mic2,
       color: "text-teal-400"
-    },
-    {
-      title: "Mental Health for Life",
-      description: "A CMHA resource exploring how to nurture and protect your mental health throughout the stages of adult life.",
-      link: "https://cmha.ca/wp-content/uploads/2016/02/MH-for-Life-NTNL-brochure-2014-web.pdf",
-      type: "PDF Guide",
-      icon: FileText,
-      color: "text-purple-400"
     }
   ];
 
@@ -115,6 +107,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                 </div>
               </div>
 
+              {/* GRID: 3 columns on desktop for perfect 1-row balance */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {resources.map((item, idx) => (
                   <motion.div
@@ -140,12 +133,12 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                           {item.description}
                         </p>
 
+                        {/* Merged Crisis Info sitting inside the first card */}
                         {item.crisis && (
-                          <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 px-5 py-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
+                          <div className="mt-4 flex flex-col gap-2 px-5 py-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
                             <span className="text-2xl font-black text-rose-500 whitespace-nowrap tracking-tight">
                               {item.crisis.line}
                             </span>
-                            <div className="hidden sm:block w-[1px] h-6 bg-rose-500/20" />
                             <span className="text-[9px] text-rose-200/70 font-bold uppercase tracking-widest leading-tight">
                               {item.crisis.label}
                             </span>
@@ -159,7 +152,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                         className={`mt-8 w-full rounded-xl border transition-all ${item.crisis ? 'bg-rose-500 text-white hover:bg-rose-600 border-transparent shadow-lg shadow-rose-500/10' : 'bg-white/5 border-white/5 text-zinc-400 hover:text-white'}`}
                       >
                         <a href={item.link} target="_blank" rel="noopener noreferrer">
-                          {item.crisis ? 'Get Help Now' : 'Open Resource'} <ExternalLink size={14} className="ml-2" />
+                          {item.crisis ? 'Open Resource' : 'Open Resource'} <ExternalLink size={14} className="ml-2" />
                         </a>
                       </Button>
                     </Card>
