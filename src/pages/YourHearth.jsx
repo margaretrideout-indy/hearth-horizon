@@ -5,7 +5,7 @@ import {
   Flame, Upload, CheckCircle2, FileText, 
   RefreshCw, Activity, History,
   Lock, Trash2, AlertTriangle, X, Compass,
-  Loader2 
+  Loader2, Circle, ArrowRight, FlaskConical, Zap
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -231,22 +231,8 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
             </div>
           </Card>
 
-          {/* ALIGNMENT SNAPSHOT — single source of truth for cultural profile */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between px-2">
-              <div className="flex items-center gap-2">
-                <Compass size={14} className="text-purple-400" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Alignment Snapshot</span>
-              </div>
-              <button
-                onClick={() => navigate((vault?.alignment_complete || vault?.ethics) ? '/horizon' : '/culture')}
-                className="text-[9px] font-black uppercase tracking-widest text-teal-500/60 hover:text-teal-400 transition-colors"
-              >
-                {(vault?.alignment_complete || vault?.ethics) ? 'Horizon →' : 'Begin →'}
-              </button>
-            </div>
-            <AlignmentWidgets vault={vault} />
-          </div>
+          {/* ALIGNMENT SNAPSHOT — Path to Alignment Roadmap */}
+          <AlignmentRoadmap vault={vault} navigate={navigate} />
 
       {/* DANGER ZONES */}
           <div className="pt-20">
@@ -327,3 +313,142 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
 const Badge = ({ children, className }) => (
   <span className={`text-[9px] font-black tracking-widest px-3 py-1 rounded-full border ${className}`}>{children}</span>
 );
+
+function AlignmentRoadmap({ vault, navigate }) {
+  const hasLexicon = !!(vault?.archetype || (vault?.lexicon && vault.lexicon.length > 0));
+  const hasEthics  = !!vault?.ethics;
+  const hasHorizon = hasLexicon && hasEthics;
+
+  const completedCount = [hasLexicon, hasEthics, hasHorizon].filter(Boolean).length;
+  const progressPct = Math.round((completedCount / 3) * 100);
+
+  const steps = [
+    {
+      id: 'lexicon',
+      label: 'Lexicon Alchemy',
+      description: 'Translate your experience into private-sector language.',
+      icon: FlaskConical,
+      complete: hasLexicon,
+      route: '/culture',
+    },
+    {
+      id: 'ethics',
+      label: 'Ethical Compass',
+      description: 'Calibrate your non-negotiables and values profile.',
+      icon: Compass,
+      complete: hasEthics,
+      route: '/culture',
+    },
+    {
+      id: 'horizon',
+      label: 'Horizon Activation',
+      description: 'Unlock your personalized job intelligence board.',
+      icon: Zap,
+      complete: hasHorizon,
+      route: '/horizon',
+    },
+  ];
+
+  // Next incomplete step determines the CTA destination
+  const nextStep = steps.find(s => !s.complete);
+  const ctaRoute = nextStep ? nextStep.route : '/horizon';
+  const ctaLabel = hasHorizon ? 'Enter the Horizon' : 'Continue the Ritual';
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-4"
+    >
+      {/* Section header with progress % */}
+      <div className="flex items-center justify-between px-2">
+        <div className="flex items-center gap-2">
+          <Compass size={14} className="text-purple-400" />
+          <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Alignment Snapshot</span>
+        </div>
+        <span
+          className="text-[10px] font-black tabular-nums"
+          style={{ color: '#39FFCA' }}
+        >
+          {progressPct}% complete
+        </span>
+      </div>
+
+      {/* Roadmap card */}
+      <div className="bg-[#0D0B14] border border-white/5 rounded-[2.5rem] p-8 space-y-6">
+
+        {/* Progress bar */}
+        <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${progressPct}%` }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            className="h-full rounded-full"
+            style={{ background: 'linear-gradient(90deg, #14b8a6, #39FFCA)' }}
+          />
+        </div>
+
+        {/* Steps */}
+        <div className="space-y-4">
+          {steps.map((step, idx) => {
+            const Icon = step.icon;
+            return (
+              <div
+                key={step.id}
+                className={`flex items-start gap-5 p-5 rounded-[1.5rem] border transition-all ${
+                  step.complete
+                    ? 'bg-teal-500/[0.04] border-teal-500/15'
+                    : 'bg-white/[0.02] border-white/5'
+                }`}
+              >
+                {/* Step icon / status */}
+                <div className="shrink-0 mt-0.5">
+                  {step.complete ? (
+                    <div className="w-8 h-8 rounded-full bg-teal-500/20 border border-teal-500/40 flex items-center justify-center shadow-[0_0_10px_#14b8a640]">
+                      <CheckCircle2 size={15} className="text-teal-400" />
+                    </div>
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                      <Circle size={13} className="text-zinc-600" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Text */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <Icon size={12} className={step.complete ? 'text-teal-400' : 'text-zinc-600'} />
+                    <span className={`text-[10px] font-black uppercase tracking-widest ${step.complete ? 'text-teal-300' : 'text-zinc-500'}`}>
+                      {step.label}
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-zinc-600 italic leading-relaxed">{step.description}</p>
+                </div>
+
+                {/* Step number */}
+                <span className="shrink-0 text-[9px] font-black text-zinc-700 tabular-nums mt-1">0{idx + 1}</span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Dynamic CTA */}
+        <button
+          onClick={() => navigate(ctaRoute)}
+          className="w-full flex items-center justify-center gap-3 py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-widest transition-all active:scale-[0.98]"
+          style={{
+            background: hasHorizon
+              ? 'linear-gradient(135deg, #14b8a6, #39FFCA)'
+              : 'rgba(20,184,166,0.08)',
+            color: hasHorizon ? '#0A080D' : '#39FFCA',
+            border: hasHorizon ? 'none' : '1px solid rgba(20,184,166,0.2)',
+            boxShadow: hasHorizon ? '0 10px 30px rgba(57,255,202,0.2)' : 'none',
+          }}
+        >
+          {ctaLabel}
+          <ArrowRight size={14} />
+        </button>
+      </div>
+    </motion.div>
+  );
+}
