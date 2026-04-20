@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Sparkles, Loader2, Leaf, Heart, X, MessageSquare, Flame, Crown, Info } from 'lucide-react';
+import { Send, Sparkles, Loader2, Leaf, Heart, X, MessageSquare, Flame, Crown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -37,26 +37,19 @@ const EmberReactions = () => {
     <div className="flex gap-1.5 mt-2">
       {configs.map(({ type, icon: Icon, color }) => {
         const hasVotes = counts[type] > 0;
-        
         return (
           <button 
             key={type} 
             onClick={(e) => { e.stopPropagation(); react(type); }} 
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] hover:border-teal-500/30 transition-all active:scale-90 group"
+            className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all active:scale-90 group"
           >
             <Icon 
-              size={11} 
+              size={10} 
               className={`transition-all duration-300 ${
-                hasVotes 
-                  ? `${color} opacity-100 scale-110` 
-                  : 'text-zinc-400 opacity-30 group-hover:opacity-70'
+                hasVotes ? `${color} opacity-100 scale-110` : 'text-zinc-400 opacity-30 group-hover:opacity-70'
               }`} 
             />
-            {hasVotes && (
-              <span className={`text-[10px] font-bold ${color}`}>
-                {counts[type]}
-              </span>
-            )}
+            {hasVotes && <span className={`text-[9px] font-bold ${color}`}>{counts[type]}</span>}
           </button>
         );
       })}
@@ -86,17 +79,32 @@ export default function EmbersChat({ vault, isAdmin }) {
 
   const fetchPosts = async () => {
     try {
+      // Ensure your base44 entity name is exactly "EmberPost"
       const data = await base44.entities.EmberPost.list('-created_date', 50);
       setPosts(data.reverse());
-    } catch (err) { console.error(err); }
+    } catch (err) { 
+      console.error("Base44 Fetch Error:", err); 
+    }
   };
 
   useEffect(() => {
     fetchPosts();
-    return base44.entities.EmberPost.subscribe((e) => {
-      if (e.type === 'create') setPosts(prev => [...prev, e.data]);
-    });
+    // Real-time subscription
+    try {
+      const unsubscribe = base44.entities.EmberPost.subscribe((e) => {
+        if (e.type === 'create') setPosts(prev => [...prev, e.data]);
+      });
+      return unsubscribe;
+    } catch (err) {
+      console.error("Base44 Subscription Error:", err);
+    }
   }, []);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
+    }
+  }, [posts]);
 
   const handleSend = async () => {
     if (!input.trim() || sending) return;
@@ -109,89 +117,86 @@ export default function EmbersChat({ vault, isAdmin }) {
         reply_to_name: replyTarget?.author_name || null,
         reply_to_content: replyTarget?.content || null,
         subscription_tier: isAdmin ? 'Founder' : (vault?.standing || 'Seedling'),
+        created_date: new Date().toISOString()
       });
       setInput('');
       setReplyTarget(null);
-    } catch (err) { console.error(err); } finally { setSending(false); }
+    } catch (err) { 
+      console.error("Base44 Send Error:", err); 
+    } finally { 
+      setSending(false); 
+    }
   };
 
   const STATIC_POSTS = [
-    { id: 'glow', is_glow: true, content: getWeeklyPrompt(), author_name: 'The Glow', subscription_tier: 'Prompt' },
+    { id: 'glow', is_glow: true, content: getWeeklyPrompt(), author_name: 'The Hearth', subscription_tier: 'Hearth' },
     { id: 'welcome', author_name: 'Margaret', subscription_tier: 'Founder', content: "Welcome to the Embers Chat. This is our shared space to navigate the shifting winds of career migration. How are you arriving today?", author_email: 'founder@hearth.io' }
   ];
 
   const allMessages = [...STATIC_POSTS, ...posts];
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#070508] border border-white/5 overflow-hidden">
-      {/* Header with Reaction Legend */}
-      <div className="p-4 border-b border-white/5 bg-[#0A080D]/80 backdrop-blur-md shrink-0 flex flex-col gap-3">
-        <div className="flex justify-between items-center">
+    <div className="flex flex-col h-full w-full bg-[#070508] border border-white/5 overflow-hidden relative">
+      
+      {/* HEADER & LEGEND */}
+      <div className="p-4 border-b border-white/5 bg-[#0A080D]/80 backdrop-blur-md shrink-0 z-20">
+        <div className="flex justify-between items-center mb-3">
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
             <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Embers Feed</span>
           </div>
           <Flame size={14} className="text-orange-500" />
         </div>
-        
-        {/* Reaction Legend for Users */}
-        <div className="flex items-center gap-4 py-1 border-t border-white/5 pt-3">
-          <div className="flex items-center gap-1.5 opacity-60">
+        <div className="flex items-center gap-4 border-t border-white/5 pt-3">
+          <div className="flex items-center gap-1.5 opacity-50">
             <Sparkles size={10} className="text-teal-400" />
             <span className="text-[9px] uppercase font-bold tracking-tighter text-zinc-400">Inspiration</span>
           </div>
-          <div className="flex items-center gap-1.5 opacity-60">
+          <div className="flex items-center gap-1.5 opacity-50">
             <Leaf size={10} className="text-green-500" />
             <span className="text-[9px] uppercase font-bold tracking-tighter text-zinc-400">Growth</span>
           </div>
-          <div className="flex items-center gap-1.5 opacity-60">
+          <div className="flex items-center gap-1.5 opacity-50">
             <Heart size={10} className="text-rose-500" />
             <span className="text-[9px] uppercase font-bold tracking-tighter text-zinc-400">Connection</span>
           </div>
         </div>
       </div>
 
+      {/* CHAT AREA */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar pb-40">
         {allMessages.map((msg, idx) => {
-          const isGlow = msg.is_glow;
-          const isFounder = msg.subscription_tier?.toLowerCase() === 'founder';
           const isHearth = msg.subscription_tier?.toLowerCase() === 'hearth';
+          const isFounder = msg.subscription_tier?.toLowerCase() === 'founder';
           const isOwn = msg.author_email === vault?.email;
 
           return (
-            <motion.div key={msg.id || idx} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'}`}>
+            <motion.div key={msg.id || idx} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'}`}>
               
-              <div className="flex items-center gap-2 mb-1.5">
+              <div className="flex items-center gap-2 mb-1.5 px-1">
                 <span className={`text-[10px] font-black uppercase tracking-tighter ${isFounder ? 'text-purple-400' : isHearth ? 'text-orange-400' : 'text-zinc-500'}`}>
                   {msg.author_name}
                 </span>
                 <TierBadge tier={msg.subscription_tier} />
               </div>
 
-              <div className={`relative max-w-[85%] p-4 rounded-2xl ${
-                isHearth ? 'bg-orange-500/5 border border-orange-500/20 text-orange-50' :
-                isFounder ? 'bg-purple-500/5 border border-purple-500/20 text-zinc-200' :
-                isOwn ? 'bg-teal-500/10 border border-teal-500/20 text-white' : 'bg-white/5 border-white/10 text-zinc-300'
+              <div className={`relative max-w-[85%] p-4 rounded-2xl transition-all border ${
+                isHearth ? 'bg-orange-500/[0.03] border-orange-500/20 text-orange-50' :
+                isFounder ? 'bg-purple-500/[0.03] border-purple-500/20 text-zinc-200' :
+                isOwn ? 'bg-teal-500/[0.07] border-teal-500/20 text-white' : 
+                'bg-white/[0.03] border-white/10 text-zinc-300'
               }`}>
                 {msg.reply_to_name && (
-                  <div className="mb-2 pl-2 border-l border-white/20 opacity-50 text-[11px] italic">
-                    <span className="font-bold not-italic text-teal-500">@{msg.reply_to_name}:</span> {msg.reply_to_content}
+                  <div className="mb-2 pl-2 border-l border-teal-500/30 opacity-60 text-[11px] italic">
+                    <span className="font-bold not-italic text-teal-400">@{msg.reply_to_name}:</span> {msg.reply_to_content}
                   </div>
                 )}
-                
-                <p className={`text-sm leading-relaxed ${isHearth ? 'font-serif italic text-md' : ''}`}>
+                <p className={`text-sm leading-relaxed ${isHearth ? 'font-serif italic' : ''}`}>
                   {msg.content}
                 </p>
-
-                {isHearth && (
-                  <div className="mt-3 pt-3 border-t border-orange-500/10 flex items-center gap-2">
-                    <Sparkles size={10} className="text-orange-500/50" />
-                    <span className="text-[8px] uppercase font-black tracking-widest text-orange-500/50">Weekly Illumination</span>
-                  </div>
-                )}
               </div>
 
-              <div className={`flex items-center gap-3 mt-1 ${isOwn ? 'flex-row-reverse' : ''}`}>
+              <div className={`flex items-center gap-3 mt-1 px-1 ${isOwn ? 'flex-row-reverse' : ''}`}>
                 <button onClick={() => setReplyTarget(msg)} className="text-[9px] font-black text-zinc-600 hover:text-teal-400 uppercase tracking-widest transition-colors flex items-center gap-1">
                   <MessageSquare size={10} /> Reply
                 </button>
@@ -202,14 +207,14 @@ export default function EmbersChat({ vault, isAdmin }) {
         })}
       </div>
 
-      {/* Input section remains standard but follows the theme */}
-      <footer className="p-6 bg-[#0A080D] border-t border-white/5">
+      {/* INPUT AREA */}
+      <footer className="absolute bottom-0 left-0 right-0 p-6 bg-[#070508]/95 backdrop-blur-xl border-t border-white/5 z-50">
         <AnimatePresence>
           {replyTarget && (
-            <div className="mb-3 p-3 bg-white/5 border border-white/10 rounded-xl flex justify-between items-center text-xs">
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="mb-3 p-3 bg-white/5 border border-white/10 rounded-xl flex justify-between items-center text-xs">
               <span className="text-zinc-500 italic">Replying to <b className="text-teal-500 not-italic">@{replyTarget.author_name}</b></span>
-              <button onClick={() => setReplyTarget(null)}><X size={14} className="text-zinc-600 hover:text-white"/></button>
-            </div>
+              <button onClick={() => setReplyTarget(null)}><X size={14} className="text-zinc-600"/></button>
+            </motion.div>
           )}
         </AnimatePresence>
         <div className="flex gap-2 max-w-5xl mx-auto">
@@ -217,14 +222,14 @@ export default function EmbersChat({ vault, isAdmin }) {
             value={input} 
             onChange={(e) => setInput(e.target.value)} 
             placeholder={replyTarget ? `Reply to ${replyTarget.author_name}...` : "Add to the embers..."} 
-            className="bg-white/5 border-white/10 h-12 rounded-xl focus-visible:ring-teal-500/20" 
+            className="bg-white/5 border-white/10 h-12 rounded-xl focus-visible:ring-0 focus-visible:border-teal-500/50" 
             onKeyDown={(e) => e.key === 'Enter' && handleSend()} 
           />
-          <Button onClick={handleSend} disabled={!input.trim() || sending} className="h-12 w-12 bg-teal-500 text-black rounded-xl hover:bg-teal-400 shadow-lg shadow-teal-500/10 transition-all">
+          <Button onClick={handleSend} disabled={!input.trim() || sending} className="h-12 w-12 bg-teal-500 text-black rounded-xl hover:bg-teal-400 transition-all">
             {sending ? <Loader2 className="animate-spin" size={18} /> : <Send size={18} />}
           </Button>
         </div>
-        <p className="text-[8px] text-center text-zinc-600 font-bold uppercase tracking-[0.4em] mt-5 opacity-40">{TOS_TEXT}</p>
+        <p className="text-[8px] text-center text-zinc-700 font-bold uppercase tracking-[0.4em] mt-5 opacity-40">{TOS_TEXT}</p>
       </footer>
     </div>
   );
