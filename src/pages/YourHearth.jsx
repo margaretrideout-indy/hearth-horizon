@@ -185,17 +185,29 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
 
         {/* RIGHT COL: ALIGNMENT & LEGACY */}
         <div className="lg:col-span-7 space-y-8">
-          <Card className={`p-10 rounded-[3rem] border transition-all ${vault?.archetype ? 'bg-teal-500/[0.07] border-teal-500/20' : 'bg-[#0D0B10] border-white/5'}`}>
+          <Card className={`p-10 rounded-[3rem] border transition-all ${(vault?.alignment_complete || vault?.ethics || vault?.archetype) ? 'bg-teal-500/[0.07] border-teal-500/20' : 'bg-[#0D0B10] border-white/5'}`}>
             <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-left">
-              <div className="space-y-4 flex-1">
+              <div className="space-y-4 flex-1" style={{ userSelect: 'text', WebkitUserSelect: 'text' }}>
                 <Badge className="bg-teal-500/10 text-teal-400 uppercase">Alignment Ledger</Badge>
-                <h4 className="text-white font-bold text-3xl">{vault?.archetype || "Calibrating..."}</h4>
-                <p className="text-xs text-zinc-500 italic leading-relaxed">{vault?.archetype ? "Path clear. View trajectory on the Horizon Board." : "Complete alignment to unlock."}</p>
+                {vault?.archetype ? (
+                  <h4 className="text-white font-bold text-3xl">{vault.archetype}</h4>
+                ) : vault?.alignment_complete || vault?.ethics ? (
+                  <h4 className="text-white font-bold text-3xl">Aligned</h4>
+                ) : (
+                  <h4 className="text-zinc-500 font-bold text-2xl italic">Begin your alignment →</h4>
+                )}
+                <p className="text-xs text-zinc-500 italic leading-relaxed">
+                  {(vault?.alignment_complete || vault?.ethics || vault?.archetype)
+                    ? "Path clear. View trajectory on the Horizon Board."
+                    : "Complete the Cultural Fit tool to unlock your profile."}
+                </p>
               </div>
-              <div className="text-center md:text-right">
-                <div className="text-6xl font-serif italic text-white mb-4">{vault?.alignmentScore || 0}%</div>
-                <Button onClick={() => navigate(vault?.archetype ? '/horizon' : '/culture')} className="bg-teal-500 text-black font-black uppercase rounded-xl px-8 h-14">
-                  {vault?.archetype ? "Horizon Board" : "Begin Alignment"} <ArrowRight size={16} className="ml-2" />
+              <div className="text-center md:text-right shrink-0">
+                {(vault?.alignment_complete || vault?.ethics) && (
+                  <div className="text-5xl font-serif italic text-white mb-4">{vault?.alignmentScore || "✓"}</div>
+                )}
+                <Button onClick={() => navigate((vault?.alignment_complete || vault?.ethics || vault?.archetype) ? '/horizon' : '/culture')} className="bg-teal-500 text-black font-black uppercase rounded-xl px-8 h-14">
+                  {(vault?.alignment_complete || vault?.ethics || vault?.archetype) ? "Horizon Board" : "Begin Alignment"} <ArrowRight size={16} className="ml-2" />
                 </Button>
               </div>
             </div>
@@ -248,12 +260,14 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
 
           {/* ALIGNMENT WIDGETS — Ethics Radar + Lexicon List */}
       {(vault?.ethics || (vault?.lexicon && vault.lexicon.length > 0)) && (
-        <div className="space-y-4">
+        <div className="space-y-4 overflow-visible">
           <div className="flex items-center gap-2 px-2">
             <Compass size={14} className="text-purple-400" />
             <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Alignment Snapshot</span>
           </div>
-          <AlignmentWidgets vault={vault} />
+          <div style={{ userSelect: 'text', WebkitUserSelect: 'text' }}>
+            <AlignmentWidgets vault={vault} />
+          </div>
         </div>
       )}
 

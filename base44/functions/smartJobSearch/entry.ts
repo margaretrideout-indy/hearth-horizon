@@ -4,13 +4,17 @@ Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
 
   const body = await req.json();
-  const { vault } = body || {};
+  const { vault, workEnv = 'remote', personalized = true } = body || {};
 
-  const hasProfile = vault && (
+  const hasProfile = personalized && vault && (
     (vault.lexicon && vault.lexicon.length > 0) ||
     (vault.ethics && Object.values(vault.ethics).some(v => v !== 50)) ||
     vault.resume
   );
+
+  const envContext = workEnv === 'remote'
+    ? 'remote-friendly or fully remote positions'
+    : 'on-site or hybrid positions in Canadian cities';
 
   let prompt;
 
@@ -28,8 +32,9 @@ User Profile:
 - Core Lexicon: ${lexiconSummary}
 - Ethics Profile: ${ethicsSummary}
 - Standing: ${vault.standing || 'Seedling'}
+- Work Environment Preference: ${envContext}
 
-Find 5 real, high-alignment job openings that would suit this person in 2026. Focus on roles in ethical tech, B-corps, mission-driven startups, social enterprises, or purpose-led organizations.
+Find 5 real, high-alignment job openings that would suit this person in 2026. Focus on roles in ethical tech, B-corps, mission-driven startups, social enterprises, or purpose-led organizations. Prioritize ${envContext}.
 
 For each job return:
 - title: specific job title
@@ -41,7 +46,7 @@ For each job return:
 
 Return as JSON.`;
   } else {
-    prompt = `Find 5 compelling job openings in 2026 for professionals interested in Ethical Tech, Systems Architecture, or Digital Stewardship roles. Focus on Canadian market or remote-friendly positions.
+    prompt = `Find 5 compelling job openings in 2026 for professionals interested in Ethical Tech, Systems Architecture, or Digital Stewardship roles. Focus on ${envContext} in the Canadian market.
 
 For each job return:
 - title: specific job title

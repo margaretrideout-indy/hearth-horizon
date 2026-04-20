@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
 import {
-  MapPin, Briefcase,
-  Loader2,
-  ExternalLink, Globe, RefreshCw,
-  Sparkles, Zap, AlertCircle
+  Briefcase, Loader2, ExternalLink, Globe, RefreshCw,
+  Sparkles, Zap, Home, Wifi
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 
+// ─── Skeleton ────────────────────────────────────────────────────────────────
 const JobCardSkeleton = () => (
   <div className="p-8 bg-[#110E16] border border-white/5 rounded-[2.5rem] animate-pulse space-y-6">
     <div className="w-12 h-12 bg-white/5 rounded-2xl" />
@@ -28,99 +25,114 @@ const JobCardSkeleton = () => (
   </div>
 );
 
+// ─── Match bar ───────────────────────────────────────────────────────────────
 const MatchBar = ({ percent }) => (
   <div className="flex items-center gap-2">
     <div className="flex-1 h-1 bg-white/5 rounded-full overflow-hidden">
-      <div className="h-full bg-gradient-to-r from-teal-500 to-purple-500 rounded-full" style={{ width: `${percent}%` }} />
+      <div
+        className="h-full bg-gradient-to-r from-teal-500 to-purple-500 rounded-full transition-all duration-700"
+        style={{ width: `${percent}%` }}
+      />
     </div>
-    <span className="text-[10px] font-black text-teal-400">{percent}%</span>
+    <span className="text-[10px] font-black text-teal-400 tabular-nums">{percent}%</span>
   </div>
 );
 
+// ─── Segmented control ───────────────────────────────────────────────────────
+const SegmentedControl = ({ value, onChange, options }) => (
+  <div className="flex bg-white/[0.04] border border-white/10 rounded-2xl p-1 gap-1">
+    {options.map((opt) => (
+      <button
+        key={opt.value}
+        onClick={() => onChange(opt.value)}
+        style={{ minHeight: 44 }}
+        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+          value === opt.value
+            ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20'
+            : 'text-zinc-500 hover:text-zinc-300'
+        }`}
+      >
+        <opt.icon size={13} />
+        <span>{opt.label}</span>
+      </button>
+    ))}
+  </div>
+);
+
+// ─── Discovery toggle ────────────────────────────────────────────────────────
+const DiscoveryToggle = ({ value, onChange }) => (
+  <div className="flex bg-white/[0.04] border border-white/10 rounded-2xl p-1 gap-1">
+    {[
+      { v: true, label: 'Personalized Sync', icon: Sparkles, activeClass: 'bg-purple-600 text-white shadow-lg shadow-purple-500/20' },
+      { v: false, label: 'Open Terrain', icon: Zap, activeClass: 'bg-zinc-700 text-white' },
+    ].map(({ v, label, icon: Icon, activeClass }) => (
+      <button
+        key={String(v)}
+        onClick={() => onChange(v)}
+        style={{ minHeight: 44 }}
+        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+          value === v ? activeClass : 'text-zinc-500 hover:text-zinc-300'
+        }`}
+      >
+        <Icon size={13} />
+        <span className="hidden sm:inline">{label}</span>
+      </button>
+    ))}
+  </div>
+);
+
+// ─── Main component ──────────────────────────────────────────────────────────
 export default function Canopy({ vault, onSync, isAdmin }) {
   const [aiJobs, setAiJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [mode, setMode] = useState(null); // 'personalized' | 'standalone'
-  const [error, setError] = useState(null);
+  const [mode, setMode] = useState(null);
 
-  // Legacy Adzuna fallback state
-  const [locationQuery, setLocationQuery] = useState('');
-  const [isRemoteOnly, setIsRemoteOnly] = useState(true);
-  const [activeLocation, setActiveLocation] = useState('');
-  const [countryCode, setCountryCode] = useState('ca');
-  const [adzunaJobs, setAdzunaJobs] = useState([]);
-  const [adzunaLoading, setAdzunaLoading] = useState(false);
+  // Controls
+  const [workEnv, setWorkEnv] = useState('remote');        // 'remote' | 'onsite'
+  const [personalized, setPersonalized] = useState(true);  // true = AI-matched, false = open
 
-  const appId = import.meta.env.VITE_ADZUNA_APP_ID || "fdbe8139";
-  const appKey = import.meta.env.VITE_ADZUNA_APP_KEY || "bc73ecdb23eacf99b7cf1739dcaec883";
+  const fetchRef = useRef(null);
 
-  const fetchSmartJobs = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const res = await base44.functions.invoke('smartJobSearch', { vault });
-      setAiJobs(res.data?.jobs || []);
-      setMode(res.data?.mode || 'standalone');
-    } catch (err) {
-      console.error('Smart job search failed:', err);
-      setError('AI search unavailable. Showing live listings.');
-      fetchAdzunaJobs();
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const updateCountryContext = (query) => {
-    const q = query.toLowerCase();
-    if (q.includes("usa") || q.includes("new york") || q.includes("california")) return "us";
-    if (q.includes("uk") || q.includes("london")) return "gb";
-    if (q.includes("australia") || q.includes("sydney")) return "au";
-    return "ca";
-  };
-
-  const fetchAdzunaJobs = async () => {
-    setAdzunaLoading(true);
-    try {
-      const what = isRemoteOnly ? "Remote" : "Professional";
-      const where = activeLocation ? `&where=${encodeURIComponent(activeLocation)}` : "";
-      const url = `https://api.adzuna.com/v1/api/jobs/${countryCode}/search/1?app_id=${appId}&app_key=${appKey}&results_per_page=15&what=${what}${where}&content-type=application/json`;
-      const response = await fetch(url);
-      const data = await response.json();
-      if (data.results) {
-        setAdzunaJobs(data.results.map((job) => ({
-          id: job.id,
-          title: job.title,
-          company: job.company?.display_name || "Confidential",
-          location: job.location?.display_name || "Global",
-          salary: job.salary_min ? `~$${Math.round(job.salary_min).toLocaleString()}` : "Market Rate",
-          link: job.redirect_url,
-          desc: job.description.replace(/<\/?[^>]+(>|$)/g, "").substring(0, 160) + "...",
-        })));
+  const fetchJobs = async () => {
+    // Cancel any pending fetch
+    clearTimeout(fetchRef.current);
+    fetchRef.current = setTimeout(async () => {
+      setIsLoading(true);
+      try {
+        const payload = {
+          vault: personalized ? vault : null,
+          workEnv,
+          personalized,
+        };
+        const res = await base44.functions.invoke('smartJobSearch', payload);
+        setAiJobs(res.data?.jobs || []);
+        setMode(res.data?.mode || 'standalone');
+      } catch (err) {
+        console.error('Job search failed:', err);
+        setAiJobs([]);
+      } finally {
+        setIsLoading(false);
       }
-    } catch { /* silent */ } finally {
-      setAdzunaLoading(false);
-    }
+    }, 300);
   };
 
-  useEffect(() => { fetchSmartJobs(); }, []);
-  useEffect(() => { if (error) fetchAdzunaJobs(); }, [activeLocation, isRemoteOnly, countryCode]);
+  // Re-fetch whenever controls change
+  useEffect(() => { fetchJobs(); }, [workEnv, personalized]);
 
-  const handleSearch = () => {
-    setCountryCode(updateCountryContext(locationQuery));
-    setActiveLocation(locationQuery);
-  };
-
-  const showingAI = aiJobs.length > 0 && !error;
+  const workEnvOptions = [
+    { value: 'remote', label: 'Remote Sanctuary', icon: Wifi },
+    { value: 'onsite', label: 'Local Presence', icon: Home },
+  ];
 
   return (
     <div className="min-h-screen bg-[#0A080D] text-white font-sans selection:bg-teal-500/30">
-      <div className="max-w-7xl mx-auto py-12 px-6 space-y-12">
+      <div className="max-w-screen-xl mx-auto py-10 px-4 sm:px-6 space-y-10">
 
-        {/* HEADER */}
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-4">
+        {/* ── HEADER ── */}
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-3">
             <div className="flex items-center gap-3 text-teal-500/80">
-              <Globe size={20} className="animate-pulse" />
+              <Globe size={18} className="animate-pulse" />
               <span className="text-[10px] font-black uppercase tracking-[0.5em] italic">Global Horizon</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-serif italic text-white tracking-tighter leading-none">
@@ -128,130 +140,126 @@ export default function Canopy({ vault, onSync, isAdmin }) {
             </h1>
           </motion.div>
 
-          {/* MODE BADGE + REFRESH */}
-          <div className="flex items-center gap-4">
+          {/* Refresh + mode badge */}
+          <div className="flex items-center gap-3">
             {mode && (
-              <div className={`flex items-center gap-2 px-4 py-2 rounded-full border text-[9px] font-black uppercase tracking-widest ${
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-[9px] font-black uppercase tracking-widest ${
                 mode === 'personalized'
                   ? 'bg-teal-500/10 border-teal-500/20 text-teal-400'
-                  : 'bg-zinc-800 border-zinc-700 text-zinc-400'
+                  : 'bg-zinc-800 border-zinc-700 text-zinc-500'
               }`}>
-                {mode === 'personalized' ? <Sparkles size={10} /> : <Zap size={10} />}
-                {mode === 'personalized' ? 'Personalized for You' : 'Curated Discovery'}
+                {mode === 'personalized' ? <Sparkles size={9} /> : <Zap size={9} />}
+                {mode === 'personalized' ? 'Personalized' : 'Discovery'}
               </div>
             )}
-            <button onClick={fetchSmartJobs} className="group w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/5 text-teal-500/40 hover:text-teal-400 transition-all">
-              <RefreshCw size={18} className={isLoading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-700'} />
+            <button
+              onClick={fetchJobs}
+              style={{ minHeight: 44, minWidth: 44 }}
+              className="flex items-center justify-center rounded-full bg-white/5 border border-white/5 text-teal-500/40 hover:text-teal-400 transition-all"
+            >
+              <RefreshCw size={16} className={isLoading ? 'animate-spin' : 'hover:rotate-180 transition-transform duration-700'} />
             </button>
           </div>
         </header>
 
-        {/* ERROR / FALLBACK SEARCH BAR */}
-        {error && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-            <div className="flex items-center gap-2 text-amber-400 text-[10px] font-black uppercase tracking-widest">
-              <AlertCircle size={14} /> {error}
-            </div>
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <div className="relative w-full sm:w-80">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={14} />
-                <Input
-                  placeholder="City, State, or Country..."
-                  value={locationQuery}
-                  onChange={(e) => setLocationQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  className="pl-12 bg-white/5 border-white/10 h-14 rounded-2xl focus:border-teal-500/50 placeholder:text-zinc-500"
-                />
-              </div>
-              <div className="flex items-center gap-4 bg-white/[0.07] border border-white/20 px-6 h-14 rounded-2xl">
-                <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest">Remote Only</span>
-                <Switch checked={isRemoteOnly} onCheckedChange={setIsRemoteOnly} className="data-[state=checked]:bg-teal-500" />
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* JOB GRID */}
-        {isLoading || adzunaLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-32">
-            {[0,1,2,3,4,5].map(i => <JobCardSkeleton key={i} />)}
+        {/* ── CONTROLS PANEL ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col sm:flex-row gap-4 p-5 bg-[#0E0C14] border border-white/5 rounded-[2rem]"
+        >
+          {/* Work Environment */}
+          <div className="flex-1 space-y-2">
+            <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 block px-1">Work Environment</span>
+            <SegmentedControl
+              value={workEnv}
+              onChange={setWorkEnv}
+              options={workEnvOptions}
+            />
           </div>
-        ) : (
+
+          {/* Discovery Mode */}
+          <div className="flex-1 space-y-2">
+            <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 block px-1">Discovery Mode</span>
+            <DiscoveryToggle value={personalized} onChange={setPersonalized} />
+          </div>
+        </motion.div>
+
+        {/* ── JOB GRID ── */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-32">
+            {[0, 1, 2, 3, 4, 5].map((i) => <JobCardSkeleton key={i} />)}
+          </div>
+        ) : aiJobs.length > 0 ? (
           <motion.div
             initial="hidden" animate="show"
-            variants={{ show: { transition: { staggerChildren: 0.08 } } }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-32"
+            variants={{ show: { transition: { staggerChildren: 0.07 } } }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-32"
           >
-            {showingAI ? (
-              aiJobs.map((job, idx) => (
-                <motion.div key={idx} variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}>
-                  <Card className="group relative h-full p-8 bg-[#110E16] border-white/5 hover:border-teal-500/20 rounded-[2.5rem] flex flex-col justify-between overflow-hidden transition-all">
-                    <div className="space-y-5 relative z-10">
-                      <div className="flex justify-between items-start">
-                        <div className="w-12 h-12 flex items-center justify-center bg-black/40 border border-white/10 rounded-2xl">
-                          <Briefcase size={20} className="text-zinc-500 group-hover:text-teal-400 transition-all" />
-                        </div>
-                        <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 text-[9px]">High Alignment</Badge>
+            {aiJobs.map((job, idx) => (
+              <motion.div key={idx} variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}>
+                <Card className="group relative h-full p-8 bg-[#110E16] border border-white/5 hover:border-teal-500/20 rounded-[2.5rem] flex flex-col justify-between overflow-hidden transition-all duration-300">
+                  <div className="space-y-5 relative z-10">
+                    {/* Top row */}
+                    <div className="flex justify-between items-start">
+                      <div className="w-11 h-11 flex items-center justify-center bg-black/40 border border-white/10 rounded-2xl shrink-0">
+                        <Briefcase size={18} className="text-zinc-500 group-hover:text-teal-400 transition-all" />
                       </div>
-                      <div>
-                        <h3 className="text-xl font-serif italic text-white/90 leading-tight">{job.title}</h3>
-                        <p className="text-[10px] text-teal-500/50 font-black uppercase tracking-widest mt-1">{job.company}</p>
-                      </div>
-                      <MatchBar percent={job.match_percent || 85} />
-                      {job.hearth_insight && (
-                        <div className="p-4 bg-purple-500/5 border border-purple-500/10 rounded-2xl">
-                          <p className="text-[10px] text-purple-300/80 italic leading-relaxed">
-                            <span className="text-purple-400 font-black not-italic">Hearth Insight: </span>
-                            {job.hearth_insight}
-                          </p>
-                        </div>
-                      )}
+                      <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20 text-[9px] font-black">
+                        High Alignment
+                      </Badge>
                     </div>
-                    <div className="mt-8 pt-6 border-t border-white/5 space-y-4 relative z-10">
-                      <div className="flex justify-between items-center">
-                        <span className="text-[9px] text-zinc-500 uppercase font-black">{job.location}</span>
-                      </div>
-                      <Button asChild className="w-full h-12 bg-white/5 hover:bg-teal-500 hover:text-black rounded-xl text-[9px] uppercase font-black transition-all">
-                        <a href={job.link || '#'} target="_blank" rel="noopener noreferrer">
-                          View Deployment <ExternalLink size={12} className="ml-2" />
-                        </a>
-                      </Button>
+
+                    {/* Title + company */}
+                    <div>
+                      <h3 className="text-xl font-serif italic text-white/90 leading-snug">{job.title}</h3>
+                      <p className="text-[10px] text-teal-500/50 font-black uppercase tracking-widest mt-1">{job.company}</p>
                     </div>
-                  </Card>
-                </motion.div>
-              ))
-            ) : adzunaJobs.length > 0 ? (
-              adzunaJobs.map((job) => (
-                <motion.div key={job.id} variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}>
-                  <Card className="group relative h-full p-8 bg-[#110E16] border-white/5 rounded-[2.5rem] flex flex-col justify-between overflow-hidden">
-                    <div className="space-y-6 relative z-10">
-                      <div className="w-12 h-12 flex items-center justify-center bg-black/40 border border-white/10 rounded-2xl">
-                        <Briefcase size={20} className="text-zinc-500 group-hover:text-teal-400 transition-all" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-serif italic text-white/90 line-clamp-2">{job.title}</h3>
-                        <p className="text-[10px] text-teal-500/50 font-black uppercase tracking-widest mt-2">{job.company}</p>
-                      </div>
-                      <p className="text-xs text-zinc-500 italic line-clamp-3">"{job.desc}"</p>
+
+                    {/* Match bar */}
+                    <MatchBar percent={job.match_percent || 85} />
+
+                    {/* Hearth Insight blockquote */}
+                    {job.hearth_insight && (
+                      <blockquote className="border-l-2 border-purple-500/40 pl-4 py-1">
+                        <p className="text-[11px] text-purple-300/70 italic leading-relaxed">
+                          <span className="text-purple-400 font-black not-italic text-[9px] uppercase tracking-widest block mb-1">
+                            Hearth Insight
+                          </span>
+                          {job.hearth_insight}
+                        </p>
+                      </blockquote>
+                    )}
+                  </div>
+
+                  {/* Footer */}
+                  <div className="mt-8 pt-5 border-t border-white/5 space-y-3 relative z-10">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[9px] text-zinc-500 uppercase font-black">{job.location}</span>
+                      <span className="text-[9px] text-zinc-600 uppercase font-black">
+                        {workEnv === 'remote' ? '🌐 Remote' : '📍 On-site'}
+                      </span>
                     </div>
-                    <div className="mt-10 pt-8 border-t border-white/5 space-y-6 relative z-10">
-                      <div className="flex justify-between items-center">
-                        <div className="text-2xl font-black italic text-white/80 font-serif">{job.salary}</div>
-                        <div className="text-[9px] font-black text-zinc-400 uppercase">{job.location}</div>
-                      </div>
-                      <Button asChild className="w-full h-12 bg-white/5 hover:bg-teal-500 hover:text-black rounded-xl text-[9px] uppercase font-black transition-all">
-                        <a href={job.link} target="_blank" rel="noopener noreferrer">View Deployment <ExternalLink size={12} className="ml-2" /></a>
-                      </Button>
-                    </div>
-                  </Card>
-                </motion.div>
-              ))
-            ) : (
-              <div className="col-span-full py-20 text-center text-zinc-500 uppercase font-black text-xs tracking-widest">
-                No openings found. Try refreshing your terrain.
-              </div>
-            )}
+                    <Button
+                      asChild
+                      className="w-full h-12 bg-white/5 hover:bg-teal-500 hover:text-black rounded-2xl text-[9px] uppercase font-black transition-all"
+                    >
+                      <a href={job.link || '#'} target="_blank" rel="noopener noreferrer">
+                        View Deployment <ExternalLink size={12} className="ml-2" />
+                      </a>
+                    </Button>
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
           </motion.div>
+        ) : (
+          <div className="col-span-full py-24 text-center space-y-3">
+            <p className="text-zinc-600 uppercase font-black text-xs tracking-widest">No openings found.</p>
+            <button onClick={fetchJobs} className="text-teal-500/60 text-[10px] uppercase font-black hover:text-teal-400 transition-colors">
+              Refresh terrain →
+            </button>
+          </div>
         )}
       </div>
     </div>
