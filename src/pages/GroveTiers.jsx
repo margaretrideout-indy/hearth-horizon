@@ -128,10 +128,10 @@ const GroveTiers = ({ vault, onSync }) => {
     <div className="relative min-h-screen bg-[#0A080D] text-slate-300 font-sans selection:bg-teal-500/30 overflow-x-hidden pb-20 text-left">
       <div className="absolute top-0 left-0 w-full h-[100vh] bg-[radial-gradient(circle_at_50%_0%,rgba(20,184,166,0.1),rgba(147,51,234,0.03)_40%,transparent_80%)] pointer-events-none" />
 
-      {/* NAVIGATION BAR */}
+      {/* NAVIGATION BAR - TWEAKED FOR MOBILE LOG IN VISIBILITY */}
       <nav className="fixed top-0 left-0 w-full z-[100] bg-[#0A080D]/90 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4 md:gap-6">
+          <div className="flex items-center gap-2 md:gap-6">
             <button onClick={() => navigate('/library')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all p-2">
               <LibraryIcon size={18} />
               <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">Library</span>
@@ -141,7 +141,11 @@ const GroveTiers = ({ vault, onSync }) => {
               <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">Horizon</span>
             </button>
           </div>
-          <button onClick={handleMemberLogin} className="flex items-center gap-2 text-white bg-white/5 px-4 py-2 rounded-full border border-white/10 hover:border-teal-500/50 transition-all">
+          
+          <button 
+            onClick={handleMemberLogin} 
+            className="flex items-center gap-2 text-white bg-white/5 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/10 hover:border-teal-500/50 transition-all active:scale-95"
+          >
             <LogIn size={14} className="text-teal-400" />
             <span className="text-[10px] font-black uppercase tracking-widest">Log In</span>
           </button>
@@ -215,18 +219,29 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        {/* LUMINARY REGISTRY */}
+        {/* LUMINARY REGISTRY - ADDED MATT'S NOTE */}
         <section className="mb-32 max-w-4xl mx-auto text-center">
           <div className="p-[1px] bg-gradient-to-b from-teal-500/20 to-purple-500/20 rounded-[3rem]">
             <div className="bg-[#0D0B12] rounded-[2.9rem] p-12 md:p-16">
               <Star className="text-teal-400 mx-auto mb-6 animate-pulse" size={32} />
               <h2 className="text-white font-serif italic text-3xl mb-4">Luminary Registry</h2>
-              <p className="text-zinc-400 text-sm font-light mb-8">Hearth & Horizon is built on reciprocity. Your contributions help keep this sanctuary accessible for all travellers.</p>
-              <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-12 opacity-40">
+              <p className="text-zinc-400 text-sm font-light mb-8 italic">
+                Hearth & Horizon is built on reciprocity. Your contributions help keep this sanctuary accessible for all travellers.
+              </p>
+              
+              <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-6 opacity-40">
                 {['Matthew R.', 'Joining Soon...', 'Joining Soon...'].map((name, i) => (
                   <span key={i} className="text-[10px] font-black uppercase tracking-widest text-zinc-500 border-b border-white/10 pb-1">{name}</span>
                 ))}
               </div>
+
+              {/* The "Small Note" to Matt */}
+              <div className="mb-12">
+                <p className="text-[10px] text-teal-400/60 font-light tracking-wide italic">
+                  To Matt: Thank you for holding the map while I was navigating my way.
+                </p>
+              </div>
+
               <button onClick={() => window.location.href = LINK_DONATION} className="px-10 py-4 bg-teal-500 text-black rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-teal-500/20">Choose Your Contribution</button>
             </div>
           </div>
