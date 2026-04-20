@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { Flame, BookOpen, Activity, Compass, LayoutDashboard, LogOut } from 'lucide-react';
+import { Flame, BookOpen, Activity, Compass, LayoutDashboard, Trees, ShieldCheck } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 // Hearth & Horizon Ecosystem Components
@@ -133,7 +133,7 @@ export default function App() {
   const showNav = !['/grove', '/', '/contact'].includes(location.pathname);
 
   const NavLinks = ({ isDesktop = false }) => {
-    const allLinks = [
+    const mainLinks = [
       { label: 'Hearth', path: '/hearth', icon: Flame },
       { label: 'Alignment', path: '/culture', icon: Compass },
       { label: 'Horizon', path: '/horizon', icon: LayoutDashboard },
@@ -143,9 +143,9 @@ export default function App() {
 
     if (isDesktop) {
       return (
-        <div className="flex flex-col h-full pb-8">
+        <div className="flex flex-col h-full pb-8 justify-between">
           <div className="flex flex-col gap-2">
-            {allLinks.map((tab) => {
+            {mainLinks.map((tab) => {
               const isActive = location.pathname === tab.path;
               return (
                 <button
@@ -159,20 +159,49 @@ export default function App() {
               );
             })}
           </div>
+
+          {/* Bottom utility links */}
+          <div className="flex flex-col gap-1 px-2 pb-4 border-t border-white/5 pt-4 mt-4">
+            {isAdmin && (
+              <button
+                onClick={() => navigate('/admin')}
+                className={`flex items-center gap-4 px-6 py-3 rounded-xl transition-all active:scale-95 ${location.pathname === '/admin' ? 'bg-zinc-800 text-amber-400 font-bold' : 'text-zinc-600 hover:text-amber-400 hover:bg-zinc-900/50'}`}
+              >
+                <ShieldCheck size={18} strokeWidth={2} />
+                <span className="text-xs tracking-wide">Admin</span>
+              </button>
+            )}
+            <button
+              onClick={() => navigate('/grove')}
+              className="flex items-center gap-4 px-6 py-3 rounded-xl transition-all active:scale-95 text-zinc-600 hover:text-teal-400 hover:bg-zinc-900/50"
+            >
+              <Trees size={18} strokeWidth={2} />
+              <span className="text-xs tracking-wide">Return to Grove</span>
+            </button>
+          </div>
         </div>
       );
     }
 
-    // Mobile / tablet bottom nav
+    // Mobile / tablet bottom nav — keep compact, add Grove + optional Admin
+    const mobileLinks = [
+      ...mainLinks,
+      { label: 'Grove', path: '/grove', icon: Trees },
+      ...(isAdmin ? [{ label: 'Admin', path: '/admin', icon: ShieldCheck }] : []),
+    ];
+
     return (
       <>
-        {allLinks.map((tab) => {
+        {mobileLinks.map((tab) => {
           const isActive = location.pathname === tab.path;
+          const accentColor = tab.path === '/admin'
+            ? (isActive ? 'text-amber-400' : 'text-zinc-600 hover:text-amber-400')
+            : (isActive ? 'text-teal-400' : 'text-zinc-600 hover:text-zinc-400');
           return (
             <button
               key={tab.label}
               onClick={() => navigate(tab.path)}
-              className={`flex flex-col items-center justify-center gap-1 flex-1 py-2 transition-all active:scale-95 ${isActive ? 'text-teal-400' : 'text-zinc-600 hover:text-zinc-400'}`}
+              className={`flex flex-col items-center justify-center gap-1 flex-1 py-2 transition-all active:scale-95 ${accentColor}`}
             >
               <tab.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
               <span className="text-[8px] font-black uppercase tracking-tighter">{tab.label}</span>
