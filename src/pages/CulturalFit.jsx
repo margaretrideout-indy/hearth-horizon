@@ -1,177 +1,132 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Send, Sparkles, Loader2, Leaf, Heart, X, Quote, MessageSquare, Flame, Crown } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { base44 } from '@/api/base44Client';
+import { Sparkles, ArrowRight, Zap, Repeat, Target, Shield } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-const TOS_TEXT = "This is a sanctuary of reciprocity. We support, we don't vent. We build, we don't break.";
-
-const GLOW_PROMPTS = [
-  "What is one small boundary you set this week that protected your peace?",
-  "Identify a 'ghost' in your current role—a task or expectation that no longer serves you. How do we exorcise it?",
-  "If your career migration had a soundtrack right now, what's the tempo?",
-  "Who is one person in your professional circle that consistently adds 'logs' to your fire?",
-  "What does 'enough' look like for you this month? Not 'more,' just 'enough.'",
-  "Where is your physical sanctuary when the digital world gets too loud?",
-  "Recall a moment this week where you chose yourself over a deadline. How did that feel?"
+const LEXICON_DATA = [
+  {
+    category: "The Pivot",
+    instruction: "How do you translate your previous 'Core Output' into the Hearth vernacular?",
+    options: [
+      { old: "Managing Deliverables", new: "Stewarding Outcomes", value: "steward" },
+      { old: "Executive Reporting", new: "Architecting Narratives", value: "hearthkeeper" },
+      { old: "Task Execution", new: "Cultivating Flow", value: "seedling" }
+    ]
+  },
+  {
+    category: "The Value Alignment",
+    instruction: "Select the frequency that best describes your professional North Star:",
+    options: [
+      { old: "Efficiency", new: "Reciprocity", value: "hearthkeeper" },
+      { old: "Competition", new: "Collective Intelligence", value: "steward" },
+      { old: "Consistency", new: "Adaptive Resilience", value: "seedling" }
+    ]
+  }
 ];
 
-const getWeeklyPrompt = () => {
-  const now = new Date();
-  const weekNumber = Math.floor(now.getDate() / 7);
-  return GLOW_PROMPTS[weekNumber % GLOW_PROMPTS.length];
-};
+export default function CulturalFit({ onComplete }) {
+  const [step, setStep] = useState(0);
+  const [userLexicon, setUserLexicon] = useState([]);
+  const [finalStanding, setFinalStanding] = useState(null);
 
-const EmberReactions = () => {
-  const [counts, setCounts] = useState({ sparkle: 0, leaf: 0, heart: 0 });
-  const react = (type) => setCounts((prev) => ({ ...prev, [type]: prev[type] + 1 }));
-  const configs = [
-    { type: 'sparkle', icon: Sparkles, color: 'text-teal-400' },
-    { type: 'leaf', icon: Leaf, color: 'text-green-500' },
-    { type: 'heart', icon: Heart, color: 'text-rose-500' }
-  ];
-  return (
-    <div className="flex gap-1.5 mt-2">
-      {configs.map(({ type, icon: Icon, color }) => (
-        <button key={type} onClick={(e) => { e.stopPropagation(); react(type); }} className="flex items-center gap-1 px-2 py-1 rounded-full bg-white/5 border border-white/5 hover:border-white/10 transition-all active:scale-90">
-          <Icon size={10} className={counts[type] > 0 ? color : 'text-zinc-600'} />
-          {counts[type] > 0 && <span className="text-[9px] text-zinc-400 font-bold">{counts[type]}</span>}
-        </button>
-      ))}
-    </div>
-  );
-};
+  const handleSelection = (option) => {
+    const updatedLexicon = [...userLexicon, option.new];
+    setUserLexicon(updatedLexicon);
 
-const TierBadge = ({ tier }) => {
-  const t = tier?.toLowerCase();
-  const isAdminTier = t === 'founder' || t === 'admin';
-  return (
-    <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded border flex items-center gap-1 ${
-      isAdminTier ? 'bg-purple-500/20 text-purple-400 border-purple-500/30' : 'bg-zinc-800 text-zinc-500 border-white/5'
-    }`}>
-      {isAdminTier && <Crown size={8} />}
-      {t || 'Seedling'}
-    </span>
-  );
-};
-
-export default function EmbersChat({ vault, isAdmin }) {
-  const [input, setInput] = useState('');
-  const [sending, setSending] = useState(false);
-  const [posts, setPosts] = useState([]);
-  const [replyTarget, setReplyTarget] = useState(null);
-  const scrollRef = useRef(null);
-
-  const fetchPosts = async () => {
-    try {
-      const data = await base44.entities.EmberPost.list('-created_date', 50);
-      setPosts(data.reverse());
-    } catch (err) { console.error(err); }
+    if (step < LEXICON_DATA.length - 1) {
+      setStep(step + 1);
+    } else {
+      // Determine standing based on the last selection for this demo 
+      // (or logic based on total points)
+      setFinalStanding(option.value);
+    }
   };
 
-  useEffect(() => {
-    fetchPosts();
-    return base44.entities.EmberPost.subscribe((e) => {
-      if (e.type === 'create') setPosts(prev => [...prev, e.data]);
-    });
-  }, []);
-
-  const handleSend = async () => {
-    if (!input.trim() || sending) return;
-    setSending(true);
-    try {
-      await base44.entities.EmberPost.create({
-        author_name: vault?.email?.split('@')[0] || 'Traveler',
-        author_email: vault?.email || 'anonymous',
-        content: input,
-        reply_to_name: replyTarget?.author_name || null,
-        reply_to_content: replyTarget?.content || null,
-        subscription_tier: isAdmin ? 'Founder' : (vault?.standing || 'Seedling'),
-      });
-      setInput('');
-      setReplyTarget(null);
-    } catch (err) { console.error(err); } finally { setSending(false); }
-  };
-
-  const STATIC_POSTS = [
-    { id: 'glow', is_glow: true, content: getWeeklyPrompt(), author_name: 'The Hearth' },
-    { id: 'welcome', author_name: 'Margaret', subscription_tier: 'Founder', content: "Welcome to the Hearth. This is our shared space to navigate the shifting winds of career migration. How are you arriving today?", author_email: 'founder@hearth.io' }
-  ];
-
-  const allMessages = [...STATIC_POSTS, ...posts];
-
-  return (
-    <div className="flex flex-col h-full w-full bg-[#070508] border border-white/5 overflow-hidden">
-      {/* Header */}
-      <div className="p-4 border-b border-white/5 bg-[#0A080D]/80 backdrop-blur-md flex justify-between items-center shrink-0">
-        <div className="flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
-          <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Embers Feed</span>
+  if (finalStanding) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9 }} 
+        animate={{ opacity: 1, scale: 1 }}
+        className="max-w-xl mx-auto p-12 bg-[#0D0B14] border border-purple-500/20 rounded-[3rem] text-center shadow-2xl"
+      >
+        <div className="inline-flex p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 mb-8">
+          <Repeat className="text-teal-400" size={32} />
         </div>
-        <Flame size={14} className="text-orange-500" />
-      </div>
+        
+        <h2 className="text-3xl font-serif italic text-white mb-6">Translation Complete</h2>
+        
+        <div className="flex flex-wrap justify-center gap-3 mb-10">
+          {userLexicon.map((word, i) => (
+            <span key={i} className="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-teal-400 text-xs font-black uppercase tracking-tighter">
+              {word}
+            </span>
+          ))}
+        </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar pb-40">
-        {allMessages.map((msg, idx) => {
-          const isGlow = msg.is_glow;
-          const isFounder = msg.subscription_tier?.toLowerCase() === 'founder';
-          const isOwn = msg.author_email === vault?.email;
+        <p className="text-zinc-500 text-sm mb-10 leading-relaxed max-w-sm mx-auto">
+          Your old world language has been shed. You are now prepared to view the <span className="text-white font-bold">Horizon Board</span> through a cleared lens.
+        </p>
 
-          return (
-            <motion.div key={msg.id || idx} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={`flex flex-col ${isGlow ? 'items-center my-8' : isOwn ? 'items-end' : 'items-start'}`}>
-              
-              {!isGlow && (
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className={`text-[10px] font-black uppercase tracking-tighter ${isFounder ? 'text-purple-400' : 'text-zinc-500'}`}>
-                    {msg.author_name}
+        <Button 
+          onClick={() => onComplete(finalStanding)}
+          className="w-full bg-teal-500 text-black font-black uppercase tracking-[0.2em] py-7 rounded-2xl hover:bg-teal-400 transition-all shadow-[0_0_20px_rgba(20,184,166,0.15)]"
+        >
+          View The Horizon
+        </Button>
+      </motion.div>
+    );
+  }
+
+  return (
+    <div className="max-w-3xl mx-auto py-20 px-8">
+      <header className="mb-16">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="h-[1px] w-12 bg-purple-500/50" />
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400">Alignment Engine</span>
+        </div>
+        <h1 className="text-4xl font-serif italic text-white mb-4">Language Translation</h1>
+        <p className="text-zinc-500 text-lg font-light tracking-wide">{LEXICON_DATA[step].instruction}</p>
+      </header>
+
+      <div className="grid gap-6">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="space-y-4"
+          >
+            {LEXICON_DATA[step].options.map((opt, i) => (
+              <button
+                key={i}
+                onClick={() => handleSelection(opt)}
+                className="w-full group flex items-center justify-between p-8 bg-white/[0.02] border border-white/5 rounded-3xl transition-all hover:bg-purple-500/[0.05] hover:border-purple-500/30 text-left"
+              >
+                <div className="flex flex-col">
+                  <span className="text-[10px] uppercase font-black tracking-widest text-zinc-600 group-hover:text-zinc-400 transition-colors mb-2 italic line-through">
+                    {opt.old}
                   </span>
-                  <TierBadge tier={msg.subscription_tier} />
+                  <span className="text-xl font-serif italic text-zinc-300 group-hover:text-teal-400 transition-all">
+                    {opt.new}
+                  </span>
                 </div>
-              )}
-
-              <div className={`relative max-w-[85%] p-4 rounded-2xl ${
-                isGlow ? 'bg-orange-500/10 border border-orange-500/20 text-center rounded-[2rem]' :
-                isFounder ? 'bg-purple-500/5 border border-purple-500/20 text-zinc-200' :
-                isOwn ? 'bg-teal-500/10 border border-teal-500/20 text-white' : 'bg-white/5 border-white/10 text-zinc-300'
-              }`}>
-                {msg.reply_to_name && (
-                  <div className="mb-2 pl-2 border-l border-white/20 opacity-50 text-[11px] italic">
-                    <span className="font-bold not-italic">@{msg.reply_to_name}:</span> {msg.reply_to_content}
-                  </div>
-                )}
-                <p className={`${isGlow ? 'font-serif italic text-orange-200 text-md' : 'text-sm'} leading-relaxed`}>
-                  {msg.content}
-                </p>
-                {isGlow && <span className="text-[8px] uppercase tracking-[0.3em] text-orange-500/60 mt-4 block">Weekly Prompt</span>}
-              </div>
-
-              {!isGlow && (
-                <div className={`flex items-center gap-3 mt-1 ${isOwn ? 'flex-row-reverse' : ''}`}>
-                  <button onClick={() => setReplyTarget(msg)} className="text-[9px] font-black text-zinc-600 hover:text-teal-400 uppercase tracking-widest">Reply</button>
-                  <EmberReactions />
+                <div className="h-12 w-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-teal-500/50 transition-all">
+                  <ArrowRight className="text-zinc-700 group-hover:text-teal-400 transition-all" size={20} />
                 </div>
-              )}
-            </motion.div>
-          );
-        })}
+              </button>
+            ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      <footer className="p-6 bg-[#0A080D] border-t border-white/5">
-        <AnimatePresence>
-          {replyTarget && (
-            <div className="mb-3 p-3 bg-white/5 border border-white/10 rounded-xl flex justify-between items-center text-xs">
-              <span className="text-zinc-500">Replying to <b className="text-teal-500">{replyTarget.author_name}</b></span>
-              <button onClick={() => setReplyTarget(null)}><X size={14}/></button>
-            </div>
-          )}
-        </AnimatePresence>
+      <footer className="mt-20 flex justify-between items-center opacity-30">
         <div className="flex gap-2">
-          <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Share a thought..." className="bg-white/5 border-white/10 h-12 rounded-xl" onKeyDown={(e) => e.key === 'Enter' && handleSend()} />
-          <Button onClick={handleSend} disabled={!input.trim() || sending} className="h-12 w-12 bg-teal-500 text-black rounded-xl">
-            {sending ? <Loader2 className="animate-spin" size={18} /> : <Send size={18} />}
-          </Button>
+          {[0, 1].map(i => (
+            <div key={i} className={`h-1 w-8 rounded-full ${i === step ? 'bg-teal-500' : 'bg-white/10'}`} />
+          ))}
         </div>
+        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-500">Lexicon Mapping v3.0</span>
       </footer>
     </div>
   );
