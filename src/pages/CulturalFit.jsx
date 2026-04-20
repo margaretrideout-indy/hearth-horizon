@@ -12,7 +12,7 @@ const VALUE_DIMENSIONS = [
   { id: 'agency', label: 'Personal Agency', icon: Shield, description: 'Autonomy over the migration path.' },
 ];
 
-export default function CulturalFit({ vault, onComplete }) {
+export default function CulturalFit({ vault, onComplete, onSync }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('lexicon'); 
   const [inputPhrase, setInputPhrase] = useState('');

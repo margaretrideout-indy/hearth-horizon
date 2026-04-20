@@ -141,30 +141,45 @@ export default function App() {
       { label: 'Embers', path: '/embers', icon: Activity }
     ];
 
-    return (
-      <div className={`flex ${isDesktop ? 'flex-col h-full pb-8' : 'justify-around items-center h-full px-2'}`}>
-        <div className={`flex ${isDesktop ? 'flex-col gap-2' : 'w-full flex-row justify-around'}`}>
-          {allLinks.map((tab) => {
-            const isActive = location.pathname === tab.path;
-            return (
-              <button
-                key={tab.label}
-                onClick={() => navigate(tab.path)}
-                className={`flex transition-all active:scale-95 ${
-                  isDesktop ?
-                  `items-center gap-4 px-6 py-4 rounded-xl mx-2 ${isActive ? 'bg-zinc-800 text-teal-400 font-bold' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'}` :
-                  `flex-col items-center gap-1 min-w-[64px] justify-center ${isActive ? 'text-teal-400' : 'text-zinc-600'}`
-                }`}
-              >
-                <tab.icon size={isDesktop ? 22 : 18} strokeWidth={isActive ? 2.5 : 2} />
-                <span className={isDesktop ? 'text-sm tracking-wide' : 'text-[7px] font-black uppercase tracking-tighter'}>
-                  {tab.label}
-                </span>
-              </button>
-            );
-          })}
+    if (isDesktop) {
+      return (
+        <div className="flex flex-col h-full pb-8">
+          <div className="flex flex-col gap-2">
+            {allLinks.map((tab) => {
+              const isActive = location.pathname === tab.path;
+              return (
+                <button
+                  key={tab.label}
+                  onClick={() => navigate(tab.path)}
+                  className={`flex items-center gap-4 px-6 py-4 rounded-xl mx-2 transition-all active:scale-95 ${isActive ? 'bg-zinc-800 text-teal-400 font-bold' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'}`}
+                >
+                  <tab.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+                  <span className="text-sm tracking-wide">{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      );
+    }
+
+    // Mobile / tablet bottom nav
+    return (
+      <>
+        {allLinks.map((tab) => {
+          const isActive = location.pathname === tab.path;
+          return (
+            <button
+              key={tab.label}
+              onClick={() => navigate(tab.path)}
+              className={`flex flex-col items-center justify-center gap-1 flex-1 py-2 transition-all active:scale-95 ${isActive ? 'text-teal-400' : 'text-zinc-600 hover:text-zinc-400'}`}
+            >
+              <tab.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+              <span className="text-[8px] font-black uppercase tracking-tighter">{tab.label}</span>
+            </button>
+          );
+        })}
+      </>
     );
   };
 
@@ -190,7 +205,7 @@ export default function App() {
                 <YourHearth 
                   vault={vault} 
                   onSync={handleSync} 
-                  onResumeSync={handleResumeSync} // CRITICAL FIX: Passing the function here
+                  onResumeSync={handleResumeSync}
                   isAdmin={isAdmin} 
                   onNavigateToHorizon={() => navigate('/horizon')} 
                 />
@@ -207,7 +222,22 @@ export default function App() {
             <Route path="*" element={<Navigate to="/grove" replace />} />
           </Routes>
         </div>
+        {/* Spacer so content isn't hidden behind mobile nav */}
+        {showNav && <div className="h-24 md:hidden flex-shrink-0" />}
       </main>
+
+      {/* MOBILE / TABLET BOTTOM NAV */}
+      {showNav && (
+        <nav className="fixed bottom-0 left-0 right-0 z-[100] md:hidden"
+          style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+        >
+          <div className="bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5">
+            <div className="flex justify-around items-center h-16 px-2">
+              <NavLinks />
+            </div>
+          </div>
+        </nav>
+      )}
     </div>
   );
 }

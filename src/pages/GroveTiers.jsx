@@ -149,8 +149,10 @@ const GroveTiers = ({ vault, onSync }) => {
     <div className="relative min-h-screen bg-[#0A080D] text-slate-300 font-sans selection:bg-teal-500/30 overflow-x-hidden pb-20 text-left">
       <div className="absolute top-0 left-0 w-full h-[100vh] bg-[radial-gradient(circle_at_50%_0%,rgba(20,184,166,0.1),rgba(147,51,234,0.03)_40%,transparent_80%)] pointer-events-none" />
 
-      {/* NAVIGATION BAR - TWEAKED FOR MOBILE LOG IN VISIBILITY */}
-      <nav className="fixed top-0 left-0 w-full z-[100] bg-[#0A080D]/90 backdrop-blur-xl border-b border-white/5">
+      {/* NAVIGATION BAR */}
+      <nav className="fixed top-0 left-0 w-full z-[100] bg-[#0A080D]/90 backdrop-blur-xl border-b border-white/5"
+        style={{ paddingTop: 'env(safe-area-inset-top)' }}
+      >
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 md:gap-6">
             <button onClick={() => navigate('/library')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all p-2">
@@ -173,7 +175,7 @@ const GroveTiers = ({ vault, onSync }) => {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-6 pt-24 md:pt-32 pb-12 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 pt-28 md:pt-36 pb-12 relative z-10">
         <header className="mb-20 text-center">
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-500/5 border border-teal-500/10 mb-8">
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">The Hearth & Horizon Sanctuary</span>
