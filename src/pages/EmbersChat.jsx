@@ -120,7 +120,7 @@ export default function EmbersChat({ vault, isAdmin }) {
   };
 
   const STATIC_POSTS = [
-    { id: 'glow', is_glow: true, content: getWeeklyPrompt(), author_name: 'The Hearth', subscription_tier: 'Hearth' },
+    { id: 'glow', is_glow: true, content: getWeeklyPrompt(), author_name: 'The Glow', subscription_tier: 'Prompt' },
     { id: 'welcome', author_name: 'Margaret', subscription_tier: 'Founder', content: "Welcome to the Embers Chat. This is our shared space to navigate the shifting winds of career migration. How are you arriving today?", author_email: 'founder@hearth.io' }
   ];
 
