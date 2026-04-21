@@ -396,8 +396,24 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
           <Compass size={14} className="text-purple-400" />
           <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Alignment Snapshot</span>
         </div>
-        <span className="text-[10px] font-black tabular-nums" style={{ color: '#39FFCA' }}>
-          {progressPct}% complete
+        <span 
+          className="text-[10px] font-black tabular-nums transition-all duration-700" 
+          style={{ 
+            color: progressPct === 100 ? '#39FFCA' : '#71717a', 
+            textShadow: progressPct === 100 ? '0 0 15px rgba(57,255,202,0.6)' : 'none' 
+          }}
+        >
+          {progressPct === 100 ? (
+            <motion.span 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              className="flex items-center gap-1.5"
+            >
+              <Zap size={10} className="fill-current" /> SYSTEM PRIMED
+            </motion.span>
+          ) : (
+            `${progressPct}% complete`
+          )}
         </span>
       </div>
 
