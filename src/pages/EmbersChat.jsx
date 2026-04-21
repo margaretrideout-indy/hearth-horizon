@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Sparkles, Loader2, Leaf, Heart, X, MessageSquare, Flame, Crown } from 'lucide-react';
+import { Send, Sparkles, Loader2, Leaf, Heart, X, MessageSquare, Flame, Crown, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -111,12 +111,25 @@ export default function EmbersChat({ vault, isAdmin }) {
         author_email: vault?.email || 'anonymous',
         content: input,
         reply_to_name: replyTarget?.author_name || null,
-        reply_to_content: replyTarget?.content || null,
+        reply_to_content: replyTarget?.content ? replyTarget.content.slice(0, 80) : null,
+        reply_to_is_glow: replyTarget?.is_glow || false,
         subscription_tier: isAdmin ? 'Founder' : (vault?.standing || 'Seedling'),
       });
       setInput('');
       setReplyTarget(null);
     } catch (err) { console.error(err); } finally { setSending(false); }
+  };
+
+  const handleDelete = async (postId) => {
+    // Optimistic update
+    setPosts(prev => prev.filter(p => p.id !== postId));
+    try {
+      await base44.entities.EmberPost.delete(postId);
+    } catch (err) {
+      console.error(err);
+      // Re-fetch on failure
+      fetchPosts();
+    }
   };
 
   const STATIC_POSTS = [
@@ -176,9 +189,15 @@ export default function EmbersChat({ vault, isAdmin }) {
                 isOwn ? 'bg-teal-500/[0.07] border-teal-500/20 text-white' : 
                 'bg-white/[0.03] border-white/10 text-zinc-300'
               }`}>
-                {msg.reply_to_name && (
-                  <div className="mb-2 pl-2 border-l border-teal-500/30 opacity-60 text-[11px] italic">
-                    <span className="font-bold not-italic text-teal-400">@{msg.reply_to_name}:</span> {msg.reply_to_content}
+                {/* Root context whisper */}
+                {(msg.reply_to_name || msg.reply_to_is_glow) && (
+                  <div className="mb-2.5 pb-2 border-b border-white/5">
+                    <p className="font-serif italic text-[10px] leading-relaxed text-zinc-600 break-words">
+                      {msg.reply_to_is_glow
+                        ? <span>✦ <em>In response to The Glow: "{msg.reply_to_content || 'the weekly prompt'}"</em></span>
+                        : <span><em>In response to <span className="text-zinc-500 not-italic font-black">{msg.reply_to_name}</span>: "{msg.reply_to_content}{msg.reply_to_content?.length >= 80 ? '…' : ''}"</em></span>
+                      }
+                    </p>
                   </div>
                 )}
                 <p className={`text-sm leading-relaxed ${isHearth ? 'font-serif italic text-md' : ''}`}>
@@ -187,9 +206,18 @@ export default function EmbersChat({ vault, isAdmin }) {
               </div>
 
               <div className={`flex items-center gap-3 mt-1 px-1 ${isOwn ? 'flex-row-reverse' : ''}`}>
-                <button onClick={() => setReplyTarget(msg)} className="text-[9px] font-black text-zinc-600 hover:text-teal-400 uppercase tracking-widest flex items-center gap-1 transition-colors">
+                <button onClick={() => setReplyTarget(msg)} className="text-[9px] font-black text-zinc-600 hover:text-teal-400 uppercase tracking-widest flex items-center gap-1 transition-colors min-h-[44px] min-w-[44px] justify-center">
                   <MessageSquare size={10} /> Reply
                 </button>
+                {isOwn && msg.id && !msg.is_glow && (
+                  <button
+                    onClick={() => handleDelete(msg.id)}
+                    className="min-h-[44px] min-w-[44px] flex items-center justify-center text-zinc-700 hover:text-rose-500 transition-colors active:scale-90 rounded-full"
+                    title="Extinguish post"
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                )}
                 <EmberReactions />
               </div>
             </motion.div>

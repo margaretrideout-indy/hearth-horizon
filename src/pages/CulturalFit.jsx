@@ -129,7 +129,7 @@ export default function CulturalFit({ vault, onComplete, onSync }) {
       await base44.auth.updateMe({ lexicon: savedLexicon, ethics, alignment_complete: true });
       if (onSync) onSync({ ...vault, lexicon: savedLexicon, ethics, alignment_complete: true });
       showToast("✦ Alignment mirrored to your Hearth.");
-      setTimeout(() => navigate('/hearth'), 1400);
+      setTimeout(() => navigate('/horizon'), 1400);
     } catch (err) {
       console.error("Vault Sync Error:", err);
     } finally {
