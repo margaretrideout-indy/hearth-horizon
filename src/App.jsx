@@ -33,7 +33,8 @@ export default function App() {
       standing: "Traveler",
       tier: "none",
       email: null,
-      lastSync: null
+      lastSync: null,
+      lexicon: []
     };
   });
 
@@ -71,8 +72,8 @@ export default function App() {
             tier: isSystemAdmin ? "steward" : normalizedTier,
             standing: displayStanding,
             archetype: user.archetype || prev.archetype,
-            // Sync resume metadata if it exists in the cloud
-            resume: user.resume_metadata || prev.resume 
+            resume: user.resume_metadata || prev.resume,
+            lexicon: user.lexicon || prev.lexicon || []
           }));
         }
       } catch (e) {
@@ -160,7 +161,6 @@ export default function App() {
             })}
           </div>
 
-          {/* Bottom utility links */}
           <div className="flex flex-col gap-1 px-2 pb-4 border-t border-white/5 pt-4 mt-4">
             {isAdmin && (
               <button
@@ -183,7 +183,6 @@ export default function App() {
       );
     }
 
-    // Mobile / tablet bottom nav — keep compact, add Grove + optional Admin
     const mobileLinks = [
       ...mainLinks,
       { label: 'Grove', path: '/grove', icon: Trees },
@@ -195,16 +194,16 @@ export default function App() {
         {mobileLinks.map((tab) => {
           const isActive = location.pathname === tab.path;
           const accentColor = tab.path === '/admin'
-            ? (isActive ? 'text-amber-400' : 'text-zinc-600 hover:text-amber-400')
-            : (isActive ? 'text-teal-400' : 'text-zinc-600 hover:text-zinc-400');
+            ? (isActive ? 'text-amber-400' : 'text-zinc-600')
+            : (isActive ? 'text-teal-400' : 'text-zinc-600');
           return (
             <button
               key={tab.label}
               onClick={() => navigate(tab.path)}
-              className={`flex flex-col items-center justify-center gap-1 flex-1 py-2 transition-all active:scale-95 ${accentColor}`}
+              className={`flex flex-col items-center justify-center min-w-[48px] flex-1 py-2 transition-all active:scale-90 ${accentColor}`}
             >
-              <tab.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-              <span className="text-[8px] font-black uppercase tracking-tighter">{tab.label}</span>
+              <tab.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+              <span className="hidden sm:block text-[8px] font-black uppercase tracking-tighter mt-1">{tab.label}</span>
             </button>
           );
         })}
@@ -228,18 +227,7 @@ export default function App() {
       <main className="flex-1 h-full relative overflow-y-auto custom-scrollbar flex flex-col">
         <div className="flex-1 w-full relative">
           <Routes>
-            <Route 
-              path="/hearth" 
-              element={
-                <YourHearth 
-                  vault={vault} 
-                  onSync={handleSync} 
-                  onResumeSync={handleResumeSync}
-                  isAdmin={isAdmin} 
-                  onNavigateToHorizon={() => navigate('/horizon')} 
-                />
-              } 
-            />
+            <Route path="/hearth" element={<YourHearth vault={vault} onSync={handleSync} onResumeSync={handleResumeSync} isAdmin={isAdmin} />} />
             <Route path="/library" element={<Library vault={vault} onRefresh={handleSync} isAdmin={isAdmin} />} />
             <Route path="/horizon" element={<Canopy vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             <Route path="/embers" element={<EmbersChat vault={vault} isAdmin={isAdmin} />} />
@@ -251,17 +239,15 @@ export default function App() {
             <Route path="*" element={<Navigate to="/grove" replace />} />
           </Routes>
         </div>
-        {/* Spacer so content isn't hidden behind mobile nav */}
         {showNav && <div className="h-24 md:hidden flex-shrink-0" />}
       </main>
 
-      {/* MOBILE / TABLET BOTTOM NAV */}
       {showNav && (
         <nav className="fixed bottom-0 left-0 right-0 z-[100] md:hidden"
           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         >
-          <div className="bg-[#0A080D]/95 backdrop-blur-xl border-t border-white/5">
-            <div className="flex justify-around items-center h-16 px-2">
+          <div className="bg-[#0A080D]/90 backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+            <div className="flex justify-around items-center h-16 px-1">
               <NavLinks />
             </div>
           </div>
