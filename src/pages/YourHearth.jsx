@@ -186,7 +186,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
         {/* RIGHT COL: LEGACY & SNAPSHOT */}
         <div className="lg:col-span-7 space-y-8">
 
-          {/* LEGACY ARCHIVE CARD (DELETE/REPLACE INCLUDED) */}
+          {/* LEGACY ARCHIVE CARD */}
           <Card className="bg-[#0D0B10] border-white/5 p-10 rounded-[3rem]">
             <div className="flex flex-col gap-8 text-left">
               <div className="flex items-center gap-3"><FileText className="text-teal-500" size={24} /><h3 className="text-xl font-bold text-white">Legacy Archive</h3></div>
@@ -231,10 +231,13 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
             </div>
           </Card>
 
-          {/* ALIGNMENT SNAPSHOT — Path to Alignment Roadmap */}
+          {/* ARTIFACT RESONANCE CARD (THE UPGRADE) */}
+          <ArtifactResonance vault={vault} />
+
+          {/* ALIGNMENT SNAPSHOT */}
           <AlignmentRoadmap vault={vault} navigate={navigate} onSync={onSync} triggerToast={triggerToast} />
 
-      {/* DANGER ZONES */}
+          {/* DANGER ZONES */}
           <div className="pt-20">
             <AnimatePresence mode="wait">
               {!confirmZone ? (
@@ -280,7 +283,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
         </div>
       </div>
 
-      {/* PULSE REFLECTION SHEET (NOW OPTIONAL) */}
+      {/* PULSE REFLECTION SHEET */}
       <AnimatePresence>
         {showSheet && (
           <>
@@ -314,6 +317,67 @@ const Badge = ({ children, className }) => (
   <span className={`text-[9px] font-black tracking-widest px-3 py-1 rounded-full border ${className}`}>{children}</span>
 );
 
+/* NEW COMPONENT: ARTIFACT RESONANCE */
+function ArtifactResonance({ vault }) {
+  if (!vault?.resume) return null;
+
+  // Placeholder data for the Demo
+  const resonance = vault?.artifact_synthesis || {
+    archetype: "The Systems Oracle",
+    translations: [
+      { old: "Command & Control", new: "Strategic Operations" },
+      { old: "Multi-Theater Logistics", new: "Global Supply Chain" }
+    ],
+    runes: ["Cloud Architecture", "Agile Flow"]
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }} 
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-gradient-to-br from-[#121016] to-[#08070B] border border-teal-500/20 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl"
+    >
+      <div className="absolute -top-24 -right-24 w-48 h-48 bg-teal-500/5 blur-[80px] rounded-full" />
+      
+      <div className="relative z-10 space-y-6">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2 text-teal-400/60">
+            <FlaskConical size={14} />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Artifact Resonance</span>
+          </div>
+          <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20">Synthesized</Badge>
+        </div>
+
+        <div className="py-2">
+          <h3 className="text-3xl font-serif italic text-white leading-tight">{resonance.archetype}</h3>
+          <p className="text-[9px] text-zinc-500 uppercase font-black mt-2 tracking-widest flex items-center gap-2">
+             <Circle size={6} className="fill-teal-500 text-teal-500" /> Extracted Identity
+          </p>
+        </div>
+
+        <div className="space-y-3">
+           {resonance.translations.map((t, i) => (
+             <div key={i} className="flex items-center justify-between bg-white/[0.02] p-4 rounded-2xl border border-white/5 group hover:border-teal-500/30 transition-colors">
+                <span className="text-[9px] text-rose-400/40 line-through uppercase font-black tracking-tighter">{t.old}</span>
+                <ArrowRight size={12} className="text-zinc-700 group-hover:text-teal-500 transition-colors" />
+                <span className="text-[10px] text-teal-400 uppercase font-black tracking-widest">{t.new}</span>
+             </div>
+           ))}
+        </div>
+
+        <div className="pt-4 flex flex-wrap gap-2">
+          {resonance.runes.map((rune, i) => (
+            <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-purple-500/5 border border-purple-500/10">
+              <div className="w-1 h-1 rounded-full bg-purple-400 animate-pulse" />
+              <span className="text-[8px] text-purple-300 font-black uppercase tracking-widest">{rune}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
   const [showRealignConfirm, setShowRealignConfirm] = useState(false);
 
@@ -324,7 +388,6 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
   const completedCount = [hasLexicon, hasEthics, hasHorizon].filter(Boolean).length;
   const progressPct = Math.round((completedCount / 3) * 100);
 
-  // Distilled summaries
   const topLexicon = vault?.lexicon?.slice(0, 3) || [];
   const ethicsEntries = vault?.ethics
     ? Object.entries(vault.ethics).sort(([, a], [, b]) => b - a).slice(0, 3)
@@ -390,7 +453,6 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-      {/* Section header */}
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-2">
           <Compass size={14} className="text-purple-400" />
@@ -417,10 +479,7 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
         </span>
       </div>
 
-      {/* Roadmap card */}
       <div className="bg-[#0D0B14] border border-white/5 rounded-[2.5rem] p-8 space-y-6">
-
-        {/* Progress bar */}
         <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
           <motion.div
             initial={{ width: 0 }}
@@ -431,7 +490,6 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
           />
         </div>
 
-        {/* Steps */}
         <div className="space-y-4">
           {steps.map((step, idx) => {
             const Icon = step.icon;
@@ -461,7 +519,6 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
                     </span>
                   </div>
                   <p className="text-[10px] text-zinc-600 italic leading-relaxed">{step.description}</p>
-                  {/* Distilled data summary */}
                   {step.summary}
                 </div>
                 <span className="shrink-0 text-[9px] font-black text-zinc-700 tabular-nums mt-1">0{idx + 1}</span>
@@ -470,7 +527,6 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
           })}
         </div>
 
-        {/* Dynamic CTA */}
         <button
           onClick={() => navigate(ctaRoute)}
           className="w-full flex items-center justify-center gap-3 py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-widest transition-all active:scale-[0.98]"
@@ -485,7 +541,6 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
           <ArrowRight size={14} />
         </button>
 
-        {/* Realign link */}
         {(hasLexicon || hasEthics) && !showRealignConfirm && (
           <div className="text-center pt-2">
             <button
@@ -497,7 +552,6 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
           </div>
         )}
 
-        {/* Realign confirmation */}
         <AnimatePresence>
           {showRealignConfirm && (
             <motion.div
