@@ -62,7 +62,7 @@ const ThankYouOverlay = ({ tier, onClose }) => {
   );
 };
 
-// ── MAIN COMPONENT ──────────────────────────────────────────────────────────
+// ── MAIN HEARTH COMPONENT ───────────────────────────────────────────────────
 export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   const navigate = useNavigate();
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -73,7 +73,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   const [confirmZone, setConfirmZone] = useState(null); 
   const [showToast, setShowToast] = useState(false);
   
-  // New: Payment Success State
+  // Success state for Stripe redirects
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
   const [successTier, setSuccessTier] = useState('');
 
@@ -106,7 +106,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  const handleFileChange = async ( e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setIsUploading(true);
@@ -354,4 +354,199 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   );
 }
 
-// ... (Sub-components LexiconArtifacts, ArtifactResonance, AlignmentRoadmap stay the same as your provided code)
+// ── SUB-COMPONENTS ──────────────────────────────────────────────────────────
+
+function LexiconArtifacts({ vault, triggerToast }) {
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  if (!vault?.lexicon || vault.lexicon.length === 0) return null;
+
+  const copy = (text) => {
+    navigator.clipboard.writeText(text);
+    triggerToast("Artifact copied to clipboard.");
+  };
+
+  const filteredLexicon = vault.lexicon.filter(phrase => 
+    phrase.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div className="space-y-6 pt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 text-left">
+      <div className="flex items-center justify-between px-2">
+        <div className="flex items-center gap-2 text-zinc-500">
+            <Zap size={14} className="text-teal-400" />
+            <span className="text-[10px] font-black uppercase tracking-widest">Alchemized Phrases</span>
+        </div>
+      </div>
+
+      <div className="relative group px-2">
+        <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-teal-500 transition-colors" size={12} />
+        <input 
+          type="text"
+          placeholder="Search artifacts..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full bg-white/[0.03] border border-white/5 rounded-xl py-2 pl-9 pr-4 text-[10px] text-zinc-300 focus:outline-none focus:border-teal-500/30 transition-all placeholder:text-zinc-700"
+        />
+      </div>
+
+      <div className="grid gap-3">
+        {filteredLexicon.map((phrase, i) => (
+          <div key={i} className="group relative p-5 bg-white/[0.02] border border-white/5 rounded-[1.5rem] hover:border-teal-500/20 transition-all">
+            <div className="flex justify-between items-start gap-4">
+              <p className="text-[11px] text-zinc-300 italic leading-relaxed pr-8">"{phrase}"</p>
+              <button 
+                onClick={() => copy(phrase)}
+                className="shrink-0 p-2 bg-zinc-900 border border-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:text-teal-400 text-zinc-500"
+              >
+                <Copy size={12} />
+              </button>
+            </div>
+
+            {vault?.resume && (
+               <div className="mt-4 pt-4 border-t border-white/[0.03] space-y-2">
+                  <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-amber-500/60">
+                    <FileText size={10} />
+                    <span>Bridge to Legacy</span>
+                  </div>
+                  <p className="text-[10px] text-zinc-500 leading-snug">
+                    This resonance bridges your experience in <span className="text-zinc-300 font-medium">"{vault.resume.name}"</span> to modern organizational needs. Use it in interview loops to anchor your value.
+                  </p>
+               </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ArtifactResonance({ vault }) {
+  if (!vault?.resume) return null;
+
+  const resonance = vault?.artifact_synthesis || {
+    archetype: "The Systems Oracle",
+    translations: [
+      { old: "Command & Control", new: "Strategic Operations" },
+      { old: "Multi-Theater Logistics", new: "Global Supply Chain" }
+    ],
+    runes: ["Cloud Architecture", "Agile Flow"]
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+      className="bg-gradient-to-br from-[#121016] to-[#08070B] border border-teal-500/20 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl text-left"
+    >
+      <div className="absolute -top-24 -right-24 w-48 h-48 bg-teal-500/5 blur-[80px] rounded-full" />
+      <div className="relative z-10 space-y-6">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2 text-teal-400/60"><FlaskConical size={14} /><span className="text-[10px] font-black uppercase tracking-[0.2em]">Resonance</span></div>
+          <span className="text-[9px] font-black tracking-widest px-3 py-1 rounded-full border bg-teal-500/10 text-teal-400 border-teal-500/20">Synthesized</span>
+        </div>
+        <div>
+          <h3 className="text-2xl font-serif italic text-white leading-tight">{resonance.archetype}</h3>
+          <p className="text-[8px] text-zinc-500 uppercase font-black mt-2 tracking-widest flex items-center gap-2"><Circle size={4} className="fill-teal-500 text-teal-500" /> Identity Extracted</p>
+        </div>
+        <div className="space-y-3">
+           {resonance.translations.map((t, i) => (
+             <div key={i} className="flex items-center justify-between bg-white/[0.02] p-4 rounded-2xl border border-white/5">
+                <span className="text-[8px] text-rose-400/40 line-through uppercase font-black">{t.old}</span>
+                <ArrowRight size={10} className="text-zinc-700" />
+                <span className="text-[9px] text-teal-400 uppercase font-black">{t.new}</span>
+             </div>
+           ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const hasLexicon = !!(vault?.archetype || (vault?.lexicon && vault.lexicon.length > 0));
+  const hasEthics = !!vault?.ethics;
+  const hasHorizon = hasLexicon && hasEthics;
+  const progressPct = Math.round(([hasLexicon, hasEthics, hasHorizon].filter(Boolean).length / 3) * 100);
+
+  const topLexicon = vault?.lexicon?.slice(0, 3) || [];
+  const ethicsEntries = vault?.ethics ? Object.entries(vault.ethics).sort(([, a], [, b]) => b - a).slice(0, 3) : [];
+
+  const handleResetAlignment = async () => {
+    await onSync({ 
+      ...vault, 
+      archetype: null, 
+      ethics: null, 
+      lexicon: [], 
+      artifact_synthesis: null,
+      alignment_complete: false 
+    });
+    setShowResetConfirm(false);
+    triggerToast("Alignment reset. Returning to the Cultural Ritual.");
+    navigate('/culture');
+  };
+
+  const steps = [
+    { id: 'lexicon', label: 'Lexicon Alchemy', description: 'Translate your experience into private-sector language.', icon: FlaskConical, complete: hasLexicon, route: '/culture', summary: hasLexicon && topLexicon.length > 0 ? (
+      <div className="flex flex-wrap gap-1.5 mt-2">{topLexicon.map((phrase, i) => <span key={i} className="px-2 py-0.5 bg-teal-500/10 border border-teal-500/15 text-teal-300 text-[9px] rounded-full font-semibold">{phrase}</span>)}</div>
+    ) : null },
+    { id: 'ethics', label: 'Ethical Compass', description: 'Calibrate your non-negotiables and values profile.', icon: Compass, complete: hasEthics, route: '/culture', summary: hasEthics && ethicsEntries.length > 0 ? (
+      <div className="flex gap-3 mt-2">{ethicsEntries.map(([key, val]) => <div key={key} className="text-center"><div className="text-[10px] font-black" style={{ color: '#39FFCA' }}>{val}%</div><div className="text-[8px] text-zinc-600 uppercase font-black capitalize">{key}</div></div>)}</div>
+    ) : null },
+    { id: 'horizon', label: 'Horizon Activation', description: 'Unlock your personalized job intelligence board.', icon: Zap, complete: hasHorizon, route: '/horizon' },
+  ];
+
+  const nextStep = steps.find(s => !s.complete);
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+      <div className="flex items-center justify-between px-2 text-left">
+        <div className="flex items-center gap-2"><Compass size={14} className="text-purple-400" /><span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Alignment Snapshot</span></div>
+        <span className="text-[10px] font-black tabular-nums" style={{ color: progressPct === 100 ? '#39FFCA' : '#71717a' }}>
+          {progressPct === 100 ? <span className="flex items-center gap-1.5"><Zap size={10} className="fill-current" /> SYSTEM PRIMED</span> : `${progressPct}% complete`}
+        </span>
+      </div>
+
+      <div className="bg-[#0D0B14] border border-white/5 rounded-[2.5rem] p-8 space-y-8 text-left">
+        <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+          <motion.div initial={{ width: 0 }} animate={{ width: `${progressPct}%` }} className="h-full rounded-full" style={{ background: 'linear-gradient(90deg, #14b8a6, #39FFCA)' }} />
+        </div>
+        <div className="space-y-4">
+          {steps.map((step) => (
+            <div key={step.id} className={`flex items-start gap-5 p-5 rounded-[1.5rem] border transition-all ${step.complete ? 'bg-teal-500/[0.04] border-teal-500/15' : 'bg-white/[0.02] border-white/5'}`}>
+              <div className="shrink-0 mt-0.5">{step.complete ? <div className="w-8 h-8 rounded-full bg-teal-500/20 border border-teal-500/40 flex items-center justify-center"><CheckCircle2 size={15} className="text-teal-400" /></div> : <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center"><Circle size={13} className="text-zinc-600" /></div>}</div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-0.5"><step.icon size={12} className={step.complete ? 'text-teal-400' : 'text-zinc-600'} /><span className={`text-[10px] font-black uppercase tracking-widest ${step.complete ? 'text-teal-300' : 'text-zinc-500'}`}>{step.label}</span></div>
+                <p className="text-[10px] text-zinc-600 italic leading-relaxed">{step.description}</p>
+                {step.summary}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="space-y-3">
+          <button onClick={() => navigate(hasHorizon ? '/horizon' : nextStep.route)} className="w-full flex items-center justify-center gap-3 py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-widest transition-all shadow-xl active:scale-95" style={{ background: hasHorizon ? 'linear-gradient(135deg, #14b8a6, #39FFCA)' : 'rgba(20,184,166,0.08)', color: hasHorizon ? '#0A080D' : '#39FFCA', border: hasHorizon ? 'none' : '1px solid rgba(20,184,166,0.2)' }}>
+            {hasHorizon ? 'Enter the Horizon' : 'Continue the Ritual'}<ArrowRight size={14} />
+          </button>
+
+          {!showResetConfirm ? (
+            <button 
+              onClick={() => setShowResetConfirm(true)}
+              className="w-full py-3 text-[9px] text-zinc-600 hover:text-amber-500/60 uppercase font-black tracking-widest flex items-center justify-center gap-2 transition-colors border border-white/5 rounded-xl bg-white/[0.01]"
+            >
+              <RotateCcw size={10} /> Shift Alignment Ritual
+            </button>
+          ) : (
+            <div className="p-4 bg-amber-500/[0.02] border border-amber-500/20 rounded-xl space-y-3 animate-in fade-in zoom-in-95 duration-200">
+               <p className="text-[9px] text-zinc-500 text-center uppercase font-black">Reset cultural data and restart alignment?</p>
+               <div className="flex gap-2">
+                 <button onClick={handleResetAlignment} className="flex-1 py-2 bg-amber-500/20 text-amber-500 text-[9px] font-black uppercase rounded-lg hover:bg-amber-500/30 transition-all">Yes, Reset</button>
+                 <button onClick={() => setShowResetConfirm(false)} className="flex-1 py-2 bg-zinc-800 text-zinc-400 text-[9px] font-black uppercase rounded-lg">Cancel</button>
+               </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
