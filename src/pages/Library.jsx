@@ -20,10 +20,22 @@ import {
 } from 'lucide-react';
 import Contact from './Contact';
 
-const AMZ_PROVISIONS_URL = "https://www.amazon.ca/shop/margaretpardy";
+// --- CONFIGURATION ---
+const MAIN_TAG = "hearthandh0a6-20";
 const BOOKSHOP_URL = "https://bookshop.org/shop/hearthandhorizon";
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/edit?slide=id.p1#slide=id.p1";
 const AMZ_LEGAL = "As an Amazon Associate I earn from qualifying purchases.";
+
+const AMZ_LISTS = [
+  { label: "Horizon Library", id: "3MQJ7V1EQV93P", isFeatured: true },
+  { label: "Curiosity Cabinet", id: "3QPCFSBBZX0LS" },
+  { label: "Analog Wayfarers", id: "WUQBYPAD7FSN" },
+  { label: "Digital Hub", id: "2WS5M8FIVKJBV" },
+  { label: "Ergonomic Sanctuary", id: "2BZUUE2ZJL0EL" }
+].map(list => ({
+  ...list,
+  url: `https://www.amazon.ca/hz/wishlist/ls/${list.id}?ref_=wl_share&tag=${MAIN_TAG}`
+}));
 
 export default function Library({ vault, onRefresh, isAdmin }) {
   const navigate = useNavigate();
@@ -107,7 +119,6 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                 </div>
               </div>
 
-              {/* GRID: 3 columns on desktop for perfect 1-row balance */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {resources.map((item, idx) => (
                   <motion.div
@@ -128,12 +139,10 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                         </div>
 
                         <h3 className="text-2xl font-serif italic text-zinc-200">{item.title}</h3>
-
                         <p className="text-sm leading-relaxed" style={{ color: '#686868' }}>
                           {item.description}
                         </p>
 
-                        {/* Merged Crisis Info sitting inside the first card */}
                         {item.crisis && (
                           <div className="mt-4 flex flex-col gap-2 px-5 py-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
                             <span className="text-2xl font-black text-rose-500 whitespace-nowrap tracking-tight">
@@ -152,7 +161,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                         className={`mt-8 w-full rounded-xl border transition-all ${item.crisis ? 'bg-rose-500 text-white hover:bg-rose-600 border-transparent shadow-lg shadow-rose-500/10' : 'bg-white/5 border-white/5 text-zinc-400 hover:text-white'}`}
                       >
                         <a href={item.link} target="_blank" rel="noopener noreferrer">
-                          {item.crisis ? 'Open Resource' : 'Open Resource'} <ExternalLink size={14} className="ml-2" />
+                          Open Resource <ExternalLink size={14} className="ml-2" />
                         </a>
                       </Button>
                     </Card>
@@ -160,7 +169,6 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                 ))}
               </div>
 
-              {/* GUIDANCE NOTE */}
               <motion.div
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
@@ -207,19 +215,30 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                         <motion.div key="amz" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}>
                           <h4 className="text-3xl text-white font-serif italic mb-4">Curated Gear</h4>
                           <p className="text-zinc-500 mb-6 max-w-lg italic">Hand-picked ergonomic and organizational tools specifically for professional migrants.</p>
+                          
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-                            {[
-                              { label: "Horizon Library", url: "https://www.amazon.ca/hz/wishlist/ls/3MQJ7V1EQV93P?ref_=wl_share/hearthandh0a6-20" },
-                              { label: "Analog Wayfarers", url: "https://www.amazon.ca/hz/wishlist/ls/WUQBYPAD7FSN?ref_=wl_share/hearthandh0a6-20" },
-                              { label: "Digital Hub", url: "https://www.amazon.ca/hz/wishlist/ls/2WS5M8FIVKJBV?ref_=wl_share/hearthandh0a6-20" },
-                              { label: "Ergonomic Sanctuary", url: "https://www.amazon.ca/hz/wishlist/ls/2BZUUE2ZJL0EL?ref_=wl_share/hearthandh0a6-20" }
-                            ].map((list) => (
-                              <a key={list.label} href={list.url} target="_blank" rel="noreferrer"
-                                className="flex items-center justify-between gap-3 bg-black/40 border border-white/10 px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-300 hover:border-teal-500/40 hover:text-teal-400 transition-all">
-                                {list.label} <ExternalLink size={12} />
+                            {AMZ_LISTS.map((list) => (
+                              <a 
+                                key={list.label} 
+                                href={list.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className={`flex items-center justify-between gap-3 bg-black/40 border border-white/10 px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-300 hover:border-teal-500/40 hover:text-teal-400 transition-all 
+                                  ${list.isFeatured ? 'sm:col-span-2 border-teal-500/30 bg-teal-500/5 py-6' : ''}`}
+                              >
+                                <span className="flex items-center gap-2">
+                                  {list.isFeatured ? (
+                                    <BookOpen size={14} className="text-teal-500" />
+                                  ) : (
+                                    <Package size={12} className="text-zinc-500" />
+                                  )}
+                                  {list.label}
+                                </span>
+                                <ExternalLink size={12} />
                               </a>
                             ))}
                           </div>
+                          
                           <p className="text-[8px] text-zinc-700 uppercase italic font-bold tracking-widest">{AMZ_LEGAL}</p>
                         </motion.div>
                       ) : (
@@ -227,7 +246,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                           <h4 className="text-3xl text-white font-serif italic mb-4">The Bookshop</h4>
                           <p className="text-zinc-500 mb-8 max-w-lg italic">Literature and deep-dives into industry culture, ethics, and transition strategy.</p>
                           <div className="flex flex-col sm:flex-row gap-4">
-                            <a href={BOOKSHOP_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-purple-600 text-white px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-500 transition-all shadow-xl shadow-purple-500/20">
+                            <a href={BOOKSHOP_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 bg-purple-600 text-white px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-500 transition-all shadow-xl shadow-purple-500/20">
                               Bookshop.org <ArrowRight size={14} />
                             </a>
                             <button disabled className="inline-flex items-center gap-3 bg-white/5 border border-white/10 text-zinc-600 px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest cursor-not-allowed opacity-50">
