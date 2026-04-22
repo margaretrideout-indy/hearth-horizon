@@ -170,7 +170,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
             </div>
           </div>
 
-          {/* LEGACY ARCHIVE (MOVED HERE FOR BALANCE) */}
+          {/* LEGACY ARCHIVE (UPDATED LABEL) */}
           <div className="space-y-8">
             <Card className="bg-[#0D0B10] border-white/5 p-10 rounded-[3rem]">
               <div className="flex flex-col gap-6 text-left">
@@ -186,7 +186,8 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                     ) : (
                       <>
                         <Upload className="text-zinc-600 mb-2 group-hover:text-teal-500" size={20} />
-                        <span className="text-[10px] font-black uppercase text-zinc-500">Upload Resume/CV</span>
+                        <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest text-center px-4">Upload Resume / CV</span>
+                        <p className="text-[8px] text-zinc-600 uppercase mt-2 font-black">PDF, DOCX supported</p>
                       </>
                     )}
                     <input type="file" className="hidden" onChange={handleFileChange} disabled={isUploading} />
@@ -210,12 +211,11 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
               </div>
             </Card>
 
-            {/* RESONANCE CARD MOVED HERE AS WELL */}
             <ArtifactResonance vault={vault} />
           </div>
         </div>
 
-        {/* RIGHT COL: THE DIRECTION (ROADMAP & ACTION) */}
+        {/* RIGHT COL: THE DIRECTION */}
         <div className="lg:col-span-7 space-y-8">
           <AlignmentRoadmap vault={vault} navigate={navigate} onSync={onSync} triggerToast={triggerToast} />
 
@@ -256,14 +256,14 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
         {showSheet && (
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowSheet(false)} className="fixed inset-0 bg-black/90 backdrop-blur-md z-[200]" />
-            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3.5rem] z-[210] p-8 pb-16">
+            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3.5rem] z-[210] p-8 pb-16 shadow-2xl">
               <div className="max-w-xl mx-auto space-y-10 text-center">
                 <div className="space-y-2">
                     <span className="text-5xl">{selectedEmoji}</span>
                     <h3 className="text-3xl font-serif italic text-white">Adding Depth</h3>
                 </div>
-                <Textarea placeholder="How does the journey feel?" value={reflection} onChange={(e) => setReflection(e.target.value)} className="bg-black/40 border-white/5 rounded-2xl p-6 text-white italic min-h-[150px]" />
-                <Button onClick={handleSavePulse} className="w-full h-16 bg-teal-500 text-black font-black uppercase rounded-2xl">Seal Pulse</Button>
+                <Textarea placeholder="How does the journey feel?" value={reflection} onChange={(e) => setReflection(e.target.value)} className="bg-black/40 border-white/5 rounded-2xl p-6 text-white italic min-h-[150px] outline-none" />
+                <Button onClick={handleSavePulse} className="w-full h-16 bg-teal-500 text-black font-black uppercase rounded-2xl shadow-xl">Seal Pulse</Button>
               </div>
             </motion.div>
           </>
@@ -292,7 +292,7 @@ function ArtifactResonance({ vault }) {
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-[#121016] to-[#08070B] border border-teal-500/20 rounded-[2.5rem] p-8 relative overflow-hidden"
+      className="bg-gradient-to-br from-[#121016] to-[#08070B] border border-teal-500/20 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl"
     >
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-teal-500/5 blur-[80px] rounded-full" />
       <div className="relative z-10 space-y-6">
@@ -302,7 +302,7 @@ function ArtifactResonance({ vault }) {
         </div>
         <div>
           <h3 className="text-2xl font-serif italic text-white leading-tight">{resonance.archetype}</h3>
-          <p className="text-[8px] text-zinc-500 uppercase font-black mt-2 tracking-widest flex items-center gap-2"><Circle size={4} className="fill-teal-500 text-teal-500" /> Archetype</p>
+          <p className="text-[8px] text-zinc-500 uppercase font-black mt-2 tracking-widest flex items-center gap-2"><Circle size={4} className="fill-teal-500 text-teal-500" /> Identity Extracted</p>
         </div>
         <div className="space-y-3">
            {resonance.translations.map((t, i) => (
@@ -317,7 +317,7 @@ function ArtifactResonance({ vault }) {
           {resonance.runes.map((rune, i) => (
             <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-purple-500/5 border border-purple-500/10">
               <div className="w-1 h-1 rounded-full bg-purple-400 animate-pulse" />
-              <span className="text-[7px] text-purple-300 font-black uppercase">{rune}</span>
+              <span className="text-[7px] text-purple-300 font-black uppercase tracking-widest">{rune}</span>
             </div>
           ))}
         </div>
@@ -336,6 +336,13 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
   const topLexicon = vault?.lexicon?.slice(0, 3) || [];
   const ethicsEntries = vault?.ethics ? Object.entries(vault.ethics).sort(([, a], [, b]) => b - a).slice(0, 3) : [];
 
+  const handleRealign = async () => {
+    await onSync({ ...vault, archetype: null, ethics: null, lexicon: [], alignment_complete: false });
+    setShowRealignConfirm(false);
+    triggerToast('Alignment cleared. Begin your new ritual.');
+    navigate('/culture');
+  };
+
   const steps = [
     { id: 'lexicon', label: 'Lexicon Alchemy', description: 'Translate your experience into private-sector language.', icon: FlaskConical, complete: hasLexicon, route: '/culture', summary: hasLexicon && topLexicon.length > 0 ? (
       <div className="flex flex-wrap gap-1.5 mt-2">{topLexicon.map((phrase, i) => <span key={i} className="px-2 py-0.5 bg-teal-500/10 border border-teal-500/15 text-teal-300 text-[9px] rounded-full font-semibold">{phrase}</span>)}</div>
@@ -346,12 +353,14 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
     { id: 'horizon', label: 'Horizon Activation', description: 'Unlock your personalized job intelligence board.', icon: Zap, complete: hasHorizon, route: '/horizon' },
   ];
 
+  const nextStep = steps.find(s => !s.complete);
+
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-2"><Compass size={14} className="text-purple-400" /><span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Alignment Snapshot</span></div>
-        <span className="text-[10px] font-black tabular-nums transition-all duration-700" style={{ color: progressPct === 100 ? '#39FFCA' : '#71717a', textShadow: progressPct === 100 ? '0 0 15px rgba(57,255,202,0.6)' : 'none' }}>
-          {progressPct === 100 ? <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-1.5"><Zap size={10} className="fill-current" /> SYSTEM PRIMED</motion.span> : `${progressPct}% complete`}
+        <span className="text-[10px] font-black tabular-nums" style={{ color: progressPct === 100 ? '#39FFCA' : '#71717a' }}>
+          {progressPct === 100 ? <span className="flex items-center gap-1.5"><Zap size={10} className="fill-current" /> SYSTEM PRIMED</span> : `${progressPct}% complete`}
         </span>
       </div>
 
@@ -371,7 +380,7 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
             </div>
           ))}
         </div>
-        <button onClick={() => navigate(hasHorizon ? '/horizon' : nextStep.route)} className="w-full flex items-center justify-center gap-3 py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-widest transition-all" style={{ background: hasHorizon ? 'linear-gradient(135deg, #14b8a6, #39FFCA)' : 'rgba(20,184,166,0.08)', color: hasHorizon ? '#0A080D' : '#39FFCA', border: hasHorizon ? 'none' : '1px solid rgba(20,184,166,0.2)' }}>
+        <button onClick={() => navigate(hasHorizon ? '/horizon' : nextStep.route)} className="w-full flex items-center justify-center gap-3 py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-widest transition-all shadow-xl active:scale-95" style={{ background: hasHorizon ? 'linear-gradient(135deg, #14b8a6, #39FFCA)' : 'rgba(20,184,166,0.08)', color: hasHorizon ? '#0A080D' : '#39FFCA', border: hasHorizon ? 'none' : '1px solid rgba(20,184,166,0.2)' }}>
           {hasHorizon ? 'Enter the Horizon' : 'Continue the Ritual'}<ArrowRight size={14} />
         </button>
       </div>
