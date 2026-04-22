@@ -186,7 +186,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                     ) : (
                       <>
                         <Upload className="text-zinc-600 mb-2 group-hover:text-teal-500" size={20} />
-                        <span className="text-[10px] font-black uppercase text-zinc-500">Upload CV Artifact</span>
+                        <span className="text-[10px] font-black uppercase text-zinc-500">Upload Resume/CV</span>
                       </>
                     )}
                     <input type="file" className="hidden" onChange={handleFileChange} disabled={isUploading} />
