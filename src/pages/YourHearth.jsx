@@ -19,7 +19,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   const [reflection, setReflection] = useState("");
   const [selectedEmoji, setSelectedEmoji] = useState(null);
   const [showSheet, setShowSheet] = useState(false); 
-  const [confirmZone, setConfirmZone] = useState(null); // 'archive' or 'all'
+  const [confirmZone, setConfirmZone] = useState(null); 
   const [showToast, setShowToast] = useState(false);
 
   const pulseOptions = [
@@ -52,22 +52,15 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   const handleRefresh = async () => {
     if (isRefreshing) return;
     setIsRefreshing(true);
-    if (onRefresh) {
-      await onRefresh();
-    } else {
-      await new Promise(resolve => setTimeout(resolve, 1200));
-    }
+    if (onRefresh) await onRefresh();
+    else await new Promise(resolve => setTimeout(resolve, 1200));
     setIsRefreshing(false);
     triggerToast("Sanctuary synchronized.");
   };
 
   const handleSavePulse = async () => {
     if (!reflection && !selectedEmoji) return;
-    const newPulse = {
-      date: new Date().toISOString(),
-      emoji: selectedEmoji,
-      text: reflection
-    };
+    const newPulse = { date: new Date().toISOString(), emoji: selectedEmoji, text: reflection };
     await onSync({ ...vault, pulses: [newPulse, ...(vault.pulses || [])] });
     setReflection("");
     setSelectedEmoji(null);
@@ -123,9 +116,10 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         
-        {/* LEFT COL: PULSES & WEATHER */}
-        <div className="lg:col-span-5 space-y-8">
-          {/* IMMEDIATE INTERNAL WEATHER SELECTION */}
+        {/* LEFT COL: THE IDENTITY (PULSES, WEATHER, LEGACY) */}
+        <div className="lg:col-span-5 space-y-10">
+          
+          {/* INTERNAL WEATHER */}
           <section className="bg-gradient-to-br from-[#16121D] to-[#0D0B10] border border-white/5 p-8 rounded-[2.5rem] shadow-2xl space-y-6">
             <div className="flex justify-between items-start px-2">
                 <div className="flex items-center gap-2">
@@ -139,10 +133,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
               {pulseOptions.map((p) => (
                 <button 
                   key={p.label} 
-                  onClick={() => {
-                    setSelectedEmoji(p.icon);
-                    setShowSheet(true);
-                  }}
+                  onClick={() => { setSelectedEmoji(p.icon); setShowSheet(true); }}
                   className={`flex flex-col items-center gap-2 p-4 rounded-2xl transition-all border ${
                     selectedEmoji === p.icon 
                       ? 'bg-rose-500/20 border-rose-500 text-white' 
@@ -154,16 +145,13 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                 </button>
               ))}
             </div>
-            <p className="text-center text-[9px] text-zinc-600 font-black uppercase tracking-widest italic">Tap to etch a pulse</p>
           </section>
 
           {/* HEARTH RECORDS */}
           <div className="space-y-6">
-            <div className="flex items-center justify-between px-2 text-zinc-500">
-                <div className="flex items-center gap-2">
-                    <History size={14} />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Hearth Records</span>
-                </div>
+            <div className="flex items-center gap-2 px-2 text-zinc-500">
+                <History size={14} />
+                <span className="text-[10px] font-black uppercase tracking-widest">Hearth Records</span>
             </div>
             <div className="space-y-4">
               {vault?.pulses?.length > 0 ? (
@@ -177,64 +165,58 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                   </div>
                 ))
               ) : (
-                <div className="py-12 text-center border border-dashed border-white/5 rounded-[2rem] text-zinc-600 uppercase font-black text-[10px]">No pulses captured yet.</div>
+                <div className="py-8 text-center border border-dashed border-white/5 rounded-[2rem] text-zinc-600 uppercase font-black text-[10px]">No pulses captured.</div>
               )}
             </div>
           </div>
+
+          {/* LEGACY ARCHIVE (MOVED HERE FOR BALANCE) */}
+          <div className="space-y-8">
+            <Card className="bg-[#0D0B10] border-white/5 p-10 rounded-[3rem]">
+              <div className="flex flex-col gap-6 text-left">
+                <div className="flex items-center gap-3"><FileText className="text-teal-500" size={20} /><h3 className="text-lg font-bold text-white">Legacy Archive</h3></div>
+                
+                {!vault?.resume ? (
+                  <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-white/5 hover:border-teal-500/20 rounded-[2rem] bg-black/40 cursor-pointer group transition-all relative overflow-hidden">
+                    {isUploading ? (
+                      <div className="flex flex-col items-center gap-3">
+                        <Loader2 className="text-teal-500 animate-spin" size={24} />
+                        <span className="text-[10px] font-black uppercase text-teal-500 animate-pulse">Archiving...</span>
+                      </div>
+                    ) : (
+                      <>
+                        <Upload className="text-zinc-600 mb-2 group-hover:text-teal-500" size={20} />
+                        <span className="text-[10px] font-black uppercase text-zinc-500">Upload CV Artifact</span>
+                      </>
+                    )}
+                    <input type="file" className="hidden" onChange={handleFileChange} disabled={isUploading} />
+                  </label>
+                ) : (
+                  <div className="p-6 rounded-[2rem] bg-teal-500/5 border border-teal-500/20 text-center">
+                    <CheckCircle2 className="text-teal-500 mx-auto mb-3" size={28} />
+                    <h4 className="text-white font-bold uppercase text-[10px] tracking-widest">Legacy Secured</h4>
+                    <p className="text-[9px] text-zinc-500 mt-1 italic line-clamp-1">{vault.resume.name}</p>
+                    <div className="mt-6 flex justify-center gap-2">
+                      <label className="inline-flex items-center gap-2 text-[8px] font-black uppercase text-zinc-300 hover:text-white cursor-pointer border border-white/10 px-3 py-2 rounded-full">
+                        <RefreshCw size={10} /> Replace
+                        <input type="file" className="hidden" onChange={handleFileChange} />
+                      </label>
+                      <button onClick={() => setConfirmZone('archive')} className="inline-flex items-center gap-2 text-[8px] font-black uppercase text-zinc-500 hover:text-rose-400 border border-white/5 px-3 py-2 rounded-full">
+                        <Trash2 size={10} />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </Card>
+
+            {/* RESONANCE CARD MOVED HERE AS WELL */}
+            <ArtifactResonance vault={vault} />
+          </div>
         </div>
 
-        {/* RIGHT COL: LEGACY & SNAPSHOT */}
+        {/* RIGHT COL: THE DIRECTION (ROADMAP & ACTION) */}
         <div className="lg:col-span-7 space-y-8">
-
-          {/* LEGACY ARCHIVE CARD */}
-          <Card className="bg-[#0D0B10] border-white/5 p-10 rounded-[3rem]">
-            <div className="flex flex-col gap-8 text-left">
-              <div className="flex items-center gap-3"><FileText className="text-teal-500" size={24} /><h3 className="text-xl font-bold text-white">Legacy Archive</h3></div>
-              
-              {!vault?.resume ? (
-                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/5 hover:border-teal-500/20 rounded-[2rem] bg-black/40 cursor-pointer group transition-all relative overflow-hidden">
-                  {isUploading ? (
-                    <div className="flex flex-col items-center gap-3">
-                      <Loader2 className="text-teal-500 animate-spin" size={32} />
-                      <span className="text-[10px] font-black uppercase text-teal-500 animate-pulse">Archiving...</span>
-                    </div>
-                  ) : (
-                    <>
-                      <Upload className="text-zinc-600 mb-3 group-hover:text-teal-500" />
-                      <span className="text-[10px] font-black uppercase text-zinc-500">Upload Resume / CV</span>
-                      <p className="text-[8px] text-zinc-600 uppercase mt-2 font-black">PDF, DOCX supported</p>
-                    </>
-                  )}
-                  <input type="file" className="hidden" onChange={handleFileChange} disabled={isUploading} />
-                </label>
-              ) : (
-                <div className="p-8 rounded-[2rem] bg-teal-500/5 border border-teal-500/20 text-center">
-                  <CheckCircle2 className="text-teal-500 mx-auto mb-4" size={32} />
-                  <h4 className="text-white font-bold uppercase text-xs tracking-widest">Legacy Secured</h4>
-                  <p className="text-[10px] text-zinc-500 mt-2 italic">"{vault.resume.name}" is archived.</p>
-                  
-                  {/* DELETE & REPLACE OPTIONS */}
-                  <div className="mt-6 flex justify-center gap-3">
-                    <label className="inline-flex items-center gap-2 text-[9px] font-black uppercase text-zinc-300 hover:text-white cursor-pointer transition-colors border border-white/10 px-4 py-2 rounded-full">
-                      <RefreshCw size={10} /> Replace
-                      <input type="file" className="hidden" onChange={handleFileChange} />
-                    </label>
-                    <button 
-                      onClick={() => setConfirmZone('archive')} 
-                      className="inline-flex items-center gap-2 text-[9px] font-black uppercase text-zinc-500 hover:text-rose-400 transition-colors border border-white/5 px-4 py-2 rounded-full"
-                    >
-                      <Trash2 size={10} /> Delete Resume
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </Card>
-
-          {/* ARTIFACT RESONANCE CARD (THE UPGRADE) */}
-          <ArtifactResonance vault={vault} />
-
-          {/* ALIGNMENT SNAPSHOT */}
           <AlignmentRoadmap vault={vault} navigate={navigate} onSync={onSync} triggerToast={triggerToast} />
 
           {/* DANGER ZONES */}
@@ -242,38 +224,24 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
             <AnimatePresence mode="wait">
               {!confirmZone ? (
                 <motion.button 
-                  key="trigger" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                  key="trigger" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                   onClick={() => setConfirmZone('all')} 
                   className="text-[10px] text-zinc-600 hover:text-rose-500 uppercase font-black tracking-widest flex items-center gap-2 mx-auto transition-colors"
                 >
                   <Trash2 size={12} /> Delete Account
                 </motion.button>
-              ) : (
+              ) : confirmZone === 'all' && (
                 <motion.div 
-                  key="confirm" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
+                  key="confirm" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   className="p-10 bg-rose-500/[0.02] border border-rose-500/20 rounded-[2.5rem] max-w-sm mx-auto space-y-6 text-center"
                 >
                   <AlertTriangle className="text-rose-500 mx-auto" size={32} />
                   <div className="space-y-2">
-                    <h5 className="text-white font-black uppercase text-xs tracking-tighter">
-                      {confirmZone === 'archive' ? "Delete Resume?" : "Delete Account?"}
-                    </h5>
-                    <p className="text-[10px] text-zinc-500 italic">
-                      {confirmZone === 'archive' 
-                        ? "This removes your CV artifact. Alignment remains safe." 
-                        : "Wipe EVERYTHING. This cannot be undone."}
-                    </p>
+                    <h5 className="text-white font-black uppercase text-xs tracking-tighter">Delete Account?</h5>
+                    <p className="text-[10px] text-zinc-500 italic">Wipe EVERYTHING. This cannot be undone.</p>
                   </div>
                   <div className="flex flex-col gap-3">
-                    <Button 
-                      onClick={confirmZone === 'archive' 
-                        ? () => { onSync({ ...vault, resume: null }); setConfirmZone(null); triggerToast("Resume deleted."); } 
-                        : handleFullWipe
-                      } 
-                      className="bg-rose-500 text-white font-black uppercase w-full rounded-xl"
-                    >
-                      {confirmZone === 'archive' ? "Delete Resume" : "Delete Account"}
-                    </Button>
+                    <Button onClick={handleFullWipe} className="bg-rose-500 text-white font-black uppercase w-full rounded-xl">Confirm Destruction</Button>
                     <Button onClick={() => setConfirmZone(null)} variant="ghost" className="text-zinc-500 uppercase text-[10px] font-black">Cancel</Button>
                   </div>
                 </motion.div>
@@ -283,27 +251,19 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
         </div>
       </div>
 
-      {/* PULSE REFLECTION SHEET */}
+      {/* PULSE SHEET */}
       <AnimatePresence>
         {showSheet && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowSheet(false)} className="fixed inset-0 bg-black/90 backdrop-blur-md z-[200] cursor-pointer" />
-            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25 }} className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3.5rem] z-[210] p-8 pb-16 shadow-2xl">
-              <div className="flex justify-between items-center mb-6">
-                <div className="w-10" /> <div className="w-12 h-1.5 bg-zinc-800 rounded-full" />
-                <button onClick={() => setShowSheet(false)} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-zinc-500 hover:text-white transition-colors"><X size={20} /></button>
-              </div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowSheet(false)} className="fixed inset-0 bg-black/90 backdrop-blur-md z-[200]" />
+            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3.5rem] z-[210] p-8 pb-16">
               <div className="max-w-xl mx-auto space-y-10 text-center">
                 <div className="space-y-2">
                     <span className="text-5xl">{selectedEmoji}</span>
                     <h3 className="text-3xl font-serif italic text-white">Adding Depth</h3>
-                    <p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest">Detail the pulse (Optional)</p>
                 </div>
-                <Textarea placeholder="How does the journey feel?" value={reflection} onChange={(e) => setReflection(e.target.value)} className="bg-black/40 border-white/5 rounded-2xl p-6 text-white italic min-h-[150px] outline-none" />
-                <div className="flex flex-col gap-4">
-                  <Button onClick={handleSavePulse} className="w-full h-16 bg-teal-500 text-black font-black uppercase rounded-2xl shadow-xl">Seal Pulse</Button>
-                  <button onClick={() => setShowSheet(false)} className="text-[10px] text-zinc-500 uppercase font-black tracking-widest py-2 hover:text-zinc-400 transition-colors">Cancel</button>
-                </div>
+                <Textarea placeholder="How does the journey feel?" value={reflection} onChange={(e) => setReflection(e.target.value)} className="bg-black/40 border-white/5 rounded-2xl p-6 text-white italic min-h-[150px]" />
+                <Button onClick={handleSavePulse} className="w-full h-16 bg-teal-500 text-black font-black uppercase rounded-2xl">Seal Pulse</Button>
               </div>
             </motion.div>
           </>
@@ -317,11 +277,9 @@ const Badge = ({ children, className }) => (
   <span className={`text-[9px] font-black tracking-widest px-3 py-1 rounded-full border ${className}`}>{children}</span>
 );
 
-/* NEW COMPONENT: ARTIFACT RESONANCE */
 function ArtifactResonance({ vault }) {
   if (!vault?.resume) return null;
 
-  // Placeholder data for the Demo
   const resonance = vault?.artifact_synthesis || {
     archetype: "The Systems Oracle",
     translations: [
@@ -333,43 +291,33 @@ function ArtifactResonance({ vault }) {
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }} 
-      animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-[#121016] to-[#08070B] border border-teal-500/20 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl"
+      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+      className="bg-gradient-to-br from-[#121016] to-[#08070B] border border-teal-500/20 rounded-[2.5rem] p-8 relative overflow-hidden"
     >
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-teal-500/5 blur-[80px] rounded-full" />
-      
       <div className="relative z-10 space-y-6">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2 text-teal-400/60">
-            <FlaskConical size={14} />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Artifact Resonance</span>
-          </div>
+          <div className="flex items-center gap-2 text-teal-400/60"><FlaskConical size={14} /><span className="text-[10px] font-black uppercase tracking-[0.2em]">Resonance</span></div>
           <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20">Synthesized</Badge>
         </div>
-
-        <div className="py-2">
-          <h3 className="text-3xl font-serif italic text-white leading-tight">{resonance.archetype}</h3>
-          <p className="text-[9px] text-zinc-500 uppercase font-black mt-2 tracking-widest flex items-center gap-2">
-             <Circle size={6} className="fill-teal-500 text-teal-500" /> Extracted Identity
-          </p>
+        <div>
+          <h3 className="text-2xl font-serif italic text-white leading-tight">{resonance.archetype}</h3>
+          <p className="text-[8px] text-zinc-500 uppercase font-black mt-2 tracking-widest flex items-center gap-2"><Circle size={4} className="fill-teal-500 text-teal-500" /> Archetype</p>
         </div>
-
         <div className="space-y-3">
            {resonance.translations.map((t, i) => (
-             <div key={i} className="flex items-center justify-between bg-white/[0.02] p-4 rounded-2xl border border-white/5 group hover:border-teal-500/30 transition-colors">
-                <span className="text-[9px] text-rose-400/40 line-through uppercase font-black tracking-tighter">{t.old}</span>
-                <ArrowRight size={12} className="text-zinc-700 group-hover:text-teal-500 transition-colors" />
-                <span className="text-[10px] text-teal-400 uppercase font-black tracking-widest">{t.new}</span>
+             <div key={i} className="flex items-center justify-between bg-white/[0.02] p-4 rounded-2xl border border-white/5">
+                <span className="text-[8px] text-rose-400/40 line-through uppercase font-black">{t.old}</span>
+                <ArrowRight size={10} className="text-zinc-700" />
+                <span className="text-[9px] text-teal-400 uppercase font-black">{t.new}</span>
              </div>
            ))}
         </div>
-
-        <div className="pt-4 flex flex-wrap gap-2">
+        <div className="pt-2 flex flex-wrap gap-2">
           {resonance.runes.map((rune, i) => (
-            <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-purple-500/5 border border-purple-500/10">
+            <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-purple-500/5 border border-purple-500/10">
               <div className="w-1 h-1 rounded-full bg-purple-400 animate-pulse" />
-              <span className="text-[8px] text-purple-300 font-black uppercase tracking-widest">{rune}</span>
+              <span className="text-[7px] text-purple-300 font-black uppercase">{rune}</span>
             </div>
           ))}
         </div>
@@ -380,208 +328,52 @@ function ArtifactResonance({ vault }) {
 
 function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
   const [showRealignConfirm, setShowRealignConfirm] = useState(false);
-
   const hasLexicon = !!(vault?.archetype || (vault?.lexicon && vault.lexicon.length > 0));
-  const hasEthics  = !!vault?.ethics;
+  const hasEthics = !!vault?.ethics;
   const hasHorizon = hasLexicon && hasEthics;
-
-  const completedCount = [hasLexicon, hasEthics, hasHorizon].filter(Boolean).length;
-  const progressPct = Math.round((completedCount / 3) * 100);
+  const progressPct = Math.round(([hasLexicon, hasEthics, hasHorizon].filter(Boolean).length / 3) * 100);
 
   const topLexicon = vault?.lexicon?.slice(0, 3) || [];
-  const ethicsEntries = vault?.ethics
-    ? Object.entries(vault.ethics).sort(([, a], [, b]) => b - a).slice(0, 3)
-    : [];
-
-  const handleRealign = async () => {
-    await onSync({ ...vault, archetype: null, ethics: null, lexicon: [], alignment_complete: false });
-    setShowRealignConfirm(false);
-    triggerToast('Alignment cleared. Begin your new ritual.');
-    navigate('/culture');
-  };
+  const ethicsEntries = vault?.ethics ? Object.entries(vault.ethics).sort(([, a], [, b]) => b - a).slice(0, 3) : [];
 
   const steps = [
-    {
-      id: 'lexicon',
-      label: 'Lexicon Alchemy',
-      description: 'Translate your experience into private-sector language.',
-      icon: FlaskConical,
-      complete: hasLexicon,
-      route: '/culture',
-      summary: hasLexicon && topLexicon.length > 0 ? (
-        <div className="flex flex-wrap gap-1.5 mt-2">
-          {topLexicon.map((phrase, i) => (
-            <span key={i} className="px-2 py-0.5 bg-teal-500/10 border border-teal-500/15 text-teal-300 text-[9px] rounded-full font-semibold">
-              {phrase.length > 22 ? phrase.slice(0, 22) + '…' : phrase}
-            </span>
-          ))}
-        </div>
-      ) : null,
-    },
-    {
-      id: 'ethics',
-      label: 'Ethical Compass',
-      description: 'Calibrate your non-negotiables and values profile.',
-      icon: Compass,
-      complete: hasEthics,
-      route: '/culture',
-      summary: hasEthics && ethicsEntries.length > 0 ? (
-        <div className="flex gap-3 mt-2">
-          {ethicsEntries.map(([key, val]) => (
-            <div key={key} className="text-center">
-              <div className="text-[10px] font-black" style={{ color: '#39FFCA' }}>{val}%</div>
-              <div className="text-[8px] text-zinc-600 uppercase font-black capitalize">{key}</div>
-            </div>
-          ))}
-        </div>
-      ) : null,
-    },
-    {
-      id: 'horizon',
-      label: 'Horizon Activation',
-      description: 'Unlock your personalized job intelligence board.',
-      icon: Zap,
-      complete: hasHorizon,
-      route: '/horizon',
-      summary: null,
-    },
+    { id: 'lexicon', label: 'Lexicon Alchemy', description: 'Translate your experience into private-sector language.', icon: FlaskConical, complete: hasLexicon, route: '/culture', summary: hasLexicon && topLexicon.length > 0 ? (
+      <div className="flex flex-wrap gap-1.5 mt-2">{topLexicon.map((phrase, i) => <span key={i} className="px-2 py-0.5 bg-teal-500/10 border border-teal-500/15 text-teal-300 text-[9px] rounded-full font-semibold">{phrase}</span>)}</div>
+    ) : null },
+    { id: 'ethics', label: 'Ethical Compass', description: 'Calibrate your non-negotiables and values profile.', icon: Compass, complete: hasEthics, route: '/culture', summary: hasEthics && ethicsEntries.length > 0 ? (
+      <div className="flex gap-3 mt-2">{ethicsEntries.map(([key, val]) => <div key={key} className="text-center"><div className="text-[10px] font-black" style={{ color: '#39FFCA' }}>{val}%</div><div className="text-[8px] text-zinc-600 uppercase font-black capitalize">{key}</div></div>)}</div>
+    ) : null },
+    { id: 'horizon', label: 'Horizon Activation', description: 'Unlock your personalized job intelligence board.', icon: Zap, complete: hasHorizon, route: '/horizon' },
   ];
-
-  const nextStep = steps.find(s => !s.complete);
-  const ctaRoute = nextStep ? nextStep.route : '/horizon';
-  const ctaLabel = hasHorizon ? 'Enter the Horizon' : 'Continue the Ritual';
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
       <div className="flex items-center justify-between px-2">
-        <div className="flex items-center gap-2">
-          <Compass size={14} className="text-purple-400" />
-          <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Alignment Snapshot</span>
-        </div>
-        <span 
-          className="text-[10px] font-black tabular-nums transition-all duration-700" 
-          style={{ 
-            color: progressPct === 100 ? '#39FFCA' : '#71717a', 
-            textShadow: progressPct === 100 ? '0 0 15px rgba(57,255,202,0.6)' : 'none' 
-          }}
-        >
-          {progressPct === 100 ? (
-            <motion.span 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              className="flex items-center gap-1.5"
-            >
-              <Zap size={10} className="fill-current" /> SYSTEM PRIMED
-            </motion.span>
-          ) : (
-            `${progressPct}% complete`
-          )}
+        <div className="flex items-center gap-2"><Compass size={14} className="text-purple-400" /><span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Alignment Snapshot</span></div>
+        <span className="text-[10px] font-black tabular-nums transition-all duration-700" style={{ color: progressPct === 100 ? '#39FFCA' : '#71717a', textShadow: progressPct === 100 ? '0 0 15px rgba(57,255,202,0.6)' : 'none' }}>
+          {progressPct === 100 ? <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-1.5"><Zap size={10} className="fill-current" /> SYSTEM PRIMED</motion.span> : `${progressPct}% complete`}
         </span>
       </div>
 
-      <div className="bg-[#0D0B14] border border-white/5 rounded-[2.5rem] p-8 space-y-6">
+      <div className="bg-[#0D0B14] border border-white/5 rounded-[2.5rem] p-8 space-y-8">
         <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${progressPct}%` }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="h-full rounded-full"
-            style={{ background: 'linear-gradient(90deg, #14b8a6, #39FFCA)' }}
-          />
+          <motion.div initial={{ width: 0 }} animate={{ width: `${progressPct}%` }} className="h-full rounded-full" style={{ background: 'linear-gradient(90deg, #14b8a6, #39FFCA)' }} />
         </div>
-
         <div className="space-y-4">
-          {steps.map((step, idx) => {
-            const Icon = step.icon;
-            return (
-              <div
-                key={step.id}
-                className={`flex items-start gap-5 p-5 rounded-[1.5rem] border transition-all ${
-                  step.complete ? 'bg-teal-500/[0.04] border-teal-500/15' : 'bg-white/[0.02] border-white/5'
-                }`}
-              >
-                <div className="shrink-0 mt-0.5">
-                  {step.complete ? (
-                    <div className="w-8 h-8 rounded-full bg-teal-500/20 border border-teal-500/40 flex items-center justify-center shadow-[0_0_10px_#14b8a640]">
-                      <CheckCircle2 size={15} className="text-teal-400" />
-                    </div>
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                      <Circle size={13} className="text-zinc-600" />
-                    </div>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <Icon size={12} className={step.complete ? 'text-teal-400' : 'text-zinc-600'} />
-                    <span className={`text-[10px] font-black uppercase tracking-widest ${step.complete ? 'text-teal-300' : 'text-zinc-500'}`}>
-                      {step.label}
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-zinc-600 italic leading-relaxed">{step.description}</p>
-                  {step.summary}
-                </div>
-                <span className="shrink-0 text-[9px] font-black text-zinc-700 tabular-nums mt-1">0{idx + 1}</span>
+          {steps.map((step, idx) => (
+            <div key={step.id} className={`flex items-start gap-5 p-5 rounded-[1.5rem] border transition-all ${step.complete ? 'bg-teal-500/[0.04] border-teal-500/15' : 'bg-white/[0.02] border-white/5'}`}>
+              <div className="shrink-0 mt-0.5">{step.complete ? <div className="w-8 h-8 rounded-full bg-teal-500/20 border border-teal-500/40 flex items-center justify-center"><CheckCircle2 size={15} className="text-teal-400" /></div> : <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center"><Circle size={13} className="text-zinc-600" /></div>}</div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-0.5"><step.icon size={12} className={step.complete ? 'text-teal-400' : 'text-zinc-600'} /><span className={`text-[10px] font-black uppercase tracking-widest ${step.complete ? 'text-teal-300' : 'text-zinc-500'}`}>{step.label}</span></div>
+                <p className="text-[10px] text-zinc-600 italic leading-relaxed">{step.description}</p>
+                {step.summary}
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
-
-        <button
-          onClick={() => navigate(ctaRoute)}
-          className="w-full flex items-center justify-center gap-3 py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-widest transition-all active:scale-[0.98]"
-          style={{
-            background: hasHorizon ? 'linear-gradient(135deg, #14b8a6, #39FFCA)' : 'rgba(20,184,166,0.08)',
-            color: hasHorizon ? '#0A080D' : '#39FFCA',
-            border: hasHorizon ? 'none' : '1px solid rgba(20,184,166,0.2)',
-            boxShadow: hasHorizon ? '0 10px 30px rgba(57,255,202,0.2)' : 'none',
-          }}
-        >
-          {ctaLabel}
-          <ArrowRight size={14} />
+        <button onClick={() => navigate(hasHorizon ? '/horizon' : nextStep.route)} className="w-full flex items-center justify-center gap-3 py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-widest transition-all" style={{ background: hasHorizon ? 'linear-gradient(135deg, #14b8a6, #39FFCA)' : 'rgba(20,184,166,0.08)', color: hasHorizon ? '#0A080D' : '#39FFCA', border: hasHorizon ? 'none' : '1px solid rgba(20,184,166,0.2)' }}>
+          {hasHorizon ? 'Enter the Horizon' : 'Continue the Ritual'}<ArrowRight size={14} />
         </button>
-
-        {(hasLexicon || hasEthics) && !showRealignConfirm && (
-          <div className="text-center pt-2">
-            <button
-              onClick={() => setShowRealignConfirm(true)}
-              className="text-[9px] font-black uppercase tracking-widest text-zinc-700 hover:text-zinc-400 transition-colors"
-            >
-              ↺ Begin New Ritual
-            </button>
-          </div>
-        )}
-
-        <AnimatePresence>
-          {showRealignConfirm && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
-              className="p-6 bg-amber-500/[0.03] border border-amber-500/20 rounded-[1.5rem] space-y-4 text-center"
-            >
-              <AlertTriangle size={22} className="text-amber-500 mx-auto" />
-              <div className="space-y-1">
-                <p className="text-[11px] font-black text-white uppercase tracking-wider">Clear Alignment?</p>
-                <p className="text-[10px] text-zinc-500 italic">
-                  Your Lexicon and Ethics will be cleared. Your resume and Hearth records remain safe.
-                </p>
-              </div>
-              <div className="flex gap-3">
-                <button
-                  onClick={handleRealign}
-                  className="flex-1 py-3 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-black uppercase hover:bg-amber-500 hover:text-black transition-all"
-                >
-                  Yes, Realign
-                </button>
-                <button
-                  onClick={() => setShowRealignConfirm(false)}
-                  className="flex-1 py-3 rounded-xl bg-white/5 text-zinc-500 text-[10px] font-black uppercase hover:text-white transition-all"
-                >
-                  Cancel
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </motion.div>
   );
