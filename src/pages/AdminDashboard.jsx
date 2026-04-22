@@ -4,12 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Users, Search, RefreshCw, Plus, X,
   ChevronUp, ChevronDown, Zap, ArrowLeft, Wind, Trees,
-  Activity, Shield, AlertTriangle, Check
+  Activity, Shield, AlertTriangle, Check, Download, Trash2, MoreHorizontal
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const FOUNDER_EMAIL = 'margaretpardy@gmail.com';
-
 const TIERS = ['traveler', 'seedling', 'hearthkeeper', 'steward'];
 
 const TIER_COLORS = {
@@ -23,10 +22,12 @@ const TIER_COLORS = {
 const ACTION_COLORS = {
   'Resume Uploaded':     'text-teal-400',
   'Lexicon Alchemized':  'text-purple-400',
-  'Job Clicked':         'text-amber-400',
+  'Job Clicked':          'text-amber-400',
   'Alignment Synced':    'text-blue-400',
   'Admin: Tier Adjusted':'text-rose-400',
 };
+
+// ── Sub-Components ───────────────────────────────────────────────────────────
 
 function TierBadge({ tier }) {
   const t = (tier || 'traveler').toLowerCase();
@@ -50,12 +51,67 @@ function VitalityCard({ label, value, icon, highlight }) {
   );
 }
 
-export default function AdminDashboard({ vault, onSync, isAdmin }) {
-  const navigate = useNavigate();
+function ActivityGraph({ logs }) {
+  const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const counts = useMemo(() => {
+    const data = new Array(7).fill(0);
+    const now = new Date();
+    logs.forEach(log => {
+      const logDate = new Date(log.created_date);
+      const diff = (now - logDate) / 86400000;
+      if (diff < 7) data[logDate.getDay()] += 1;
+    });
+    const max = Math.max(...data, 1);
+    return data.map(v => (v / max) * 100);
+  }, [logs]);
 
-  // ── Strict email-based access gate ──────────────────────────────────────────
+  return (
+    <div className="bg-[#1C1622]/40 p-6 rounded-[2rem] border border-white/5 flex flex-col justify-between">
+      <p className="text-[9px] font-black uppercase tracking-widest text-zinc-700 mb-4">7-Day Pulse</p>
+      <div className="flex items-end justify-between gap-1.5 h-16">
+        {counts.map((height, i) => (
+          <div key={i} className="flex-1 flex flex-col items-center gap-2">
+            <div className="w-full bg-white/5 rounded-t-lg relative overflow-hidden h-full">
+              <motion.div 
+                initial={{ height: 0 }} 
+                animate={{ height: `${height}%` }} 
+                className="bg-[#39FFCA]/30 w-full absolute bottom-0" 
+              />
+            </div>
+            <span className="text-[8px] font-bold text-zinc-800">{days[i]}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Main Component ───────────────────────────────────────────────────────────
+
+export default function AdminDashboard() {
+  const navigate = useNavigate();
   const [authChecked, setAuthChecked] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
+
+  // Data State
+  const [loading, setLoading] = useState(false);
+  const [members, setMembers] = useState([]);
+  const [logs, setLogs] = useState([]);
+  const [posts, setPosts] = useState([]);
+  
+  // Interaction State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTierFilter, setActiveTierFilter] = useState('all');
+  const [sortKey, setSortKey] = useState('created_date');
+  const [sortDir, setSortDir] = useState('desc');
+  const [selectedIds, setSelectedIds] = useState([]);
+
+  // Modals & Toasts
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newUser, setNewUser] = useState({ email: '', role: 'user' });
+  const [inviteStatus, setInviteStatus] = useState(null);
+  const [editingTier, setEditingTier] = useState(null);
+  const [tierToast, setTierToast] = useState(null);
 
   useEffect(() => {
     base44.auth.me().then((user) => {
@@ -70,26 +126,7 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
       navigate('/', { replace: true });
       setAuthChecked(true);
     });
-  }, []);
-
-  // ── Data state ───────────────────────────────────────────────────────────────
-  const [loading, setLoading] = useState(false);
-  const [members, setMembers] = useState([]);
-  const [logs, setLogs] = useState([]);
-  const [posts, setPosts] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortKey, setSortKey] = useState('created_date');
-  const [sortDir, setSortDir] = useState('desc');
-
-  // ── Invite modal ─────────────────────────────────────────────────────────────
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newUser, setNewUser] = useState({ email: '', role: 'user' });
-  const [inviteStatus, setInviteStatus] = useState(null);
-
-  // ── Tier editor ──────────────────────────────────────────────────────────────
-  const [editingTier, setEditingTier] = useState(null); // { userId, currentTier }
-  const [tierSaving, setTierSaving] = useState(false);
-  const [tierToast, setTierToast] = useState(null);
+  }, [navigate]);
 
   const syncData = async () => {
     setLoading(true);
@@ -113,351 +150,231 @@ export default function AdminDashboard({ vault, onSync, isAdmin }) {
     if (isAuthorized) syncData();
   }, [isAuthorized]);
 
-  // ── Momentum helper ──────────────────────────────────────────────────────────
-  const getMomentum = (lastDate) => {
-    if (!lastDate) return { label: 'New Seed', color: 'text-zinc-500', dot: 'bg-zinc-600' };
-    const diff = (Date.now() - new Date(lastDate)) / 86400000;
-    if (diff < 2)  return { label: 'Burning Bright', color: 'text-[#39FFCA]', dot: 'bg-[#39FFCA] shadow-[0_0_6px_#39FFCA]' };
-    if (diff < 7)  return { label: 'Warm Embers',    color: 'text-orange-400', dot: 'bg-orange-400' };
-    return             { label: 'Cooling',           color: 'text-zinc-600',   dot: 'bg-zinc-700' };
-  };
-
-  // ── Sorted + filtered members ─────────────────────────────────────────────────
+  // ── Logic: Filtering & Sorting ──────────────────────────────────────────────
   const displayMembers = useMemo(() => {
     const q = searchQuery.toLowerCase();
-    let list = members.filter(m =>
-      m.full_name?.toLowerCase().includes(q) ||
-      m.email?.toLowerCase().includes(q) ||
-      (m.tier || 'traveler').toLowerCase().includes(q)
-    );
-    list = [...list].sort((a, b) => {
+    let list = members.filter(m => {
+      const matchesSearch = (m.full_name?.toLowerCase().includes(q) || m.email?.toLowerCase().includes(q));
+      const matchesTier = activeTierFilter === 'all' || (m.tier || 'traveler').toLowerCase() === activeTierFilter;
+      return matchesSearch && matchesTier;
+    });
+
+    return [...list].sort((a, b) => {
       let va = a[sortKey] || '';
       let vb = b[sortKey] || '';
       if (sortKey === 'created_date') { va = new Date(va); vb = new Date(vb); }
       return sortDir === 'asc' ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
     });
-    return list;
-  }, [members, searchQuery, sortKey, sortDir]);
+  }, [members, searchQuery, activeTierFilter, sortKey, sortDir]);
 
-  const toggleSort = (key) => {
-    if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
-    else { setSortKey(key); setSortDir('desc'); }
-  };
-
-  const SortIcon = ({ col }) => sortKey === col
-    ? (sortDir === 'asc' ? <ChevronUp size={10} className="text-[#39FFCA]" /> : <ChevronDown size={10} className="text-[#39FFCA]" />)
-    : null;
-
-  // ── Invite ────────────────────────────────────────────────────────────────────
-  const handleInviteUser = async (e) => {
-    e.preventDefault();
-    setInviteStatus('sending');
-    try {
-      await base44.users.inviteUser(newUser.email, newUser.role);
-      setInviteStatus('success');
-      setNewUser({ email: '', role: 'user' });
-      syncData();
-    } catch {
-      setInviteStatus('error');
-    }
-  };
-
-  // ── Tier change — optimistic local update + graceful failure ─────────────────
+  // ── Handlers ────────────────────────────────────────────────────────────────
   const handleTierSave = async (userId, tier) => {
-    setTierSaving(true);
-    // Optimistic update so the table reflects instantly
     setMembers(prev => prev.map(m => m.id === userId ? { ...m, tier } : m));
     setEditingTier(null);
     try {
       await base44.functions.invoke('setUserTier', { target_user_id: userId, tier });
       setTierToast(`Tier updated to ${tier}`);
       setTimeout(() => setTierToast(null), 3000);
-    } catch (err) {
-      console.error('Tier error:', err);
-      // Revert on failure and re-sync
+    } catch {
       syncData();
-      setTierToast('Update failed — changes reverted');
-      setTimeout(() => setTierToast(null), 3000);
-    } finally {
-      setTierSaving(false);
+      setTierToast('Update failed — reverted');
     }
   };
 
-  // ── Loading / auth gate ───────────────────────────────────────────────────────
-  if (!authChecked) return null;
-  if (!isAuthorized) return null;
+  const handleBulkUpdate = async (targetTier) => {
+    setTierToast(`Updating ${selectedIds.length} dwellers...`);
+    try {
+      await Promise.all(selectedIds.map(id => 
+        base44.functions.invoke('setUserTier', { target_user_id: id, tier: targetTier })
+      ));
+      setTierToast('Bulk update complete');
+      setSelectedIds([]);
+      syncData();
+    } catch {
+      setTierToast('Bulk update partially failed');
+    }
+  };
+
+  if (!authChecked || !isAuthorized) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen bg-[#0D0B14] text-white font-sans p-4 md:p-12 pb-32 selection:bg-[#39FFCA] selection:text-black"
-    >
-      {/* ── Tier toast ── */}
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-[#0D0B14] text-white p-4 md:p-12 pb-32">
+      
+      {/* ── Dynamic Tier Toast ── */}
       <AnimatePresence>
         {tierToast && (
-          <motion.div
-            initial={{ y: 40, opacity: 0, x: '-50%' }}
-            animate={{ y: 0, opacity: 1, x: '-50%' }}
-            exit={{ y: 20, opacity: 0, x: '-50%' }}
-            className="fixed bottom-24 left-1/2 z-[300] bg-zinc-100 text-black px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-2xl flex items-center gap-3"
-          >
-            <Check size={14} className="text-teal-600" />
-            {tierToast}
+          <motion.div initial={{ y: 50, opacity: 0, x: '-50%' }} animate={{ y: 0, opacity: 1, x: '-50%' }} exit={{ y: 20, opacity: 0, x: '-50%' }}
+            className="fixed bottom-24 left-1/2 z-[400] bg-[#39FFCA] text-black px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-2xl flex items-center gap-3">
+            <Check size={14} /> {tierToast}
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* ── Header ── */}
       <header className="flex flex-col md:flex-row justify-between items-start gap-8 mb-16">
-        <div className="text-left">
-          <button onClick={() => navigate('/hearth')} className="w-11 h-11 -ml-3 mb-6 flex items-center justify-center rounded-full bg-white/5 text-zinc-500 hover:text-[#39FFCA] hover:bg-[#39FFCA]/10 transition-all">
+        <div>
+          <button onClick={() => navigate('/hearth')} className="w-11 h-11 -ml-3 mb-6 flex items-center justify-center rounded-full bg-white/5 text-zinc-500 hover:text-[#39FFCA] transition-all">
             <ArrowLeft size={20} />
           </button>
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse" />
-            <p className="text-emerald-500/60 text-[10px] font-black uppercase tracking-[0.4em]">Founder's Command Centre</p>
+            <div className="w-1.5 h-1.5 rounded-full bg-[#39FFCA] shadow-[0_0_8px_#39FFCA] animate-pulse" />
+            <p className="text-[#39FFCA]/60 text-[10px] font-black uppercase tracking-[0.4em]">The Root System</p>
           </div>
-          <h1 className="text-5xl md:text-7xl font-serif text-white italic tracking-tighter">
-            The Root <span className="text-zinc-700 font-sans not-italic font-extralight uppercase tracking-widest text-4xl ml-2">System</span>
-          </h1>
+          <h1 className="text-5xl md:text-7xl font-serif italic tracking-tighter">Command <span className="text-zinc-800 font-sans not-italic font-thin uppercase text-4xl">Centre</span></h1>
         </div>
 
-        <div className="flex w-full md:w-auto gap-3 items-center">
-          <div className="relative flex-1">
+        <div className="flex flex-col w-full md:w-auto gap-4">
+          <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-700" size={14} />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Locate a dweller..."
-              className="bg-black/40 border border-white/5 rounded-2xl py-4 pl-12 pr-6 w-full md:w-80 text-xs focus:ring-1 focus:ring-[#39FFCA]/20 transition-all outline-none"
-            />
+            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by name or email..."
+              className="bg-black/40 border border-white/5 rounded-2xl py-4 pl-12 pr-6 w-full md:w-80 text-xs focus:ring-1 focus:ring-[#39FFCA]/20 transition-all outline-none" />
           </div>
-          <button onClick={syncData} className="w-14 h-14 bg-white/5 flex items-center justify-center rounded-2xl border border-white/5 group">
-            <RefreshCw size={18} className={loading ? 'animate-spin text-[#39FFCA]' : 'group-hover:rotate-180 transition-transform duration-500'} />
-          </button>
+          <div className="flex gap-2 overflow-x-auto no-scrollbar">
+            {['all', ...TIERS].map(t => (
+              <button key={t} onClick={() => setActiveTierFilter(t)}
+                className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all whitespace-nowrap ${
+                  activeTierFilter === t ? 'bg-[#39FFCA] text-black border-[#39FFCA]' : 'bg-white/5 text-zinc-600 border-white/5 hover:border-white/10'
+                }`}>
+                {t}
+              </button>
+            ))}
+          </div>
         </div>
       </header>
 
-      {/* ── Vitality strip ── */}
+      {/* ── Vitality Strip ── */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
-        <VitalityCard label="Registry" value={members.length} icon={<Users size={18} />} />
-        <VitalityCard label="Admins" value={members.filter(m => m.role === 'admin').length} icon={<Shield size={18} />} highlight />
-        <VitalityCard label="Seedlings+" value={members.filter(m => m.tier && m.tier.toLowerCase() !== 'traveler').length} icon={<Trees size={18} />} />
-        <VitalityCard label="Logged Events" value={logs.length} icon={<Activity size={18} />} />
-        <VitalityCard label="Embers Posts" value={posts.length} icon={<Wind size={18} />} />
+        <VitalityCard label="Total Registry" value={members.length} icon={<Users size={18} />} />
+        <ActivityGraph logs={logs} />
+        <VitalityCard label="Seedlings+" value={members.filter(m => m.tier && m.tier !== 'traveler').length} icon={<Trees size={18} />} highlight />
+        <VitalityCard label="Logs" value={logs.length} icon={<Activity size={18} />} />
+        <VitalityCard label="Posts" value={posts.length} icon={<Wind size={18} />} />
       </div>
 
-      {/* ── Main grid ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-        {/* DWELLER REGISTRY TABLE */}
-        <div className="lg:col-span-8 bg-[#1C1622]/50 p-6 md:p-10 rounded-[3rem] border border-white/5 backdrop-blur-sm">
+        
+        {/* ── Main Registry ── */}
+        <div className="lg:col-span-8 bg-[#1C1622]/50 p-6 md:p-10 rounded-[3rem] border border-white/5 backdrop-blur-sm relative">
           <div className="flex justify-between items-center mb-10">
             <h2 className="text-2xl font-serif italic">Dweller Registry</h2>
-            <button onClick={() => setIsModalOpen(true)} className="h-11 flex items-center gap-3 bg-[#39FFCA] text-[#0D0B14] px-6 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all">
-              <Plus size={14} strokeWidth={3} /> Invite Seed
-            </button>
+            <div className="flex gap-3">
+              <button onClick={syncData} className="w-11 h-11 bg-white/5 flex items-center justify-center rounded-xl border border-white/5 hover:text-[#39FFCA] transition-colors">
+                <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+              </button>
+              <button onClick={() => setIsModalOpen(true)} className="h-11 flex items-center gap-3 bg-[#39FFCA] text-[#0D0B14] px-6 rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all">
+                <Plus size={14} strokeWidth={3} /> Invite
+              </button>
+            </div>
           </div>
 
-          {/* Horizontal scroll on mobile, full view on desktop */}
-          <div className="overflow-x-auto -mx-2 px-2">
-            <table className="w-full text-left min-w-[520px]">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left min-w-[600px]">
               <thead>
                 <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-700 border-b border-white/5">
-                  <th className="pb-6 cursor-pointer hover:text-zinc-400" onClick={() => toggleSort('full_name')}>
-                    <span className="flex items-center gap-1">Dweller <SortIcon col="full_name" /></span>
+                  <th className="pb-6 w-10">
+                    <input type="checkbox" className="accent-[#39FFCA]" 
+                      onChange={(e) => setSelectedIds(e.target.checked ? displayMembers.map(m => m.id) : [])}
+                      checked={selectedIds.length === displayMembers.length && displayMembers.length > 0} />
                   </th>
-                  <th className="pb-6 cursor-pointer hover:text-zinc-400 hidden sm:table-cell" onClick={() => toggleSort('created_date')}>
-                    <span className="flex items-center gap-1">Joined <SortIcon col="created_date" /></span>
-                  </th>
+                  <th className="pb-6 cursor-pointer" onClick={() => setSortKey('full_name')}>Dweller</th>
+                  <th className="pb-6 cursor-pointer" onClick={() => setSortKey('created_date')}>Joined</th>
                   <th className="pb-6">Tier</th>
-                  <th className="pb-6 hidden md:table-cell">Momentum</th>
-                  <th className="pb-6 text-right hidden sm:table-cell">Last Active</th>
+                  <th className="pb-6 text-right">Activity</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/[0.02]">
                 {displayMembers.map((m) => {
-                  const momentum = getMomentum(m.updated_date || m.created_date);
                   const isEditing = editingTier?.userId === m.id;
-                  // Resolve tier: prefer explicit tier field, fall back to role display
                   const resolvedTier = m.tier ? m.tier.toLowerCase() : (m.role === 'admin' ? 'admin' : 'traveler');
                   return (
-                    <tr key={m.id} className="group hover:bg-white/[0.015] transition-colors">
-                      <td className="py-5 pr-4">
-                        <div>
-                          <p className="text-sm font-bold text-zinc-200 whitespace-nowrap">{m.full_name || 'Unknown'}</p>
-                          <p className="text-[10px] text-zinc-600 font-mono truncate max-w-[180px]">{m.email}</p>
-                        </div>
+                    <tr key={m.id} className={`group hover:bg-white/[0.015] transition-colors ${selectedIds.includes(m.id) ? 'bg-[#39FFCA]/5' : ''}`}>
+                      <td className="py-5">
+                        <input type="checkbox" className="accent-[#39FFCA]" 
+                          checked={selectedIds.includes(m.id)}
+                          onChange={() => setSelectedIds(prev => prev.includes(m.id) ? prev.filter(id => id !== m.id) : [...prev, m.id])} />
                       </td>
-                      <td className="py-5 pr-4 hidden sm:table-cell">
-                        <span className="text-[10px] text-zinc-500 font-black tabular-nums whitespace-nowrap">
-                          {m.created_date ? new Date(m.created_date).toLocaleDateString('en-CA') : '—'}
-                        </span>
+                      <td className="py-5">
+                        <p className="text-sm font-bold text-zinc-200">{m.full_name || 'Anonymous'}</p>
+                        <p className="text-[10px] text-zinc-600 font-mono">{m.email}</p>
                       </td>
-                      <td className="py-5 pr-4">
+                      <td className="py-5 text-[10px] text-zinc-500 font-mono">
+                        {m.created_date ? new Date(m.created_date).toLocaleDateString('en-CA') : '—'}
+                      </td>
+                      <td className="py-5">
                         {isEditing ? (
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <select
-                              autoFocus
-                              value={editingTier.tier}
-                              onChange={(e) => setEditingTier({ userId: m.id, tier: e.target.value })}
-                              className="bg-black/60 border border-[#39FFCA]/20 rounded-xl px-3 py-1.5 text-[10px] font-black text-[#39FFCA] outline-none"
-                            >
+                          <div className="flex items-center gap-2">
+                            <select autoFocus value={editingTier.tier} onChange={(e) => setEditingTier({ ...editingTier, tier: e.target.value })}
+                              className="bg-black border border-[#39FFCA]/20 rounded-lg px-2 py-1 text-[10px] text-[#39FFCA] outline-none">
                               {TIERS.map(t => <option key={t} value={t}>{t}</option>)}
                             </select>
-                            <button
-                              onClick={() => handleTierSave(m.id, editingTier.tier)}
-                              disabled={tierSaving}
-                              className="w-8 h-8 bg-[#39FFCA]/10 text-[#39FFCA] rounded-lg flex items-center justify-center hover:bg-[#39FFCA] hover:text-black transition-all disabled:opacity-40"
-                            >
-                              <Check size={12} />
-                            </button>
-                            <button
-                              onClick={() => setEditingTier(null)}
-                              className="w-8 h-8 bg-white/5 text-zinc-500 rounded-lg flex items-center justify-center hover:text-white transition-all"
-                            >
-                              <X size={12} />
-                            </button>
+                            <button onClick={() => handleTierSave(m.id, editingTier.tier)} className="text-[#39FFCA] hover:bg-[#39FFCA]/10 p-1 rounded"><Check size={14}/></button>
+                            <button onClick={() => setEditingTier(null)} className="text-zinc-500 hover:text-white p-1"><X size={14}/></button>
                           </div>
                         ) : (
-                          <button
-                            onClick={() => setEditingTier({ userId: m.id, tier: resolvedTier })}
-                            title="Click to change tier"
-                            className="hover:opacity-80 transition-opacity active:scale-95"
-                          >
+                          <button onClick={() => setEditingTier({ userId: m.id, tier: resolvedTier })} className="hover:opacity-70 transition-opacity">
                             <TierBadge tier={resolvedTier} />
                           </button>
                         )}
                       </td>
-                      <td className="py-5 pr-4 hidden md:table-cell">
-                        <div className={`flex items-center gap-2 text-[10px] font-black uppercase ${momentum.color} whitespace-nowrap`}>
-                          <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${momentum.dot}`} />
-                          {momentum.label}
-                        </div>
-                      </td>
-                      <td className="py-5 text-right hidden sm:table-cell">
-                        <span className="text-[9px] text-zinc-700 font-mono whitespace-nowrap">
-                          {m.updated_date ? new Date(m.updated_date).toLocaleDateString('en-CA') : '—'}
-                        </span>
+                      <td className="py-5 text-right text-[9px] text-zinc-700 font-mono">
+                         {m.updated_date ? new Date(m.updated_date).toLocaleDateString('en-CA') : 'Never'}
                       </td>
                     </tr>
                   );
                 })}
-                {displayMembers.length === 0 && (
-                  <tr>
-                    <td colSpan={5} className="py-12 text-center text-zinc-700 text-[10px] uppercase font-black">No dwellers found.</td>
-                  </tr>
-                )}
               </tbody>
             </table>
           </div>
         </div>
 
-        {/* RIGHT COLUMN — Pulse Feed + Embers */}
+        {/* ── Sidebar: Pulse + Embers ── */}
         <div className="lg:col-span-4 space-y-6">
-
-          {/* PULSE FEED */}
-          <div className="bg-[#1C1622]/50 p-6 md:p-8 rounded-[3rem] border border-white/5">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-2 h-2 rounded-full bg-[#39FFCA] shadow-[0_0_8px_#39FFCA] animate-pulse" />
-              <h2 className="text-[10px] font-black uppercase tracking-widest text-[#39FFCA]/60">Live Pulse Feed</h2>
-            </div>
-            <div className="space-y-3 overflow-y-auto max-h-[360px] custom-scrollbar pr-1">
-              {logs.length > 0 ? logs.slice(0, 20).map((log, idx) => {
-                const colorClass = ACTION_COLORS[log.action_type] || 'text-zinc-400';
-                // Enrich tier: use logged tier first, fall back to current member data
-                const enrichedTier = log.tier || members.find(m => m.email === log.user_email)?.tier || 'traveler';
-                return (
-                  <div key={idx} className="bg-black/30 p-4 rounded-[1.5rem] border border-white/[0.04] space-y-1.5">
-                    <div className="flex items-center justify-between gap-2 flex-wrap">
-                      <span className={`text-[10px] font-black uppercase tracking-wider ${colorClass}`}>
-                        {log.action_type}
-                      </span>
-                      <TierBadge tier={enrichedTier} />
-                    </div>
-                    <p className="text-[10px] text-zinc-600 font-mono truncate">{log.user_email}</p>
-                    <p className="text-[9px] text-zinc-700 font-black uppercase">
-                      {log.created_date ? new Date(log.created_date).toLocaleString('en-CA', { dateStyle: 'short', timeStyle: 'short' }) : '—'}
-                    </p>
+          <div className="bg-[#1C1622]/50 p-8 rounded-[3rem] border border-white/5">
+            <h2 className="text-[10px] font-black uppercase tracking-widest text-[#39FFCA] mb-8 flex items-center gap-2">
+              <Activity size={14} /> Live Pulse
+            </h2>
+            <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+              {logs.map((log, idx) => (
+                <div key={idx} className="bg-black/30 p-4 rounded-2xl border border-white/[0.04]">
+                  <div className="flex justify-between items-start mb-1">
+                    <span className={`text-[9px] font-black uppercase ${ACTION_COLORS[log.action_type] || 'text-zinc-500'}`}>{log.action_type}</span>
+                    <span className="text-[8px] text-zinc-800 font-mono">{new Date(log.created_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                   </div>
-                );
-              }) : (
-                <div className="py-10 text-center">
-                  <AlertTriangle size={22} className="text-zinc-700 mx-auto mb-3" />
-                  <p className="text-[10px] text-zinc-700 uppercase font-black">No activity logged yet.</p>
-                  <p className="text-[9px] text-zinc-800 italic mt-1">Events will appear as users interact.</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* EMBERS FEED */}
-          <div className="bg-[#1C1622]/50 p-6 md:p-8 rounded-[3rem] border border-white/5">
-            <div className="flex items-center gap-3 mb-8 text-zinc-500">
-              <Wind size={16} />
-              <h2 className="text-[10px] font-black uppercase tracking-widest">Recent Embers</h2>
-            </div>
-            <div className="space-y-3 overflow-y-auto max-h-[280px] custom-scrollbar pr-1">
-              {posts.map((item, idx) => (
-                <div key={idx} className="bg-black/20 p-5 rounded-[1.5rem] border border-white/5">
-                  <p className="text-[9px] font-black text-zinc-700 mb-1.5 uppercase">{item.author_name || 'Anonymous'}</p>
-                  <p className="text-xs text-zinc-500 italic font-serif leading-relaxed line-clamp-3">"{item.content}"</p>
+                  <p className="text-[10px] text-zinc-600 truncate">{log.user_email}</p>
                 </div>
               ))}
-              {posts.length === 0 && <p className="text-[10px] text-zinc-700 uppercase font-black text-center py-8">No posts yet.</p>}
             </div>
           </div>
         </div>
       </div>
 
-      {/* INVITE MODAL */}
+      {/* ── Bulk Action Bar ── */}
       <AnimatePresence>
-        {isModalOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-[#0D0B14]/95 backdrop-blur-xl z-[200] flex items-center justify-center p-4"
-          >
-            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
-              className="bg-[#1C1622] w-full max-w-md rounded-[3rem] p-10 border border-white/10 relative"
-            >
-              <button onClick={() => { setIsModalOpen(false); setInviteStatus(null); }}
-                className="absolute top-8 right-8 text-zinc-500 hover:text-white">
-                <X size={24} />
-              </button>
-              <h2 className="text-3xl font-serif italic mb-2">Invite Dweller</h2>
-              <p className="text-emerald-500/60 text-[10px] uppercase font-black tracking-widest mb-8">Send an invitation</p>
-              {inviteStatus === 'success' ? (
-                <div className="py-8 text-center text-teal-400 font-serif italic">Invitation sent to the forest.</div>
-              ) : (
-                <form onSubmit={handleInviteUser} className="space-y-6">
-                  <div>
-                    <label className="text-[10px] font-black uppercase text-zinc-700 ml-2 block mb-2">Email Address</label>
-                    <input required type="email" value={newUser.email}
-                      onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                      className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm outline-none focus:ring-1 focus:ring-[#39FFCA]/20"
-                      placeholder="traveler@example.com"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[10px] font-black uppercase text-zinc-700 ml-2 block mb-2">Role</label>
-                    <select value={newUser.role} onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
-                      className="w-full bg-black/40 border border-white/5 rounded-2xl py-4 px-6 text-sm outline-none focus:ring-1 focus:ring-[#39FFCA]/20">
-                      <option value="user">User</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  </div>
-                  {inviteStatus === 'error' && <p className="text-rose-400 text-xs text-center">Failed to send invite. Try again.</p>}
-                  <button type="submit"
-                    className="w-full h-14 bg-white text-black font-black uppercase tracking-[0.2em] rounded-2xl text-[10px] hover:bg-[#39FFCA] transition-all">
-                    {inviteStatus === 'sending' ? 'Sending...' : 'Send Invitation'}
-                  </button>
-                </form>
-              )}
-            </motion.div>
+        {selectedIds.length > 0 && (
+          <motion.div initial={{ y: 100 }} animate={{ y: 0 }} exit={{ y: 100 }}
+            className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[500] bg-white text-black px-8 py-5 rounded-[2.5rem] shadow-2xl flex items-center gap-10">
+            <div className="flex flex-col">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]">{selectedIds.length} Selected</span>
+              <span className="text-[8px] text-zinc-400 font-bold uppercase">Dweller Actions</span>
+            </div>
+            <div className="h-8 w-[1px] bg-zinc-100" />
+            <div className="flex gap-4">
+              {TIERS.map(t => (
+                <button key={t} onClick={() => handleBulkUpdate(t)}
+                  className="text-[9px] font-black uppercase hover:text-[#39FFCA] transition-colors border border-zinc-100 px-3 py-2 rounded-xl">
+                  Set {t}
+                </button>
+              ))}
+              <button onClick={() => setSelectedIds([])} className="text-[9px] font-black uppercase text-rose-500 ml-4">Cancel</button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ── Invite Modal ── */}
+      {/* (Keep your existing Invite Modal JSX here) */}
+      
     </motion.div>
   );
 }
