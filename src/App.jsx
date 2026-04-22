@@ -34,7 +34,7 @@ export default function App() {
       tier: "none",
       email: null,
       lastSync: null,
-      lexicon: []
+      lexicon: [] // Initialize empty lexicon
     };
   });
 
@@ -73,7 +73,7 @@ export default function App() {
             standing: displayStanding,
             archetype: user.archetype || prev.archetype,
             resume: user.resume_metadata || prev.resume,
-            lexicon: user.lexicon || prev.lexicon || []
+            lexicon: user.lexicon || prev.lexicon || [] // Sync lexicon from cloud
           }));
         }
       } catch (e) {
@@ -203,7 +203,10 @@ export default function App() {
               className={`flex flex-col items-center justify-center min-w-[48px] flex-1 py-2 transition-all active:scale-90 ${accentColor}`}
             >
               <tab.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
-              <span className="hidden sm:block text-[8px] font-black uppercase tracking-tighter mt-1">{tab.label}</span>
+              {/* Labels only show on screens larger than mobile (sm:block) */}
+              <span className="hidden sm:block text-[8px] font-black uppercase tracking-tighter mt-1">
+                {tab.label}
+              </span>
             </button>
           );
         })}
@@ -239,6 +242,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/grove" replace />} />
           </Routes>
         </div>
+        {/* Adds padding at bottom so main content doesn't get hidden behind the floating nav */}
         {showNav && <div className="h-24 md:hidden flex-shrink-0" />}
       </main>
 
