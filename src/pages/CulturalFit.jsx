@@ -59,7 +59,7 @@ export default function CulturalFit({ vault, onComplete, onSync }) {
     setTimeout(() => setToast(null), 3000);
   };
 
-  // Debounced LLM alchemy
+ // Debounced LLM alchemy + AUTO-ARCHIVE
   useEffect(() => {
     if (!inputPhrase || inputPhrase.length < 3) {
       setResults([]);
@@ -73,17 +73,36 @@ export default function CulturalFit({ vault, onComplete, onSync }) {
           resumeContext,
           ethics,
         });
-        setResults(res.data?.identities || []);
+        
+        const newIdentities = res.data?.identities || [];
+        setResults(newIdentities);
+
+        // --- NEW: AUTO-ARCHIVE LOGIC ---
+        if (newIdentities.length > 0) {
+          const phrasesToSave = newIdentities.map(item => item.hearth);
+          setSavedLexicon(prev => {
+            const uniqueNew = phrasesToSave.filter(p => !prev.includes(p));
+            return [...prev, ...uniqueNew];
+          });
+        }
+        // ------------------------------
+
       } catch {
-        // fallback to local mapping
-        setResults(localAlchemize(inputPhrase));
+        const fallbacks = localAlchemize(inputPhrase);
+        setResults(fallbacks);
+
+        // Auto-archive fallbacks too
+        const phrasesToSave = fallbacks.map(item => item.hearth);
+        setSavedLexicon(prev => {
+          const uniqueNew = phrasesToSave.filter(p => !prev.includes(p));
+          return [...prev, ...uniqueNew];
+        });
       } finally {
         setIsAlchemizing(false);
       }
     }, 800);
     return () => clearTimeout(handler);
   }, [inputPhrase]);
-
   // Auto-save lexicon + ethics debounced
   useEffect(() => {
     clearTimeout(autoSaveTimer.current);
