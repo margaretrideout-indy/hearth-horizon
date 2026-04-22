@@ -135,10 +135,8 @@ export default function CulturalFit({ vault, onComplete, onSync }) {
   const handleCopy = (text, index) => {
     navigator.clipboard.writeText(text);
     setCopiedIndex(index);
-    if (!savedLexicon.includes(text)) {
-      setSavedLexicon(prev => [...prev, text]);
-      showToast("Added to your Lexicon.");
-    }
+    showToast("Copied to clipboard."); 
+    // We removed the setSavedLexicon line here because the useEffect above handles it now!
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
