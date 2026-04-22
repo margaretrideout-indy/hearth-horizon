@@ -185,7 +185,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
                     ) : (
                       <>
                         <Upload className="text-zinc-600 mb-2 group-hover:text-teal-500" size={20} />
-                        <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest text-center px-4">Upload Resume / CV</span>
+                        <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest text-center px-4">Upload Resume / CV for Analysis</span>
                         <p className="text-[8px] text-zinc-600 uppercase mt-2 font-black">PDF, DOCX supported</p>
                       </>
                     )}
