@@ -73,25 +73,40 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   const [confirmZone, setConfirmZone] = useState(null); 
   const [showToast, setShowToast] = useState(false);
   
-  // Success state for Stripe redirects
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
   const [successTier, setSuccessTier] = useState('');
 
-  // ── STRIPE REDIRECT LISTENER ──
+  // ── STRIPE & ADMIN NOTIFICATION LISTENER ──
   useEffect(() => {
+    // 1. Handle Stripe Redirects
     const params = new URLSearchParams(window.location.search);
     const status = params.get('session');
-    const tier = params.get('tier');
+    const urlTier = params.get('tier');
 
-    if (status === 'success' && tier) {
-      setSuccessTier(tier.toLowerCase());
+    if (status === 'success' && urlTier) {
+      setSuccessTier(urlTier.toLowerCase());
+      setShowSuccessOverlay(true);
+      window.history.replaceState({}, document.title, window.location.pathname);
+      return; 
+    } 
+    
+    // 2. Handle Admin Manual Upgrades (Base44 Notification Flag)
+    if (vault && vault.notification) {
+      const tierToNotify = vault.notification.toLowerCase();
+      setSuccessTier(tierToNotify);
       setShowSuccessOverlay(true);
 
-      // Clean the URL so refreshing doesn't trigger it again
-      const newUrl = window.location.pathname;
-      window.history.replaceState({}, document.title, newUrl);
+      // Clear the flag in Base44 immediately so it doesn't loop
+      const clearFlag = async () => {
+        try {
+          await onSync({ ...vault, notification: null });
+        } catch (err) {
+          console.error("Hearth: Failed to clear notification flag", err);
+        }
+      };
+      clearFlag();
     }
-  }, []);
+  }, [vault?.notification, onSync]);
 
   const pulseOptions = [
     { icon: "🌱", label: "Growing" },
@@ -149,7 +164,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   return (
     <div className="max-w-6xl mx-auto space-y-12 pb-32 animate-in fade-in duration-1000 relative px-4 md:px-6">
       
-      {/* PAYMENT SUCCESS OVERLAY */}
       <AnimatePresence>
         {showSuccessOverlay && (
           <ThankYouOverlay 
@@ -159,7 +173,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
         )}
       </AnimatePresence>
 
-      {/* TOAST NOTIFICATION */}
       <AnimatePresence>
         {showToast && (
           <motion.div 
@@ -174,7 +187,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
         )}
       </AnimatePresence>
 
-      {/* REFRESH CONTROL */}
       <div className="flex justify-center h-4 relative pt-4">
         <motion.div 
           animate={isRefreshing ? { rotate: 360 } : {}}
@@ -197,10 +209,8 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         
-        {/* LEFT COL: THE IDENTITY */}
         <div className="lg:col-span-5 space-y-10 text-left">
           
-          {/* INTERNAL WEATHER */}
           <section className="bg-gradient-to-br from-[#16121D] to-[#0D0B10] border border-white/5 p-8 rounded-[2.5rem] shadow-2xl space-y-6">
             <div className="flex justify-between items-start px-2">
                 <div className="flex items-center gap-2">
@@ -228,7 +238,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
             </div>
           </section>
 
-          {/* HEARTH RECORDS */}
           <div className="space-y-6">
             <div className="flex items-center gap-2 px-2 text-zinc-500">
                 <History size={14} />
@@ -296,11 +305,9 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
           </div>
         </div>
 
-        {/* RIGHT COL: THE DIRECTION */}
         <div className="lg:col-span-7 space-y-8">
           <AlignmentRoadmap vault={vault} navigate={navigate} onSync={onSync} triggerToast={triggerToast} />
 
-          {/* DANGER ZONES */}
           <div className="pt-20">
             <AnimatePresence mode="wait">
               {!confirmZone ? (
@@ -332,7 +339,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
         </div>
       </div>
 
-      {/* PULSE SHEET */}
       <AnimatePresence>
         {showSheet && (
           <>
