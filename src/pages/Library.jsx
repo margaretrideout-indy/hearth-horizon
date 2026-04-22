@@ -209,10 +209,10 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                           <p className="text-zinc-500 mb-6 max-w-lg italic">Hand-picked ergonomic and organizational tools specifically for professional migrants.</p>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
                             {[
-                              { label: "Horizon Library", url: "https://www.amazon.ca/hz/wishlist/ls/3MQJ7V1EQV93P?ref_=wl_share" },
-                              { label: "Analog Wayfarers", url: "https://www.amazon.ca/hz/wishlist/ls/WUQBYPAD7FSN?ref_=wl_share" },
-                              { label: "Digital Hub", url: "https://www.amazon.ca/hz/wishlist/ls/2WS5M8FIVKJBV?ref_=wl_share" },
-                              { label: "Ergonomic Sanctuary", url: "https://www.amazon.ca/hz/wishlist/ls/2BZUUE2ZJL0EL?ref_=wl_share" }
+                              { label: "Horizon Library", url: "https://www.amazon.ca/hz/wishlist/ls/3MQJ7V1EQV93P?ref_=wl_share/hearthandh0a6-20" },
+                              { label: "Analog Wayfarers", url: "https://www.amazon.ca/hz/wishlist/ls/WUQBYPAD7FSN?ref_=wl_share/hearthandh0a6-20" },
+                              { label: "Digital Hub", url: "https://www.amazon.ca/hz/wishlist/ls/2WS5M8FIVKJBV?ref_=wl_share/hearthandh0a6-20" },
+                              { label: "Ergonomic Sanctuary", url: "https://www.amazon.ca/hz/wishlist/ls/2BZUUE2ZJL0EL?ref_=wl_share/hearthandh0a6-20" }
                             ].map((list) => (
                               <a key={list.label} href={list.url} target="_blank" rel="noreferrer"
                                 className="flex items-center justify-between gap-3 bg-black/40 border border-white/10 px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-300 hover:border-teal-500/40 hover:text-teal-400 transition-all">
