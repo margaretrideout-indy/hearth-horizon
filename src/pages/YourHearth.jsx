@@ -6,7 +6,7 @@ import {
   RefreshCw, Activity, History,
   Lock, Trash2, AlertTriangle, X, Compass,
   Loader2, Circle, ArrowRight, FlaskConical, Zap,
-  Sparkles, Copy, Search
+  Sparkles, Copy, Search, RotateCcw
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -35,7 +35,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = async ( e) => {
     const file = e.target.files[0];
     if (!file) return;
     setIsUploading(true);
@@ -296,7 +296,6 @@ function LexiconArtifacts({ vault, triggerToast }) {
         </div>
       </div>
 
-      {/* SEARCH BAR */}
       <div className="relative group px-2">
         <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-teal-500 transition-colors" size={12} />
         <input 
@@ -321,7 +320,6 @@ function LexiconArtifacts({ vault, triggerToast }) {
               </button>
             </div>
 
-            {/* RESUME BRIDGE: Dynamic logic based on vault data */}
             {vault?.resume && (
                <div className="mt-4 pt-4 border-t border-white/[0.03] space-y-2">
                   <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-amber-500/60">
@@ -335,10 +333,6 @@ function LexiconArtifacts({ vault, triggerToast }) {
             )}
           </div>
         ))}
-
-        {filteredLexicon.length === 0 && (
-          <p className="text-[10px] text-zinc-600 italic text-center py-4">No matching phrases found.</p>
-        )}
       </div>
     </div>
   );
@@ -380,20 +374,13 @@ function ArtifactResonance({ vault }) {
              </div>
            ))}
         </div>
-        <div className="pt-2 flex flex-wrap gap-2">
-          {resonance.runes.map((rune, i) => (
-            <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-purple-500/5 border border-purple-500/10">
-              <div className="w-1 h-1 rounded-full bg-purple-400 animate-pulse" />
-              <span className="text-[7px] text-purple-300 font-black uppercase tracking-widest">{rune}</span>
-            </div>
-          ))}
-        </div>
       </div>
     </motion.div>
   );
 }
 
 function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
   const hasLexicon = !!(vault?.archetype || (vault?.lexicon && vault.lexicon.length > 0));
   const hasEthics = !!vault?.ethics;
   const hasHorizon = hasLexicon && hasEthics;
@@ -401,6 +388,20 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
 
   const topLexicon = vault?.lexicon?.slice(0, 3) || [];
   const ethicsEntries = vault?.ethics ? Object.entries(vault.ethics).sort(([, a], [, b]) => b - a).slice(0, 3) : [];
+
+  const handleResetAlignment = async () => {
+    await onSync({ 
+      ...vault, 
+      archetype: null, 
+      ethics: null, 
+      lexicon: [], 
+      artifact_synthesis: null,
+      alignment_complete: false 
+    });
+    setShowResetConfirm(false);
+    triggerToast("Alignment reset. Returning to the Cultural Ritual.");
+    navigate('/culture');
+  };
 
   const steps = [
     { id: 'lexicon', label: 'Lexicon Alchemy', description: 'Translate your experience into private-sector language.', icon: FlaskConical, complete: hasLexicon, route: '/culture', summary: hasLexicon && topLexicon.length > 0 ? (
@@ -439,9 +440,30 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
             </div>
           ))}
         </div>
-        <button onClick={() => navigate(hasHorizon ? '/horizon' : nextStep.route)} className="w-full flex items-center justify-center gap-3 py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-widest transition-all shadow-xl active:scale-95" style={{ background: hasHorizon ? 'linear-gradient(135deg, #14b8a6, #39FFCA)' : 'rgba(20,184,166,0.08)', color: hasHorizon ? '#0A080D' : '#39FFCA', border: hasHorizon ? 'none' : '1px solid rgba(20,184,166,0.2)' }}>
-          {hasHorizon ? 'Enter the Horizon' : 'Continue the Ritual'}<ArrowRight size={14} />
-        </button>
+
+        <div className="space-y-3">
+          <button onClick={() => navigate(hasHorizon ? '/horizon' : nextStep.route)} className="w-full flex items-center justify-center gap-3 py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-widest transition-all shadow-xl active:scale-95" style={{ background: hasHorizon ? 'linear-gradient(135deg, #14b8a6, #39FFCA)' : 'rgba(20,184,166,0.08)', color: hasHorizon ? '#0A080D' : '#39FFCA', border: hasHorizon ? 'none' : '1px solid rgba(20,184,166,0.2)' }}>
+            {hasHorizon ? 'Enter the Horizon' : 'Continue the Ritual'}<ArrowRight size={14} />
+          </button>
+
+          {/* RESET ALIGNMENT SECTION */}
+          {!showResetConfirm ? (
+            <button 
+              onClick={() => setShowResetConfirm(true)}
+              className="w-full py-3 text-[9px] text-zinc-600 hover:text-amber-500/60 uppercase font-black tracking-widest flex items-center justify-center gap-2 transition-colors border border-white/5 rounded-xl bg-white/[0.01]"
+            >
+              <RotateCcw size={10} /> Shift Alignment Ritual
+            </button>
+          ) : (
+            <div className="p-4 bg-amber-500/[0.02] border border-amber-500/20 rounded-xl space-y-3 animate-in fade-in zoom-in-95 duration-200">
+               <p className="text-[9px] text-zinc-500 text-center uppercase font-black">Reset cultural data and restart alignment?</p>
+               <div className="flex gap-2">
+                 <button onClick={handleResetAlignment} className="flex-1 py-2 bg-amber-500/20 text-amber-500 text-[9px] font-black uppercase rounded-lg hover:bg-amber-500/30 transition-all">Yes, Reset</button>
+                 <button onClick={() => setShowResetConfirm(false)} className="flex-1 py-2 bg-zinc-800 text-zinc-400 text-[9px] font-black uppercase rounded-lg">Cancel</button>
+               </div>
+            </div>
+          )}
+        </div>
       </div>
     </motion.div>
   );
