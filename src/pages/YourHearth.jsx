@@ -5,7 +5,8 @@ import {
   Flame, Upload, CheckCircle2, FileText, 
   RefreshCw, Activity, History,
   Lock, Trash2, AlertTriangle, X, Compass,
-  Loader2, Circle, ArrowRight, FlaskConical, Zap
+  Loader2, Circle, ArrowRight, FlaskConical, Zap,
+  Sparkles, Copy
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -116,7 +117,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         
-        {/* LEFT COL: THE IDENTITY (PULSES, WEATHER, LEGACY) */}
+        {/* LEFT COL: THE IDENTITY */}
         <div className="lg:col-span-5 space-y-10">
           
           {/* INTERNAL WEATHER */}
@@ -170,7 +171,6 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
             </div>
           </div>
 
-          {/* LEGACY ARCHIVE (UPDATED LABEL) */}
           <div className="space-y-8">
             <Card className="bg-[#0D0B10] border-white/5 p-10 rounded-[3rem]">
               <div className="flex flex-col gap-6 text-left">
@@ -212,6 +212,9 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
             </Card>
 
             <ArtifactResonance vault={vault} />
+            
+            {/* Added: Display for Alchemized Phrases */}
+            <LexiconArtifacts vault={vault} triggerToast={triggerToast} />
           </div>
         </div>
 
@@ -277,6 +280,37 @@ const Badge = ({ children, className }) => (
   <span className={`text-[9px] font-black tracking-widest px-3 py-1 rounded-full border ${className}`}>{children}</span>
 );
 
+function LexiconArtifacts({ vault, triggerToast }) {
+  if (!vault?.lexicon || vault.lexicon.length === 0) return null;
+
+  const copy = (text) => {
+    navigator.clipboard.writeText(text);
+    triggerToast("Artifact copied to clipboard.");
+  };
+
+  return (
+    <div className="space-y-6 pt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 text-left">
+      <div className="flex items-center gap-2 px-2 text-zinc-500">
+          <Zap size={14} className="text-teal-400" />
+          <span className="text-[10px] font-black uppercase tracking-widest">Alchemized Phrases</span>
+      </div>
+      <div className="grid gap-3">
+        {vault.lexicon.map((phrase, i) => (
+          <div key={i} className="group relative flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-2xl hover:border-teal-500/20 transition-all">
+            <p className="text-[10px] text-zinc-400 italic pr-10 leading-relaxed">"{phrase}"</p>
+            <button 
+              onClick={() => copy(phrase)}
+              className="absolute right-3 p-2 bg-zinc-900 border border-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:text-teal-400 text-zinc-500"
+            >
+              <Copy size={12} />
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ArtifactResonance({ vault }) {
   if (!vault?.resume) return null;
 
@@ -301,8 +335,8 @@ function ArtifactResonance({ vault }) {
           <Badge className="bg-teal-500/10 text-teal-400 border-teal-500/20">Synthesized</Badge>
         </div>
         <div>
-          <h3 className="text-2xl font-serif italic text-white leading-tight">{resonance.archetype}</h3>
-          <p className="text-[8px] text-zinc-500 uppercase font-black mt-2 tracking-widest flex items-center gap-2"><Circle size={4} className="fill-teal-500 text-teal-500" /> Identity Extracted</p>
+          <h3 className="text-2xl font-serif italic text-white leading-tight text-left">{resonance.archetype}</h3>
+          <p className="text-[8px] text-zinc-500 uppercase font-black mt-2 tracking-widest flex items-center gap-2 text-left"><Circle size={4} className="fill-teal-500 text-teal-500" /> Identity Extracted</p>
         </div>
         <div className="space-y-3">
            {resonance.translations.map((t, i) => (
@@ -357,7 +391,7 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-      <div className="flex items-center justify-between px-2">
+      <div className="flex items-center justify-between px-2 text-left">
         <div className="flex items-center gap-2"><Compass size={14} className="text-purple-400" /><span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Alignment Snapshot</span></div>
         <span className="text-[10px] font-black tabular-nums" style={{ color: progressPct === 100 ? '#39FFCA' : '#71717a' }}>
           {progressPct === 100 ? <span className="flex items-center gap-1.5"><Zap size={10} className="fill-current" /> SYSTEM PRIMED</span> : `${progressPct}% complete`}
@@ -368,7 +402,7 @@ function AlignmentRoadmap({ vault, navigate, onSync, triggerToast }) {
         <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
           <motion.div initial={{ width: 0 }} animate={{ width: `${progressPct}%` }} className="h-full rounded-full" style={{ background: 'linear-gradient(90deg, #14b8a6, #39FFCA)' }} />
         </div>
-        <div className="space-y-4">
+        <div className="space-y-4 text-left">
           {steps.map((step, idx) => (
             <div key={step.id} className={`flex items-start gap-5 p-5 rounded-[1.5rem] border transition-all ${step.complete ? 'bg-teal-500/[0.04] border-teal-500/15' : 'bg-white/[0.02] border-white/5'}`}>
               <div className="shrink-0 mt-0.5">{step.complete ? <div className="w-8 h-8 rounded-full bg-teal-500/20 border border-teal-500/40 flex items-center justify-center"><CheckCircle2 size={15} className="text-teal-400" /></div> : <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center"><Circle size={13} className="text-zinc-600" /></div>}</div>
