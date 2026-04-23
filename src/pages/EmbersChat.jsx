@@ -77,6 +77,8 @@ export default function EmbersChat({ vault, isAdmin }) {
   const [replyTarget, setReplyTarget] = useState(null);
   const scrollRef = useRef(null);
 
+  const soulCount = posts.filter(p => !p.is_glow && !p.is_bot).length + 2; // +2 for static posts
+
   const fetchPosts = async () => {
     try {
       const data = await base44.entities.EmberPost.list('-created_date', 50);
@@ -140,17 +142,26 @@ export default function EmbersChat({ vault, isAdmin }) {
   const allMessages = [...STATIC_POSTS, ...posts];
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#070508] border border-white/5 overflow-hidden">
+    <div className="flex flex-col h-full w-full bg-[#070508] border border-white/5 overflow-hidden" style={{ animation: 'firelightGlow 8s ease-in-out infinite' }}>
+      <style>{`
+        @keyframes firelightGlow {
+          0%, 100% { box-shadow: 0 0 40px rgba(245, 158, 11, 0.03) inset; }
+          50% { box-shadow: 0 0 60px rgba(124, 58, 237, 0.04) inset; }
+        }
+      `}</style>
       
       {/* HEADER & LEGEND */}
       <div className="p-4 border-b border-white/5 bg-[#0A080D]/80 backdrop-blur-md shrink-0 z-20">
-        <div className="flex justify-between items-center mb-3">
+        <div className="flex justify-between items-center mb-2">
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
             <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Embers Feed</span>
           </div>
           <Flame size={14} className="text-orange-500" />
         </div>
+        <p className="text-[9px] font-serif italic text-amber-500/40 mb-3">
+          There {soulCount === 1 ? 'is' : 'are'} <span className="text-amber-400/60 font-black not-italic">{soulCount}</span> soul{soulCount !== 1 ? 's' : ''} by the fire.
+        </p>
         <div className="flex items-center gap-4 border-t border-white/5 pt-3">
           <div className="flex items-center gap-1.5 opacity-40">
             <Sparkles size={10} className="text-teal-400" />
@@ -206,14 +217,14 @@ export default function EmbersChat({ vault, isAdmin }) {
               </div>
 
               <div className={`flex items-center gap-3 mt-1 px-1 ${isOwn ? 'flex-row-reverse' : ''}`}>
-                <button onClick={() => setReplyTarget(msg)} className="text-[9px] font-black text-zinc-600 hover:text-teal-400 uppercase tracking-widest flex items-center gap-1 transition-colors min-h-[44px] min-w-[44px] justify-center">
+                <button onClick={() => setReplyTarget(msg)} aria-label="Reply to this post" className="text-[9px] font-black text-zinc-600 hover:text-teal-400 uppercase tracking-widest flex items-center gap-1 transition-colors min-h-[44px] min-w-[44px] justify-center">
                   <MessageSquare size={10} /> Reply
                 </button>
                 {isOwn && msg.id && !msg.is_glow && (
                   <button
                     onClick={() => handleDelete(msg.id)}
+                    aria-label="Extinguish this post"
                     className="min-h-[44px] min-w-[44px] flex items-center justify-center text-zinc-700 hover:text-rose-500 transition-colors active:scale-90 rounded-full"
-                    title="Extinguish post"
                   >
                     <Trash2 size={13} />
                   </button>
@@ -237,7 +248,7 @@ export default function EmbersChat({ vault, isAdmin }) {
         </AnimatePresence>
         <div className="flex gap-2 max-w-5xl mx-auto">
           <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Add to the embers..." className="bg-white/5 border-white/10 h-12 rounded-xl focus-visible:ring-0 focus-visible:border-teal-500/50" onKeyDown={(e) => e.key === 'Enter' && handleSend()} />
-          <Button onClick={handleSend} disabled={!input.trim() || sending} className="h-12 w-12 bg-teal-500 text-black rounded-xl hover:bg-teal-400">
+          <Button onClick={handleSend} disabled={!input.trim() || sending} aria-label="Send message" className="h-12 w-12 bg-teal-500 text-black rounded-xl hover:bg-teal-400">
             {sending ? <Loader2 className="animate-spin" size={18} /> : <Send size={18} />}
           </Button>
         </div>

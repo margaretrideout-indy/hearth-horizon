@@ -343,7 +343,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-12 pb-32 animate-in fade-in duration-1000 relative px-4 md:px-6">
+    <div className="max-w-6xl mx-auto space-y-12 pb-32 page-fade-in relative px-4 md:px-6">
 
       <AnimatePresence>
         {showSuccessOverlay && <ThankYouOverlay tier={successTier} onClose={() => setShowSuccessOverlay(false)} />}
@@ -363,7 +363,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
 
       <div className="flex justify-center h-4 relative pt-4">
         <motion.div animate={isRefreshing ? { rotate: 360 } : {}} transition={isRefreshing ? { repeat: Infinity, duration: 1, ease: "linear" } : {}}
-          className="text-teal-500/40 hover:text-teal-500 transition-colors" onClick={handleRefresh}>
+          className="text-teal-500/40 hover:text-teal-500 transition-colors" onClick={handleRefresh} aria-label="Synchronize Hearth">
           <RefreshCw size={22} className="cursor-pointer active:scale-90" />
         </motion.div>
       </div>
@@ -440,6 +440,20 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
             </div>
             <ResonanceDisplay vault={vault} navigate={navigate} />
           </div>
+
+          {/* Return to Smithy CTA */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+            <button onClick={() => navigate('/library')}
+              className="w-full flex items-center justify-between px-6 py-4 bg-[#0F0C18] border border-purple-500/10 rounded-2xl hover:border-purple-500/30 transition-all group">
+              <div className="flex items-center gap-3">
+                <Hammer size={13} className="text-purple-400/50 group-hover:text-purple-400 transition-colors" />
+                <span className="text-[11px] font-serif italic text-zinc-500 group-hover:text-zinc-300 transition-colors">
+                  Need to sharpen your steel? <span className="text-purple-400">Return to the Smithy.</span>
+                </span>
+              </div>
+              <ArrowRight size={13} className="text-purple-400/30 group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
+            </button>
+          </motion.div>
 
           {/* Alignment Roadmap */}
           <AlignmentRoadmap vault={vault} navigate={navigate} onSync={onSync} triggerToast={triggerToast} />

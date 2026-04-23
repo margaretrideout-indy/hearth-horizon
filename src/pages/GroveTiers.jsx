@@ -19,8 +19,13 @@ const LINK_DONATION = 'https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02';
 // The underlying BUSINESS VALUE is surfaced, not just word-swaps.
 // e.g. "Safety Officer" → the value is Risk Mitigation, not just "Safety Manager"
 const LEGACY_MAP = [
+  // BIG THREE — explicit priority matches (checked first for highest fidelity)
+  { triggers: ['teacher', 'elementary teacher', 'secondary teacher', 'high school teacher', 'classroom teacher'], horizon: 'Learning & Development Architect' },
+  { triggers: ['police officer', 'police', 'constable', 'rcmp officer', 'military officer', 'army officer', 'navy officer', 'soldier', 'veteran', 'armed forces'], horizon: 'Operational Risk & Strategic Lead' },
+  { triggers: ['paramedic', 'first responder', 'firefighter', 'fire fighter', 'emt', 'emergency responder'], horizon: 'Crisis Management & Resilience Director' },
+
   // EDUCATION — core value: Human Capital Development, Behaviour Design, Talent Activation
-  { triggers: ['teacher', 'educator', 'instructor', 'tutor', 'professor', 'lecturer', 'pedagog'], horizon: 'Human Capital Development Strategist' },
+  { triggers: ['educator', 'instructor', 'tutor', 'professor', 'lecturer', 'pedagog'], horizon: 'Human Capital Development Strategist' },
   { triggers: ['principal', 'vice principal', 'superintendent', 'head of school', 'dean'], horizon: 'Organizational Leadership & Culture Executive' },
   { triggers: ['curriculum', 'instructional design', 'learning design', 'e-learning'], horizon: 'Learning Experience Architect' },
   { triggers: ['special education', 'resource teacher', 'iep', 'inclusion'], horizon: 'Adaptive Systems & Equity Specialist' },
@@ -86,6 +91,7 @@ function BrigidSampler({ onSave }) {
   const [legacyTitle, setLegacyTitle] = useState('');
   const [horizonTitle, setHorizonTitle] = useState(null);
   const [saved, setSaved] = useState(false);
+  const [showBrigidToast, setShowBrigidToast] = useState(false);
   const inputRef = useRef(null);
 
   const [isPoetic, setIsPoetic] = useState(false);
@@ -98,6 +104,11 @@ function BrigidSampler({ onSave }) {
       if (mapped) {
         setHorizonTitle(mapped);
         setIsPoetic(false);
+        // Show Brigid's toast after a short reveal delay
+        setTimeout(() => {
+          setShowBrigidToast(true);
+          setTimeout(() => setShowBrigidToast(false), 4000);
+        }, 700);
       } else {
         setHorizonTitle(BRIGID_POETIC_FALLBACK);
         setIsPoetic(true);
@@ -119,6 +130,22 @@ function BrigidSampler({ onSave }) {
       initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
       className="max-w-2xl mx-auto mb-24"
     >
+      {/* Brigid Toast */}
+      <AnimatePresence>
+        {showBrigidToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -12, scale: 0.97 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-[999] flex items-center gap-3 px-6 py-3 rounded-2xl bg-[#1A1225] border border-purple-500/30 shadow-2xl shadow-purple-500/10 max-w-xs w-full"
+          >
+            <div className="w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center shrink-0">
+              <Sparkles size={11} className="text-purple-400" />
+            </div>
+            <p className="text-[10px] font-serif italic text-purple-200/80 leading-snug">
+              "A strong foundation. Choose your gear below to begin the deep work."
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className="p-8 md:p-12 rounded-[2.5rem] bg-gradient-to-br from-[#14101C] to-[#0D0B12] border border-purple-500/20 shadow-[0_0_60px_rgba(168,85,247,0.05)] relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_0%,rgba(168,85,247,0.04),transparent_60%)] pointer-events-none" />
         <div className="relative z-10 space-y-6">

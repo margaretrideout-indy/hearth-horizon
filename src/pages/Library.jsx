@@ -71,7 +71,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0A080D] text-zinc-300 font-sans selection:bg-teal-500/30 overflow-x-hidden relative">
+    <div className="min-h-screen bg-[#0A080D] text-zinc-300 font-sans selection:bg-teal-500/30 overflow-x-hidden relative page-fade-in">
       <div className="max-w-7xl mx-auto px-6 pt-24 pb-48 relative z-10">
 
         {/* HEADER */}
@@ -242,8 +242,8 @@ export default function Library({ vault, onRefresh, isAdmin }) {
         )}
 
         {/* VOLUME NAV */}
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[110] w-fit px-6">
-          <div className="bg-[#16121D]/80 backdrop-blur-xl rounded-full border border-white/10 p-2 shadow-2xl flex gap-2">
+        <div className="fixed bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 z-[110] w-fit px-4 max-w-[calc(100vw-2rem)]">
+          <div className="bg-[#16121D]/90 backdrop-blur-xl rounded-full border border-white/10 p-2 shadow-2xl flex gap-2 overflow-hidden">
             <button onClick={() => setCurrentVolume(1)}
               className={`flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 1 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}>
               <Hammer size={12} /> The Smithy

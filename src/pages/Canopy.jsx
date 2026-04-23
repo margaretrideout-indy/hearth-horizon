@@ -125,7 +125,7 @@ export default function Canopy({ vault, onSync, isAdmin }) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0A080D] text-white font-sans selection:bg-teal-500/30">
+    <div className="min-h-screen bg-[#0A080D] text-white font-sans selection:bg-teal-500/30 page-fade-in">
       <div className="max-w-screen-xl mx-auto py-10 px-4 sm:px-6 space-y-10">
 
         {/* ── HEADER ── */}
@@ -136,17 +136,11 @@ export default function Canopy({ vault, onSync, isAdmin }) {
               <span className="text-[10px] font-black uppercase tracking-[0.5em] italic">Global Horizon</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-serif italic text-white tracking-tighter leading-none">
-              Survey the <span className="text-zinc-400 font-sans not-italic font-extralight uppercase">World</span>
+              {vault?.archetype
+                ? <>The Horizon for a <span className="text-teal-400">{vault.archetype}</span></>
+                : <>The Horizon <span className="text-zinc-400 font-sans not-italic font-extralight uppercase">Awaits</span></>
+              }
             </h1>
-            {vault?.archetype && (
-              <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20">
-                <Sparkles size={10} className="text-purple-400" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-purple-300">
-                  Searching as: {vault.archetype}
-                </span>
-              </motion.div>
-            )}
           </motion.div>
 
           {/* Refresh + mode badge */}
@@ -206,7 +200,12 @@ export default function Canopy({ vault, onSync, isAdmin }) {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-32"
           >
             {aiJobs.map((job, idx) => (
-              <motion.div key={idx} variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}>
+              <motion.div
+                key={idx}
+                variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
+                animate={{ x: [0, idx % 2 === 0 ? 4 : -4, 0] }}
+                transition={{ x: { duration: 6 + idx * 0.5, repeat: Infinity, ease: "easeInOut", delay: idx * 0.3 } }}
+              >
                 <Card className="group relative h-full p-8 bg-[#110E16] border border-white/5 hover:border-teal-500/20 rounded-[2.5rem] flex flex-col justify-between overflow-hidden transition-all duration-300">
                   <div className="space-y-5 relative z-10">
                     {/* Top row */}
