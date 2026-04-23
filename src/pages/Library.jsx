@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   BookOpen, ExternalLink, Heart, Mic2, FileText,
-  ShieldAlert, Package, Book, Compass, Lock, ArrowRight, PhoneCall, Hammer
+  ShieldAlert, Package, Book, Compass, Lock, ArrowRight, PhoneCall, Hammer, CheckCircle2
 } from 'lucide-react';
 import Contact from './Contact';
 
@@ -37,6 +37,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
   const currentTier = vault?.tier?.toLowerCase() || 'none';
   const isRegistered = currentTier !== 'none' && currentTier !== 'traveler';
   const isSeedlingPlus = isAdmin || isRegistered || currentTier === 'admin' || currentTier === 'steward';
+  const smithyComplete = !!(vault?.ethics && (vault?.lexicon?.length > 0 || vault?.resume));
 
   const handleResourceClick = (title, desc, isUnlocked) => {
     if (!isUnlocked) {
@@ -246,6 +247,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
             <button onClick={() => setCurrentVolume(1)}
               className={`flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 1 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}>
               <Hammer size={12} /> The Smithy
+              {smithyComplete && <CheckCircle2 size={11} className={currentVolume === 1 ? 'text-black/60' : 'text-teal-500'} />}
             </button>
             <button onClick={() => setCurrentVolume(2)}
               className={`flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}>

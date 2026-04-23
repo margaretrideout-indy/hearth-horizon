@@ -46,18 +46,26 @@ function ResonanceDisplay({ vault, navigate }) {
   const archetype = vault?.archetype || (hasResume ? "The Systems Oracle" : null);
   const topVerbs = vault?.lexicon?.slice(0, 3) || [];
 
-  const isFoggy = !hasLexicon && !hasResume && !hasEthics;
+  const isFoggy = !hasLexicon && !hasResume && !hasEthics && !archetype;
 
   if (isFoggy) {
     return (
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
         className="bg-gradient-to-br from-[#0F0D16] to-[#08070B] border border-white/5 rounded-[2.5rem] p-8 space-y-6 text-center">
-        <div className="w-16 h-16 mx-auto rounded-full bg-white/[0.02] border border-white/5 flex items-center justify-center">
-          <Sparkles size={24} className="text-zinc-700" />
+        {/* Pulsing glow where archetype badge will be */}
+        <div className="relative mx-auto w-fit">
+          <motion.div
+            animate={{ opacity: [0.3, 0.7, 0.3], scale: [0.97, 1.03, 0.97] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            className="w-48 h-10 mx-auto rounded-full bg-teal-500/10 border border-teal-500/10 shadow-[0_0_30px_rgba(20,184,166,0.08)] flex items-center justify-center"
+          >
+            <FlaskConical size={12} className="text-teal-500/30 mr-2" />
+            <span className="text-[9px] font-black uppercase tracking-widest text-teal-500/25">Archetype Forming</span>
+          </motion.div>
         </div>
         <div className="space-y-2">
-          <h3 className="text-xl font-serif italic text-zinc-600">The Mirror is Foggy</h3>
-          <p className="text-[10px] text-zinc-700 uppercase font-black tracking-widest">Visit the Smithy to begin your translation.</p>
+          <h3 className="text-xl font-serif italic text-zinc-500">The trail is yet to be blazed.</h3>
+          <p className="text-[11px] text-zinc-600 italic font-serif">Your identity awaits in the Smithy.</p>
         </div>
         <button onClick={() => navigate('/library')}
           className="inline-flex items-center gap-2 px-6 py-3 bg-teal-500/10 border border-teal-500/20 text-teal-400 text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-teal-500/20 transition-all">
@@ -94,8 +102,8 @@ function ResonanceDisplay({ vault, navigate }) {
             </p>
             <div className="space-y-2">
               {topVerbs.map((phrase, i) => (
-                <div key={i} className="flex items-start gap-3 p-3 bg-white/[0.02] border border-white/5 rounded-xl">
-                  <span className="text-[9px] font-black text-teal-500/40 mt-0.5 shrink-0">0{i + 1}</span>
+                <div key={i} className="flex items-start gap-3 p-3 bg-teal-950/30 border border-teal-500/10 rounded-xl shadow-[0_0_12px_rgba(20,184,166,0.04)] hover:shadow-[0_0_20px_rgba(20,184,166,0.08)] transition-shadow">
+                  <span className="text-[9px] font-black text-teal-500/30 mt-0.5 shrink-0">✦</span>
                   <p className="font-mono text-[11px] text-teal-300 leading-snug italic">
                     {phrase.length > 45 ? phrase.slice(0, 45) + '…' : phrase}
                   </p>

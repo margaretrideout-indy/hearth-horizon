@@ -138,6 +138,15 @@ export default function Canopy({ vault, onSync, isAdmin }) {
             <h1 className="text-5xl md:text-7xl font-serif italic text-white tracking-tighter leading-none">
               Survey the <span className="text-zinc-400 font-sans not-italic font-extralight uppercase">World</span>
             </h1>
+            {vault?.archetype && (
+              <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20">
+                <Sparkles size={10} className="text-purple-400" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-purple-300">
+                  Searching as: {vault.archetype}
+                </span>
+              </motion.div>
+            )}
           </motion.div>
 
           {/* Refresh + mode badge */}

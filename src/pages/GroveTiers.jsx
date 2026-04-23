@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import SanctuaryTransition from '../components/SanctuaryTransition';
 import {
   Flame, Heart, Sprout, Globe, ShieldCheck, Check, Leaf, Mountain, UserPlus,
   Smartphone, Share2, PlusSquare, Sparkles, Send, Zap, FileText, Map, MessageSquare, Briefcase,
@@ -7,7 +9,7 @@ import {
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const LINK_HEARTHKEEPER = 'https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03';
 const LINK_STEWARD = 'https://buy.stripe.com/aFafZhfG8aebdqI4hIdAk04';
@@ -24,16 +26,16 @@ const LEGACY_MAP = [
   { triggers: ['community', 'outreach', 'engagement', 'relations'], horizon: 'Stakeholder Engagement Lead' },
 ];
 
+const BRIGID_POETIC_FALLBACK = "A complex history, indeed. Let us sit by the fire in the Smithy to find its true horizon.";
+
 function mapLegacyToHorizon(input) {
   if (!input || input.trim().length < 2) return null;
   const lower = input.toLowerCase();
   for (const entry of LEGACY_MAP) {
     if (entry.triggers.some(t => lower.includes(t))) return entry.horizon;
   }
-  // Generic fallback: append "Strategist"
-  const words = input.trim().split(' ');
-  const last = words[words.length - 1];
-  return `${last.charAt(0).toUpperCase() + last.slice(1)} Strategist`;
+  // Poetic fallback — Brigid speaks
+  return null;
 }
 
 // Brigid Sampler Component
@@ -43,10 +45,24 @@ function BrigidSampler({ onSave }) {
   const [saved, setSaved] = useState(false);
   const inputRef = useRef(null);
 
+  const [isPoetic, setIsPoetic] = useState(false);
+
   const handleInput = (val) => {
     setLegacyTitle(val);
     setSaved(false);
-    setHorizonTitle(val.length >= 3 ? mapLegacyToHorizon(val) : null);
+    if (val.length >= 3) {
+      const mapped = mapLegacyToHorizon(val);
+      if (mapped) {
+        setHorizonTitle(mapped);
+        setIsPoetic(false);
+      } else {
+        setHorizonTitle(BRIGID_POETIC_FALLBACK);
+        setIsPoetic(true);
+      }
+    } else {
+      setHorizonTitle(null);
+      setIsPoetic(false);
+    }
   };
 
   const handleSave = () => {
@@ -92,14 +108,30 @@ function BrigidSampler({ onSave }) {
                   <span className="text-[8px] font-black uppercase tracking-[0.4em] text-purple-500/40">Brigid's Reading</span>
                   <div className="h-[1px] flex-1 bg-gradient-to-l from-purple-500/20 to-transparent" />
                 </div>
-                <div className="p-5 bg-purple-500/[0.04] border border-purple-500/20 rounded-2xl">
-                  <p className="text-[9px] font-black uppercase tracking-widest text-purple-500/50 mb-2">Your Horizon Title</p>
-                  <p className="text-xl font-serif italic text-white">{horizonTitle}</p>
-                </div>
-                <p className="text-[10px] text-zinc-600 italic text-center">
-                  Ready to deepen this translation? Choose your path below.
-                </p>
-                {!saved ? (
+                <motion.div
+                  className={`p-5 rounded-2xl border ${isPoetic ? 'bg-amber-500/[0.03] border-amber-500/20' : 'bg-purple-500/[0.04] border-purple-500/20'}`}
+                  animate={{ backgroundOpacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <p className={`text-[9px] font-black uppercase tracking-widest mb-2 ${isPoetic ? 'text-amber-500/50' : 'text-purple-500/50'}`}>
+                    {isPoetic ? "Brigid Speaks" : "Your Horizon Title"}
+                  </p>
+                  <motion.p
+                    key={horizonTitle}
+                    initial={{ opacity: 0, y: 4, filter: 'blur(6px)' }}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className={`font-serif italic leading-snug ${isPoetic ? 'text-base text-amber-200/80' : 'text-xl text-white'}`}
+                  >
+                    {isPoetic ? `"${horizonTitle}"` : horizonTitle}
+                  </motion.p>
+                </motion.div>
+                {!isPoetic && (
+                  <p className="text-[10px] text-zinc-600 italic text-center">
+                    Ready to deepen this translation? Choose your path below.
+                  </p>
+                )}
+                {!isPoetic && (!saved ? (
                   <button onClick={handleSave}
                     className="flex items-center gap-2 mx-auto px-6 py-2.5 bg-purple-500/20 border border-purple-500/30 text-purple-400 text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-purple-500/30 transition-all">
                     <Check size={12} /> Save to My Hearth
@@ -107,6 +139,11 @@ function BrigidSampler({ onSave }) {
                 ) : (
                   <p className="text-[10px] text-teal-400 font-black uppercase tracking-widest text-center flex items-center justify-center gap-2">
                     <Sparkles size={11} /> Saved to your Hearth vault
+                  </p>
+                ))}
+                {isPoetic && (
+                  <p className="text-[10px] text-amber-500/40 italic text-center">
+                    Visit the Smithy in the Library to begin the full translation.
                   </p>
                 )}
               </motion.div>
@@ -123,9 +160,15 @@ const GroveTiers = ({ vault, onSync }) => {
   const [requestStatus, setRequestStatus] = useState(null);
   const [contactStatus, setContactStatus] = useState(null);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [showTransition, setShowTransition] = useState(false);
 
   const handleBrigidSave = (legacyTitle, horizonTitle) => {
     onSync({ ...vault, archetype: horizonTitle, legacy_title: legacyTitle });
+  };
+
+  const navigateToHearth = () => {
+    setShowTransition(true);
+    // navigate is called by the transition component's onComplete
   };
 
   const hasSession = vault?.isAligned || !!localStorage.getItem('base44_auth_session');
@@ -137,7 +180,7 @@ const GroveTiers = ({ vault, onSync }) => {
   const handleSeedling = () => {
     onSync({ tier: 'Seedling' });
     if (hasSession) {
-      navigate('/hearth');
+      navigateToHearth();
     } else {
       base44.auth.redirectToLogin('/hearth');
     }
@@ -146,7 +189,7 @@ const GroveTiers = ({ vault, onSync }) => {
   const handlePaid = (stripeUrl, tierName) => {
     onSync({ tier: tierName });
     if (hasSession) {
-      navigate('/hearth');
+      navigateToHearth();
     } else {
       window.location.href = stripeUrl;
     }
@@ -256,6 +299,9 @@ const GroveTiers = ({ vault, onSync }) => {
 
   return (
     <div className="relative min-h-screen bg-[#0A080D] text-slate-300 font-sans selection:bg-teal-500/30 overflow-x-hidden pb-20 text-left">
+      <AnimatePresence>
+        {showTransition && <SanctuaryTransition onComplete={() => navigate('/hearth')} />}
+      </AnimatePresence>
       <div className="absolute top-0 left-0 w-full h-[100vh] bg-[radial-gradient(circle_at_50%_0%,rgba(20,184,166,0.1),rgba(147,51,234,0.03)_40%,transparent_80%)] pointer-events-none" />
 
       {/* NAVIGATION BAR */}
