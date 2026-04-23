@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Flame, Heart, Sprout, Globe, ShieldCheck, Check, Leaf, Mountain, UserPlus,
   Smartphone, Share2, PlusSquare, Sparkles, Send, Zap, FileText, Map, MessageSquare, Briefcase,
-  MoreVertical, Star, Library as LibraryIcon, Compass, ArrowRight, LogIn 
+  MoreVertical, Star, Library as LibraryIcon, Compass, ArrowRight, LogIn, ChevronRight
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -13,11 +13,120 @@ const LINK_HEARTHKEEPER = 'https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03';
 const LINK_STEWARD = 'https://buy.stripe.com/aFafZhfG8aebdqI4hIdAk04';
 const LINK_DONATION = 'https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02';
 
+// Legacy title → Horizon title mapping
+const LEGACY_MAP = [
+  { triggers: ['teacher', 'educator', 'instructor', 'tutor', 'professor'], horizon: 'Learning Experience Architect' },
+  { triggers: ['nurse', 'doctor', 'health', 'medical', 'care', 'clinical'], horizon: 'Healthcare Systems Strategist' },
+  { triggers: ['social worker', 'counsellor', 'counselor', 'therapist', 'support'], horizon: 'Human Capital Consultant' },
+  { triggers: ['manager', 'director', 'coordinator', 'administrator', 'supervisor'], horizon: 'Operations Lead' },
+  { triggers: ['analyst', 'data', 'research', 'evaluation'], horizon: 'Intelligence & Insights Specialist' },
+  { triggers: ['program', 'project', 'policy'], horizon: 'Strategic Program Architect' },
+  { triggers: ['community', 'outreach', 'engagement', 'relations'], horizon: 'Stakeholder Engagement Lead' },
+];
+
+function mapLegacyToHorizon(input) {
+  if (!input || input.trim().length < 2) return null;
+  const lower = input.toLowerCase();
+  for (const entry of LEGACY_MAP) {
+    if (entry.triggers.some(t => lower.includes(t))) return entry.horizon;
+  }
+  // Generic fallback: append "Strategist"
+  const words = input.trim().split(' ');
+  const last = words[words.length - 1];
+  return `${last.charAt(0).toUpperCase() + last.slice(1)} Strategist`;
+}
+
+// Brigid Sampler Component
+function BrigidSampler({ onSave }) {
+  const [legacyTitle, setLegacyTitle] = useState('');
+  const [horizonTitle, setHorizonTitle] = useState(null);
+  const [saved, setSaved] = useState(false);
+  const inputRef = useRef(null);
+
+  const handleInput = (val) => {
+    setLegacyTitle(val);
+    setSaved(false);
+    setHorizonTitle(val.length >= 3 ? mapLegacyToHorizon(val) : null);
+  };
+
+  const handleSave = () => {
+    if (!horizonTitle) return;
+    onSave(legacyTitle, horizonTitle);
+    setSaved(true);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+      className="max-w-2xl mx-auto mb-24"
+    >
+      <div className="p-8 md:p-12 rounded-[2.5rem] bg-gradient-to-br from-[#14101C] to-[#0D0B12] border border-purple-500/20 shadow-[0_0_60px_rgba(168,85,247,0.05)] relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_0%,rgba(168,85,247,0.04),transparent_60%)] pointer-events-none" />
+        <div className="relative z-10 space-y-6">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
+            <span className="text-[9px] font-black uppercase tracking-[0.5em] text-purple-500/70">Initial Spark — Brigid is Listening</span>
+          </div>
+          <h3 className="text-2xl md:text-3xl font-serif italic text-white">Whisper your legacy title to Brigid.</h3>
+          <p className="text-[11px] text-zinc-500 italic">She will translate it into the language of your next horizon — instantly.</p>
+
+          <div className="relative">
+            <input
+              ref={inputRef}
+              type="text"
+              value={legacyTitle}
+              onChange={(e) => handleInput(e.target.value)}
+              placeholder="e.g. Special Education Teacher, Charge Nurse..."
+              className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-purple-500/40 transition-all placeholder:text-zinc-700 font-serif italic"
+            />
+          </div>
+
+          <AnimatePresence>
+            {horizonTitle && (
+              <motion.div
+                initial={{ opacity: 0, y: 8, height: 0 }} animate={{ opacity: 1, y: 0, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+                className="space-y-4"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
+                  <span className="text-[8px] font-black uppercase tracking-[0.4em] text-purple-500/40">Brigid's Reading</span>
+                  <div className="h-[1px] flex-1 bg-gradient-to-l from-purple-500/20 to-transparent" />
+                </div>
+                <div className="p-5 bg-purple-500/[0.04] border border-purple-500/20 rounded-2xl">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-purple-500/50 mb-2">Your Horizon Title</p>
+                  <p className="text-xl font-serif italic text-white">{horizonTitle}</p>
+                </div>
+                <p className="text-[10px] text-zinc-600 italic text-center">
+                  Ready to deepen this translation? Choose your path below.
+                </p>
+                {!saved ? (
+                  <button onClick={handleSave}
+                    className="flex items-center gap-2 mx-auto px-6 py-2.5 bg-purple-500/20 border border-purple-500/30 text-purple-400 text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-purple-500/30 transition-all">
+                    <Check size={12} /> Save to My Hearth
+                  </button>
+                ) : (
+                  <p className="text-[10px] text-teal-400 font-black uppercase tracking-widest text-center flex items-center justify-center gap-2">
+                    <Sparkles size={11} /> Saved to your Hearth vault
+                  </p>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 const GroveTiers = ({ vault, onSync }) => {
   const navigate = useNavigate();
   const [requestStatus, setRequestStatus] = useState(null);
   const [contactStatus, setContactStatus] = useState(null);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+
+  const handleBrigidSave = (legacyTitle, horizonTitle) => {
+    onSync({ ...vault, archetype: horizonTitle, legacy_title: legacyTitle });
+  };
 
   const hasSession = vault?.isAligned || !!localStorage.getItem('base44_auth_session');
 
@@ -213,11 +322,14 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
+        {/* BRIGID SAMPLER */}
+        <BrigidSampler onSave={handleBrigidSave} />
+
         {/* PRICING GRID */}
         <section className="mb-32">
           <div className="text-center mb-16">
-            <h2 className="text-white font-serif italic text-4xl mb-4">Choose Your Path</h2>
-            <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">Structured Support Options</p>
+            <h2 className="text-white font-serif italic text-4xl mb-4">Deepen the Translation</h2>
+            <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">Choose your level of support</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {tiers.map((tier, idx) => (

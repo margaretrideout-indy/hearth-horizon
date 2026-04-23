@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
-  FileText, ChevronDown, Zap,
-  Mail, ExternalLink, DollarSign, Download, Copy, Lock,
-  Fingerprint, ClipboardList, Presentation, Check,
-  Sword, Shield, BookOpen 
+  FileText, ChevronDown, Zap, Mail, ExternalLink, DollarSign,
+  Download, Copy, Lock, Fingerprint, ClipboardList, Presentation,
+  Check, Sword, Shield, BookOpen, Upload, CheckCircle2, Loader2,
+  RefreshCw, Trash2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { base44 } from '@/api/base44Client';
 
 // --- DATA: THE FULL 50 VERB LEXICON ---
 const powerVerbs = [
@@ -61,17 +62,22 @@ const powerVerbs = [
   { legacy: "Expanded", horizon: "Amplified", use: "Scaling operational capacity." }
 ];
 
+const VALUE_DIMENSIONS = [
+  { id: 'reciprocity', label: 'Reciprocity', description: 'Balancing extraction with contribution.' },
+  { id: 'transparency', label: 'Transparency', description: 'Radical honesty in process and pay.' },
+  { id: 'agency', label: 'Personal Agency', description: 'Autonomy over the migration path.' },
+];
+
 const generateDynamicScripts = (vault) => {
   const targetRole = vault?.selectedPath?.domain || "[Target Role]";
   const salaryRange = vault?.selectedPath?.salary || "[Market Range]";
   const topSkill = vault?.skills?.find((s) => s.status === 'aligned')?.skill || "[Your Core Expertise]";
-
   return {
     outreach: [
       { title: "Phase 1: Soft Curiosity", script: `Hi [Name], I've been following your team's growth in ${targetRole}. As I transition my experience in ${topSkill} toward the private sector, I'm curious: what is the one 'unwritten' skill your team values most right now?` },
       { title: "Phase 2: The Value-Add", script: `Hi [Name], I saw the recent news about [Company Project]. It reminded me of a challenge we solved regarding ${topSkill}. Thought this insight might be useful for your team's current trajectory. No reply needed, just wanted to share!` },
       { title: "Phase 3: Sponsorship Request", script: `Hi [Name], your insights have been instrumental. I'm currently architecting my move into ${targetRole} and would value 15 minutes of your time to ask 3 specific questions about the roadmap at [Company].` },
-      { title: "Phase 4: The Closing Loop", script: `Hi [Name], thank you again for the sync. I’ve applied for the ${targetRole} opening and mentioned our conversation regarding their focus on ${topSkill}. I'd value any internal perspective you're able to share with the hiring lead.` }
+      { title: "Phase 4: The Closing Loop", script: `Hi [Name], thank you again for the sync. I've applied for the ${targetRole} opening and mentioned our conversation regarding their focus on ${topSkill}. I'd value any internal perspective you're able to share with the hiring lead.` }
     ],
     salary: [
       { label: "The 'Anchor' Avoidance", script: `I am looking for a total compensation package that reflects the current market value for a ${targetRole} level of responsibility. Given my expertise in ${topSkill}, I am focusing on positions in the ${salaryRange} range. Does that align with your budget?` },
@@ -81,7 +87,165 @@ const generateDynamicScripts = (vault) => {
   };
 };
 
-const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
+// ── Resume Forge Sub-Component ───────────────────────────────────────────────
+function ResumeForge({ vault, onSync }) {
+  const [isUploading, setIsUploading] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(null), 3000); };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !onSync) return;
+    setIsUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const resumeData = { name: file.name, url: file_url, lastModified: new Date().toISOString() };
+      
+      setIsAnalyzing(true);
+      let bridgeAnalysis = null;
+      try {
+        const res = await base44.integrations.Core.InvokeLLM({
+          prompt: `Analyze this resume and extract 3 transferable skills framed in private-sector language. Focus on outcomes. Resume file: ${file.name}. Return a brief paragraph of 2-3 sentences.`,
+          file_urls: [file_url]
+        });
+        bridgeAnalysis = res;
+      } catch { /* silent fallback */ }
+
+      await base44.auth.updateMe({ resume_metadata: resumeData });
+      onSync({ ...vault, resume: resumeData, bridge_analysis: bridgeAnalysis });
+      showToast("Legacy archived & analyzed.");
+    } catch {
+      showToast("Upload failed. Try again.");
+    } finally {
+      setIsUploading(false);
+      setIsAnalyzing(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    await base44.auth.updateMe({ resume_metadata: null });
+    onSync({ ...vault, resume: null, bridge_analysis: null });
+    showToast("Resume cleared.");
+  };
+
+  return (
+    <div className="space-y-6">
+      <AnimatePresence>
+        {toast && (
+          <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }}
+            className="px-4 py-2 bg-teal-500/10 border border-teal-500/20 rounded-xl text-[10px] font-black uppercase text-teal-400 tracking-widest text-center">
+            {toast}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {!vault?.resume ? (
+        <label className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-[2rem] bg-black/40 cursor-pointer group transition-all ${isUploading || isAnalyzing ? 'border-teal-500/40' : 'border-white/5 hover:border-teal-500/20'}`}>
+          {isAnalyzing ? (
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="text-purple-400 animate-spin" size={24} />
+              <span className="text-[10px] font-black uppercase text-purple-400 animate-pulse">Brigid is reading your legacy...</span>
+            </div>
+          ) : isUploading ? (
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="text-teal-500 animate-spin" size={24} />
+              <span className="text-[10px] font-black uppercase text-teal-500 animate-pulse">Archiving...</span>
+            </div>
+          ) : (
+            <>
+              <Upload className="text-zinc-600 mb-2 group-hover:text-teal-500 transition-colors" size={22} />
+              <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest text-center px-4">Upload Resume / CV for Analysis</span>
+              <p className="text-[8px] text-zinc-600 uppercase mt-2 font-black">PDF, DOCX supported · Brigid will translate it</p>
+            </>
+          )}
+          <input type="file" className="hidden" onChange={handleFileChange} disabled={isUploading || isAnalyzing} accept=".pdf,.doc,.docx" />
+        </label>
+      ) : (
+        <div className="p-6 rounded-[2rem] bg-teal-500/5 border border-teal-500/20 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <CheckCircle2 className="text-teal-500" size={20} />
+              <div>
+                <p className="text-[10px] font-black uppercase text-teal-400 tracking-widest">Legacy Secured</p>
+                <p className="text-[9px] text-zinc-500 italic mt-0.5 truncate max-w-[200px]">{vault.resume.name}</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <label className="inline-flex items-center gap-1 text-[8px] font-black uppercase text-zinc-400 hover:text-white cursor-pointer border border-white/10 px-3 py-1.5 rounded-full transition-colors">
+                <RefreshCw size={9} /> Replace
+                <input type="file" className="hidden" onChange={handleFileChange} accept=".pdf,.doc,.docx" />
+              </label>
+              <button onClick={handleDelete} className="inline-flex items-center gap-1 text-[8px] font-black uppercase text-zinc-600 hover:text-rose-400 border border-white/5 px-3 py-1.5 rounded-full transition-colors">
+                <Trash2 size={9} />
+              </button>
+            </div>
+          </div>
+          {vault?.bridge_analysis && (
+            <div className="pt-4 border-t border-white/5">
+              <p className="text-[9px] font-black uppercase tracking-widest text-purple-400/60 mb-2 flex items-center gap-1">
+                <Zap size={9} /> Brigid's Reading
+              </p>
+              <p className="text-[11px] text-zinc-400 italic leading-relaxed font-serif">"{vault.bridge_analysis}"</p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Ethics Compass Sub-Component ─────────────────────────────────────────────
+function EthicsForge({ vault, onSync }) {
+  const [ethics, setEthics] = useState(vault?.ethics || { reciprocity: 50, transparency: 50, agency: 50 });
+  const [isSaving, setIsSaving] = useState(false);
+  const saveTimer = useRef(null);
+
+  const handleChange = (id, val) => {
+    const next = { ...ethics, [id]: val };
+    setEthics(next);
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(async () => {
+      if (!onSync) return;
+      setIsSaving(true);
+      try {
+        await base44.auth.updateMe({ ethics: next });
+        onSync({ ...vault, ethics: next });
+      } finally {
+        setIsSaving(false);
+      }
+    }, 1500);
+  };
+
+  return (
+    <div className="space-y-10">
+      <p className="text-[10px] text-zinc-600 italic">
+        {isSaving ? <span className="text-teal-500/60">Auto-saving...</span> : "Calibrate what you will and won't compromise. Brigid will use these to filter your Horizon."}
+      </p>
+      {VALUE_DIMENSIONS.map((dim) => (
+        <div key={dim.id} className="space-y-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <span className="text-sm font-black uppercase tracking-widest text-zinc-200 block">{dim.label}</span>
+              <span className="text-[10px] text-zinc-600 italic">{dim.description}</span>
+            </div>
+            <span className="text-xs font-mono text-purple-400 shrink-0">{ethics[dim.id]}%</span>
+          </div>
+          <input
+            type="range" min="0" max="100"
+            value={ethics[dim.id]}
+            onChange={(e) => handleChange(dim.id, Number(e.target.value))}
+            className="w-full h-1.5 bg-white/5 rounded-full appearance-none accent-purple-500 cursor-pointer"
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── Main Contact Component ────────────────────────────────────────────────────
+const Contact = ({ vault, onSync, onRefresh, isAdmin, isSeedlingPlus }) => {
   const [expandedCard, setExpandedCard] = useState(null);
   const [showAllVerbs, setShowAllVerbs] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
@@ -101,11 +265,62 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
   };
 
   const trailKitResources = [
-    { id: 'verbs', title: "Power Verb Lexicon", desc: "Strategic verbs to replace legacy language.", type: "Seedlings+", icon: <Zap className="text-teal-400" />, isUnlocked: canAccessVerbs },
-    { id: 'ledger', title: "The Identity Ledger", desc: "Workbook & Deck to decouple your worth.", type: "Hearthkeepers+", icon: <Fingerprint className="text-teal-400" />, isUnlocked: canAccessHighTier },
-    { id: 'resume', title: "Trailblazer's Blueprint", desc: "ATS-optimized resume layout.", type: "Hearthkeepers+", icon: <FileText className="text-purple-400" />, isUnlocked: canAccessHighTier },
-    { id: 'outreach', title: "Sponsorship Outreach", desc: "Turn contacts into advocates.", type: "Stewards Only", icon: <Mail className="text-teal-400" />, isUnlocked: canAccessHighTier },
-    { id: 'scripts', title: "Salary Negotiations", desc: "Tactical word-for-word scripts.", type: "Stewards Only", icon: <DollarSign className="text-purple-400" />, isUnlocked: canAccessHighTier }
+    {
+      id: 'brigid',
+      title: "Brigid's Counsel",
+      desc: "Upload your CV. Let Brigid translate your legacy into market-ready language.",
+      type: "All Pilgrims",
+      icon: <Upload className="text-teal-400" />,
+      isUnlocked: true
+    },
+    {
+      id: 'ethics',
+      title: "Ethics Compass",
+      desc: "Calibrate your non-negotiables. These values will shape your Horizon results.",
+      type: "All Pilgrims",
+      icon: <Shield className="text-purple-400" />,
+      isUnlocked: true
+    },
+    {
+      id: 'verbs',
+      title: "Power Verb Lexicon",
+      desc: "Strategic verbs to replace legacy language.",
+      type: "Seedlings+",
+      icon: <Zap className="text-teal-400" />,
+      isUnlocked: canAccessVerbs
+    },
+    {
+      id: 'ledger',
+      title: "The Identity Ledger",
+      desc: "Workbook & Deck to decouple your worth.",
+      type: "Hearthkeepers+",
+      icon: <Fingerprint className="text-teal-400" />,
+      isUnlocked: canAccessHighTier
+    },
+    {
+      id: 'resume',
+      title: "Trailblazer's Blueprint",
+      desc: "ATS-optimized resume layout.",
+      type: "Hearthkeepers+",
+      icon: <FileText className="text-purple-400" />,
+      isUnlocked: canAccessHighTier
+    },
+    {
+      id: 'outreach',
+      title: "Sponsorship Outreach",
+      desc: "Turn contacts into advocates.",
+      type: "Stewards Only",
+      icon: <Mail className="text-teal-400" />,
+      isUnlocked: canAccessHighTier
+    },
+    {
+      id: 'scripts',
+      title: "Salary Negotiations",
+      desc: "Tactical word-for-word scripts.",
+      type: "Stewards Only",
+      icon: <DollarSign className="text-purple-400" />,
+      isUnlocked: canAccessHighTier
+    }
   ];
 
   return (
@@ -113,12 +328,14 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
       <header className="mb-16 border-b border-white/5 pb-16 pt-8">
         <div className="flex items-center gap-4 mb-6">
           <Sword size={16} className="text-teal-500/50" />
-          <span className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-500/70 italic">Volume II: Tactical Arsenal</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-500/70 italic">Volume I: The Active Lab</span>
           {isMasterAdmin && <span className="text-[10px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded bg-teal-500/10 text-teal-400 border border-teal-500/20">Founder Access</span>}
         </div>
-        <h2 className="text-5xl md:text-7xl text-white font-serif italic mb-6 tracking-tighter">The Trail <span className="text-zinc-800 font-sans not-italic font-extralight uppercase">Kit</span></h2>
+        <h2 className="text-5xl md:text-7xl text-white font-serif italic mb-6 tracking-tighter">
+          The Identity <span className="text-zinc-800 font-sans not-italic font-extralight uppercase">Smithy</span>
+        </h2>
         <p className="max-w-xl text-zinc-500 text-sm leading-relaxed font-light italic border-l border-teal-500/20 pl-6">
-          Strategic assets for the transition. From shifting your lexicon to securing your market value—these are the tools for planting new roots in foreign soil.
+          Brigid tends the forge. Upload your legacy, calibrate your values, and receive the language of your next chapter.
         </p>
       </header>
 
@@ -128,8 +345,8 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
           const isLocked = !tool.isUnlocked;
 
           return (
-            <motion.div key={tool.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }} className="flex flex-col group">
-              <button 
+            <motion.div key={tool.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.07 }} className="flex flex-col group">
+              <button
                 onClick={() => !isLocked && setExpandedCard(isOpen ? null : tool.id)}
                 className={`relative w-full text-left bg-[#16121D]/40 backdrop-blur-sm border transition-all duration-500 ${
                   isLocked ? 'opacity-40 cursor-not-allowed border-white/5' : 'cursor-pointer hover:border-teal-500/30'
@@ -137,7 +354,7 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
               >
                 <div className="p-8 md:p-10 flex items-center justify-between gap-6">
                   <div className="flex items-center gap-8">
-                    <div className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl bg-black/40 border border-white/10 group-hover:border-teal-500/30 transition-all relative overflow-hidden">
+                    <div className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl bg-black/40 border border-white/10 group-hover:border-teal-500/30 transition-all">
                       {isLocked ? <Lock size={20} className="text-zinc-700" /> : tool.icon}
                     </div>
                     <div>
@@ -145,13 +362,13 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
                         <span className={`text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full border ${isLocked ? 'border-zinc-800 text-zinc-700' : 'border-teal-500/20 text-teal-500/60'}`}>
                           {tool.type}
                         </span>
-                        {isLocked && <Lock size={10} className="text-zinc-800" />}
                       </div>
                       <h3 className="text-xl md:text-2xl text-white font-serif italic tracking-tight">{tool.title}</h3>
+                      <p className="text-[10px] text-zinc-600 mt-1 italic">{tool.desc}</p>
                     </div>
                   </div>
                   {!isLocked && (
-                    <div className={`transition-transform duration-500 ${isOpen ? 'rotate-180 text-teal-500' : 'text-zinc-700 group-hover:text-white'}`}>
+                    <div className={`transition-transform duration-500 shrink-0 ${isOpen ? 'rotate-180 text-teal-500' : 'text-zinc-700 group-hover:text-white'}`}>
                       <ChevronDown size={24} strokeWidth={1} />
                     </div>
                   )}
@@ -160,9 +377,20 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
 
               <AnimatePresence>
                 {isOpen && (
-                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden bg-[#1C1622] border-x border-b border-teal-500/40 rounded-b-[2.5rem] shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden bg-[#1C1622] border-x border-b border-teal-500/40 rounded-b-[2.5rem] shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
                     <div className="p-8 md:p-12 pt-4 space-y-10">
-                      
+
+                      {/* BRIGID'S COUNSEL — Resume Upload */}
+                      {tool.id === 'brigid' && (
+                        <ResumeForge vault={vault} onSync={onSync} />
+                      )}
+
+                      {/* ETHICS COMPASS */}
+                      {tool.id === 'ethics' && (
+                        <EthicsForge vault={vault} onSync={onSync} />
+                      )}
+
                       {/* VERBS CONTENT */}
                       {tool.id === 'verbs' && (
                         <div className="space-y-8">
@@ -203,7 +431,7 @@ const Contact = ({ vault, isAdmin, isSeedlingPlus }) => {
                         </div>
                       )}
 
-                      {/* RESUME CONTENT */}
+                      {/* RESUME BLUEPRINT */}
                       {tool.id === 'resume' && (
                         <div className="bg-black/40 border border-white/5 p-12 md:p-16 rounded-[3rem] text-center relative overflow-hidden">
                           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-purple-500/5 blur-[100px]" />

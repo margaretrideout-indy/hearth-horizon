@@ -5,18 +5,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
-  BookOpen,
-  ExternalLink,
-  Heart,
-  Mic2,
-  FileText,
-  ShieldAlert,
-  Package,
-  Book,
-  Compass,
-  Lock,
-  ArrowRight,
-  PhoneCall
+  BookOpen, ExternalLink, Heart, Mic2, FileText,
+  ShieldAlert, Package, Book, Compass, Lock, ArrowRight, PhoneCall, Hammer
 } from 'lucide-react';
 import Contact from './Contact';
 
@@ -63,26 +53,19 @@ export default function Library({ vault, onRefresh, isAdmin }) {
       icon: PhoneCall,
       color: "text-rose-400",
       link: "https://cmha.ca/wp-content/uploads/2016/02/MH-for-Life-NTNL-brochure-2014-web.pdf",
-      crisis: {
-        line: "9-8-8",
-        label: "Suicide Crisis Helpline — Call or text anytime"
-      }
+      crisis: { line: "9-8-8", label: "Suicide Crisis Helpline — Call or text anytime" }
     },
     {
       title: "Burnout to Balance",
       description: "A comprehensive guide to reclaiming your energy and setting sustainable boundaries in a high-pressure world.",
       link: "https://static1.squarespace.com/static/5d3080f196bac8000148b997/t/664cfc0539541d281b05c587/1716321288694/GKYMH+From+Burnout+to+Balance.pdf",
-      type: "PDF Guide",
-      icon: FileText,
-      color: "text-orange-400"
+      type: "PDF Guide", icon: FileText, color: "text-orange-400"
     },
     {
       title: "Your Inner Advocate",
       description: "A podcast dedicated to changing the internal narrative and advocating for your own mental well-being.",
       link: "https://podcasts.apple.com/ca/podcast/your-inner-advocate/id1722984987",
-      type: "Podcast",
-      icon: Mic2,
-      color: "text-teal-400"
+      type: "Podcast", icon: Mic2, color: "text-teal-400"
     }
   ];
 
@@ -91,28 +74,36 @@ export default function Library({ vault, onRefresh, isAdmin }) {
       <div className="max-w-7xl mx-auto px-6 pt-24 pb-48 relative z-10">
 
         {/* HEADER */}
-        <header className="mb-24 text-left">
+        <header className="mb-20 text-left">
           <div className="flex items-center gap-3 text-teal-500/80 mb-6">
             <BookOpen size={20} />
-            <span className="text-[10px] font-black uppercase tracking-[0.5em] italic">The Reference Archives</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.5em] italic">
+              {currentVolume === 1 ? 'Volume I — The Active Lab' : 'Volume II — The Reference Archives'}
+            </span>
           </div>
           <h1 className="text-6xl md:text-8xl font-serif italic text-white tracking-tighter leading-none mb-8">
             The <span className="text-zinc-800 font-sans not-italic font-extralight uppercase">Library</span>
           </h1>
           <p className="max-w-xl text-zinc-500 text-sm leading-relaxed italic border-l border-teal-500/20 pl-6">
-            A curated collection of strategic blueprints, provisioned tools, and archival literature to support your professional migration.
+            {currentVolume === 1
+              ? "Where Brigid waits. Enter the Smithy to forge your new identity — resume, ethics, and lexicon."
+              : "A curated collection of strategic blueprints, provisioned tools, and archival literature to support your professional migration."}
           </p>
         </header>
 
+        {/* VOLUME I: THE SMITHY (Contact component) */}
         {currentVolume === 1 ? (
-          <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="space-y-32">
+          <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
+            <Contact vault={vault} onRefresh={onRefresh} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} />
+          </motion.div>
+        ) : (
+          /* VOLUME II: THE ARCHIVES */
+          <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="space-y-32 pb-32">
 
-            {/* 1. THE SANCTUARY */}
+            {/* THE SANCTUARY */}
             <section className="space-y-10">
               <div className="flex items-center gap-4 border-b border-white/5 pb-6">
-                <div className="p-3 bg-orange-500/10 rounded-xl text-orange-500">
-                  <Heart size={24} />
-                </div>
+                <div className="p-3 bg-orange-500/10 rounded-xl text-orange-500"><Heart size={24} /></div>
                 <div>
                   <h2 className="text-2xl font-serif italic text-white">The Sanctuary</h2>
                   <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Mental Health & Resilience Resources</p>
@@ -121,12 +112,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {resources.map((item, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                  >
+                  <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}>
                     <Card className={`group relative p-8 bg-[#110E16] border-white/5 rounded-[2.5rem] hover:border-white/10 transition-all h-full flex flex-col justify-between overflow-hidden ${item.crisis ? 'ring-1 ring-rose-500/20 shadow-lg shadow-rose-500/5' : ''}`}>
                       <div className="space-y-4">
                         <div className="flex justify-between items-start">
@@ -137,29 +123,16 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                             {item.type}
                           </span>
                         </div>
-
                         <h3 className="text-2xl font-serif italic text-zinc-200">{item.title}</h3>
-                        <p className="text-sm leading-relaxed" style={{ color: '#686868' }}>
-                          {item.description}
-                        </p>
-
+                        <p className="text-sm leading-relaxed" style={{ color: '#686868' }}>{item.description}</p>
                         {item.crisis && (
                           <div className="mt-4 flex flex-col gap-2 px-5 py-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
-                            <span className="text-2xl font-black text-rose-500 whitespace-nowrap tracking-tight">
-                              {item.crisis.line}
-                            </span>
-                            <span className="text-[9px] text-rose-200/70 font-bold uppercase tracking-widest leading-tight">
-                              {item.crisis.label}
-                            </span>
+                            <span className="text-2xl font-black text-rose-500 whitespace-nowrap tracking-tight">{item.crisis.line}</span>
+                            <span className="text-[9px] text-rose-200/70 font-bold uppercase tracking-widest leading-tight">{item.crisis.label}</span>
                           </div>
                         )}
                       </div>
-
-                      <Button
-                        asChild
-                        variant="ghost"
-                        className={`mt-8 w-full rounded-xl border transition-all ${item.crisis ? 'bg-rose-500 text-white hover:bg-rose-600 border-transparent shadow-lg shadow-rose-500/10' : 'bg-white/5 border-white/5 text-zinc-400 hover:text-white'}`}
-                      >
+                      <Button asChild variant="ghost" className={`mt-8 w-full rounded-xl border transition-all ${item.crisis ? 'bg-rose-500 text-white hover:bg-rose-600 border-transparent shadow-lg shadow-rose-500/10' : 'bg-white/5 border-white/5 text-zinc-400 hover:text-white'}`}>
                         <a href={item.link} target="_blank" rel="noopener noreferrer">
                           Open Resource <ExternalLink size={14} className="ml-2" />
                         </a>
@@ -169,22 +142,16 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                 ))}
               </div>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                className="p-8 rounded-[2.5rem] bg-teal-500/[0.02] border border-teal-500/10 flex flex-col md:flex-row items-center gap-6"
-              >
-                <div className="text-teal-500 shrink-0">
-                  <ShieldAlert size={32} />
-                </div>
+              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+                className="p-8 rounded-[2.5rem] bg-teal-500/[0.02] border border-teal-500/10 flex flex-col md:flex-row items-center gap-6">
+                <div className="text-teal-500 shrink-0"><ShieldAlert size={32} /></div>
                 <p className="text-xs text-zinc-400 italic font-serif text-center md:text-left leading-relaxed max-w-2xl">
                   "The Hearth is a tool for navigation, but your internal compass is the final authority. If the weight of the journey feels too heavy, please seek direct support from a licensed professional."
                 </p>
               </motion.div>
             </section>
 
-            {/* 2. THE STUDY — AFFILIATE LINKS */}
+            {/* THE STUDY */}
             <section>
               <div className="mb-12 flex items-center gap-4">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500">The Study</h3>
@@ -193,52 +160,35 @@ export default function Library({ vault, onRefresh, isAdmin }) {
               <div className="bg-[#110E16]/60 border border-white/5 rounded-[3rem] p-8 md:p-12 overflow-hidden relative">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                   <div className="lg:col-span-4 flex gap-4 md:flex-col">
-                    <button
-                      onClick={() => setStudyTab('amazon')}
-                      className={`p-6 rounded-2xl border transition-all text-left flex-1 ${studyTab === 'amazon' ? 'bg-teal-500/10 border-teal-500/30 shadow-lg' : 'bg-black/20 border-white/5 opacity-40 hover:opacity-60'}`}
-                    >
+                    <button onClick={() => setStudyTab('amazon')}
+                      className={`p-6 rounded-2xl border transition-all text-left flex-1 ${studyTab === 'amazon' ? 'bg-teal-500/10 border-teal-500/30 shadow-lg' : 'bg-black/20 border-white/5 opacity-40 hover:opacity-60'}`}>
                       <Package size={24} className={`mb-4 ${studyTab === 'amazon' ? 'text-teal-400' : 'text-zinc-600'}`} />
                       <span className="text-[10px] font-black uppercase tracking-widest block">Provisions</span>
                     </button>
-                    <button
-                      onClick={() => setStudyTab('books')}
-                      className={`p-6 rounded-2xl border transition-all text-left flex-1 ${studyTab === 'books' ? 'bg-purple-500/10 border-purple-500/30 shadow-lg' : 'bg-black/20 border-white/5 opacity-40 hover:opacity-60'}`}
-                    >
+                    <button onClick={() => setStudyTab('books')}
+                      className={`p-6 rounded-2xl border transition-all text-left flex-1 ${studyTab === 'books' ? 'bg-purple-500/10 border-purple-500/30 shadow-lg' : 'bg-black/20 border-white/5 opacity-40 hover:opacity-60'}`}>
                       <Book size={24} className={`mb-4 ${studyTab === 'books' ? 'text-purple-400' : 'text-zinc-600'}`} />
                       <span className="text-[10px] font-black uppercase tracking-widest block">Archives</span>
                     </button>
                   </div>
-
                   <div className="lg:col-span-8">
                     <AnimatePresence mode="wait">
                       {studyTab === 'amazon' ? (
                         <motion.div key="amz" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}>
                           <h4 className="text-3xl text-white font-serif italic mb-4">Curated Gear</h4>
                           <p className="text-zinc-500 mb-6 max-w-lg italic">Hand-picked ergonomic and organizational tools specifically for professional migrants.</p>
-                          
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
                             {AMZ_LISTS.map((list) => (
-                              <a 
-                                key={list.label} 
-                                href={list.url} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className={`flex items-center justify-between gap-3 bg-black/40 border border-white/10 px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-300 hover:border-teal-500/40 hover:text-teal-400 transition-all 
-                                  ${list.isFeatured ? 'sm:col-span-2 border-teal-500/30 bg-teal-500/5 py-6' : ''}`}
-                              >
+                              <a key={list.label} href={list.url} target="_blank" rel="noopener noreferrer"
+                                className={`flex items-center justify-between gap-3 bg-black/40 border border-white/10 px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-300 hover:border-teal-500/40 hover:text-teal-400 transition-all ${list.isFeatured ? 'sm:col-span-2 border-teal-500/30 bg-teal-500/5 py-6' : ''}`}>
                                 <span className="flex items-center gap-2">
-                                  {list.isFeatured ? (
-                                    <BookOpen size={14} className="text-teal-500" />
-                                  ) : (
-                                    <Package size={12} className="text-zinc-500" />
-                                  )}
+                                  {list.isFeatured ? <BookOpen size={14} className="text-teal-500" /> : <Package size={12} className="text-zinc-500" />}
                                   {list.label}
                                 </span>
                                 <ExternalLink size={12} />
                               </a>
                             ))}
                           </div>
-                          
                           <p className="text-[8px] text-zinc-700 uppercase italic font-bold tracking-widest">{AMZ_LEGAL}</p>
                         </motion.div>
                       ) : (
@@ -261,7 +211,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
               </div>
             </section>
 
-            {/* 3. THE LOOKOUT — STRATEGY DECK */}
+            {/* THE LOOKOUT */}
             <section className="pb-32">
               <div className="mb-12 flex items-center gap-4">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500">The Lookout</h3>
@@ -287,28 +237,19 @@ export default function Library({ vault, onRefresh, isAdmin }) {
                 </div>
               </div>
             </section>
-
-          </motion.div>
-        ) : (
-          <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="pb-32">
-            <Contact vault={vault} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} />
           </motion.div>
         )}
 
         {/* VOLUME NAV */}
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[110] w-fit px-6">
           <div className="bg-[#16121D]/80 backdrop-blur-xl rounded-full border border-white/10 p-2 shadow-2xl flex gap-2">
-            <button
-              onClick={() => setCurrentVolume(1)}
-              className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 1 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}
-            >
-              Volume I
+            <button onClick={() => setCurrentVolume(1)}
+              className={`flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 1 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}>
+              <Hammer size={12} /> The Smithy
             </button>
-            <button
-              onClick={() => setCurrentVolume(2)}
-              className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}
-            >
-              Volume II
+            <button onClick={() => setCurrentVolume(2)}
+              className={`flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}>
+              <BookOpen size={12} /> Archives
             </button>
           </div>
         </div>
