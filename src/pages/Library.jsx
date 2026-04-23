@@ -79,7 +79,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
           <div className="flex items-center gap-3 text-teal-500/80 mb-6">
             <BookOpen size={20} />
             <span className="text-[10px] font-black uppercase tracking-[0.5em] italic">
-              {currentVolume === 1 ? 'Volume I — The Active Lab' : 'Volume II — The Reference Archives'}
+              {currentVolume === 1 ? 'Volume I — The Active Lab' : "Volume II — The Wayfarer's Library"}
             </span>
           </div>
           <h1 className="text-6xl md:text-8xl font-serif italic text-white tracking-tighter leading-none mb-8">
@@ -88,7 +88,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
           <p className="max-w-xl text-zinc-500 text-sm leading-relaxed italic border-l border-teal-500/20 pl-6">
             {currentVolume === 1
               ? "Where Brigid waits. Enter the Smithy to forge your new identity — resume, ethics, and lexicon."
-              : "A curated collection of strategic blueprints, provisioned tools, and archival literature to support your professional migration."}
+              : "The Wayfarer's Library — a curated collection of mental health sanctuaries, provisioned tools, and archival literature to support your professional migration."}
           </p>
         </header>
 
@@ -251,7 +251,7 @@ export default function Library({ vault, onRefresh, isAdmin }) {
             </button>
             <button onClick={() => setCurrentVolume(2)}
               className={`flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}>
-              <BookOpen size={12} /> Archives
+              <BookOpen size={12} /> Wayfarer's Library
             </button>
           </div>
         </div>
