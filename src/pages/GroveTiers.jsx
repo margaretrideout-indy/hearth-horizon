@@ -15,15 +15,58 @@ const LINK_HEARTHKEEPER = 'https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03';
 const LINK_STEWARD = 'https://buy.stripe.com/aFafZhfG8aebdqI4hIdAk04';
 const LINK_DONATION = 'https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02';
 
-// Legacy title → Horizon title mapping
+// Legacy title → Horizon title mapping (Functional Equivalency)
+// The underlying BUSINESS VALUE is surfaced, not just word-swaps.
+// e.g. "Safety Officer" → the value is Risk Mitigation, not just "Safety Manager"
 const LEGACY_MAP = [
-  { triggers: ['teacher', 'educator', 'instructor', 'tutor', 'professor'], horizon: 'Learning Experience Architect' },
-  { triggers: ['nurse', 'doctor', 'health', 'medical', 'care', 'clinical'], horizon: 'Healthcare Systems Strategist' },
-  { triggers: ['social worker', 'counsellor', 'counselor', 'therapist', 'support'], horizon: 'Human Capital Consultant' },
-  { triggers: ['manager', 'director', 'coordinator', 'administrator', 'supervisor'], horizon: 'Operations Lead' },
-  { triggers: ['analyst', 'data', 'research', 'evaluation'], horizon: 'Intelligence & Insights Specialist' },
-  { triggers: ['program', 'project', 'policy'], horizon: 'Strategic Program Architect' },
-  { triggers: ['community', 'outreach', 'engagement', 'relations'], horizon: 'Stakeholder Engagement Lead' },
+  // EDUCATION — core value: Human Capital Development, Behaviour Design, Talent Activation
+  { triggers: ['teacher', 'educator', 'instructor', 'tutor', 'professor', 'lecturer', 'pedagog'], horizon: 'Human Capital Development Strategist' },
+  { triggers: ['principal', 'vice principal', 'superintendent', 'head of school', 'dean'], horizon: 'Organizational Leadership & Culture Executive' },
+  { triggers: ['curriculum', 'instructional design', 'learning design', 'e-learning'], horizon: 'Learning Experience Architect' },
+  { triggers: ['special education', 'resource teacher', 'iep', 'inclusion'], horizon: 'Adaptive Systems & Equity Specialist' },
+  { triggers: ['librarian', 'information', 'archivist'], horizon: 'Knowledge Management & Intelligence Lead' },
+
+  // HEALTHCARE — core value: Risk Mitigation, Protocol Governance, Continuity of Operations
+  { triggers: ['nurse', 'rn ', 'lpn ', 'nursing'], horizon: 'Clinical Operations & Continuity Specialist' },
+  { triggers: ['doctor', 'physician', 'md ', 'surgeon', 'gp '], horizon: 'Health Systems & Diagnostic Strategist' },
+  { triggers: ['paramedic', 'emt ', 'first responder', 'emergency medical'], horizon: 'Crisis Response & Field Operations Lead' },
+  { triggers: ['pharmacist', 'pharmacy'], horizon: 'Regulatory Compliance & Product Governance Lead' },
+  { triggers: ['physiotherap', 'occupational therap', 'rehab'], horizon: 'Performance Recovery & Workforce Wellness Consultant' },
+  { triggers: ['health care aide', 'pca ', 'personal support', 'care aide'], horizon: 'Human-Centered Service Delivery Specialist' },
+  { triggers: ['mental health', 'psychiatr', 'psycholog'], horizon: 'Behavioural Insights & Workforce Resilience Advisor' },
+
+  // SOCIAL SERVICES — core value: Stakeholder Risk Assessment, Resource Allocation, Compliance Navigation
+  { triggers: ['social worker', 'caseworker', 'case manager', 'child welfare'], horizon: 'Risk Assessment & Stakeholder Resource Strategist' },
+  { triggers: ['counsellor', 'counselor', 'therapist', 'life coach'], horizon: 'Human Capital Resilience & Development Consultant' },
+  { triggers: ['probation', 'corrections', 'justice', 'parole'], horizon: 'Compliance Governance & Behaviour Change Lead' },
+  { triggers: ['shelter', 'housing', 'homeless', 'transitional'], horizon: 'Crisis Infrastructure & Resource Allocation Manager' },
+  { triggers: ['addictions', 'substance', 'recovery', 'harm reduction'], horizon: 'Health Risk Mitigation & Community Continuity Advisor' },
+
+  // GOVERNMENT & PUBLIC ADMIN — core value: Policy Architecture, Strategic Direction, Risk Governance
+  { triggers: ['policy', 'policy analyst', 'legislative', 'regulatory'], horizon: 'Policy Architecture & Regulatory Intelligence Lead' },
+  { triggers: ['bylaw', 'enforcement', 'compliance officer', 'inspector'], horizon: 'Regulatory Compliance & Risk Enforcement Strategist' },
+  { triggers: ['civil servant', 'public servant', 'government', 'municipal'], horizon: 'Public Sector Operations & Strategic Delivery Lead' },
+  { triggers: ['fire', 'firefighter', 'fire chief', 'fire marshal'], horizon: 'Emergency Risk Mitigation & Operational Safety Lead' },
+  { triggers: ['police', 'officer', 'constable', 'rcmp', 'opp '], horizon: 'Security Operations & Organizational Risk Manager' },
+  { triggers: ['military', 'army', 'navy', 'air force', 'veteran', 'forces'], horizon: 'Strategic Operations & High-Stakes Execution Leader' },
+
+  // MANAGEMENT & OPERATIONS — core value: Strategic Direction, Process Optimization, Talent Orchestration
+  { triggers: ['manager', 'supervisor', 'team lead', 'foreman'], horizon: 'Operational Excellence & Team Performance Lead' },
+  { triggers: ['director', 'executive director', 'vp ', 'vice president'], horizon: 'Strategic Direction & Organizational Growth Executive' },
+  { triggers: ['coordinator', 'administrator', 'admin'], horizon: 'Systems Coordination & Operational Flow Specialist' },
+  { triggers: ['program manager', 'project manager', 'project coordinator'], horizon: 'Strategic Program Delivery & Stakeholder Alignment Lead' },
+  { triggers: ['hr ', 'human resources', 'talent acquisition', 'recruiter'], horizon: 'Human Capital Strategy & Talent Pipeline Architect' },
+
+  // DATA & RESEARCH — core value: Intelligence Generation, Decision Enablement, Signal Extraction
+  { triggers: ['analyst', 'data analyst', 'business analyst', 'systems analyst'], horizon: 'Business Intelligence & Decision Enablement Specialist' },
+  { triggers: ['researcher', 'research coordinator', 'evaluator', 'epidemiol'], horizon: 'Evidence Synthesis & Strategic Insights Lead' },
+  { triggers: ['statistician', 'data scientist', 'quantitative'], horizon: 'Predictive Intelligence & Analytics Architect' },
+
+  // COMMUNITY & COMMUNICATIONS — core value: Stakeholder Mobilization, Brand Trust, Narrative Strategy
+  { triggers: ['community', 'outreach', 'liaison'], horizon: 'Stakeholder Mobilization & Trust-Building Lead' },
+  { triggers: ['communications', 'public relations', 'media relations', 'pr '], horizon: 'Narrative Strategy & Brand Reputation Manager' },
+  { triggers: ['fundrais', 'grant', 'development officer'], horizon: 'Revenue Strategy & Mission-Aligned Capital Lead' },
+  { triggers: ['volunteer', 'event coordinator', 'events'], horizon: 'Experience Design & Community Activation Strategist' },
 ];
 
 const BRIGID_POETIC_FALLBACK = "A complex history, indeed. Let us sit by the fire in the Smithy to find its true horizon.";
