@@ -1,231 +1,439 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
-  BookOpen, ExternalLink, Heart, Mic2, FileText,
-  ShieldAlert, Package, Book, Compass, Lock, ArrowRight, PhoneCall,
-  Hammer, CheckCircle2, Flame, Package2
+  BookOpen, ExternalLink, Heart, Mic2, FileText, ShieldAlert,
+  Package, Compass, Lock, ArrowRight, PhoneCall, Hammer,
+  CheckCircle2, Flame, Package2, Upload, Loader2, RefreshCw,
+  Trash2, ChevronDown, Zap, Search, Sparkles
 } from 'lucide-react';
-import Contact from './Contact';
+import WayfarersCache from './Contact';
+import { base44 } from '@/api/base44Client';
 
-// --- CONFIGURATION ---
-const MAIN_TAG = "hearthandh0a6-20";
-const BOOKSHOP_URL = "https://bookshop.org/shop/hearthandhorizon";
+// ── CONSTANTS ────────────────────────────────────────────────────────────────
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/edit?slide=id.p1#slide=id.p1";
-const AMZ_LEGAL = "As an Amazon Associate I earn from qualifying purchases.";
 
-const AMZ_LISTS = [
-  { label: "Horizon Library", id: "3MQJ7V1EQV93P", isFeatured: true },
-  { label: "Curiosity Cabinet", id: "3QPCFSBBZX0LS" },
-  { label: "Analog Wayfarers", id: "WUQBYPAD7FSN" },
-  { label: "Digital Hub", id: "2WS5M8FIVKJBV" },
-  { label: "Ergonomic Sanctuary", id: "2BZUUE2ZJL0EL" }
-].map(list => ({
-  ...list,
-  url: `https://www.amazon.ca/hz/wishlist/ls/${list.id}?ref_=wl_share&tag=${MAIN_TAG}`
-}));
+const VERB_MAP = [
+  { legacy: "Taught", horizon: "Facilitated" }, { legacy: "Managed", horizon: "Spearheaded" },
+  { legacy: "Helped", horizon: "Advocated" }, { legacy: "Led", horizon: "Championed" },
+  { legacy: "Fixed", horizon: "Remediated" }, { legacy: "Organized", horizon: "Orchestrated" },
+  { legacy: "Started", horizon: "Pioneered" }, { legacy: "Built", horizon: "Engineered" },
+  { legacy: "Changed", horizon: "Transformed" }, { legacy: "Checked", horizon: "Audited" },
+  { legacy: "Made", horizon: "Architected" }, { legacy: "Planned", horizon: "Strategized" },
+  { legacy: "Wrote", horizon: "Authored" }, { legacy: "Ran", horizon: "Directed" },
+  { legacy: "Saved", horizon: "Conserved" }, { legacy: "Expanded", horizon: "Amplified" },
+];
+
+const VALUE_DIMENSIONS = [
+  { id: 'reciprocity', label: 'Reciprocity', description: 'Balancing extraction with contribution.' },
+  { id: 'luminescence', label: 'Luminescence', description: 'Radical honesty in process and culture.' },
+  { id: 'sovereignty', label: 'Sovereignty', description: 'Autonomy over the migration path.' },
+];
 
 const sanctuaryResources = [
   {
-    title: "Sanctuary Lifeline",
+    title: "Sanctuary Lifeline", type: "Priority Access", icon: PhoneCall, color: "text-rose-400",
     description: "A CMHA resource for nurturing mental health through adult life, paired with immediate crisis support.",
-    type: "Priority Access",
-    icon: PhoneCall,
-    color: "text-rose-400",
     link: "https://cmha.ca/wp-content/uploads/2016/02/MH-for-Life-NTNL-brochure-2014-web.pdf",
     crisis: { line: "9-8-8", label: "Suicide Crisis Helpline — Call or text anytime" }
   },
   {
-    title: "Burnout to Balance",
-    description: "A comprehensive guide to reclaiming your energy and setting sustainable boundaries in a high-pressure world.",
-    link: "https://static1.squarespace.com/static/5d3080f196bac8000148b997/t/664cfc0539541d281b05c587/1716321288694/GKYMH+From+Burnout+to+Balance.pdf",
-    type: "PDF Guide", icon: FileText, color: "text-orange-400"
+    title: "Burnout to Balance", type: "PDF Guide", icon: FileText, color: "text-orange-400",
+    description: "A comprehensive guide to reclaiming your energy and setting sustainable boundaries.",
+    link: "https://static1.squarespace.com/static/5d3080f196bac8000148b997/t/664cfc0539541d281b05c587/1716321288694/GKYMH+From+Burnout+to+Balance.pdf"
   },
   {
-    title: "Your Inner Advocate",
+    title: "Your Inner Advocate", type: "Podcast", icon: Mic2, color: "text-teal-400",
     description: "A podcast dedicated to changing the internal narrative and advocating for your own mental well-being.",
-    link: "https://podcasts.apple.com/ca/podcast/your-inner-advocate/id1722984987",
-    type: "Podcast", icon: Mic2, color: "text-teal-400"
+    link: "https://podcasts.apple.com/ca/podcast/your-inner-advocate/id1722984987"
   }
 ];
 
-// ── Volume I: The High Forge ─────────────────────────────────────────────────
-function HighForge({ vault, onRefresh, isAdmin, isSeedlingPlus, navigate, handleResourceClick }) {
+// ── BRIGID'S COUNSEL ─────────────────────────────────────────────────────────
+function BrigidsCounsel({ vault, onSync }) {
+  const [isUploading, setIsUploading] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [toast, setToast] = useState(null);
+  const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(null), 3000); };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !onSync) return;
+    setIsUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const resumeData = { name: file.name, url: file_url, lastModified: new Date().toISOString() };
+      setIsAnalyzing(true);
+      let hearthRecord = null, resonance = null, bridgeAnalysis = null;
+      try {
+        const res = await base44.integrations.Core.InvokeLLM({
+          prompt: `You are Brigid. Analyze this resume. Return JSON with: horizon_title (corporate title), power_verbs (array of 3 corporate action verbs), archetype (one-sentence identity), key_strengths (array of 3 transferable competencies), bridge_analysis (2-sentence private-sector summary). Resume: ${file.name}`,
+          file_urls: [file_url],
+          response_json_schema: {
+            type: "object",
+            properties: {
+              horizon_title: { type: "string" },
+              power_verbs: { type: "array", items: { type: "string" } },
+              archetype: { type: "string" },
+              key_strengths: { type: "array", items: { type: "string" } },
+              bridge_analysis: { type: "string" }
+            }
+          }
+        });
+        hearthRecord = { horizon_title: res.horizon_title, power_verbs: res.power_verbs || [], archetype: res.archetype };
+        resonance = res.key_strengths || [];
+        bridgeAnalysis = res.bridge_analysis;
+      } catch { /* silent */ }
+      await base44.auth.updateMe({ resume_metadata: resumeData });
+      onSync({ ...vault, resume: resumeData, bridge_analysis: bridgeAnalysis, currentDraft: resumeData, legacyResume: resumeData, hearthRecord, resonance, archetype: hearthRecord?.archetype || vault?.archetype });
+      showToast("Legacy archived & analyzed.");
+    } catch { showToast("Upload failed. Try again."); }
+    finally { setIsUploading(false); setIsAnalyzing(false); }
+  };
+
+  const handleDelete = async () => {
+    await base44.auth.updateMe({ resume_metadata: null });
+    onSync({ ...vault, resume: null, bridge_analysis: null, legacyResume: null, hearthRecord: null });
+    showToast("Resume cleared.");
+  };
+
   return (
-    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="space-y-20 pb-32">
+    <div className="space-y-6">
+      <AnimatePresence>
+        {toast && (
+          <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }}
+            className="px-4 py-2 bg-teal-500/10 border border-teal-500/20 rounded-xl text-[10px] font-black uppercase text-teal-400 tracking-widest text-center">
+            {toast}
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {!vault?.resume ? (
+        <label className={`flex flex-col items-center justify-center w-full h-44 border-2 border-dashed rounded-[2rem] bg-black/40 cursor-pointer group transition-all ${isUploading || isAnalyzing ? 'border-teal-500/40' : 'border-white/5 hover:border-teal-500/20'}`}>
+          {isAnalyzing ? (
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="text-purple-400 animate-spin" size={24} />
+              <span className="text-[10px] font-black uppercase text-purple-400 animate-pulse">Brigid is reading your legacy...</span>
+            </div>
+          ) : isUploading ? (
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="text-teal-500 animate-spin" size={24} />
+              <span className="text-[10px] font-black uppercase text-teal-500 animate-pulse">Archiving...</span>
+            </div>
+          ) : (
+            <>
+              <Upload className="text-zinc-600 mb-2 group-hover:text-teal-500 transition-colors" size={22} />
+              <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest text-center px-4">Upload Resume / CV</span>
+              <p className="text-[8px] text-zinc-600 uppercase mt-2 font-black">PDF, DOCX · Brigid will translate it</p>
+            </>
+          )}
+          <input type="file" className="hidden" onChange={handleFileChange} disabled={isUploading || isAnalyzing} accept=".pdf,.doc,.docx" />
+        </label>
+      ) : (
+        <div className="p-6 rounded-[2rem] bg-teal-500/5 border border-teal-500/20 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <CheckCircle2 className="text-teal-500" size={20} />
+              <div>
+                <p className="text-[10px] font-black uppercase text-teal-400 tracking-widest">Legacy Secured</p>
+                <p className="text-[9px] text-zinc-500 italic mt-0.5 truncate max-w-[200px]">{vault.resume.name}</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <label className="inline-flex items-center gap-1 text-[8px] font-black uppercase text-zinc-400 hover:text-white cursor-pointer border border-white/10 px-3 py-1.5 rounded-full transition-colors">
+                <RefreshCw size={9} /> Replace
+                <input type="file" className="hidden" onChange={handleFileChange} accept=".pdf,.doc,.docx" />
+              </label>
+              <button onClick={handleDelete} className="inline-flex items-center gap-1 text-[8px] font-black uppercase text-zinc-600 hover:text-rose-400 border border-white/5 px-3 py-1.5 rounded-full transition-colors">
+                <Trash2 size={9} />
+              </button>
+            </div>
+          </div>
+          {vault?.hearthRecord?.horizon_title && (
+            <div className="pt-4 border-t border-white/5 space-y-3">
+              <p className="text-[9px] font-black uppercase tracking-widest text-teal-400/60 flex items-center gap-1"><Zap size={9} /> Horizon Title</p>
+              <p className="text-sm font-serif italic text-teal-300">{vault.hearthRecord.horizon_title}</p>
+              {vault.hearthRecord.power_verbs?.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {vault.hearthRecord.power_verbs.map((v, i) => (
+                    <span key={i} className="px-3 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-300 text-[10px] font-black rounded-full">{v}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── SOUL COMPASS ─────────────────────────────────────────────────────────────
+function SoulCompass({ vault, onSync }) {
+  const [ethics, setEthics] = useState(vault?.ethics || { reciprocity: 50, luminescence: 50, sovereignty: 50 });
+  const [isSaving, setIsSaving] = useState(false);
+  const saveTimer = useRef(null);
+
+  const handleChange = (id, val) => {
+    const next = { ...ethics, [id]: val };
+    setEthics(next);
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(async () => {
+      if (!onSync) return;
+      setIsSaving(true);
+      try { await base44.auth.updateMe({ ethics: next }); onSync({ ...vault, ethics: next }); }
+      finally { setIsSaving(false); }
+    }, 1200);
+  };
+
+  return (
+    <div className="space-y-8">
+      <p className="text-[10px] text-zinc-600 italic">
+        {isSaving ? <span className="text-teal-500/60 animate-pulse">Syncing to Horizon...</span> : "Your calibration updates the Alignment badges in the Horizon in real-time."}
+      </p>
+      {VALUE_DIMENSIONS.map((dim) => (
+        <div key={dim.id} className="space-y-3">
+          <div className="flex justify-between items-center">
+            <div>
+              <span className="text-sm font-black uppercase tracking-widest text-zinc-200 block">{dim.label}</span>
+              <span className="text-[10px] text-zinc-600 italic">{dim.description}</span>
+            </div>
+            <span className="text-xs font-mono text-purple-400 shrink-0 tabular-nums">{ethics[dim.id]}%</span>
+          </div>
+          <input type="range" min="0" max="100" value={ethics[dim.id]}
+            onChange={(e) => handleChange(dim.id, Number(e.target.value))}
+            className="w-full h-1.5 bg-white/5 rounded-full appearance-none accent-purple-500 cursor-pointer" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── RITE OF RENAMING ─────────────────────────────────────────────────────────
+function RiteOfRenaming({ vault, onSync }) {
+  const [query, setQuery] = useState('');
+  const [result, setResult] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleTransform = async () => {
+    if (!query.trim()) return;
+    // First try local map
+    const local = VERB_MAP.find(v => v.legacy.toLowerCase() === query.trim().toLowerCase());
+    if (local) { setResult({ legacy: local.legacy, horizon: local.horizon, source: 'local' }); return; }
+    // Fallback to Brigid
+    setIsLoading(true);
+    try {
+      const res = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are Brigid. Transform this public-sector legacy task/verb into a single powerful corporate private-sector power verb or short phrase (max 3 words). Legacy task: "${query}". Return JSON with: legacy (the input), horizon (the transformation), rationale (one sentence why).`,
+        response_json_schema: {
+          type: "object",
+          properties: { legacy: { type: "string" }, horizon: { type: "string" }, rationale: { type: "string" } }
+        }
+      });
+      setResult({ ...res, source: 'brigid' });
+      // Save to lexicon
+      if (onSync && res.horizon) {
+        const lexicon = [...(vault?.lexicon || [])];
+        if (!lexicon.includes(res.horizon)) onSync({ ...vault, lexicon: [res.horizon, ...lexicon] });
+      }
+    } catch { setResult({ legacy: query, horizon: "Orchestrated", rationale: "Brigid could not reach the fire. Try again.", source: 'fallback' }); }
+    finally { setIsLoading(false); }
+  };
+
+  return (
+    <div className="space-y-6">
+      <p className="text-[10px] text-zinc-600 italic">Enter a legacy task or verb. Brigid will return your Horizon Power Verb.</p>
+      <div className="flex gap-3">
+        <input
+          type="text" value={query} onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleTransform()}
+          placeholder="e.g. 'Supervised students' or 'Taught'"
+          className="flex-1 bg-black/40 border border-white/10 rounded-2xl px-5 py-3 text-sm text-white focus:outline-none focus:border-teal-500/40 placeholder:text-zinc-700 font-serif italic"
+        />
+        <button onClick={handleTransform} disabled={isLoading || !query.trim()}
+          className="px-5 py-3 bg-teal-500/10 border border-teal-500/20 text-teal-400 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-teal-500/20 transition-all disabled:opacity-40">
+          {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
+        </button>
+      </div>
+      <AnimatePresence>
+        {result && (
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            className="p-6 bg-purple-500/5 border border-purple-500/20 rounded-2xl space-y-3">
+            <div className="flex items-center gap-4">
+              <span className="text-[10px] text-zinc-600 line-through uppercase tracking-widest">{result.legacy}</span>
+              <ArrowRight size={12} className="text-purple-400 shrink-0" />
+              <span className="text-lg font-serif italic text-purple-300">{result.horizon}</span>
+              {result.source === 'brigid' && <Sparkles size={12} className="text-purple-400/60" />}
+            </div>
+            {result.rationale && <p className="text-[10px] text-zinc-600 italic border-l border-white/5 pl-3">"{result.rationale}"</p>}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ── ACCORDION TOOL ────────────────────────────────────────────────────────────
+function SmithyTool({ tool, isOpen, onToggle, children }) {
+  return (
+    <div className="flex flex-col">
+      <button onClick={onToggle}
+        className={`relative w-full text-left bg-[#16121D]/40 border transition-all duration-300 ${isOpen ? 'rounded-t-[2rem] border-teal-500/40 bg-[#1C1622]' : 'rounded-[2rem] border-white/5 hover:border-teal-500/20'}`}>
+        <div className="p-6 md:p-8 flex items-center justify-between gap-6">
+          <div className="flex items-center gap-5">
+            <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-black/40 border border-white/10">
+              {tool.icon}
+            </div>
+            <div>
+              <span className="text-[8px] font-black uppercase tracking-[0.2em] text-teal-500/50 block mb-1">{tool.type}</span>
+              <h3 className="text-lg md:text-xl text-white font-serif italic">{tool.title}</h3>
+              <p className="text-[10px] text-zinc-600 italic mt-0.5">{tool.desc}</p>
+            </div>
+          </div>
+          <div className={`transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180 text-teal-500' : 'text-zinc-700'}`}>
+            <ChevronDown size={22} strokeWidth={1.5} />
+          </div>
+        </div>
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden bg-[#1C1622] border-x border-b border-teal-500/40 rounded-b-[2rem]">
+            <div className="p-6 md:p-10 pt-4">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ── HIGH FORGE ────────────────────────────────────────────────────────────────
+function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
+  const [openTool, setOpenTool] = useState(null);
+
+  const toggle = (id) => setOpenTool(prev => prev === id ? null : id);
+
+  const smithyTools = [
+    { id: 'brigid', title: "Brigid's Counsel", desc: "Upload your CV. Brigid translates your legacy.", type: "All Pilgrims", icon: <Upload className="text-teal-400" size={20} /> },
+    { id: 'compass', title: "The Soul Compass", desc: "Calibrate Reciprocity, Luminescence & Sovereignty.", type: "All Pilgrims", icon: <Compass className="text-purple-400" size={20} /> },
+    { id: 'rename', title: "The Rite of Renaming", desc: "Enter a legacy task. Receive your Horizon Power Verb.", type: "All Pilgrims", icon: <Zap className="text-amber-400" size={20} /> },
+  ];
+
+  return (
+    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="space-y-16 pb-48">
 
       {/* NARRATIVE BANNER */}
-      <div className="p-6 rounded-[2rem] bg-amber-500/[0.03] border border-amber-500/10 flex items-center gap-4">
-        <Flame size={20} className="text-amber-500/60 shrink-0" />
+      <div className="p-5 rounded-[1.5rem] bg-amber-500/[0.03] border border-amber-500/10 flex items-center gap-4">
+        <Flame size={18} className="text-amber-500/60 shrink-0" />
         <p className="text-[11px] font-serif italic text-amber-200/50 leading-relaxed">
           "The work begins here. Your legacy is being forged; your progress is safe by the fire."
         </p>
       </div>
 
-      {/* STRATEGY DECK — top of forge */}
+      {/* STRATEGY DECK HERO */}
       <section>
-        <div className="mb-8 flex items-center gap-4">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500">Master Blueprint</h3>
+        <div className="mb-6 flex items-center gap-4">
+          <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500">The Grand Map</h3>
           <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
         </div>
         <div className="p-10 md:p-14 bg-gradient-to-br from-[#16121D] to-[#0D0B10] border border-teal-500/20 rounded-[3rem] relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity">
             <Compass size={140} />
           </div>
-          <div className="relative z-10 space-y-6">
-            <Badge className="bg-teal-500/10 text-teal-400 uppercase font-black px-4 py-1 border-teal-500/20">Premium Resource</Badge>
+          <div className="relative z-10 space-y-5">
+            <Badge className="bg-teal-500/10 text-teal-400 uppercase font-black px-4 py-1 border-teal-500/20 text-[9px]">The Grand Map of the Pilgrimage</Badge>
             <h4 className="text-3xl md:text-4xl text-white font-serif italic leading-tight max-w-lg">Master Strategy Deck</h4>
             <p className="text-zinc-400 italic max-w-md text-sm leading-relaxed">The complete architectural blueprint for career migration and resignation protocols.</p>
-            <Button
-              onClick={() => handleResourceClick("Strategy Deck", "Unlock full oversight of your career migration path.", isSeedlingPlus)}
-              className="h-14 px-10 bg-teal-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-teal-500/20"
-            >
-              {isSeedlingPlus
-                ? <a href={STRATEGY_DECK_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">Open Blueprint <ExternalLink size={14} /></a>
-                : <><Lock size={14} className="mr-2" /> Unlock Blueprint</>
-              }
-            </Button>
+            {isSeedlingPlus ? (
+              <a href={STRATEGY_DECK_URL} target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 h-14 px-10 bg-teal-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-teal-500/20 text-[10px] hover:bg-teal-400 transition-all">
+                Open Blueprint <ExternalLink size={14} />
+              </a>
+            ) : (
+              <button onClick={() => navigate('/grove')}
+                className="inline-flex items-center gap-3 h-14 px-10 bg-white/5 border border-white/10 text-zinc-400 font-black uppercase tracking-widest rounded-2xl text-[10px] hover:border-teal-500/20 transition-all">
+                <Lock size={14} /> Unlock Blueprint
+              </button>
+            )}
           </div>
         </div>
       </section>
 
-      {/* IDENTITY SMITHY — Resume & Ethics tools */}
+      {/* THE SMITHY — accordion tools */}
       <section>
-        <div className="mb-8 flex items-center gap-4">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500">Identity Smithy</h3>
+        <div className="mb-6 flex items-center gap-4">
+          <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500">The Smithy — Active Tools</h3>
           <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
         </div>
-        <Contact vault={vault} onRefresh={onRefresh} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} />
-      </section>
-
-      {/* THE SANCTUARY — Mental Health */}
-      <section className="space-y-10">
-        <div className="flex items-center gap-4 border-b border-white/5 pb-6">
-          <div className="p-3 bg-orange-500/10 rounded-xl text-orange-500"><Heart size={24} /></div>
-          <div>
-            <h2 className="text-2xl font-serif italic text-white">The Sanctuary</h2>
-            <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Mental Health & Resilience Resources</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {sanctuaryResources.map((item, idx) => (
-            <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}>
-              <Card className={`group relative p-8 bg-[#110E16] border-white/5 rounded-[2.5rem] hover:border-white/10 transition-all h-full flex flex-col justify-between overflow-hidden ${item.crisis ? 'ring-1 ring-rose-500/20 shadow-lg shadow-rose-500/5' : ''}`}>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-start">
-                    <div className={`p-4 rounded-2xl bg-black/40 border border-white/5 ${item.color}`}>
-                      <item.icon size={24} />
-                    </div>
-                    <span className={`text-[9px] font-black uppercase tracking-tighter px-3 py-1 rounded-full ${item.crisis ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'text-zinc-600 bg-white/5'}`}>
-                      {item.type}
-                    </span>
-                  </div>
-                  <h3 className="text-2xl font-serif italic text-zinc-200">{item.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: '#686868' }}>{item.description}</p>
-                  {item.crisis && (
-                    <div className="mt-4 flex flex-col gap-2 px-5 py-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
-                      <span className="text-2xl font-black text-rose-500 whitespace-nowrap tracking-tight">{item.crisis.line}</span>
-                      <span className="text-[9px] text-rose-200/70 font-bold uppercase tracking-widest leading-tight">{item.crisis.label}</span>
-                    </div>
-                  )}
-                </div>
-                <Button asChild variant="ghost" className={`mt-8 w-full rounded-xl border transition-all ${item.crisis ? 'bg-rose-500 text-white hover:bg-rose-600 border-transparent shadow-lg shadow-rose-500/10' : 'bg-white/5 border-white/5 text-zinc-400 hover:text-white'}`}>
-                  <a href={item.link} target="_blank" rel="noopener noreferrer">
-                    Open Resource <ExternalLink size={14} className="ml-2" />
-                  </a>
-                </Button>
-              </Card>
-            </motion.div>
+        <div className="space-y-3">
+          {smithyTools.map((tool) => (
+            <SmithyTool key={tool.id} tool={tool} isOpen={openTool === tool.id} onToggle={() => toggle(tool.id)}>
+              {tool.id === 'brigid' && <BrigidsCounsel vault={vault} onSync={onSync} />}
+              {tool.id === 'compass' && <SoulCompass vault={vault} onSync={onSync} />}
+              {tool.id === 'rename' && <RiteOfRenaming vault={vault} onSync={onSync} />}
+            </SmithyTool>
           ))}
         </div>
-
-        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-          className="p-8 rounded-[2.5rem] bg-teal-500/[0.02] border border-teal-500/10 flex flex-col md:flex-row items-center gap-6">
-          <div className="text-teal-500 shrink-0"><ShieldAlert size={32} /></div>
-          <p className="text-xs text-zinc-400 italic font-serif text-center md:text-left leading-relaxed max-w-2xl">
-            "The Hearth is a tool for navigation, but your internal compass is the final authority. If the weight of the journey feels too heavy, please seek direct support from a licensed professional."
-          </p>
-        </motion.div>
       </section>
-    </motion.div>
-  );
-}
 
-// ── Volume II: The Wayfarer's Cache ──────────────────────────────────────────
-function WayfarersCache({ studyTab, setStudyTab }) {
-  return (
-    <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="space-y-20 pb-32">
-
-      {/* NARRATIVE BANNER */}
-      <div className="p-6 rounded-[2rem] bg-purple-500/[0.03] border border-purple-500/10 flex items-center gap-4">
-        <Package2 size={20} className="text-purple-500/60 shrink-0" />
-        <p className="text-[11px] font-serif italic text-purple-200/50 leading-relaxed">
-          "Your provisions are laid out. Affiliate tools, reference literature, and external resources — everything for the road ahead."
-        </p>
-      </div>
-
-      {/* AFFILIATE PROVISIONS + BOOKSHOP */}
-      <section>
-        <div className="mb-8 flex items-center gap-4">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500">The Provisions</h3>
-          <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
+      {/* THE SANCTUARY */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-4 border-b border-white/5 pb-6">
+          <div className="p-3 bg-orange-500/10 rounded-xl text-orange-500"><Heart size={22} /></div>
+          <div>
+            <h2 className="text-2xl font-serif italic text-white">The Sanctuary</h2>
+            <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Mental Health & Resilience</p>
+          </div>
         </div>
-        <div className="bg-[#110E16]/60 border border-white/5 rounded-[3rem] p-8 md:p-12 overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-4 flex gap-4 md:flex-col">
-              <button onClick={() => setStudyTab('amazon')}
-                className={`p-6 rounded-2xl border transition-all text-left flex-1 ${studyTab === 'amazon' ? 'bg-teal-500/10 border-teal-500/30 shadow-lg' : 'bg-black/20 border-white/5 opacity-40 hover:opacity-60'}`}>
-                <Package size={24} className={`mb-4 ${studyTab === 'amazon' ? 'text-teal-400' : 'text-zinc-600'}`} />
-                <span className="text-[10px] font-black uppercase tracking-widest block">Curated Gear</span>
-                <span className="text-[9px] text-zinc-600 mt-1 block">Amazon Affiliate Lists</span>
-              </button>
-              <button onClick={() => setStudyTab('books')}
-                className={`p-6 rounded-2xl border transition-all text-left flex-1 ${studyTab === 'books' ? 'bg-purple-500/10 border-purple-500/30 shadow-lg' : 'bg-black/20 border-white/5 opacity-40 hover:opacity-60'}`}>
-                <Book size={24} className={`mb-4 ${studyTab === 'books' ? 'text-purple-400' : 'text-zinc-600'}`} />
-                <span className="text-[10px] font-black uppercase tracking-widest block">The Bookshop</span>
-                <span className="text-[9px] text-zinc-600 mt-1 block">Literature & Archives</span>
-              </button>
-            </div>
-            <div className="lg:col-span-8">
-              <AnimatePresence mode="wait">
-                {studyTab === 'amazon' ? (
-                  <motion.div key="amz" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}>
-                    <h4 className="text-3xl text-white font-serif italic mb-4">Curated Gear</h4>
-                    <p className="text-zinc-500 mb-6 max-w-lg italic">Hand-picked ergonomic and organizational tools specifically for professional migrants.</p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-                      {AMZ_LISTS.map((list) => (
-                        <a key={list.label} href={list.url} target="_blank" rel="noopener noreferrer"
-                          className={`flex items-center justify-between gap-3 bg-black/40 border border-white/10 px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-300 hover:border-teal-500/40 hover:text-teal-400 transition-all ${list.isFeatured ? 'sm:col-span-2 border-teal-500/30 bg-teal-500/5 py-6' : ''}`}>
-                          <span className="flex items-center gap-2">
-                            {list.isFeatured ? <BookOpen size={14} className="text-teal-500" /> : <Package size={12} className="text-zinc-500" />}
-                            {list.label}
-                          </span>
-                          <ExternalLink size={12} />
-                        </a>
-                      ))}
-                    </div>
-                    <p className="text-[8px] text-zinc-700 uppercase italic font-bold tracking-widest">{AMZ_LEGAL}</p>
-                  </motion.div>
-                ) : (
-                  <motion.div key="books" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}>
-                    <h4 className="text-3xl text-white font-serif italic mb-4">The Bookshop</h4>
-                    <p className="text-zinc-500 mb-8 max-w-lg italic">Literature and deep-dives into industry culture, ethics, and transition strategy.</p>
-                    <div className="flex flex-col sm:flex-row gap-4">
-                      <a href={BOOKSHOP_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 bg-purple-600 text-white px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-500 transition-all shadow-xl shadow-purple-500/20">
-                        Bookshop.org <ArrowRight size={14} />
-                      </a>
-                      <button disabled className="inline-flex items-center gap-3 bg-white/5 border border-white/10 text-zinc-600 px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest cursor-not-allowed opacity-50">
-                        Indigo — Coming Soon
-                      </button>
-                    </div>
-                  </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {sanctuaryResources.map((item, idx) => (
+            <Card key={idx} className={`group p-7 bg-[#110E16] border-white/5 rounded-[2rem] flex flex-col justify-between h-full ${item.crisis ? 'ring-1 ring-rose-500/20' : ''}`}>
+              <div className="space-y-4">
+                <div className="flex justify-between items-start">
+                  <div className={`p-3 rounded-xl bg-black/40 border border-white/5 ${item.color}`}><item.icon size={20} /></div>
+                  <span className={`text-[9px] font-black uppercase tracking-tighter px-3 py-1 rounded-full ${item.crisis ? 'bg-rose-500 text-white' : 'text-zinc-600 bg-white/5'}`}>{item.type}</span>
+                </div>
+                <h3 className="text-xl font-serif italic text-zinc-200">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-zinc-600">{item.description}</p>
+                {item.crisis && (
+                  <div className="flex flex-col gap-1 px-4 py-3 rounded-xl bg-rose-500/10 border border-rose-500/20">
+                    <span className="text-xl font-black text-rose-500">{item.crisis.line}</span>
+                    <span className="text-[9px] text-rose-200/70 font-bold uppercase tracking-widest">{item.crisis.label}</span>
+                  </div>
                 )}
-              </AnimatePresence>
-            </div>
+              </div>
+              <a href={item.link} target="_blank" rel="noopener noreferrer"
+                className={`mt-6 w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${item.crisis ? 'bg-rose-500 text-white hover:bg-rose-600' : 'bg-white/5 border border-white/5 text-zinc-400 hover:text-white'}`}>
+                Open Resource <ExternalLink size={12} />
+              </a>
+            </Card>
+          ))}
+        </div>
+        <div className="p-6 rounded-[2rem] bg-teal-500/[0.02] border border-teal-500/10 flex items-center gap-5">
+          <ShieldAlert size={28} className="text-teal-500 shrink-0" />
+          <p className="text-xs text-zinc-500 italic font-serif leading-relaxed">
+            "The Hearth is a tool for navigation, but your internal compass is the final authority. If the weight feels too heavy, please seek direct support from a licensed professional."
+          </p>
+        </div>
+      </section>
+
+      {/* HORIZON PORTAL CTA */}
+      <section>
+        <div className="p-10 md:p-14 bg-gradient-to-br from-[#0F1A16] to-[#08070B] border border-teal-500/20 rounded-[3rem] text-center space-y-6 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,184,166,0.05),transparent_70%)] pointer-events-none" />
+          <div className="relative z-10 space-y-4">
+            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-teal-500/60">The Portal</p>
+            <h3 className="text-2xl md:text-3xl font-serif italic text-white leading-snug max-w-lg mx-auto">
+              Your identity is forged.<br />
+              <span className="text-teal-400">The mists have cleared.</span>
+            </h3>
+            <p className="text-zinc-500 text-sm italic">Step into the Horizon.</p>
+            <button onClick={() => navigate('/horizon')}
+              className="inline-flex items-center gap-3 h-14 px-10 bg-teal-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-teal-500/20 text-[10px] hover:bg-teal-400 transition-all">
+              Enter the Horizon <ArrowRight size={14} />
+            </button>
           </div>
         </div>
       </section>
@@ -233,44 +441,36 @@ function WayfarersCache({ studyTab, setStudyTab }) {
   );
 }
 
-// ── Main Library Component ────────────────────────────────────────────────────
-export default function Library({ vault, onRefresh, isAdmin }) {
+// ── MAIN LIBRARY ──────────────────────────────────────────────────────────────
+export default function Library({ vault, onRefresh, onSync, isAdmin }) {
   const navigate = useNavigate();
   const [currentVolume, setCurrentVolume] = useState(1);
-  const [studyTab, setStudyTab] = useState('amazon');
-  const [showLockSheet, setShowLockSheet] = useState(false);
-  const [lockContext, setLockContext] = useState({ title: '', desc: '' });
 
   const currentTier = vault?.tier?.toLowerCase() || 'none';
   const isRegistered = currentTier !== 'none' && currentTier !== 'traveler';
   const isSeedlingPlus = isAdmin || isRegistered || currentTier === 'admin' || currentTier === 'steward';
-  const forgeComplete = !!(vault?.hearthRecord || vault?.resume);
+  const forgeComplete = !!(vault?.hearthRecord || vault?.legacyResume);
 
-  const handleResourceClick = (title, desc, isUnlocked) => {
-    if (!isUnlocked) {
-      setLockContext({ title, desc });
-      setShowLockSheet(true);
-    }
-  };
+  const handleSync = onSync || onRefresh;
 
   const VOLUME_LABELS = {
-    1: { tag: 'Volume I — The High Forge', subtitle: "The work begins here. Your legacy is being forged; your progress is safe by the fire." },
-    2: { tag: "Volume II — The Wayfarer's Cache", subtitle: "Affiliate gear, reference literature, and external resources — everything provisioned for the road ahead." }
+    1: { tag: 'Volume I — The High Forge', subtitle: "Internal calibration. The source of your transformation." },
+    2: { tag: "Volume II — The Wayfarer's Cache", subtitle: "External action. Everything provisioned for the road ahead." }
   };
 
   return (
     <div className="min-h-screen bg-[#0A080D] text-zinc-300 font-sans selection:bg-teal-500/30 overflow-x-hidden relative page-fade-in">
-      <div className="max-w-7xl mx-auto px-6 pt-24 pb-48 relative z-10">
+      <div className="max-w-5xl mx-auto px-6 pt-16 pb-48 relative z-10">
 
         {/* HEADER */}
-        <header className="mb-20 text-left">
-          <div className="flex items-center gap-3 text-teal-500/80 mb-6">
-            <BookOpen size={20} />
+        <header className="mb-16 text-left">
+          <div className="flex items-center gap-3 text-teal-500/80 mb-5">
+            <BookOpen size={18} />
             <span className="text-[10px] font-black uppercase tracking-[0.5em] italic">
               {VOLUME_LABELS[currentVolume].tag}
             </span>
           </div>
-          <h1 className="text-6xl md:text-8xl font-serif italic text-white tracking-tighter leading-none mb-8">
+          <h1 className="text-6xl md:text-8xl font-serif italic text-white tracking-tighter leading-none mb-6">
             The <span className="text-zinc-800 font-sans not-italic font-extralight uppercase">Library</span>
           </h1>
           <p className="max-w-xl text-zinc-500 text-sm leading-relaxed italic border-l border-teal-500/20 pl-6">
@@ -279,43 +479,25 @@ export default function Library({ vault, onRefresh, isAdmin }) {
         </header>
 
         {currentVolume === 1
-          ? <HighForge vault={vault} onRefresh={onRefresh} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} navigate={navigate} handleResourceClick={handleResourceClick} />
-          : <WayfarersCache studyTab={studyTab} setStudyTab={setStudyTab} />
+          ? <HighForge vault={vault} onSync={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} navigate={navigate} />
+          : <WayfarersCache vault={vault} onSync={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} />
         }
-
-        {/* VOLUME NAV */}
-        <div className="fixed bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 z-[110] w-fit px-4 max-w-[calc(100vw-2rem)]">
-          <div className="bg-[#16121D]/90 backdrop-blur-xl rounded-full border border-white/10 p-2 shadow-2xl flex gap-2 overflow-hidden">
-            <button onClick={() => setCurrentVolume(1)}
-              className={`flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 1 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}>
-              <Hammer size={12} /> High Forge
-              {forgeComplete && <CheckCircle2 size={11} className={currentVolume === 1 ? 'text-black/60' : 'text-teal-500'} />}
-            </button>
-            <button onClick={() => setCurrentVolume(2)}
-              className={`flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}>
-              <Package size={12} /> Wayfarer's Cache
-            </button>
-          </div>
-        </div>
       </div>
 
-      {/* LOCK SHEET */}
-      <AnimatePresence>
-        {showLockSheet && (
-          <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowLockSheet(false)} className="fixed inset-0 bg-black/90 backdrop-blur-md z-[120]" />
-            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed bottom-0 left-0 right-0 bg-[#0D0B10] border-t border-white/10 rounded-t-[3rem] z-[130] p-10 shadow-2xl">
-              <div className="max-w-md mx-auto text-center space-y-6">
-                <div className="w-20 h-20 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner"><Lock className="text-purple-400" size={32} /></div>
-                <h3 className="text-3xl font-serif italic text-white">{lockContext.title}</h3>
-                <p className="text-sm text-zinc-500 italic leading-relaxed">{lockContext.desc}</p>
-                <Button onClick={() => navigate('/grove')} className="w-full h-16 bg-purple-600 text-white font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-purple-600/20">View Tiers</Button>
-                <button onClick={() => setShowLockSheet(false)} className="text-[10px] font-black text-zinc-700 hover:text-zinc-500 uppercase tracking-widest mt-4 block mx-auto py-2 transition-colors">Keep Exploring</button>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      {/* VOLUME NAV */}
+      <div className="fixed bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 z-[110] w-fit px-4 max-w-[calc(100vw-2rem)]">
+        <div className="bg-[#16121D]/90 backdrop-blur-xl rounded-full border border-white/10 p-2 shadow-2xl flex gap-2">
+          <button onClick={() => setCurrentVolume(1)}
+            className={`flex items-center gap-2 px-5 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 1 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}>
+            <Hammer size={12} /> High Forge
+            {forgeComplete && <CheckCircle2 size={11} className={currentVolume === 1 ? 'text-black/60' : 'text-teal-500'} />}
+          </button>
+          <button onClick={() => setCurrentVolume(2)}
+            className={`flex items-center gap-2 px-5 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${currentVolume === 2 ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'text-zinc-500 hover:text-zinc-300'}`}>
+            <Package size={12} /> Wayfarer's Cache
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

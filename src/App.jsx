@@ -10,7 +10,7 @@ import Library from './pages/Library';
 import AdminDashboard from './pages/AdminDashboard';
 import Canopy from './pages/Canopy';
 import Contact from './pages/Contact';
-import CulturalFit from './pages/CulturalFit';
+// CulturalFit archived — tools consolidated into Library > High Forge
 import EmbersChat from './pages/EmbersChat';
 
 export default function App() {
@@ -140,9 +140,8 @@ export default function App() {
   const NavLinks = ({ isDesktop = false }) => {
     const mainLinks = [
       { label: 'Hearth', path: '/hearth', icon: Flame },
-      { label: 'Alignment', path: '/culture', icon: Compass },
-      { label: 'Horizon', path: '/horizon', icon: LayoutDashboard },
       { label: 'Library', path: '/library', icon: BookOpen },
+      { label: 'Horizon', path: '/horizon', icon: LayoutDashboard },
       { label: 'Embers', path: '/embers', icon: Activity }
     ];
 
@@ -235,10 +234,10 @@ export default function App() {
         <div className="flex-1 w-full relative">
           <Routes>
             <Route path="/hearth" element={<YourHearth vault={vault} onSync={handleSync} onResumeSync={handleResumeSync} isAdmin={isAdmin} />} />
-            <Route path="/library" element={<Library vault={vault} onRefresh={handleSync} isAdmin={isAdmin} />} />
+            <Route path="/library" element={<Library vault={vault} onRefresh={handleSync} onSync={handleSync} isAdmin={isAdmin} />} />
             <Route path="/horizon" element={<Canopy vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             <Route path="/embers" element={<EmbersChat vault={vault} isAdmin={isAdmin} />} />
-            <Route path="/culture" element={<CulturalFit vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+            {/* /culture archived — identity tools now in /library High Forge */}
             <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             <Route path="/contact" element={<Contact vault={vault} onRefresh={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} />} />
             <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />

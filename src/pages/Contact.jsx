@@ -1,544 +1,241 @@
-import React, { useState, useRef, useEffect } from 'react';
-import {
-  FileText, ChevronDown, Zap, Mail, ExternalLink, DollarSign,
-  Download, Copy, Lock, Fingerprint, ClipboardList, Presentation,
-  Check, Sword, Shield, BookOpen, Upload, CheckCircle2, Loader2,
-  RefreshCw, Trash2
-} from 'lucide-react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  FileText, ExternalLink, Mail, DollarSign, Download,
+  Copy, Check, Presentation, ClipboardList, Package,
+  BookOpen, ChevronDown, Zap, Book, ArrowRight
+} from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
-// --- DATA: THE FULL 50 VERB LEXICON ---
-const powerVerbs = [
-  { legacy: "Taught", horizon: "Facilitated", use: "Standardizing delivery for stakeholders." },
-  { legacy: "Improved", horizon: "Optimized", use: "Refining workflows for maximum efficiency." },
-  { legacy: "Managed", horizon: "Spearheaded", use: "Leading high-stakes initiatives." },
-  { legacy: "Talked to", horizon: "Consulted", use: "Providing expert advisory to teams." },
-  { legacy: "Organized", horizon: "Orchestrated", use: "Handling complex logistics." },
-  { legacy: "Fixed", horizon: "Remediated", use: "Resolving systemic bottlenecks." },
-  { legacy: "Helped", horizon: "Advocated", use: "Championing client-centric solutions." },
-  { legacy: "Worked on", horizon: "Executed", use: "Delivering high-impact project milestones." },
-  { legacy: "Started", horizon: "Pioneered", use: "Launching first-to-market initiatives." },
-  { legacy: "Used", horizon: "Leveraged", use: "Utilizing data-driven insights for growth." },
-  { legacy: "Changed", horizon: "Transformed", use: "Modernizing legacy architectures." },
-  { legacy: "Made", horizon: "Architected", use: "Designing scalable frameworks." },
-  { legacy: "Led", horizon: "Championed", use: "Advocating for cross-functional excellence." },
-  { legacy: "Watched", horizon: "Monitored", use: "Ensuring real-time quality assurance." },
-  { legacy: "Gave", horizon: "Administered", use: "Managing resource allocation." },
-  { legacy: "Finished", horizon: "Finalized", use: "Closing high-value contract lifecycles." },
-  { legacy: "Showed", horizon: "Demonstrated", use: "Presenting proof-of-concept to leadership." },
-  { legacy: "Met", horizon: "Collaborated", use: "Driving consensus across departments." },
-  { legacy: "Kept", horizon: "Maintained", use: "Upholding operational continuity." },
-  { legacy: "Followed", horizon: "Aligned", use: "Synchronizing projects with corporate goals." },
-  { legacy: "Checked", horizon: "Audited", use: "Validating regulatory compliance." },
-  { legacy: "Added", horizon: "Integrated", use: "Consolidating disparate data streams." },
-  { legacy: "Asked", horizon: "Queried", use: "Extracting actionable intelligence." },
-  { legacy: "Built", horizon: "Engineered", use: "Constructing robust technical solutions." },
-  { legacy: "Cleaned", horizon: "Refined", use: "Polishing user-facing deliverables." },
-  { legacy: "Cut", horizon: "Reduced", use: "Mitigating unnecessary overhead." },
-  { legacy: "Decided", horizon: "Determined", use: "Establishing strategic direction." },
-  { legacy: "Explained", horizon: "Articulated", use: "Clarifying complex value propositions." },
-  { legacy: "Found", horizon: "Identified", use: "Detecting market opportunities." },
-  { legacy: "Guarded", horizon: "Secured", use: "Protecting proprietary assets." },
-  { legacy: "Hired", horizon: "Recruited", use: "Acquiring top-tier talent." },
-  { legacy: "Ideas", horizon: "Conceptualized", use: "Ideating next-generation products." },
-  { legacy: "Joined", horizon: "Merged", use: "Unifying organizational silos." },
-  { legacy: "Lowered", horizon: "Decreased", use: "Minimizing churn rates." },
-  { legacy: "Moved", horizon: "Transitioned", use: "Migrating legacy systems to cloud." },
-  { legacy: "Noticed", horizon: "Observed", use: "Analyzing user behavior patterns." },
-  { legacy: "Opened", horizon: "Launched", use: "Deploying market-ready solutions." },
-  { legacy: "Planned", horizon: "Strategized", use: "Mapping long-term growth trajectories." },
-  { legacy: "Quiet", horizon: "Suppressed", use: "Neutralizing security vulnerabilities." },
-  { legacy: "Ran", horizon: "Directed", use: "Governing large-scale operations." },
-  { legacy: "Saved", horizon: "Conserved", use: "Preserving budgetary resources." },
-  { legacy: "Tested", horizon: "Evaluated", use: "Benchmarking performance metrics." },
-  { legacy: "Updated", horizon: "Modernized", use: "Refreshing outdated workflows." },
-  { legacy: "Verified", horizon: "Validated", use: "Confirming data integrity." },
-  { legacy: "Wrote", horizon: "Authored", use: "Producing technical documentation." },
-  { legacy: "Yielded", horizon: "Generated", use: "Producing measurable ROI." },
-  { legacy: "Zoned", horizon: "Segmented", use: "Targeting niche demographics." },
-  { legacy: "Pointed", horizon: "Indicated", use: "Forecasting industry trends." },
-  { legacy: "Simplified", horizon: "Streamlined", use: "Expediting delivery timelines." },
-  { legacy: "Expanded", horizon: "Amplified", use: "Scaling operational capacity." }
-];
+// ── CONSTANTS ────────────────────────────────────────────────────────────────
+const MAIN_TAG = "hearthandh0a6-20";
+const BOOKSHOP_URL = "https://bookshop.org/shop/hearthandhorizon";
 
-const VALUE_DIMENSIONS = [
-  { id: 'reciprocity', label: 'Reciprocity', description: 'Balancing extraction with contribution.' },
-  { id: 'transparency', label: 'Transparency', description: 'Radical honesty in process and pay.' },
-  { id: 'agency', label: 'Personal Agency', description: 'Autonomy over the migration path.' },
-];
+const AMZ_LISTS = [
+  { label: "Horizon Library", id: "3MQJ7V1EQV93P", isFeatured: true },
+  { label: "Curiosity Cabinet", id: "3QPCFSBBZX0LS" },
+  { label: "Analog Wayfarers", id: "WUQBYPAD7FSN" },
+  { label: "Digital Hub", id: "2WS5M8FIVKJBV" },
+  { label: "Ergonomic Sanctuary", id: "2BZUUE2ZJL0EL" }
+].map(l => ({ ...l, url: `https://www.amazon.ca/hz/wishlist/ls/${l.id}?ref_=wl_share&tag=${MAIN_TAG}` }));
 
-const generateDynamicScripts = (vault) => {
+const generateScripts = (vault) => {
   const targetRole = vault?.selectedPath?.domain || "[Target Role]";
+  const topSkill = vault?.skills?.find(s => s.status === 'aligned')?.skill || "[Core Expertise]";
   const salaryRange = vault?.selectedPath?.salary || "[Market Range]";
-  const topSkill = vault?.skills?.find((s) => s.status === 'aligned')?.skill || "[Your Core Expertise]";
   return {
     outreach: [
       { title: "Phase 1: Soft Curiosity", script: `Hi [Name], I've been following your team's growth in ${targetRole}. As I transition my experience in ${topSkill} toward the private sector, I'm curious: what is the one 'unwritten' skill your team values most right now?` },
       { title: "Phase 2: The Value-Add", script: `Hi [Name], I saw the recent news about [Company Project]. It reminded me of a challenge we solved regarding ${topSkill}. Thought this insight might be useful for your team's current trajectory. No reply needed, just wanted to share!` },
       { title: "Phase 3: Sponsorship Request", script: `Hi [Name], your insights have been instrumental. I'm currently architecting my move into ${targetRole} and would value 15 minutes of your time to ask 3 specific questions about the roadmap at [Company].` },
-      { title: "Phase 4: The Closing Loop", script: `Hi [Name], thank you again for the sync. I've applied for the ${targetRole} opening and mentioned our conversation regarding their focus on ${topSkill}. I'd value any internal perspective you're able to share with the hiring lead.` }
+      { title: "Phase 4: The Closing Loop", script: `Hi [Name], thank you again for the sync. I've applied for the ${targetRole} opening and mentioned our conversation regarding ${topSkill}. I'd value any internal perspective you're able to share with the hiring lead.` }
     ],
     salary: [
       { label: "The 'Anchor' Avoidance", script: `I am looking for a total compensation package that reflects the current market value for a ${targetRole} level of responsibility. Given my expertise in ${topSkill}, I am focusing on positions in the ${salaryRange} range. Does that align with your budget?` },
-      { label: "The 'Total Rewards' Pivot", script: `I understand the base is fixed. Given my specialized background in ${topSkill}, can we discuss other levers such as a signing bonus or an accelerated performance review to align the total rewards with the seniority of this ${targetRole} position?` },
+      { label: "The 'Total Rewards' Pivot", script: `I understand the base is fixed. Given my specialized background in ${topSkill}, can we discuss other levers such as a signing bonus or an accelerated performance review to align total rewards with the seniority of this ${targetRole} position?` },
       { label: "The 'Equity/Bonus' Bridge", script: `If we can't meet the ${salaryRange} base today, I'm open to structured performance bonuses or an equity stake that triggers upon reaching [Specific KPI] within my first 6 months.` }
     ]
   };
 };
 
-// ── Resume Forge Sub-Component ───────────────────────────────────────────────
-function ResumeForge({ vault, onSync }) {
-  const [isUploading, setIsUploading] = useState(false);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [toast, setToast] = useState(null);
-
-  const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(null), 3000); };
-
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file || !onSync) return;
-    setIsUploading(true);
-    try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      const resumeData = { name: file.name, url: file_url, lastModified: new Date().toISOString() };
-      
-      setIsAnalyzing(true);
-      let hearthRecord = null;
-      let resonance = null;
-      let bridgeAnalysis = null;
-
-      try {
-        const res = await base44.integrations.Core.InvokeLLM({
-          prompt: `You are Brigid, a career translation AI. Analyze this resume deeply and return a JSON object with:
-1. "horizon_title": A single corporate private-sector title (e.g. "Learning & Development Architect") that best represents the candidate's highest value.
-2. "power_verbs": An array of exactly 3 strong action verbs from the resume, reframed in corporate language (e.g. "Orchestrated", "Championed", "Engineered").
-3. "archetype": A one-sentence identity archetype statement (e.g. "A systems thinker who translates human complexity into organizational clarity.").
-4. "key_strengths": An array of exactly 3 transferable strengths framed as private-sector competencies (e.g. "Crisis Risk Mitigation", "Stakeholder Communication Strategy", "Data-Driven Program Design").
-5. "bridge_analysis": A 2-sentence paragraph summarizing their transferable value in private-sector language.
-Resume file: ${file.name}`,
-          file_urls: [file_url],
-          response_json_schema: {
-            type: "object",
-            properties: {
-              horizon_title: { type: "string" },
-              power_verbs: { type: "array", items: { type: "string" } },
-              archetype: { type: "string" },
-              key_strengths: { type: "array", items: { type: "string" } },
-              bridge_analysis: { type: "string" }
-            }
-          }
-        });
-        hearthRecord = {
-          horizon_title: res.horizon_title,
-          power_verbs: res.power_verbs || [],
-          archetype: res.archetype
-        };
-        resonance = res.key_strengths || [];
-        bridgeAnalysis = res.bridge_analysis;
-      } catch { /* silent fallback */ }
-
-      await base44.auth.updateMe({ resume_metadata: resumeData });
-      onSync({
-        ...vault,
-        resume: resumeData,
-        bridge_analysis: bridgeAnalysis,
-        // The Forge (Active): raw file reference for editing
-        currentDraft: resumeData,
-        // The Hearth (Legacy): preserved original
-        legacyResume: resumeData,
-        // The Hearth (Horizon): analyzed corporate identity
-        hearthRecord,
-        // The Parse: 3 key strengths
-        resonance,
-        // Also surface archetype at top level
-        archetype: hearthRecord?.archetype || vault?.archetype
-      });
-      showToast("Legacy archived & analyzed.");
-    } catch {
-      showToast("Upload failed. Try again.");
-    } finally {
-      setIsUploading(false);
-      setIsAnalyzing(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    await base44.auth.updateMe({ resume_metadata: null });
-    onSync({ ...vault, resume: null, bridge_analysis: null });
-    showToast("Resume cleared.");
-  };
-
+// ── ACCORDION SECTION ─────────────────────────────────────────────────────────
+function CacheSection({ id, title, desc, icon, isOpen, onToggle, children }) {
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col">
+      <button onClick={onToggle}
+        className={`w-full text-left bg-[#16121D]/40 border transition-all duration-300 ${isOpen ? 'rounded-t-[2rem] border-teal-500/30 bg-[#1C1622]' : 'rounded-[2rem] border-white/5 hover:border-white/10'}`}>
+        <div className="p-6 md:p-8 flex items-center justify-between gap-6">
+          <div className="flex items-center gap-5">
+            <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-black/40 border border-white/10">{icon}</div>
+            <div>
+              <h3 className="text-lg font-serif italic text-white">{title}</h3>
+              <p className="text-[10px] text-zinc-600 italic mt-0.5">{desc}</p>
+            </div>
+          </div>
+          <div className={`transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180 text-teal-500' : 'text-zinc-700'}`}>
+            <ChevronDown size={22} strokeWidth={1.5} />
+          </div>
+        </div>
+      </button>
       <AnimatePresence>
-        {toast && (
-          <motion.div initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }}
-            className="px-4 py-2 bg-teal-500/10 border border-teal-500/20 rounded-xl text-[10px] font-black uppercase text-teal-400 tracking-widest text-center">
-            {toast}
+        {isOpen && (
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden bg-[#1C1622] border-x border-b border-teal-500/30 rounded-b-[2rem]">
+            <div className="p-6 md:p-10 pt-4">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {!vault?.resume ? (
-        <label className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-[2rem] bg-black/40 cursor-pointer group transition-all ${isUploading || isAnalyzing ? 'border-teal-500/40' : 'border-white/5 hover:border-teal-500/20'}`}>
-          {isAnalyzing ? (
-            <div className="flex flex-col items-center gap-3">
-              <Loader2 className="text-purple-400 animate-spin" size={24} />
-              <span className="text-[10px] font-black uppercase text-purple-400 animate-pulse">Brigid is reading your legacy...</span>
-            </div>
-          ) : isUploading ? (
-            <div className="flex flex-col items-center gap-3">
-              <Loader2 className="text-teal-500 animate-spin" size={24} />
-              <span className="text-[10px] font-black uppercase text-teal-500 animate-pulse">Archiving...</span>
-            </div>
-          ) : (
-            <>
-              <Upload className="text-zinc-600 mb-2 group-hover:text-teal-500 transition-colors" size={22} />
-              <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest text-center px-4">Upload Resume / CV for Analysis</span>
-              <p className="text-[8px] text-zinc-600 uppercase mt-2 font-black">PDF, DOCX supported · Brigid will translate it</p>
-            </>
-          )}
-          <input type="file" className="hidden" onChange={handleFileChange} disabled={isUploading || isAnalyzing} accept=".pdf,.doc,.docx" />
-        </label>
-      ) : (
-        <div className="p-6 rounded-[2rem] bg-teal-500/5 border border-teal-500/20 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <CheckCircle2 className="text-teal-500" size={20} />
-              <div>
-                <p className="text-[10px] font-black uppercase text-teal-400 tracking-widest">Legacy Secured</p>
-                <p className="text-[9px] text-zinc-500 italic mt-0.5 truncate max-w-[200px]">{vault.resume.name}</p>
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <label className="inline-flex items-center gap-1 text-[8px] font-black uppercase text-zinc-400 hover:text-white cursor-pointer border border-white/10 px-3 py-1.5 rounded-full transition-colors">
-                <RefreshCw size={9} /> Replace
-                <input type="file" className="hidden" onChange={handleFileChange} accept=".pdf,.doc,.docx" />
-              </label>
-              <button onClick={handleDelete} className="inline-flex items-center gap-1 text-[8px] font-black uppercase text-zinc-600 hover:text-rose-400 border border-white/5 px-3 py-1.5 rounded-full transition-colors">
-                <Trash2 size={9} />
-              </button>
-            </div>
-          </div>
-          {vault?.hearthRecord?.horizon_title && (
-            <div className="pt-4 border-t border-white/5 space-y-4">
-              <div>
-                <p className="text-[9px] font-black uppercase tracking-widest text-teal-400/60 mb-1 flex items-center gap-1">
-                  <Zap size={9} /> Horizon Title
-                </p>
-                <p className="text-sm font-serif italic text-teal-300">{vault.hearthRecord.horizon_title}</p>
-              </div>
-              {vault.hearthRecord.power_verbs?.length > 0 && (
-                <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-purple-400/60 mb-2">Power Verbs</p>
-                  <div className="flex flex-wrap gap-2">
-                    {vault.hearthRecord.power_verbs.map((v, i) => (
-                      <span key={i} className="px-3 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-300 text-[10px] font-black rounded-full">{v}</span>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {vault?.resonance?.length > 0 && (
-                <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-amber-400/60 mb-2">Key Strengths</p>
-                  <div className="space-y-1">
-                    {vault.resonance.map((s, i) => (
-                      <div key={i} className="flex items-center gap-2 text-[10px] text-zinc-400 italic">
-                        <span className="text-amber-500/40">✦</span> {s}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {vault?.bridge_analysis && (
-                <div className="pt-2 border-t border-white/5">
-                  <p className="text-[9px] font-black uppercase tracking-widest text-purple-400/60 mb-2 flex items-center gap-1">
-                    <Zap size={9} /> Brigid's Reading
-                  </p>
-                  <p className="text-[11px] text-zinc-400 italic leading-relaxed font-serif">"{vault.bridge_analysis}"</p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }
 
-// ── Ethics Compass Sub-Component ─────────────────────────────────────────────
-function EthicsForge({ vault, onSync }) {
-  const [ethics, setEthics] = useState(vault?.ethics || { reciprocity: 50, transparency: 50, agency: 50 });
-  const [isSaving, setIsSaving] = useState(false);
-  const saveTimer = useRef(null);
-
-  const handleChange = (id, val) => {
-    const next = { ...ethics, [id]: val };
-    setEthics(next);
-    clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(async () => {
-      if (!onSync) return;
-      setIsSaving(true);
-      try {
-        await base44.auth.updateMe({ ethics: next });
-        onSync({ ...vault, ethics: next });
-      } finally {
-        setIsSaving(false);
-      }
-    }, 1500);
-  };
-
-  return (
-    <div className="space-y-10">
-      <p className="text-[10px] text-zinc-600 italic">
-        {isSaving ? <span className="text-teal-500/60">Auto-saving...</span> : "Calibrate what you will and won't compromise. Brigid will use these to filter your Horizon."}
-      </p>
-      {VALUE_DIMENSIONS.map((dim) => (
-        <div key={dim.id} className="space-y-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <span className="text-sm font-black uppercase tracking-widest text-zinc-200 block">{dim.label}</span>
-              <span className="text-[10px] text-zinc-600 italic">{dim.description}</span>
-            </div>
-            <span className="text-xs font-mono text-purple-400 shrink-0">{ethics[dim.id]}%</span>
-          </div>
-          <input
-            type="range" min="0" max="100"
-            value={ethics[dim.id]}
-            onChange={(e) => handleChange(dim.id, Number(e.target.value))}
-            className="w-full h-1.5 bg-white/5 rounded-full appearance-none accent-purple-500 cursor-pointer"
-          />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ── Main Contact Component ────────────────────────────────────────────────────
-const Contact = ({ vault, onSync, onRefresh, isAdmin, isSeedlingPlus }) => {
-  const [expandedCard, setExpandedCard] = useState(null);
-  const [showAllVerbs, setShowAllVerbs] = useState(false);
+// ── MAIN WAYFARER'S CACHE ─────────────────────────────────────────────────────
+export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus }) {
+  const [openSection, setOpenSection] = useState(null);
   const [copiedIndex, setCopiedIndex] = useState(null);
+  const [provisionsTab, setProvisionsTab] = useState('amazon');
+
+  const toggle = (id) => setOpenSection(prev => prev === id ? null : id);
+  const scripts = generateScripts(vault);
 
   const normalizedTier = vault?.tier?.toLowerCase() || 'none';
-  const isMasterAdmin = isAdmin === true || normalizedTier === 'admin' || vault?.standing === 'Founder';
+  const canAccessHighTier = isAdmin || ['steward', 'founding steward', 'hearthkeeper'].includes(normalizedTier);
 
-  const canAccessVerbs = isMasterAdmin || isSeedlingPlus || normalizedTier !== 'none';
-  const canAccessHighTier = isMasterAdmin || ['steward', 'founding steward'].includes(normalizedTier);
-
-  const dynamicContent = generateDynamicScripts(vault);
-
-  const handleCopy = (text, index) => {
+  const handleCopy = (text, idx) => {
     navigator.clipboard.writeText(text);
-    setCopiedIndex(index);
+    setCopiedIndex(idx);
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
-  const trailKitResources = [
-    {
-      id: 'brigid',
-      title: "Brigid's Counsel",
-      desc: "Upload your CV. Let Brigid translate your legacy into market-ready language.",
-      type: "All Pilgrims",
-      icon: <Upload className="text-teal-400" />,
-      isUnlocked: true
-    },
-    {
-      id: 'ethics',
-      title: "Ethics Compass",
-      desc: "Calibrate your non-negotiables. These values will shape your Horizon results.",
-      type: "All Pilgrims",
-      icon: <Shield className="text-purple-400" />,
-      isUnlocked: true
-    },
-    {
-      id: 'verbs',
-      title: "Power Verb Lexicon",
-      desc: "Strategic verbs to replace legacy language.",
-      type: "Seedlings+",
-      icon: <Zap className="text-teal-400" />,
-      isUnlocked: canAccessVerbs
-    },
-    {
-      id: 'ledger',
-      title: "The Identity Ledger",
-      desc: "Workbook & Deck to decouple your worth.",
-      type: "Hearthkeepers+",
-      icon: <Fingerprint className="text-teal-400" />,
-      isUnlocked: canAccessHighTier
-    },
-    {
-      id: 'resume',
-      title: "Trailblazer's Blueprint",
-      desc: "ATS-optimized resume layout.",
-      type: "Hearthkeepers+",
-      icon: <FileText className="text-purple-400" />,
-      isUnlocked: canAccessHighTier
-    },
-    {
-      id: 'outreach',
-      title: "Sponsorship Outreach",
-      desc: "Turn contacts into advocates.",
-      type: "Stewards Only",
-      icon: <Mail className="text-teal-400" />,
-      isUnlocked: canAccessHighTier
-    },
-    {
-      id: 'scripts',
-      title: "Salary Negotiations",
-      desc: "Tactical word-for-word scripts.",
-      type: "Stewards Only",
-      icon: <DollarSign className="text-purple-400" />,
-      isUnlocked: canAccessHighTier
-    }
-  ];
-
   return (
-    <div className="animate-in fade-in duration-700 pb-32 px-4 md:px-0 max-w-4xl mx-auto">
-      <header className="mb-16 border-b border-white/5 pb-16 pt-8">
-        <div className="flex items-center gap-4 mb-6">
-          <Sword size={16} className="text-teal-500/50" />
-          <span className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-500/70 italic">Volume I: The Active Lab</span>
-          {isMasterAdmin && <span className="text-[10px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded bg-teal-500/10 text-teal-400 border border-teal-500/20">Founder Access</span>}
-        </div>
-        <h2 className="text-5xl md:text-7xl text-white font-serif italic mb-6 tracking-tighter">
-          The Identity <span className="text-zinc-800 font-sans not-italic font-extralight uppercase">Smithy</span>
-        </h2>
-        <p className="max-w-xl text-zinc-500 text-sm leading-relaxed font-light italic border-l border-teal-500/20 pl-6">
-          Brigid tends the forge. Upload your legacy, calibrate your values, and receive the language of your next chapter.
+    <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="space-y-16 pb-48">
+
+      {/* NARRATIVE BANNER */}
+      <div className="p-5 rounded-[1.5rem] bg-purple-500/[0.03] border border-purple-500/10 flex items-center gap-4">
+        <Package size={18} className="text-purple-500/60 shrink-0" />
+        <p className="text-[11px] font-serif italic text-purple-200/50 leading-relaxed">
+          "Your provisions are laid out. Reference literature, communication kits, and tools — everything for the road ahead."
         </p>
-      </header>
-
-      <div className="grid grid-cols-1 gap-4">
-        {trailKitResources.map((tool, idx) => {
-          const isOpen = expandedCard === tool.id && tool.isUnlocked;
-          const isLocked = !tool.isUnlocked;
-
-          return (
-            <motion.div key={tool.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.07 }} className="flex flex-col group">
-              <button
-                onClick={() => !isLocked && setExpandedCard(isOpen ? null : tool.id)}
-                className={`relative w-full text-left bg-[#16121D]/40 backdrop-blur-sm border transition-all duration-500 ${
-                  isLocked ? 'opacity-40 cursor-not-allowed border-white/5' : 'cursor-pointer hover:border-teal-500/30'
-                } ${isOpen ? 'rounded-t-[2.5rem] border-teal-500/40 bg-[#1C1622]' : 'rounded-[2.5rem] border-white/5'}`}
-              >
-                <div className="p-8 md:p-10 flex items-center justify-between gap-6">
-                  <div className="flex items-center gap-8">
-                    <div className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl bg-black/40 border border-white/10 group-hover:border-teal-500/30 transition-all">
-                      {isLocked ? <Lock size={20} className="text-zinc-700" /> : tool.icon}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <span className={`text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full border ${isLocked ? 'border-zinc-800 text-zinc-700' : 'border-teal-500/20 text-teal-500/60'}`}>
-                          {tool.type}
-                        </span>
-                      </div>
-                      <h3 className="text-xl md:text-2xl text-white font-serif italic tracking-tight">{tool.title}</h3>
-                      <p className="text-[10px] text-zinc-600 mt-1 italic">{tool.desc}</p>
-                    </div>
-                  </div>
-                  {!isLocked && (
-                    <div className={`transition-transform duration-500 shrink-0 ${isOpen ? 'rotate-180 text-teal-500' : 'text-zinc-700 group-hover:text-white'}`}>
-                      <ChevronDown size={24} strokeWidth={1} />
-                    </div>
-                  )}
-                </div>
-              </button>
-
-              <AnimatePresence>
-                {isOpen && (
-                  <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden bg-[#1C1622] border-x border-b border-teal-500/40 rounded-b-[2.5rem] shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
-                    <div className="p-8 md:p-12 pt-4 space-y-10">
-
-                      {/* BRIGID'S COUNSEL — Resume Upload */}
-                      {tool.id === 'brigid' && (
-                        <ResumeForge vault={vault} onSync={onSync} />
-                      )}
-
-                      {/* ETHICS COMPASS */}
-                      {tool.id === 'ethics' && (
-                        <EthicsForge vault={vault} onSync={onSync} />
-                      )}
-
-                      {/* VERBS CONTENT */}
-                      {tool.id === 'verbs' && (
-                        <div className="space-y-8">
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {(showAllVerbs ? powerVerbs : powerVerbs.slice(0, 9)).map((v, i) => (
-                              <div key={i} className="bg-black/40 border border-white/5 p-6 rounded-2xl hover:border-teal-500/20 transition-all">
-                                <div className="text-[9px] text-zinc-700 line-through uppercase tracking-widest mb-2">{v.legacy}</div>
-                                <div className="text-2xl font-serif italic text-teal-400 mb-4 tracking-tighter">{v.horizon}</div>
-                                <div className="text-[10px] text-zinc-500 italic opacity-80 border-t border-white/5 pt-4">"{v.use}"</div>
-                              </div>
-                            ))}
-                          </div>
-                          <button onClick={(e) => { e.stopPropagation(); setShowAllVerbs(!showAllVerbs); }} className="w-full h-16 border border-dashed border-zinc-800 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600 hover:text-teal-400 hover:border-teal-500/30 transition-all">
-                            {showAllVerbs ? "Collapse Lexicon" : `Reveal Full Lexicon (${powerVerbs.length} Verbs)`}
-                          </button>
-                        </div>
-                      )}
-
-                      {/* LEDGER CONTENT */}
-                      {tool.id === 'ledger' && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <a href="https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link" target="_blank" rel="noopener noreferrer" className="group/btn bg-black/40 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-teal-500/40 transition-all">
-                            <div className="mb-10">
-                              <div className="w-10 h-10 bg-teal-500/10 rounded-xl flex items-center justify-center text-teal-500 mb-6"><Presentation size={20} /></div>
-                              <h4 className="text-white font-serif italic text-xl mb-2 tracking-tight">The Identity Ledger</h4>
-                              <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Master Class Slide Deck</p>
-                            </div>
-                            <div className="w-full h-14 bg-teal-500 text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3">Open Presentation <ExternalLink size={14} /></div>
-                          </a>
-                          <a href="https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="group/btn bg-black/40 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-white/20 transition-all">
-                            <div className="mb-10">
-                              <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-zinc-500 mb-6"><ClipboardList size={20} /></div>
-                              <h4 className="text-white font-serif italic text-xl mb-2 tracking-tight">Implementation Guide</h4>
-                              <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Personal Workbook (PDF)</p>
-                            </div>
-                            <div className="w-full h-14 border border-zinc-800 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3"><Download size={14} /> Download Ledger</div>
-                          </a>
-                        </div>
-                      )}
-
-                      {/* RESUME BLUEPRINT */}
-                      {tool.id === 'resume' && (
-                        <div className="bg-black/40 border border-white/5 p-12 md:p-16 rounded-[3rem] text-center relative overflow-hidden">
-                          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-purple-500/5 blur-[100px]" />
-                          <a href="https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-4 px-12 h-16 bg-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-purple-500 transition-all relative z-10"><FileText size={16} /> Secure Blueprint</a>
-                        </div>
-                      )}
-
-                      {/* OUTREACH & SCRIPTS */}
-                      {(tool.id === 'outreach' || tool.id === 'scripts') && (
-                        <div className="space-y-4">
-                          {(tool.id === 'outreach' ? dynamicContent.outreach : dynamicContent.salary).map((item, i) => (
-                            <div key={i} className="bg-black/40 border border-white/5 p-8 rounded-[2.5rem] group/script relative">
-                              <div className="flex justify-between items-start mb-6">
-                                <div className="flex items-center gap-3">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-teal-500" />
-                                  <h4 className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">{item.title || item.label}</h4>
-                                </div>
-                                <button onClick={() => handleCopy(item.script, `${tool.id}-${i}`)} className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-2xl text-zinc-600 hover:text-teal-400 transition-all">
-                                  {copiedIndex === `${tool.id}-${i}` ? <Check size={18} className="text-teal-500" /> : <Copy size={18} />}
-                                </button>
-                              </div>
-                              <div className="font-mono text-[13px] text-zinc-400 italic leading-relaxed pl-6 border-l border-teal-500/20 py-2">"{item.script}"</div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          );
-        })}
       </div>
-    </div>
-  );
-};
 
-export default Contact;
+      <div className="space-y-3">
+
+        {/* THE IDENTITY LEDGER */}
+        <CacheSection id="ledger" title="The Identity Ledger" desc="Worksheet PDF & Identity Slides — decouple your worth."
+          icon={<ClipboardList className="text-teal-400" size={20} />}
+          isOpen={openSection === 'ledger'} onToggle={() => toggle('ledger')}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a href="https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=drive_link" target="_blank" rel="noopener noreferrer"
+              className="bg-black/40 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-teal-500/30 transition-all">
+              <div className="mb-8">
+                <div className="w-10 h-10 bg-teal-500/10 rounded-xl flex items-center justify-center text-teal-500 mb-5"><Presentation size={18} /></div>
+                <h4 className="text-white font-serif italic text-xl mb-1">Identity Slides</h4>
+                <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Master Class Slide Deck</p>
+              </div>
+              <div className="w-full h-12 bg-teal-500 text-black text-[9px] font-black uppercase tracking-widest rounded-xl flex items-center justify-center gap-2">Open Deck <ExternalLink size={12} /></div>
+            </a>
+            <a href="https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link" target="_blank" rel="noopener noreferrer"
+              className="bg-black/40 border border-white/5 p-8 rounded-[2rem] flex flex-col justify-between hover:border-white/10 transition-all">
+              <div className="mb-8">
+                <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-zinc-500 mb-5"><FileText size={18} /></div>
+                <h4 className="text-white font-serif italic text-xl mb-1">Implementation Worksheet</h4>
+                <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Personal Workbook (PDF)</p>
+              </div>
+              <div className="w-full h-12 border border-zinc-800 text-white text-[9px] font-black uppercase tracking-widest rounded-xl flex items-center justify-center gap-2"><Download size={12} /> Download Worksheet</div>
+            </a>
+          </div>
+        </CacheSection>
+
+        {/* THE BLUEPRINT */}
+        <CacheSection id="blueprint" title="The Blueprint" desc="ATS-optimized resume template — ready to deploy."
+          icon={<FileText className="text-purple-400" size={20} />}
+          isOpen={openSection === 'blueprint'} onToggle={() => toggle('blueprint')}>
+          <div className="bg-black/40 border border-white/5 p-12 rounded-[2.5rem] text-center relative overflow-hidden">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-purple-500/5 blur-[100px]" />
+            <div className="relative z-10 space-y-4">
+              <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-black">Trailblazer's Blueprint</p>
+              <h4 className="text-2xl font-serif italic text-white">ATS-Optimized Resume Template</h4>
+              <a href="https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing" target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-10 h-14 bg-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-500 transition-all">
+                <FileText size={14} /> Secure Blueprint
+              </a>
+            </div>
+          </div>
+        </CacheSection>
+
+        {/* SPONSORSHIP OUTREACH */}
+        <CacheSection id="outreach" title="Sponsorship Outreach" desc="4-phase copy-paste scripts to turn contacts into advocates."
+          icon={<Mail className="text-teal-400" size={20} />}
+          isOpen={openSection === 'outreach'} onToggle={() => toggle('outreach')}>
+          <div className="space-y-4">
+            {scripts.outreach.map((item, i) => (
+              <div key={i} className="bg-black/40 border border-white/5 p-6 rounded-[1.5rem]">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+                    <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">{item.title}</span>
+                  </div>
+                  <button onClick={() => handleCopy(item.script, `out-${i}`)} className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl text-zinc-600 hover:text-teal-400 transition-all">
+                    {copiedIndex === `out-${i}` ? <Check size={14} className="text-teal-500" /> : <Copy size={14} />}
+                  </button>
+                </div>
+                <p className="font-mono text-[12px] text-zinc-400 italic leading-relaxed pl-4 border-l border-teal-500/20">"{item.script}"</p>
+              </div>
+            ))}
+          </div>
+        </CacheSection>
+
+        {/* SALARY NEGOTIATIONS */}
+        <CacheSection id="salary" title="Salary Negotiations" desc="Word-for-word tactical scripts for the negotiation table."
+          icon={<DollarSign className="text-amber-400" size={20} />}
+          isOpen={openSection === 'salary'} onToggle={() => toggle('salary')}>
+          <div className="space-y-4">
+            {scripts.salary.map((item, i) => (
+              <div key={i} className="bg-black/40 border border-white/5 p-6 rounded-[1.5rem]">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                    <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">{item.label}</span>
+                  </div>
+                  <button onClick={() => handleCopy(item.script, `sal-${i}`)} className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl text-zinc-600 hover:text-amber-400 transition-all">
+                    {copiedIndex === `sal-${i}` ? <Check size={14} className="text-amber-500" /> : <Copy size={14} />}
+                  </button>
+                </div>
+                <p className="font-mono text-[12px] text-zinc-400 italic leading-relaxed pl-4 border-l border-amber-500/20">"{item.script}"</p>
+              </div>
+            ))}
+          </div>
+        </CacheSection>
+
+        {/* PROVISIONS FOR THE PATH */}
+        <CacheSection id="provisions" title="Provisions for the Path" desc="Curated gear, tools & literature for the professional migrant."
+          icon={<Package className="text-zinc-400" size={20} />}
+          isOpen={openSection === 'provisions'} onToggle={() => toggle('provisions')}>
+          <div className="space-y-6">
+            {/* Tab switcher */}
+            <div className="flex bg-white/[0.04] border border-white/10 rounded-xl p-1 gap-1 w-fit">
+              {[{ id: 'amazon', label: 'Tools & Tech', icon: Package }, { id: 'books', label: 'The Bookshop', icon: Book }].map(tab => (
+                <button key={tab.id} onClick={() => setProvisionsTab(tab.id)}
+                  className={`flex items-center gap-2 px-5 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${provisionsTab === tab.id ? 'bg-teal-500 text-black' : 'text-zinc-500 hover:text-zinc-300'}`}>
+                  <tab.icon size={12} /> {tab.label}
+                </button>
+              ))}
+            </div>
+            <AnimatePresence mode="wait">
+              {provisionsTab === 'amazon' ? (
+                <motion.div key="amz" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {AMZ_LISTS.map((list) => (
+                      <a key={list.label} href={list.url} target="_blank" rel="noopener noreferrer"
+                        className={`flex items-center justify-between gap-3 bg-black/40 border border-white/10 px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-300 hover:border-teal-500/40 hover:text-teal-400 transition-all ${list.isFeatured ? 'sm:col-span-2 border-teal-500/30 bg-teal-500/5 py-5' : ''}`}>
+                        <span className="flex items-center gap-2">
+                          {list.isFeatured ? <BookOpen size={13} className="text-teal-500" /> : <Package size={11} className="text-zinc-500" />}
+                          {list.label}
+                        </span>
+                        <ExternalLink size={11} />
+                      </a>
+                    ))}
+                  </div>
+                  <p className="text-[8px] text-zinc-700 uppercase italic font-bold tracking-widest">As an Amazon Associate I earn from qualifying purchases.</p>
+                </motion.div>
+              ) : (
+                <motion.div key="books" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
+                  <p className="text-zinc-500 italic text-sm">Literature and deep-dives into industry culture, ethics, and transition strategy.</p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <a href={BOOKSHOP_URL} target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-3 bg-purple-600 text-white px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-500 transition-all">
+                      Bookshop.org <ArrowRight size={13} />
+                    </a>
+                    <button disabled className="inline-flex items-center gap-3 bg-white/5 border border-white/10 text-zinc-600 px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest opacity-50 cursor-not-allowed">
+                      Indigo — Coming Soon
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </CacheSection>
+      </div>
+    </motion.div>
+  );
+}
