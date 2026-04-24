@@ -157,25 +157,72 @@ function ResonanceDisplay({ vault, navigate }) {
           </div>
         )}
 
-        {/* Roots of the Path — legacy resume reference */}
-        {legacyResume && (
-          <div className="pt-3 border-t border-white/5 space-y-2">
-            <p className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 flex items-center gap-1">
-              <Mountain size={9} /> Roots of the Path
-            </p>
-            <div className="flex items-center gap-2 text-[9px] text-zinc-600 font-black uppercase tracking-widest">
-              <CheckCircle2 size={10} className="text-teal-500/60 shrink-0" />
-              <span className="truncate text-zinc-500">{legacyResume.name}</span>
-            </div>
-            {vault?.bridge_analysis && (
-              <p className="text-[10px] text-zinc-600 italic leading-relaxed font-serif border-l border-white/5 pl-3">
-                "{vault.bridge_analysis.slice(0, 120)}{vault.bridge_analysis.length > 120 ? '…' : ''}"
-              </p>
-            )}
-          </div>
-        )}
+        {/* Roots of the Path — Tome/Scroll */}
+        {legacyResume && <TomeDisplay legacyResume={legacyResume} bridgeAnalysis={vault?.bridge_analysis} />}
       </div>
     </motion.div>
+  );
+}
+
+// ── TOME DISPLAY ─────────────────────────────────────────────────────────────
+function TomeDisplay({ legacyResume, bridgeAnalysis }) {
+  const [isTomeOpen, setIsTomeOpen] = useState(false);
+  const rawText = legacyResume?.rawText || legacyResume?.text || bridgeAnalysis || null;
+
+  return (
+    <div className="pt-3 border-t border-white/5 space-y-3">
+      <p className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 flex items-center gap-1">
+        <Mountain size={9} /> Roots of the Path
+      </p>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 text-[9px] text-zinc-500 font-black uppercase tracking-widest min-w-0">
+          <CheckCircle2 size={10} className="text-teal-500/60 shrink-0" />
+          <span className="truncate">{legacyResume.name || 'Legacy Resume'}</span>
+        </div>
+        <button
+          onClick={() => setIsTomeOpen(o => !o)}
+          className="shrink-0 text-[9px] font-black uppercase tracking-widest text-zinc-600 hover:text-teal-400 transition-colors border border-white/5 rounded-lg px-3 py-1.5"
+        >
+          {isTomeOpen ? 'Close Tome' : 'Review the Records'}
+        </button>
+      </div>
+
+      <AnimatePresence>
+        {isTomeOpen ? (
+          <motion.div
+            key="open"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="bg-[#1A1625]/40 border border-zinc-800 rounded-2xl p-4">
+              {rawText ? (
+                <div className="max-h-40 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent pr-1">
+                  <p className="font-serif text-[11px] text-zinc-400 leading-relaxed italic whitespace-pre-wrap">
+                    {rawText}
+                  </p>
+                </div>
+              ) : (
+                <p className="font-serif text-[11px] text-zinc-600 italic text-center py-4">
+                  "The full manuscript rests within the Forge."
+                </p>
+              )}
+            </div>
+          </motion.div>
+        ) : (
+          <motion.p
+            key="closed"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="text-[10px] text-zinc-700 italic font-serif pl-1"
+          >
+            Your legacy is secured.
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -210,7 +257,7 @@ const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9G
 
 function StrategyProgress({ vault, navigate }) {
   const steps = [
-    { label: 'Resume Uploaded', done: !!vault?.resume },
+    { label: 'Roots of the Path', done: !!(vault?.legacyResume || vault?.resume) },
     { label: 'Horizon Title Set', done: !!vault?.hearthRecord?.horizon_title },
     { label: 'Ethics Calibrated', done: !!vault?.ethics },
     { label: 'Lexicon Forged', done: !!(vault?.lexicon?.length > 0 || vault?.hearthRecord?.power_verbs?.length > 0) },
