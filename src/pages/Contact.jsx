@@ -104,17 +104,56 @@ function ResumeForge({ vault, onSync }) {
       const resumeData = { name: file.name, url: file_url, lastModified: new Date().toISOString() };
       
       setIsAnalyzing(true);
+      let hearthRecord = null;
+      let resonance = null;
       let bridgeAnalysis = null;
+
       try {
         const res = await base44.integrations.Core.InvokeLLM({
-          prompt: `Analyze this resume and extract 3 transferable skills framed in private-sector language. Focus on outcomes. Resume file: ${file.name}. Return a brief paragraph of 2-3 sentences.`,
-          file_urls: [file_url]
+          prompt: `You are Brigid, a career translation AI. Analyze this resume deeply and return a JSON object with:
+1. "horizon_title": A single corporate private-sector title (e.g. "Learning & Development Architect") that best represents the candidate's highest value.
+2. "power_verbs": An array of exactly 3 strong action verbs from the resume, reframed in corporate language (e.g. "Orchestrated", "Championed", "Engineered").
+3. "archetype": A one-sentence identity archetype statement (e.g. "A systems thinker who translates human complexity into organizational clarity.").
+4. "key_strengths": An array of exactly 3 transferable strengths framed as private-sector competencies (e.g. "Crisis Risk Mitigation", "Stakeholder Communication Strategy", "Data-Driven Program Design").
+5. "bridge_analysis": A 2-sentence paragraph summarizing their transferable value in private-sector language.
+Resume file: ${file.name}`,
+          file_urls: [file_url],
+          response_json_schema: {
+            type: "object",
+            properties: {
+              horizon_title: { type: "string" },
+              power_verbs: { type: "array", items: { type: "string" } },
+              archetype: { type: "string" },
+              key_strengths: { type: "array", items: { type: "string" } },
+              bridge_analysis: { type: "string" }
+            }
+          }
         });
-        bridgeAnalysis = res;
+        hearthRecord = {
+          horizon_title: res.horizon_title,
+          power_verbs: res.power_verbs || [],
+          archetype: res.archetype
+        };
+        resonance = res.key_strengths || [];
+        bridgeAnalysis = res.bridge_analysis;
       } catch { /* silent fallback */ }
 
       await base44.auth.updateMe({ resume_metadata: resumeData });
-      onSync({ ...vault, resume: resumeData, bridge_analysis: bridgeAnalysis });
+      onSync({
+        ...vault,
+        resume: resumeData,
+        bridge_analysis: bridgeAnalysis,
+        // The Forge (Active): raw file reference for editing
+        currentDraft: resumeData,
+        // The Hearth (Legacy): preserved original
+        legacyResume: resumeData,
+        // The Hearth (Horizon): analyzed corporate identity
+        hearthRecord,
+        // The Parse: 3 key strengths
+        resonance,
+        // Also surface archetype at top level
+        archetype: hearthRecord?.archetype || vault?.archetype
+      });
       showToast("Legacy archived & analyzed.");
     } catch {
       showToast("Upload failed. Try again.");
@@ -182,12 +221,44 @@ function ResumeForge({ vault, onSync }) {
               </button>
             </div>
           </div>
-          {vault?.bridge_analysis && (
-            <div className="pt-4 border-t border-white/5">
-              <p className="text-[9px] font-black uppercase tracking-widest text-purple-400/60 mb-2 flex items-center gap-1">
-                <Zap size={9} /> Brigid's Reading
-              </p>
-              <p className="text-[11px] text-zinc-400 italic leading-relaxed font-serif">"{vault.bridge_analysis}"</p>
+          {vault?.hearthRecord?.horizon_title && (
+            <div className="pt-4 border-t border-white/5 space-y-4">
+              <div>
+                <p className="text-[9px] font-black uppercase tracking-widest text-teal-400/60 mb-1 flex items-center gap-1">
+                  <Zap size={9} /> Horizon Title
+                </p>
+                <p className="text-sm font-serif italic text-teal-300">{vault.hearthRecord.horizon_title}</p>
+              </div>
+              {vault.hearthRecord.power_verbs?.length > 0 && (
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-purple-400/60 mb-2">Power Verbs</p>
+                  <div className="flex flex-wrap gap-2">
+                    {vault.hearthRecord.power_verbs.map((v, i) => (
+                      <span key={i} className="px-3 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-300 text-[10px] font-black rounded-full">{v}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {vault?.resonance?.length > 0 && (
+                <div>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-amber-400/60 mb-2">Key Strengths</p>
+                  <div className="space-y-1">
+                    {vault.resonance.map((s, i) => (
+                      <div key={i} className="flex items-center gap-2 text-[10px] text-zinc-400 italic">
+                        <span className="text-amber-500/40">✦</span> {s}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {vault?.bridge_analysis && (
+                <div className="pt-2 border-t border-white/5">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-purple-400/60 mb-2 flex items-center gap-1">
+                    <Zap size={9} /> Brigid's Reading
+                  </p>
+                  <p className="text-[11px] text-zinc-400 italic leading-relaxed font-serif">"{vault.bridge_analysis}"</p>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -34,7 +34,11 @@ export default function App() {
       tier: "none",
       email: null,
       lastSync: null,
-      lexicon: [] // Initialize empty lexicon
+      lexicon: [],
+      currentDraft: null,
+      legacyResume: null,
+      hearthRecord: null,
+      resonance: []
     };
   });
 

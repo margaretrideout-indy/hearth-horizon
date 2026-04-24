@@ -5,7 +5,7 @@ import {
   Flame, CheckCircle2, RefreshCw, Activity, History,
   Lock, Trash2, AlertTriangle, X, Compass,
   Loader2, Circle, ArrowRight, FlaskConical, Zap,
-  RotateCcw, Mountain, Hammer, Sparkles, Users
+  RotateCcw, Mountain, Hammer, Sparkles, Users, ExternalLink
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -43,16 +43,19 @@ function ResonanceDisplay({ vault, navigate }) {
   const hasLexicon = vault?.lexicon && vault.lexicon.length > 0;
   const hasResume = !!vault?.resume;
   const hasEthics = !!vault?.ethics;
-  const archetype = vault?.archetype || (hasResume ? "The Systems Oracle" : null);
-  const topVerbs = vault?.lexicon?.slice(0, 3) || [];
+  const hasHearthRecord = !!vault?.hearthRecord;
+  const horizonTitle = vault?.hearthRecord?.horizon_title || vault?.archetype;
+  const powerVerbs = vault?.hearthRecord?.power_verbs || [];
+  const keyStrengths = vault?.resonance || [];
+  const legacyResume = vault?.legacyResume;
+  const topLexiconVerbs = vault?.lexicon?.slice(0, 3) || [];
 
-  const isFoggy = !hasLexicon && !hasResume && !hasEthics && !archetype;
+  const isFoggy = !hasLexicon && !hasResume && !hasEthics && !horizonTitle;
 
   if (isFoggy) {
     return (
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
         className="bg-gradient-to-br from-[#0F0D16] to-[#08070B] border border-white/5 rounded-[2.5rem] p-8 space-y-6 text-center">
-        {/* Pulsing glow where archetype badge will be */}
         <div className="relative mx-auto w-fit">
           <motion.div
             animate={{ opacity: [0.3, 0.7, 0.3], scale: [0.97, 1.03, 0.97] }}
@@ -82,27 +85,56 @@ function ResonanceDisplay({ vault, navigate }) {
       <div className="absolute -bottom-16 -left-16 w-36 h-36 bg-purple-500/5 blur-[60px] rounded-full pointer-events-none" />
 
       <div className="relative z-10 space-y-6">
-        {/* Archetype */}
-        <div>
-          <p className="text-[9px] font-black uppercase tracking-[0.4em] text-teal-500/50 mb-2 flex items-center gap-1">
-            <FlaskConical size={9} /> Current Archetype
-          </p>
-          {archetype ? (
-            <h3 className="text-2xl font-serif italic text-white leading-tight">{archetype}</h3>
-          ) : (
-            <p className="text-sm font-serif italic text-zinc-600">Identity forming...</p>
-          )}
-        </div>
 
-        {/* Lexicon Mirror */}
-        {topVerbs.length > 0 && (
+        {/* Horizon Title (from Brigid's analysis) */}
+        {horizonTitle && (
+          <div>
+            <p className="text-[9px] font-black uppercase tracking-[0.4em] text-teal-500/50 mb-2 flex items-center gap-1">
+              <FlaskConical size={9} /> Horizon Title
+            </p>
+            <h3 className="text-2xl font-serif italic text-white leading-tight">{horizonTitle}</h3>
+          </div>
+        )}
+
+        {/* Power Verbs (from Brigid's analysis) */}
+        {powerVerbs.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-[9px] font-black uppercase tracking-[0.4em] text-purple-500/50 flex items-center gap-1">
+              <Zap size={9} /> Power Verbs
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {powerVerbs.map((v, i) => (
+                <span key={i} className="px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 text-purple-300 text-[10px] font-black rounded-full">{v}</span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Key Strengths / Resonance */}
+        {keyStrengths.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-[9px] font-black uppercase tracking-[0.4em] text-amber-500/50 flex items-center gap-1">
+              <Sparkles size={9} /> Key Strengths
+            </p>
+            <div className="space-y-1.5">
+              {keyStrengths.map((s, i) => (
+                <div key={i} className="flex items-center gap-2 text-[10px] text-zinc-400 italic">
+                  <span className="text-amber-500/40">✦</span> {s}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Fallback: Lexicon Mirror if no hearthRecord */}
+        {!hasHearthRecord && topLexiconVerbs.length > 0 && (
           <div className="space-y-3">
             <p className="text-[9px] font-black uppercase tracking-[0.4em] text-purple-500/50 flex items-center gap-1">
               <Zap size={9} /> Lexicon Mirror
             </p>
             <div className="space-y-2">
-              {topVerbs.map((phrase, i) => (
-                <div key={i} className="flex items-start gap-3 p-3 bg-teal-950/30 border border-teal-500/10 rounded-xl shadow-[0_0_12px_rgba(20,184,166,0.04)] hover:shadow-[0_0_20px_rgba(20,184,166,0.08)] transition-shadow">
+              {topLexiconVerbs.map((phrase, i) => (
+                <div key={i} className="flex items-start gap-3 p-3 bg-teal-950/30 border border-teal-500/10 rounded-xl transition-shadow">
                   <span className="text-[9px] font-black text-teal-500/30 mt-0.5 shrink-0">✦</span>
                   <p className="font-mono text-[11px] text-teal-300 leading-snug italic">
                     {phrase.length > 45 ? phrase.slice(0, 45) + '…' : phrase}
@@ -125,11 +157,21 @@ function ResonanceDisplay({ vault, navigate }) {
           </div>
         )}
 
-        {/* Resume status */}
-        {hasResume && (
-          <div className="flex items-center gap-2 text-[9px] text-zinc-600 font-black uppercase tracking-widest pt-1 border-t border-white/5">
-            <CheckCircle2 size={10} className="text-teal-500/60" />
-            <span>Legacy archived: <span className="text-zinc-500">{vault.resume.name}</span></span>
+        {/* Roots of the Path — legacy resume reference */}
+        {legacyResume && (
+          <div className="pt-3 border-t border-white/5 space-y-2">
+            <p className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 flex items-center gap-1">
+              <Mountain size={9} /> Roots of the Path
+            </p>
+            <div className="flex items-center gap-2 text-[9px] text-zinc-600 font-black uppercase tracking-widest">
+              <CheckCircle2 size={10} className="text-teal-500/60 shrink-0" />
+              <span className="truncate text-zinc-500">{legacyResume.name}</span>
+            </div>
+            {vault?.bridge_analysis && (
+              <p className="text-[10px] text-zinc-600 italic leading-relaxed font-serif border-l border-white/5 pl-3">
+                "{vault.bridge_analysis.slice(0, 120)}{vault.bridge_analysis.length > 120 ? '…' : ''}"
+              </p>
+            )}
           </div>
         )}
       </div>
@@ -160,6 +202,56 @@ function EmbersIndicator({ navigate }) {
       </div>
       <Flame size={14} className="text-orange-500/40 group-hover:text-orange-400 transition-colors" />
     </button>
+  );
+}
+
+// ── STRATEGY PROGRESS ────────────────────────────────────────────────────────
+const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/edit?slide=id.p1#slide=id.p1";
+
+function StrategyProgress({ vault, navigate }) {
+  const steps = [
+    { label: 'Resume Uploaded', done: !!vault?.resume },
+    { label: 'Horizon Title Set', done: !!vault?.hearthRecord?.horizon_title },
+    { label: 'Ethics Calibrated', done: !!vault?.ethics },
+    { label: 'Lexicon Forged', done: !!(vault?.lexicon?.length > 0 || vault?.hearthRecord?.power_verbs?.length > 0) },
+  ];
+  const completed = steps.filter(s => s.done).length;
+  const pct = Math.round((completed / steps.length) * 100);
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+      className="p-6 bg-[#0E0B16] border border-teal-500/10 rounded-[2rem] space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Compass size={13} className="text-teal-500/60" />
+          <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500">Strategy Progress</span>
+        </div>
+        <span className="text-[9px] font-black tabular-nums text-teal-400">{pct}%</span>
+      </div>
+      <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+        <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }}
+          className="h-full rounded-full bg-gradient-to-r from-teal-500 to-purple-500" />
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        {steps.map((step, i) => (
+          <div key={i} className={`flex items-center gap-2 text-[9px] font-black uppercase tracking-wider ${step.done ? 'text-teal-400' : 'text-zinc-700'}`}>
+            <CheckCircle2 size={10} className={step.done ? 'text-teal-400' : 'text-zinc-700'} />
+            {step.label}
+          </div>
+        ))}
+      </div>
+      {pct === 100 ? (
+        <a href={STRATEGY_DECK_URL} target="_blank" rel="noopener noreferrer"
+          className="w-full flex items-center justify-center gap-2 py-3 bg-teal-500 text-black text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all">
+          Open Master Blueprint <ExternalLink size={10} />
+        </a>
+      ) : (
+        <button onClick={() => navigate('/library')}
+          className="w-full py-3 text-[9px] font-black uppercase tracking-widest text-zinc-600 hover:text-teal-400 transition-colors border border-white/5 rounded-xl">
+          Continue in the Forge →
+        </button>
+      )}
+    </motion.div>
   );
 }
 
@@ -454,6 +546,9 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
               <ArrowRight size={13} className="text-purple-400/30 group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
             </button>
           </motion.div>
+
+          {/* Strategy Progress */}
+          <StrategyProgress vault={vault} navigate={navigate} />
 
           {/* Alignment Roadmap */}
           <AlignmentRoadmap vault={vault} navigate={navigate} onSync={onSync} triggerToast={triggerToast} />
