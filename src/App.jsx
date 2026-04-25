@@ -207,7 +207,7 @@ export default function App() {
             >
               <tab.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
               {/* Labels only show on screens larger than mobile (sm:block) */}
-              <span className="hidden sm:block text-[8px] font-black uppercase tracking-tighter mt-1">
+              <span className="hidden text-[8px] font-black uppercase tracking-tighter mt-1">
                 {tab.label}
               </span>
             </button>
