@@ -1,12 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import SanctuaryTransition from '../components/SanctuaryTransition';
 import {
   Flame, Heart, Sprout, Globe, ShieldCheck, Check, Leaf, Mountain, UserPlus,
   Smartphone, Share2, PlusSquare, Sparkles, Send, Zap, FileText, Map, MessageSquare, Briefcase,
-  MoreVertical, Star, Library as LibraryIcon, Compass, ArrowRight, LogIn, ChevronRight,
-  Coffee
+  MoreVertical, Star, Library as LibraryIcon, Compass, ArrowRight, LogIn, ChevronRight
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -147,35 +146,25 @@ function BrigidSampler({ onSave }) {
               >
                 <div className="flex items-center gap-3">
                   <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
-                  <span className="text-[8px] font-black uppercase tracking-0.4em text-purple-500/40">Brigid's Reading</span>
+                  <span className="text-[8px] font-black uppercase tracking-widest text-purple-500/40">Brigid's Reading</span>
                   <div className="h-[1px] flex-1 bg-gradient-to-l from-purple-500/20 to-transparent" />
                 </div>
                 <motion.div
                   className={`p-5 rounded-2xl border ${isPoetic ? 'bg-amber-500/[0.03] border-amber-500/20' : 'bg-purple-500/[0.04] border-purple-500/20'}`}
-                  animate={{ backgroundOpacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                 >
                   <p className={`text-[9px] font-black uppercase tracking-widest mb-2 ${isPoetic ? 'text-amber-500/50' : 'text-purple-500/50'}`}>
                     {isPoetic ? "Brigid Speaks" : "Your Horizon Title"}
                   </p>
                   <motion.p
                     key={horizonTitle}
-                    initial={{ opacity: 0, y: 4, filter: 'blur(6px)' }}
-                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    initial={{ opacity: 0, y: 4, filter: 'blur(6px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                     className={`font-serif italic leading-snug ${isPoetic ? 'text-base text-amber-200/80' : 'text-xl text-white'}`}
                   >
                     {isPoetic ? `"${horizonTitle}"` : horizonTitle}
                   </motion.p>
                 </motion.div>
-                {!isPoetic && (
-                  <p className="text-[10px] text-zinc-600 italic text-center">
-                    Ready to deepen this translation? Choose your path below.
-                  </p>
-                )}
                 {!isPoetic && (!saved ? (
-                  <button onClick={handleSave}
-                    className="flex items-center gap-2 mx-auto px-6 py-2.5 bg-purple-500/20 border border-purple-500/30 text-purple-400 text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-purple-500/30 transition-all">
+                  <button onClick={handleSave} className="flex items-center gap-2 mx-auto px-6 py-2.5 bg-purple-500/20 border border-purple-500/30 text-purple-400 text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-purple-500/30 transition-all">
                     <Check size={12} /> Save to My Hearth
                   </button>
                 ) : (
@@ -199,75 +188,22 @@ const GroveTiers = ({ vault, onSync }) => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [showTransition, setShowTransition] = useState(false);
 
-  // KO-FI WIDGET INJECTION
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://storage.ko-fi.com/cdn/widget/Widget_2.js';
-    script.async = true;
-    script.onload = () => {
-      if (window.kofiwidget2) {
-        window.kofiwidget2.init('Support the Smithy', '#72a4f2', 'I2I51EFK95');
-        window.kofiwidget2.draw();
-      }
-    };
-    document.body.appendChild(script);
-
-    return () => {
-      const kofiWidget = document.getElementById('kofi-widget-overlay');
-      if (kofiWidget) kofiWidget.remove();
-      if (document.body.contains(script)) document.body.removeChild(script);
-    };
-  }, []);
-
   const handleBrigidSave = (legacyTitle, horizonTitle) => {
     onSync({ ...vault, archetype: horizonTitle, legacy_title: legacyTitle });
   };
 
-  const navigateToHearth = () => {
-    setShowTransition(true);
-  };
-
   const hasSession = vault?.isAligned || !!localStorage.getItem('base44_auth_session');
-
-  const handleMemberLogin = () => {
-    base44.auth.redirectToLogin('/hearth');
-  };
 
   const handleSeedling = () => {
     onSync({ tier: 'Seedling' });
-    if (hasSession) {
-      navigateToHearth();
-    } else {
-      base44.auth.redirectToLogin('/hearth');
-    }
+    if (hasSession) { setShowTransition(true); } 
+    else { base44.auth.redirectToLogin('/hearth'); }
   };
 
   const handlePaid = (stripeUrl, tierName) => {
     onSync({ tier: tierName });
-    if (hasSession) {
-      navigateToHearth();
-    } else {
-      window.location.href = stripeUrl;
-    }
-  };
-
-  const handleRequestSeat = async () => {
-    if (!hasSession) {
-      base44.auth.redirectToLogin('/grove');
-      return;
-    }
-    setRequestStatus('sending');
-    try {
-      const user = await base44.auth.me();
-      await base44.entities.VoucherPool.create({
-        claimed_by: user.email,
-        status: 'available'
-      });
-      onSync({ tier: 'Seedling' });
-      setRequestStatus('success');
-    } catch (error) {
-      setRequestStatus('error');
-    }
+    if (hasSession) { setShowTransition(true); } 
+    else { window.location.href = stripeUrl; }
   };
 
   const handleContactSubmit = async (e) => {
@@ -275,10 +211,7 @@ const GroveTiers = ({ vault, onSync }) => {
     setContactStatus('sending');
     try {
       await base44.entities.SeatRequest.create({
-        name: formData.name,
-        email: formData.email,
-        field: 'Other',
-        status: 'pending'
+        name: formData.name, email: formData.email, field: 'Other', status: 'pending'
       });
       setContactStatus('success');
     } catch (error) {
@@ -288,48 +221,10 @@ const GroveTiers = ({ vault, onSync }) => {
   };
 
   const tiers = [
-    {
-      name: "Seedling",
-      price: "FREE",
-      period: "ALWAYS OPEN",
-      desc: "A quiet space for those beginning to look toward a new horizon.",
-      features: ["Seedling Badge", "1 Horizon Analysis/Mo", "Horizon Job Board", "Embers Community Chat", "Public Library"],
-      button: "GET STARTED",
-      onClick: handleSeedling,
-      icon: <Leaf className="w-5 h-5 text-teal-400" />
-    },
-    {
-      name: "Hearthkeeper",
-      price: "$3",
-      period: "$5/MO AFTER FIRST MONTH",
-      desc: "Removing the noise to keep your creative fires burning bright.",
-      features: ["Everything in Seedling, plus:", "Hearthkeeper Badge", "Unlimited Hearth Syncing", "Full Ecosystem Alignment", "Unlimited Horizon Analysis"],
-      button: "SELECT PLAN",
-      onClick: () => handlePaid('https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03', 'Hearthkeeper'),
-      highlight: true,
-      icon: <Flame className="w-5 h-5 text-amber-400" />
-    },
-    {
-      name: "Steward",
-      price: "$5",
-      period: "$8/MO AFTER FIRST MONTH",
-      desc: "Full oversight and total access to the entire landscape.",
-      features: ["Everything in Hearthkeeper, plus:", "Founding Forest Badge", "Scholarship Sponsorship", "Priority Resource Requests"],
-      button: "SELECT PLAN",
-      onClick: () => handlePaid('https://buy.stripe.com/aFafZhfG8aebdqI4hIdAk04', 'Steward'),
-      icon: <Mountain className="w-5 h-5 text-teal-400" />
-    },
-    {
-      name: "Scholarship",
-      price: "WAITLIST",
-      period: "EQUITY BASIS",
-      desc: "For those in deep transition seeking support and sanctuary.",
-      features: ["Full Hearthkeeper Access", "Community Support", "Direct Navigation Aid"],
-      button: requestStatus === 'success' ? "REQUESTED" : "REQUEST SEAT",
-      onClick: handleRequestSeat,
-      isSpecial: true,
-      icon: <UserPlus className="w-5 h-5 text-purple-400" />
-    }
+    { name: "Seedling", price: "FREE", period: "ALWAYS OPEN", desc: "A quiet space for those beginning to look toward a new horizon.", features: ["Seedling Badge", "1 Horizon Analysis/Mo", "Horizon Job Board", "Embers Community Chat", "Public Library"], button: "GET STARTED", onClick: handleSeedling, icon: <Leaf className="w-5 h-5 text-teal-400" /> },
+    { name: "Hearthkeeper", price: "$3", period: "$5/MO AFTER FIRST MONTH", desc: "Removing the noise to keep your creative fires burning bright.", features: ["Everything in Seedling, plus:", "Hearthkeeper Badge", "Unlimited Hearth Syncing", "Full Ecosystem Alignment", "Unlimited Horizon Analysis"], button: "SELECT PLAN", onClick: () => handlePaid('https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03', 'Hearthkeeper'), highlight: true, icon: <Flame className="w-5 h-5 text-amber-400" /> },
+    { name: "Steward", price: "$5", period: "$8/MO AFTER FIRST MONTH", desc: "Full oversight and total access to the entire landscape.", features: ["Everything in Hearthkeeper, plus:", "Founding Forest Badge", "Scholarship Sponsorship", "Priority Resource Requests"], button: "SELECT PLAN", onClick: () => handlePaid('https://buy.stripe.com/aFafZhfG8aebdqI4hIdAk04', 'Steward'), icon: <Mountain className="w-5 h-5 text-teal-400" /> },
+    { name: "Scholarship", price: "WAITLIST", period: "EQUITY BASIS", desc: "For those in deep transition seeking support and sanctuary.", features: ["Full Hearthkeeper Access", "Community Support", "Direct Navigation Aid"], button: requestStatus === 'success' ? "REQUESTED" : "REQUEST SEAT", onClick: () => {}, isSpecial: true, icon: <UserPlus className="w-5 h-5 text-purple-400" /> }
   ];
 
   return (
@@ -339,6 +234,7 @@ const GroveTiers = ({ vault, onSync }) => {
       </AnimatePresence>
       <div className="absolute top-0 left-0 w-full h-[100vh] bg-[radial-gradient(circle_at_50%_0%,rgba(20,184,166,0.1),rgba(147,51,234,0.03)_40%,transparent_80%)] pointer-events-none" />
 
+      {/* NAVIGATION */}
       <nav className="fixed top-0 left-0 w-full z-[100] bg-[#0A080D]/90 backdrop-blur-xl border-b border-white/5" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 md:gap-6">
@@ -351,7 +247,7 @@ const GroveTiers = ({ vault, onSync }) => {
               <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">Horizon</span>
             </button>
           </div>
-          <button onClick={handleMemberLogin} className="flex items-center gap-2 text-white bg-white/5 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/10 hover:border-teal-500/50 transition-all">
+          <button onClick={() => base44.auth.redirectToLogin('/hearth')} className="flex items-center gap-2 text-white bg-white/5 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/10 hover:border-teal-500/50 transition-all">
             <LogIn size={14} className="text-teal-400" />
             <span className="text-[10px] font-black uppercase tracking-widest">Log In</span>
           </button>
@@ -363,7 +259,7 @@ const GroveTiers = ({ vault, onSync }) => {
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-500/5 border border-teal-500/10 mb-8">
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">The Hearth & Horizon Sanctuary</span>
           </motion.div>
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif italic text-white mb-12 tracking-tight leading-tight max-w-4xl mx-auto">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif italic text-white mb-12 tracking-tight leading-tight max-w-4xl mx-auto text-center">
             Transition with <span className="text-teal-400">Intention.</span>
           </h1>
           <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} className="max-w-4xl mx-auto p-8 md:p-16 rounded-[2.5rem] bg-gradient-to-b from-[#110E16] to-[#0D0B12] border border-white/5 shadow-2xl relative overflow-hidden text-center">
@@ -377,23 +273,7 @@ const GroveTiers = ({ vault, onSync }) => {
           </motion.div>
         </header>
 
-        {/* FEATURES GRID */}
-        <section className="mb-32">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { icon: Zap, title: "The Reframing Engine", color: "text-teal-400", text: "Flip your current experience into the outcome-based language recruiters value most." },
-              { icon: FileText, title: "Wayfarer's Tools", color: "text-purple-400", text: "ATS-optimized resume templates and salary negotiation scripts designed for the Canadian market." },
-              { icon: Map, title: "Market Topography", color: "text-amber-400", text: "Navigate RRSP matching, vacation negotiation, and provincial credential translation." }
-            ].map((item, i) => (
-              <div key={i} className="p-8 rounded-3xl bg-[#110E16]/40 border border-white/5 hover:border-teal-500/20 transition-all">
-                <item.icon className={`${item.color} mb-6`} size={28} />
-                <h3 className="text-lg font-bold text-white mb-3">{item.title}</h3>
-                <p className="text-sm text-zinc-400 leading-relaxed font-light">{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
+        {/* BRIGID SAMPLER */}
         <BrigidSampler onSave={handleBrigidSave} />
 
         {/* PRICING GRID */}
@@ -431,9 +311,6 @@ const GroveTiers = ({ vault, onSync }) => {
             <div className="bg-[#0D0B12] rounded-[2.9rem] p-12 md:p-16">
               <Star className="text-teal-400 mx-auto mb-6 animate-pulse" size={32} />
               <h2 className="text-white font-serif italic text-3xl mb-4">Luminary Registry</h2>
-              <p className="text-zinc-400 text-sm font-light mb-8 italic">
-                Hearth & Horizon is built on reciprocity. Your contributions help keep this sanctuary accessible for all travellers.
-              </p>
               <div className="mb-12">
                 <p className="text-[10px] text-teal-400/50 font-light tracking-wide italic max-w-xs mx-auto">
                   To Matt: Thank you for holding the map steady while I found my way through the trees.
@@ -444,20 +321,16 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        {/* NEW: KO-FI "FUEL THE FORGE" SECTION */}
+        {/* KO-FI SECTION - STABLE VERSION */}
         <section className="mb-32 max-w-4xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="p-8 md:p-12 rounded-[2.5rem] bg-gradient-to-br from-[#110E16] to-[#0D0B12] border border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left"
-          >
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="p-8 md:p-12 rounded-[2.5rem] bg-gradient-to-br from-[#110E16] to-[#0D0B12] border border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
             <div>
               <div className="flex items-center gap-3 justify-center md:justify-start mb-4">
-                <Coffee size={20} className="text-teal-400" />
+                <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-teal-400/70">Fuel the Forge</span>
               </div>
               <h3 className="text-xl font-serif italic text-white mb-2">Buy the Architect a Coffee</h3>
-              <p className="text-sm text-zinc-500 font-light max-w-sm">
+              <p className="text-sm text-zinc-500 font-light max-w-sm italic">
                 I build in solitude to keep the vision pure. Your support keeps the lights on and the ideas flowing from the woods.
               </p>
             </div>
@@ -478,11 +351,11 @@ const GroveTiers = ({ vault, onSync }) => {
               <div className="py-10 text-teal-400 font-serif italic">Your message has been carried to the Hearth.</div>
             ) : (
               <form onSubmit={handleContactSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
                   <input required placeholder="Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-teal-500/50" />
                   <input required type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-teal-500/50" />
                 </div>
-                <textarea required rows="4" placeholder="Your inquiry..." value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm text-white focus:outline-none focus:border-teal-500/50" />
+                <textarea required rows="4" placeholder="Your inquiry..." value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm text-white focus:outline-none focus:border-teal-500/50 text-left" />
                 <button type="submit" className="w-full py-5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-2xl text-[10px] font-black uppercase hover:bg-teal-500 hover:text-black transition-all">
                   {contactStatus === 'sending' ? 'Sending...' : 'Send Message'}
                 </button>
@@ -500,14 +373,14 @@ const GroveTiers = ({ vault, onSync }) => {
                 <Share2 size={18} className="text-teal-400" />
                 <div className="text-[10px] text-left">
                   <p className="text-white font-bold">iOS / Safari</p>
-                  <p className="text-zinc-500">Tap Share → 'Add to Home Screen'</p>
+                  <p className="text-zinc-500 font-light">Tap Share → 'Add to Home Screen'</p>
                 </div>
               </div>
               <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/10">
                 <MoreVertical size={18} className="text-purple-400" />
                 <div className="text-[10px] text-left">
                   <p className="text-white font-bold">Android / Chrome</p>
-                  <p className="text-zinc-500">Tap Menu → 'Install App'</p>
+                  <p className="text-zinc-500 font-light">Tap Menu → 'Install App'</p>
                 </div>
               </div>
             </div>
