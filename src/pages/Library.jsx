@@ -219,10 +219,8 @@ function RiteOfRenaming({ vault, onSync }) {
 
   const handleTransform = async () => {
     if (!query.trim()) return;
-    // First try local map
     const local = VERB_MAP.find(v => v.legacy.toLowerCase() === query.trim().toLowerCase());
     if (local) { setResult({ legacy: local.legacy, horizon: local.horizon, source: 'local' }); return; }
-    // Fallback to Brigid
     setIsLoading(true);
     try {
       const res = await base44.integrations.Core.InvokeLLM({
@@ -233,7 +231,6 @@ function RiteOfRenaming({ vault, onSync }) {
         }
       });
       setResult({ ...res, source: 'brigid' });
-      // Save to lexicon
       if (onSync && res.horizon) {
         const lexicon = [...(vault?.lexicon || [])];
         if (!lexicon.includes(res.horizon)) onSync({ ...vault, lexicon: [res.horizon, ...lexicon] });
@@ -312,7 +309,6 @@ function SmithyTool({ tool, isOpen, onToggle, children }) {
 // ── HIGH FORGE ────────────────────────────────────────────────────────────────
 function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
   const [openTool, setOpenTool] = useState(null);
-
   const toggle = (id) => setOpenTool(prev => prev === id ? null : id);
 
   const smithyTools = [
@@ -323,6 +319,63 @@ function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
 
   return (
     <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="space-y-16 pb-48">
+
+      {/* QUICK-START GUIDE */}
+      <section>
+        <div className="bg-[#110E16]/60 border border-white/5 p-8 md:p-10 rounded-[2.5rem] relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-6 opacity-[0.03] pointer-events-none">
+            <Compass size={120} />
+          </div>
+          <div className="relative z-10 space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
+              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">The Wayfarer’s Quick-Start Guide</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <div className="w-6 h-6 rounded-full bg-teal-500/10 border border-teal-500/30 flex items-center justify-center shrink-0 text-[10px] text-teal-400 font-black">1</div>
+                  <p className="text-[11px] text-zinc-300 leading-relaxed">
+                    <strong className="text-white uppercase tracking-tighter">Internalize:</strong> Enter <span className="text-teal-400 font-bold">The Hearth</span> (top right) to complete your optional Emoji Check-in and record your daily Reflection.
+                  </p>
+                </div>
+                <div className="flex gap-4">
+                  <div className="w-6 h-6 rounded-full bg-teal-500/10 border border-teal-500/30 flex items-center justify-center shrink-0 text-[10px] text-teal-400 font-black">2</div>
+                  <p className="text-[11px] text-zinc-300 leading-relaxed">
+                    <strong className="text-white uppercase tracking-tighter">Translate:</strong> Stay here in the <span className="text-teal-400 font-bold">Library</span> to upload your resume for analysis and download specialized scripts.
+                  </p>
+                </div>
+                <div className="flex gap-4">
+                  <div className="w-6 h-6 rounded-full bg-teal-500/10 border border-teal-500/30 flex items-center justify-center shrink-0 text-[10px] text-teal-400 font-black">3</div>
+                  <p className="text-[11px] text-zinc-300 leading-relaxed">
+                    <strong className="text-white uppercase tracking-tighter">Provisions:</strong> Check the <span className="text-teal-400 font-bold">Provisions</span> section (Volume II below) for resources curated for your journey.
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <div className="w-6 h-6 rounded-full bg-teal-500/10 border border-teal-500/30 flex items-center justify-center shrink-0 text-[10px] text-teal-400 font-black">4</div>
+                  <p className="text-[11px] text-zinc-300 leading-relaxed">
+                    <strong className="text-white uppercase tracking-tighter">Navigate:</strong> Visit the <span className="text-teal-400 font-bold">Horizon</span> board to see where your new corporate title can take you.
+                  </p>
+                </div>
+                <div className="flex gap-4">
+                  <div className="w-6 h-6 rounded-full bg-teal-500/10 border border-teal-500/30 flex items-center justify-center shrink-0 text-[10px] text-teal-400 font-black">5</div>
+                  <p className="text-[11px] text-zinc-300 leading-relaxed">
+                    <strong className="text-white uppercase tracking-tighter">Connect:</strong> Join the <span className="text-teal-400 font-bold">Embers chat</span> to say hi and share the trail with fellow travelers!
+                  </p>
+                </div>
+                <div className="mt-4 p-4 rounded-2xl bg-teal-500/5 border border-teal-500/10 flex items-center gap-3">
+                  <Heart size={16} className="text-pink-500 animate-pulse" />
+                  <p className="text-[9px] text-zinc-500 italic">"Honor the person before the professional."</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* NARRATIVE BANNER */}
       <div className="p-5 rounded-[1.5rem] bg-amber-500/[0.03] border border-amber-500/10 flex items-center gap-4">
