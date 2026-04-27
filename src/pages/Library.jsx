@@ -337,7 +337,7 @@ function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
                 <div className="flex gap-4">
                   <div className="w-6 h-6 rounded-full bg-teal-500/10 border border-teal-500/30 flex items-center justify-center shrink-0 text-[10px] text-teal-400 font-black">1</div>
                   <p className="text-[11px] text-zinc-300 leading-relaxed">
-                    <strong className="text-white uppercase tracking-tighter">Internalize:</strong> Enter <span className="text-teal-400 font-bold">The Hearth</span> (top right) to complete your optional Emoji Check-in and record your daily Reflection.
+                    <strong className="text-white uppercase tracking-tighter">Internalize:</strong> Enter <span className="text-teal-400 font-bold">The Hearth</span> to complete your optional Emoji Check-in and record your daily Reflection.
                   </p>
                 </div>
                 <div className="flex gap-4">
