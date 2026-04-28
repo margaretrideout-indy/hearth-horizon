@@ -53,9 +53,31 @@
         }
       },
       "description": "Matched company archetypes"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description or notes about this values profile",
+      "maxLength": 1000
     }
   },
   "required": [
     "non_negotiables"
-  ]
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    },
+    "write": {
+      "created_by": "{{user.email}}"
+    }
+  }
 }

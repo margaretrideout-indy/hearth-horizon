@@ -57,10 +57,56 @@
     "brigid_checkin_message": {
       "type": "string",
       "description": "Supportive message from Brigid if user has been Weathering"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description or notes about this profile",
+      "maxLength": 1000
     }
   },
   "required": [
     "current_role",
     "sector"
-  ]
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
 }

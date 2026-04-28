@@ -30,11 +30,77 @@
     "stripe_session_id": {
       "type": "string",
       "description": "Stripe session ID for this payment"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description or notes about this voucher",
+      "maxLength": 1000
     }
   },
   "required": [
     "sponsor_email",
     "amount_paid",
     "status"
-  ]
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "user"
+          }
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "data.status": "available"
+        },
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "data.claimed_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "data.status": "available"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
 }

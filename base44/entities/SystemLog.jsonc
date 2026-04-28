@@ -21,6 +21,11 @@
     "tier": {
       "type": "string",
       "description": "User's subscription tier at time of action"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description or notes about this log entry",
+      "maxLength": 1000
     }
   },
   "required": [

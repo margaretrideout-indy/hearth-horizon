@@ -10,6 +10,8 @@ import Library from './pages/Library';
 import AdminDashboard from './pages/AdminDashboard';
 import Canopy from './pages/Canopy';
 import Contact from './pages/Contact';
+import About from './pages/About';
+import ContactPage from './pages/ContactPage';
 // CulturalFit archived — tools consolidated into Library > High Forge
 import EmbersChat from './pages/EmbersChat';
 
@@ -135,7 +137,7 @@ export default function App() {
     }
   };
 
-  const showNav = !['/grove', '/', '/contact'].includes(location.pathname);
+  const showNav = !['/grove', '/', '/contact', '/about', '/contact-us'].includes(location.pathname);
 
   const NavLinks = ({ isDesktop = false }) => {
     const mainLinks = [
@@ -241,6 +243,8 @@ export default function App() {
             <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             <Route path="/contact" element={<Contact vault={vault} onRefresh={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} />} />
             <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact-us" element={<ContactPage />} />
             <Route path="/" element={<Navigate to="/grove" replace />} />
             <Route path="*" element={<Navigate to="/grove" replace />} />
           </Routes>
