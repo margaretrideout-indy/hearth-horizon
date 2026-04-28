@@ -9,6 +9,65 @@ import {
 import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
 
+// ─── CONSTELLATION COMPONENT ────────────────────────────────────────────────
+const HorizonConstellation = ({ vault }) => {
+  const nodes = [
+    { id: 1, label: "Strategic Orchestration", x: -160, y: -40, color: "#2dd4bf" },
+    { id: 2, label: "Systems Architecture", x: 140, y: -60, color: "#a855f7" },
+    { id: 3, label: "Stakeholder Advocacy", x: -120, y: 70, color: "#f43f5e" },
+    { id: 4, label: "Operational Resilience", x: 180, y: 50, color: "#fbbf24" },
+  ];
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2 }}
+      className="w-full bg-[#0E0C14] border border-white/5 rounded-[2.5rem] overflow-hidden mb-10"
+    >
+      <div className="h-[280px] w-full relative flex items-center justify-center">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(45,212,191,0.05),transparent_70%)]" />
+        
+        <svg width="100%" height="100%" viewBox="-300 -120 600 240" className="overflow-visible relative z-10">
+          <defs>
+            <filter id="glow-base44">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          {nodes.map((node) => (
+            <motion.line
+              key={node.id}
+              x1="0" y1="0" x2={node.x} y2={node.y}
+              stroke="white" strokeWidth="0.5" strokeDasharray="3 3"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 0.15 }}
+              transition={{ duration: 2, delay: node.id * 0.2 }}
+            />
+          ))}
+
+          <motion.g initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 100 }}>
+            <circle r="6" fill="#2dd4bf" filter="url(#glow-base44)" />
+            <text y="25" textAnchor="middle" className="fill-white/80 text-[10px] font-serif italic tracking-widest uppercase">
+              {vault?.archetype || "Wayfarer"}
+            </text>
+          </motion.g>
+
+          {nodes.map((node) => (
+            <motion.g key={node.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 + node.id * 0.1 }}>
+              <circle cx={node.x} cy={node.y} r="3" fill={node.color} />
+              <text x={node.x} y={node.y - 10} textAnchor="middle" className="fill-zinc-500 text-[6px] font-black uppercase tracking-tighter">
+                {node.label}
+              </text>
+            </motion.g>
+          ))}
+        </svg>
+      </div>
+    </motion.div>
+  );
+};
+
 // ─── Skeleton ────────────────────────────────────────────────────────────────
 const JobCardSkeleton = () => (
   <div className="p-8 bg-[#110E16] border border-white/5 rounded-[2.5rem] animate-pulse space-y-6">
@@ -94,7 +153,6 @@ export default function Canopy({ vault, onSync, isAdmin }) {
   const fetchRef = useRef(null);
 
   const fetchJobs = async () => {
-    // Cancel any pending fetch
     clearTimeout(fetchRef.current);
     fetchRef.current = setTimeout(async () => {
       setIsLoading(true);
@@ -116,7 +174,6 @@ export default function Canopy({ vault, onSync, isAdmin }) {
     }, 300);
   };
 
-  // Re-fetch whenever controls change
   useEffect(() => { fetchJobs(); }, [workEnv, personalized]);
 
   const workEnvOptions = [
@@ -143,7 +200,6 @@ export default function Canopy({ vault, onSync, isAdmin }) {
             </h1>
           </motion.div>
 
-          {/* Refresh + mode badge */}
           <div className="flex items-center gap-3">
             {mode && (
               <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-[9px] font-black uppercase tracking-widest ${
@@ -165,13 +221,15 @@ export default function Canopy({ vault, onSync, isAdmin }) {
           </div>
         </header>
 
+        {/* ── NEW: CONSTELLATION MAP ── */}
+        <HorizonConstellation vault={vault} />
+
         {/* ── CONTROLS PANEL ── */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col sm:flex-row gap-4 p-5 bg-[#0E0C14] border border-white/5 rounded-[2rem]"
         >
-          {/* Work Environment */}
           <div className="flex-1 space-y-2">
             <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 block px-1">Work Environment</span>
             <SegmentedControl
@@ -181,7 +239,6 @@ export default function Canopy({ vault, onSync, isAdmin }) {
             />
           </div>
 
-          {/* Discovery Mode */}
           <div className="flex-1 space-y-2">
             <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 block px-1">Discovery Mode</span>
             <DiscoveryToggle value={personalized} onChange={setPersonalized} />
@@ -208,7 +265,6 @@ export default function Canopy({ vault, onSync, isAdmin }) {
               >
                 <Card className="group relative h-full p-8 bg-[#110E16] border border-white/5 hover:border-teal-500/20 rounded-[2.5rem] flex flex-col justify-between overflow-hidden transition-all duration-300">
                   <div className="space-y-5 relative z-10">
-                    {/* Top row */}
                     <div className="flex justify-between items-start">
                       <div className="w-11 h-11 flex items-center justify-center bg-black/40 border border-white/10 rounded-2xl shrink-0">
                         <Briefcase size={18} className="text-zinc-500 group-hover:text-teal-400 transition-all" />
@@ -218,16 +274,13 @@ export default function Canopy({ vault, onSync, isAdmin }) {
                       </Badge>
                     </div>
 
-                    {/* Title + company */}
                     <div>
                       <h3 className="text-xl font-serif italic text-white/90 leading-snug">{job.title}</h3>
                       <p className="text-[10px] text-teal-500/50 font-black uppercase tracking-widest mt-1">{job.company}</p>
                     </div>
 
-                    {/* Match bar */}
                     <MatchBar percent={job.match_percent || 85} />
 
-                    {/* Hearth Insight blockquote */}
                     {job.hearth_insight && (
                       <blockquote className="border-l-2 border-purple-500/40 pl-4 py-1">
                         <p className="text-[11px] text-purple-300/70 italic leading-relaxed">
@@ -240,7 +293,6 @@ export default function Canopy({ vault, onSync, isAdmin }) {
                     )}
                   </div>
 
-                  {/* Footer */}
                   <div className="mt-8 pt-5 border-t border-white/5 space-y-3 relative z-10">
                     <div className="flex justify-between items-center">
                       <span className="text-[9px] text-zinc-500 uppercase font-black">{job.location}</span>
