@@ -9,8 +9,8 @@ import {
 // ── CONSTANTS ────────────────────────────────────────────────────────────────
 const MAIN_TAG = "hearthandh0a6-20";
 const BOOKSHOP_URL = "https://bookshop.org/shop/hearthandhorizon";
-const VAULT_URL = "https://margaretpardy.gumroad.com/l/zuyjl"; // The Vault
-const ALIGNMENT_URL = "https://margaretpardy.gumroad.com/l/alignment"; // Replace with your actual Alignment URL
+const VAULT_URL = "https://margaretpardy.gumroad.com/l/zuyjl"; 
+const ALIGNMENT_URL = "https://margaretpardy.gumroad.com/l/sbxvp";
 const BLUEPRINT_URL = "https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing";
 
 const AMZ_LISTS = [
@@ -99,7 +99,7 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
 
       <div className="space-y-3">
 
-        {/* 1. THE IDENTITY LEDGER */}
+        {/* IDENTITY LEDGER */}
         <CacheSection id="ledger" title="The Identity Ledger" desc="Worksheet PDF & Identity Slides — decouple your worth."
           icon={<ClipboardList className="text-teal-400" size={20} />}
           isOpen={openSection === 'ledger'} onToggle={() => toggle('ledger')}>
@@ -125,7 +125,7 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
           </div>
         </CacheSection>
 
-        {/* 2. THE BLUEPRINT (NOTION RESOURCE) */}
+        {/* THE BLUEPRINT (NOTION 1) */}
         <CacheSection id="blueprint" title="The Blueprint" desc="ATS-optimized resume template — ready to deploy."
           icon={<FileText className="text-purple-400" size={20} />}
           isOpen={openSection === 'blueprint'} onToggle={() => toggle('blueprint')}>
@@ -142,8 +142,8 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
           </div>
         </CacheSection>
 
-        {/* SPONSORSHIP OUTREACH */}
-        <CacheSection id="outreach" title="Sponsorship Outreach" desc="4-phase copy-paste scripts to turn contacts into advocates."
+        {/* OUTREACH SCRIPTS */}
+        <CacheSection id="outreach" title="Sponsorship Outreach" desc="4-phase scripts to turn contacts into advocates."
           icon={<Mail className="text-teal-400" size={20} />}
           isOpen={openSection === 'outreach'} onToggle={() => toggle('outreach')}>
           <div className="space-y-4">
@@ -164,8 +164,8 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
           </div>
         </CacheSection>
 
-        {/* SALARY NEGOTIATIONS */}
-        <CacheSection id="salary" title="Salary Negotiations" desc="Word-for-word tactical scripts for the negotiation table."
+        {/* SALARY SCRIPTS */}
+        <CacheSection id="salary" title="Salary Negotiations" desc="Tactical scripts for the negotiation table."
           icon={<DollarSign className="text-amber-400" size={20} />}
           isOpen={openSection === 'salary'} onToggle={() => toggle('salary')}>
           <div className="space-y-4">
@@ -186,12 +186,11 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
           </div>
         </CacheSection>
 
-        {/* 3. PROVISIONS FOR THE PATH (VAULT & ALIGNMENT) */}
-        <CacheSection id="provisions" title="Provisions for the Path" desc="Curated gear, tools & literature for the professional migrant."
+        {/* PROVISIONS: VAULT & ALIGNMENT (NOTION 2 & 3) */}
+        <CacheSection id="provisions" title="Provisions for the Path" desc="Curated gear, tools & archetypes for the migrant."
           icon={<Package className="text-zinc-400" size={20} />}
           isOpen={openSection === 'provisions'} onToggle={() => toggle('provisions')}>
           <div className="space-y-6">
-            {/* Tab switcher */}
             <div className="flex bg-white/[0.04] border border-white/10 rounded-xl p-1 gap-1 w-fit overflow-x-auto">
               {[
                 { id: 'vault', label: 'Archetype Systems', icon: Sparkles },
@@ -209,16 +208,16 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
               {provisionsTab === 'vault' ? (
                 <motion.div key="vault" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   
-                  {/* ARCHETYPE VAULT CARD */}
+                  {/* ARCHETYPE VAULT */}
                   <div className="p-6 bg-[#1A1216] border border-pink-500/20 rounded-[2rem] flex flex-col justify-between group">
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
                         <Sparkles size={14} className="text-pink-500" />
-                        <span className="text-[8px] font-black uppercase text-pink-500 tracking-widest">Library Access</span>
+                        <span className="text-[8px] font-black uppercase text-pink-500 tracking-widest">Digital Mirror</span>
                       </div>
                       <h4 className="text-xl font-serif italic text-white leading-tight">The Archetype Vault</h4>
                       <p className="text-zinc-500 text-xs italic leading-relaxed">
-                        A digital divination deck and embodiment system. Draw your daily spirit and track resonance.
+                        Your library of mirrors. Draw your daily spirit and log your resonance.
                       </p>
                     </div>
                     <a href={VAULT_URL} target="_blank" rel="noopener noreferrer"
@@ -227,16 +226,16 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
                     </a>
                   </div>
 
-                  {/* ARCHETYPE ALIGNMENT CARD */}
+                  {/* ARCHETYPE ALIGNMENT */}
                   <div className="p-6 bg-[#12161A] border border-teal-500/20 rounded-[2rem] flex flex-col justify-between group">
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
                         <Zap size={14} className="text-teal-500" />
-                        <span className="text-[8px] font-black uppercase text-teal-400 tracking-widest">Active System</span>
+                        <span className="text-[8px] font-black uppercase text-teal-400 tracking-widest">Active Mapping</span>
                       </div>
                       <h4 className="text-xl font-serif italic text-white leading-tight">Archetype Alignment</h4>
                       <p className="text-zinc-500 text-xs italic leading-relaxed">
-                        The full embodiment protocol. Map your internal landscape and visualize your evolution.
+                        Visualize your evolution. Track your daily frequency and map your growth.
                       </p>
                     </div>
                     <a href={ALIGNMENT_URL} target="_blank" rel="noopener noreferrer"
@@ -264,7 +263,7 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
                 </motion.div>
               ) : (
                 <motion.div key="books" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
-                  <p className="text-zinc-500 italic text-sm">Literature and deep-dives into industry culture, ethics, and transition strategy.</p>
+                  <p className="text-zinc-500 italic text-sm">Literature and deep-dives into industry culture and strategy.</p>
                   <div className="flex flex-col sm:flex-row gap-3">
                     <a href={BOOKSHOP_URL} target="_blank" rel="noopener noreferrer"
                       className="inline-flex items-center gap-3 bg-purple-600 text-white px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-500 transition-all">
