@@ -3,13 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   FileText, ExternalLink, Mail, DollarSign, Download,
   Copy, Check, Presentation, ClipboardList, Package,
-  BookOpen, ChevronDown, Zap, Book, ArrowRight
+  BookOpen, ChevronDown, Zap, Book, ArrowRight, Sparkles
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 // ── CONSTANTS ────────────────────────────────────────────────────────────────
 const MAIN_TAG = "hearthandh0a6-20";
 const BOOKSHOP_URL = "https://bookshop.org/shop/hearthandhorizon";
+const NOTION_VAULT_URL = "https://margaretpardy.gumroad.com/l/zuyjl";
 
 const AMZ_LISTS = [
   { label: "Horizon Library", id: "3MQJ7V1EQV93P", isFeatured: true },
@@ -73,14 +74,13 @@ function CacheSection({ id, title, desc, icon, isOpen, onToggle, children }) {
 export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus }) {
   const [openSection, setOpenSection] = useState(null);
   const [copiedIndex, setCopiedIndex] = useState(null);
-  const [provisionsTab, setProvisionsTab] = useState('amazon');
+  const [provisionsTab, setProvisionsTab] = useState('vault'); // Default to your new product!
 
   const toggle = (id) => setOpenSection(prev => prev === id ? null : id);
   const scripts = generateScripts(vault);
 
   const normalizedTier = vault?.tier?.toLowerCase() || 'none';
-  const canAccessHighTier = isAdmin || ['steward', 'founding steward', 'hearthkeeper'].includes(normalizedTier);
-
+  
   const handleCopy = (text, idx) => {
     navigator.clipboard.writeText(text);
     setCopiedIndex(idx);
@@ -193,16 +193,43 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
           isOpen={openSection === 'provisions'} onToggle={() => toggle('provisions')}>
           <div className="space-y-6">
             {/* Tab switcher */}
-            <div className="flex bg-white/[0.04] border border-white/10 rounded-xl p-1 gap-1 w-fit">
-              {[{ id: 'amazon', label: 'Tools & Tech', icon: Package }, { id: 'books', label: 'The Bookshop', icon: Book }].map(tab => (
+            <div className="flex bg-white/[0.04] border border-white/10 rounded-xl p-1 gap-1 w-fit overflow-x-auto">
+              {[
+                { id: 'vault', label: 'Archetype Vault', icon: Sparkles },
+                { id: 'amazon', label: 'Tools & Tech', icon: Package }, 
+                { id: 'books', label: 'The Bookshop', icon: Book }
+              ].map(tab => (
                 <button key={tab.id} onClick={() => setProvisionsTab(tab.id)}
-                  className={`flex items-center gap-2 px-5 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${provisionsTab === tab.id ? 'bg-teal-500 text-black' : 'text-zinc-500 hover:text-zinc-300'}`}>
+                  className={`flex items-center gap-2 px-5 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${provisionsTab === tab.id ? 'bg-teal-500 text-black' : 'text-zinc-500 hover:text-zinc-300'}`}>
                   <tab.icon size={12} /> {tab.label}
                 </button>
               ))}
             </div>
+
             <AnimatePresence mode="wait">
-              {provisionsTab === 'amazon' ? (
+              {provisionsTab === 'vault' ? (
+                <motion.div key="vault" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
+                  <div className="p-8 bg-gradient-to-br from-[#1A1216] to-[#0D0B10] border border-pink-500/20 rounded-[2rem] relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+                      <Sparkles size={80} className="text-pink-400" />
+                    </div>
+                    <div className="relative z-10 space-y-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse" />
+                        <span className="text-[9px] font-black uppercase text-pink-500 tracking-[0.3em]">Identity System</span>
+                      </div>
+                      <h4 className="text-2xl font-serif italic text-white leading-tight">The Archetype Vault (Oracle Edition)</h4>
+                      <p className="text-zinc-400 italic text-sm leading-relaxed max-w-md">
+                        A digital divination deck and embodiment system for the modern sovereign. Draw your daily spirit and track your internal resonance.
+                      </p>
+                      <a href={NOTION_VAULT_URL} target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-3 h-12 px-8 bg-pink-500 text-black font-black uppercase tracking-widest rounded-xl text-[9px] hover:bg-pink-400 transition-all shadow-lg shadow-pink-500/10">
+                        Secure the Vault <ExternalLink size={12} />
+                      </a>
+                    </div>
+                  </div>
+                </motion.div>
+              ) : provisionsTab === 'amazon' ? (
                 <motion.div key="amz" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {AMZ_LISTS.map((list) => (
