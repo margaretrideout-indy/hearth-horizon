@@ -5,12 +5,13 @@ import {
   Copy, Check, Presentation, ClipboardList, Package,
   BookOpen, ChevronDown, Zap, Book, ArrowRight, Sparkles
 } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
 
 // ── CONSTANTS ────────────────────────────────────────────────────────────────
 const MAIN_TAG = "hearthandh0a6-20";
 const BOOKSHOP_URL = "https://bookshop.org/shop/hearthandhorizon";
-const NOTION_VAULT_URL = "https://margaretpardy.gumroad.com/l/zuyjl";
+const VAULT_URL = "https://margaretpardy.gumroad.com/l/zuyjl"; // The Vault
+const ALIGNMENT_URL = "https://margaretpardy.gumroad.com/l/alignment"; // Replace with your actual Alignment URL
+const BLUEPRINT_URL = "https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing";
 
 const AMZ_LISTS = [
   { label: "Horizon Library", id: "3MQJ7V1EQV93P", isFeatured: true },
@@ -98,7 +99,7 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
 
       <div className="space-y-3">
 
-        {/* THE IDENTITY LEDGER */}
+        {/* 1. THE IDENTITY LEDGER */}
         <CacheSection id="ledger" title="The Identity Ledger" desc="Worksheet PDF & Identity Slides — decouple your worth."
           icon={<ClipboardList className="text-teal-400" size={20} />}
           isOpen={openSection === 'ledger'} onToggle={() => toggle('ledger')}>
@@ -124,7 +125,7 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
           </div>
         </CacheSection>
 
-        {/* THE BLUEPRINT */}
+        {/* 2. THE BLUEPRINT (NOTION RESOURCE) */}
         <CacheSection id="blueprint" title="The Blueprint" desc="ATS-optimized resume template — ready to deploy."
           icon={<FileText className="text-purple-400" size={20} />}
           isOpen={openSection === 'blueprint'} onToggle={() => toggle('blueprint')}>
@@ -133,7 +134,7 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
             <div className="relative z-10 space-y-4">
               <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-black">Trailblazer's Blueprint</p>
               <h4 className="text-2xl font-serif italic text-white">ATS-Optimized Resume Template</h4>
-              <a href="https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing" target="_blank" rel="noopener noreferrer"
+              <a href={BLUEPRINT_URL} target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 px-10 h-14 bg-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-500 transition-all">
                 <FileText size={14} /> Secure Blueprint
               </a>
@@ -185,14 +186,15 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
           </div>
         </CacheSection>
 
-        {/* PROVISIONS FOR THE PATH */}
+        {/* 3. PROVISIONS FOR THE PATH (VAULT & ALIGNMENT) */}
         <CacheSection id="provisions" title="Provisions for the Path" desc="Curated gear, tools & literature for the professional migrant."
           icon={<Package className="text-zinc-400" size={20} />}
           isOpen={openSection === 'provisions'} onToggle={() => toggle('provisions')}>
           <div className="space-y-6">
+            {/* Tab switcher */}
             <div className="flex bg-white/[0.04] border border-white/10 rounded-xl p-1 gap-1 w-fit overflow-x-auto">
               {[
-                { id: 'vault', label: 'Archetype Vault', icon: Sparkles },
+                { id: 'vault', label: 'Archetype Systems', icon: Sparkles },
                 { id: 'amazon', label: 'Tools & Tech', icon: Package }, 
                 { id: 'books', label: 'The Bookshop', icon: Book }
               ].map(tab => (
@@ -205,35 +207,44 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
 
             <AnimatePresence mode="wait">
               {provisionsTab === 'vault' ? (
-                <motion.div key="vault" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
-                  <div className="p-8 bg-gradient-to-br from-[#1A1216] to-[#0D0B10] border border-pink-500/20 rounded-[2rem] relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                      <Sparkles size={80} className="text-pink-400" />
-                    </div>
-                    <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse" />
-                          <span className="text-[9px] font-black uppercase text-pink-500 tracking-[0.3em]">Identity System</span>
-                        </div>
-                        <h4 className="text-2xl font-serif italic text-white leading-tight">The Archetype Vault (Oracle Edition)</h4>
-                        <p className="text-zinc-400 italic text-sm leading-relaxed">
-                          A digital divination deck and embodiment system. Draw your daily spirit, track resonance, and map your internal evolution.
-                        </p>
-                        <div className="flex gap-2">
-                           <span className="px-2 py-1 bg-pink-500/5 border border-pink-500/10 rounded-md text-[7px] font-black uppercase text-pink-300">Daily Draw</span>
-                           <span className="px-2 py-1 bg-pink-500/5 border border-pink-500/10 rounded-md text-[7px] font-black uppercase text-pink-300">Resonance Log</span>
-                        </div>
+                <motion.div key="vault" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  
+                  {/* ARCHETYPE VAULT CARD */}
+                  <div className="p-6 bg-[#1A1216] border border-pink-500/20 rounded-[2rem] flex flex-col justify-between group">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2">
+                        <Sparkles size={14} className="text-pink-500" />
+                        <span className="text-[8px] font-black uppercase text-pink-500 tracking-widest">Library Access</span>
                       </div>
-                      <div className="flex flex-col gap-3">
-                        <a href={NOTION_VAULT_URL} target="_blank" rel="noopener noreferrer"
-                          className="flex items-center justify-between gap-4 h-14 px-8 bg-pink-500 text-black font-black uppercase tracking-widest rounded-xl text-[9px] hover:bg-pink-400 transition-all shadow-lg shadow-pink-500/10">
-                          Secure the Vault <ExternalLink size={12} />
-                        </a>
-                        <p className="text-[9px] text-zinc-600 text-center italic">Notion System · $22</p>
-                      </div>
+                      <h4 className="text-xl font-serif italic text-white leading-tight">The Archetype Vault</h4>
+                      <p className="text-zinc-500 text-xs italic leading-relaxed">
+                        A digital divination deck and embodiment system. Draw your daily spirit and track resonance.
+                      </p>
                     </div>
+                    <a href={VAULT_URL} target="_blank" rel="noopener noreferrer"
+                      className="mt-6 flex items-center justify-center gap-2 h-11 bg-pink-500 text-black font-black uppercase tracking-widest rounded-xl text-[8px] hover:bg-pink-400 transition-all">
+                      Secure Vault <ExternalLink size={10} />
+                    </a>
                   </div>
+
+                  {/* ARCHETYPE ALIGNMENT CARD */}
+                  <div className="p-6 bg-[#12161A] border border-teal-500/20 rounded-[2rem] flex flex-col justify-between group">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2">
+                        <Zap size={14} className="text-teal-500" />
+                        <span className="text-[8px] font-black uppercase text-teal-400 tracking-widest">Active System</span>
+                      </div>
+                      <h4 className="text-xl font-serif italic text-white leading-tight">Archetype Alignment</h4>
+                      <p className="text-zinc-500 text-xs italic leading-relaxed">
+                        The full embodiment protocol. Map your internal landscape and visualize your evolution.
+                      </p>
+                    </div>
+                    <a href={ALIGNMENT_URL} target="_blank" rel="noopener noreferrer"
+                      className="mt-6 flex items-center justify-center gap-2 h-11 bg-teal-500 text-black font-black uppercase tracking-widest rounded-xl text-[8px] hover:bg-teal-400 transition-all">
+                      Start Alignment <ExternalLink size={10} />
+                    </a>
+                  </div>
+
                 </motion.div>
               ) : provisionsTab === 'amazon' ? (
                 <motion.div key="amz" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
@@ -259,9 +270,6 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
                       className="inline-flex items-center gap-3 bg-purple-600 text-white px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-500 transition-all">
                       Bookshop.org <ArrowRight size={13} />
                     </a>
-                    <button disabled className="inline-flex items-center gap-3 bg-white/5 border border-white/10 text-zinc-600 px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-widest opacity-50 cursor-not-allowed">
-                      Indigo — Coming Soon
-                    </button>
                   </div>
                 </motion.div>
               )}
