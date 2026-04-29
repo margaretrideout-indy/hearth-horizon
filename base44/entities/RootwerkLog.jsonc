@@ -28,11 +28,33 @@
       "type": "boolean",
       "default": true,
       "description": "Whether this entry is private or shared to the Embers feed"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description or notes about this log entry",
+      "maxLength": 1000
     }
   },
   "required": [
     "user_id",
     "entry_body",
     "sentiment_tag"
-  ]
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    },
+    "write": {
+      "created_by": "{{user.email}}"
+    }
+  }
 }

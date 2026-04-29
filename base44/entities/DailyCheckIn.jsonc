@@ -25,9 +25,31 @@
     "gratitude_note": {
       "type": "string",
       "description": "Something they value about their journey"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description or notes about this check-in",
+      "maxLength": 1000
     }
   },
   "required": [
     "mood"
-  ]
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    },
+    "write": {
+      "created_by": "{{user.email}}"
+    }
+  }
 }
