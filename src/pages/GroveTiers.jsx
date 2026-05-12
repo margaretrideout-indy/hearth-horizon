@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import SanctuaryTransition from '../components/SanctuaryTransition';
+import StickyNav from '@/components/StickyNav';
+import SMEFooter from '@/components/SMEFooter';
 import {
   Check, Flame, Sparkles,
   LogIn, ChevronDown
@@ -292,19 +294,10 @@ export default function GroveTiers({ vault, onSync }) {
       </AnimatePresence>
 
       {/* ── NAV ── */}
-      <nav className="fixed top-0 left-0 w-full z-[100] bg-[#0A080D]/95 backdrop-blur-xl border-b border-zinc-900" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-        <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
-          <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-700">Hearth & Horizon</span>
-          <div className="flex items-center gap-4">
-            <button onClick={handleEnter} className="text-zinc-600 hover:text-zinc-300 text-[9px] font-black uppercase tracking-widest transition-colors">
-              <LogIn size={14} className="inline mr-1" /> Enter Sanctuary
-            </button>
-          </div>
-        </div>
-      </nav>
+      <StickyNav showBrigidCta={false} />
 
       {/* ── CONTENT ── */}
-      <div className="max-w-3xl mx-auto px-6 pt-32 pb-40 space-y-32">
+      <div className="max-w-3xl mx-auto px-6 pt-32 pb-40 space-y-40">
 
         {/* ── SECTION 1: Hero + Tool ── */}
         <section className="space-y-12">
@@ -337,7 +330,8 @@ export default function GroveTiers({ vault, onSync }) {
         </section>
 
         {/* ── SECTION 3: About Footer ── */}
-        <section className="border-t border-zinc-900 pt-20">
+        <section className="border-t border-zinc-900 pt-20 space-y-16">
+          <SMEFooter />
           <AboutFooter />
         </section>
 

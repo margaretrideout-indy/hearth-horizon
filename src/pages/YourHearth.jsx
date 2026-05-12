@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { base44 } from '@/api/base44Client';
 import ExpertiseBadge from '../components/ExpertiseBadge';
+import SMEFooter from '@/components/SMEFooter';
 
 // ── THANK YOU OVERLAY ────────────────────────────────────────────────────────
 const ThankYouOverlay = ({ tier, onClose }) => {
@@ -483,7 +484,7 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-16 pb-40 page-fade-in relative px-4 md:px-6">
+    <div className="max-w-6xl mx-auto space-y-20 pb-40 page-fade-in relative px-4 md:px-6">
       <ExpertiseBadge />
 
       <AnimatePresence>
@@ -602,8 +603,13 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
           {/* Alignment Roadmap */}
           <AlignmentRoadmap vault={vault} navigate={navigate} onSync={onSync} triggerToast={triggerToast} />
 
+          {/* SME Footer */}
+          <div className="pt-8">
+            <SMEFooter />
+          </div>
+
           {/* Delete Account */}
-          <div className="pt-16">
+          <div className="pt-4">
             <AnimatePresence mode="wait">
               {!confirmZone ? (
                 <motion.button key="trigger" initial={{ opacity: 0 }} animate={{ opacity: 1 }}

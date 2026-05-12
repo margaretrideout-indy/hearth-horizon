@@ -13,6 +13,7 @@ import {
 import WayfarersCache from './Contact';
 import { base44 } from '@/api/base44Client';
 import ExpertiseBadge from '../components/ExpertiseBadge';
+import SMEFooter from '@/components/SMEFooter';
 
 // ── CONSTANTS ────────────────────────────────────────────────────────────────
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/edit?slide=id.p1#slide=id.p1";
@@ -319,7 +320,7 @@ function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
   ];
 
   return (
-    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="space-y-24 pb-56">
+    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="space-y-32 pb-56">
 
       {/* QUICK-START GUIDE */}
       <section>
@@ -538,12 +539,9 @@ export default function Library({ vault, onRefresh, onSync, isAdmin }) {
         }
       </div>
 
-      {/* SME Signature */}
-      <div className="max-w-5xl mx-auto px-6 pb-8 text-center space-y-1">
-        <div className="border-t border-zinc-900 pt-8">
-          <p className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-800">Frameworks curated by</p>
-          <p className="text-[10px] font-serif italic text-zinc-600">Margaret Rideout, M.Ed. — 13+ Years in Program Management & Curriculum Development</p>
-        </div>
+      {/* SME Footer */}
+      <div className="max-w-5xl mx-auto px-6 pb-8">
+        <SMEFooter />
       </div>
 
       <ExpertiseBadge />
