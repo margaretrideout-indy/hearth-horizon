@@ -12,6 +12,7 @@ import Canopy from './pages/Canopy';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import ContactPage from './pages/ContactPage';
+import Advisory from './pages/Advisory';
 // CulturalFit archived — tools consolidated into Library > High Forge
 import EmbersChat from './pages/EmbersChat';
 
@@ -245,6 +246,7 @@ export default function App() {
             <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact-us" element={<ContactPage />} />
+            <Route path="/advisory" element={<Advisory />} />
             <Route path="/" element={<Navigate to="/grove" replace />} />
             <Route path="*" element={<Navigate to="/grove" replace />} />
           </Routes>

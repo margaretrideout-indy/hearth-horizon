@@ -387,6 +387,7 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap justify-center gap-6 text-[10px] font-black uppercase tracking-widest text-zinc-600">
           <button onClick={() => navigate('/about')} className="hover:text-zinc-300 transition-colors">About</button>
+          <button onClick={() => navigate('/advisory')} className="hover:text-zinc-300 transition-colors">Advisory Services</button>
           <button onClick={() => navigate('/contact-us')} className="hover:text-zinc-300 transition-colors">Contact</button>
           <a href="mailto:hello@hearthandhorizon.ca" className="hover:text-zinc-300 transition-colors">hello@hearthandhorizon.ca</a>
         </div>
