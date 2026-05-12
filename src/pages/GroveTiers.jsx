@@ -5,7 +5,8 @@ import SanctuaryTransition from '../components/SanctuaryTransition';
 import {
   Flame, Heart, Sprout, Globe, ShieldCheck, Check, Leaf, Mountain, UserPlus,
   Smartphone, Share2, PlusSquare, Sparkles, Send, Zap, FileText, Map, MessageSquare, Briefcase,
-  MoreVertical, Star, Library as LibraryIcon, Compass, ArrowRight, LogIn, ChevronRight
+  MoreVertical, Star, Library as LibraryIcon, Compass, ArrowRight, LogIn, ChevronRight,
+  ClipboardList, GraduationCap, Users
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -34,7 +35,6 @@ const LEGACY_MAP = [
   { triggers: ['bylaw', 'enforcement', 'compliance officer', 'inspector'], horizon: 'Regulatory Compliance & Risk Enforcement Strategist' },
   { triggers: ['civil servant', 'public servant', 'government', 'municipal'], horizon: 'Public Sector Operations & Strategic Delivery Lead' },
   { triggers: ['fire', 'firefighter', 'fire chief', 'fire marshal'], horizon: 'Emergency Risk Mitigation & Operational Safety Lead' },
-  { triggers: ['police', 'officer', 'constable', 'rcmp', 'opp '], horizon: 'Security Operations & Organizational Risk Manager' },
   { triggers: ['military', 'army', 'navy', 'air force', 'veteran', 'forces'], horizon: 'Strategic Operations & High-Stakes Execution Leader' },
   { triggers: ['manager', 'supervisor', 'team lead', 'foreman'], horizon: 'Operational Excellence & Team Performance Lead' },
   { triggers: ['director', 'executive director', 'vp ', 'vice president'], horizon: 'Strategic Direction & Organizational Growth Executive' },
@@ -196,13 +196,13 @@ const GroveTiers = ({ vault, onSync }) => {
 
   const handleSeedling = () => {
     onSync({ tier: 'Seedling' });
-    if (hasSession) { setShowTransition(true); } 
+    if (hasSession) { setShowTransition(true); }
     else { base44.auth.redirectToLogin('/hearth'); }
   };
 
   const handlePaid = (stripeUrl, tierName) => {
     onSync({ tier: tierName });
-    if (hasSession) { setShowTransition(true); } 
+    if (hasSession) { setShowTransition(true); }
     else { window.location.href = stripeUrl; }
   };
 
@@ -237,14 +237,21 @@ const GroveTiers = ({ vault, onSync }) => {
       {/* NAVIGATION */}
       <nav className="fixed top-0 left-0 w-full z-[100] bg-[#0A080D]/90 backdrop-blur-xl border-b border-white/5" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 md:gap-6">
-            <button onClick={() => navigate('/library')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all p-2">
-              <LibraryIcon size={18} />
-              <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">Library</span>
+          <div className="flex items-center gap-1 md:gap-4">
+            <button onClick={() => navigate('/library')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all px-3 py-2">
+              <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">Framework</span>
+              <LibraryIcon size={16} className="md:hidden" />
             </button>
-            <button onClick={() => navigate('/horizon')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all p-2">
-              <Compass size={18} />
+            <button onClick={() => navigate('/horizon')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all px-3 py-2">
               <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">Horizon</span>
+              <Compass size={16} className="md:hidden" />
+            </button>
+            <button onClick={() => navigate('/advisory')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all px-3 py-2">
+              <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">Advisory</span>
+              <Briefcase size={16} className="md:hidden" />
+            </button>
+            <button onClick={() => navigate('/about')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all px-3 py-2">
+              <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">About</span>
             </button>
           </div>
           <button onClick={() => base44.auth.redirectToLogin('/hearth')} className="flex items-center gap-2 text-white bg-white/5 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/10 hover:border-teal-500/50 transition-all">
@@ -255,26 +262,69 @@ const GroveTiers = ({ vault, onSync }) => {
       </nav>
 
       <div className="max-w-7xl mx-auto px-6 pt-28 md:pt-36 pb-12 relative z-10">
-        <header className="mb-20 text-center">
+
+        {/* ── HERO ── */}
+        <header className="mb-24 text-center">
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-500/5 border border-teal-500/10 mb-8">
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">The Hearth & Horizon Sanctuary</span>
           </motion.div>
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif italic text-white mb-12 tracking-tight leading-tight max-w-4xl mx-auto text-center">
-            Transition with <span className="text-teal-400">Intention.</span>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif italic text-white mb-8 tracking-tight leading-tight max-w-4xl mx-auto">
+            Transitioning Professionals from{' '}
+            <span className="text-teal-400">Institutions to the Digital Frontier.</span>
           </h1>
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} className="max-w-4xl mx-auto p-8 md:p-16 rounded-[2.5rem] bg-gradient-to-b from-[#110E16] to-[#0D0B12] border border-white/5 shadow-2xl relative overflow-hidden text-center">
-            <p className="relative z-10 text-base md:text-lg text-zinc-300 font-light leading-relaxed mb-10 italic">
-              "As an Indigenous educator with 13 years in the classroom, I’ve learned that a professional shift is more than a move- it's a migration of the self."
+          <p className="text-zinc-500 text-sm italic max-w-xl mx-auto mb-10 leading-relaxed">
+            A sanctuary for public-sector professionals navigating a deliberate migration into the private sector.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <button onClick={handleSeedling} className="h-14 px-10 bg-teal-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-teal-500/20 text-[10px] hover:bg-teal-400 transition-all">
+              Begin Your Journey
+            </button>
+            <button onClick={() => navigate('/advisory')} className="h-14 px-10 bg-white/5 border border-white/10 text-zinc-300 font-black uppercase tracking-widest rounded-2xl text-[10px] hover:border-teal-500/30 hover:text-white transition-all">
+              Book Advisory →
+            </button>
+          </div>
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} className="max-w-2xl mx-auto p-8 md:p-12 rounded-[2.5rem] bg-gradient-to-b from-[#110E16] to-[#0D0B12] border border-white/5 shadow-2xl text-center">
+            <p className="text-base text-zinc-400 font-light leading-relaxed italic mb-6">
+              "A professional shift is more than a move — it's a migration of the self."
             </p>
-            <div className="relative z-10 flex flex-col items-center gap-2">
-              <span className="text-white font-serif italic text-xl"> Margaret, Founder </span>
-              <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-400">BA, BEd, MEd | Indigenous Studies</span>
+            <div className="flex flex-col items-center gap-1">
+              <span className="text-white font-serif italic text-lg">Margaret, Founder</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-500">BA, BEd, MEd | Indigenous Studies</span>
             </div>
           </motion.div>
         </header>
 
         {/* BRIGID SAMPLER */}
         <BrigidSampler onSave={handleBrigidSave} />
+
+        {/* ── SME ADVISORY CALLOUT ── */}
+        <section className="mb-32 max-w-4xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} className="p-10 md:p-14 rounded-[2.5rem] bg-gradient-to-br from-[#0F1A16] to-[#0A080D] border border-teal-500/20 relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,rgba(20,184,166,0.05),transparent_60%)] pointer-events-none" />
+            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+              <div className="space-y-4 max-w-lg">
+                <div className="flex items-center gap-2">
+                  <GraduationCap size={16} className="text-teal-400" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/70">SME Advisory</span>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-serif italic text-white leading-snug">
+                  13 Years of Curriculum Leadership.
+                </h2>
+                <p className="text-zinc-500 text-sm italic leading-relaxed">
+                  With an M.Ed. and over a decade managing institutional curricula, Margaret offers strategic advisory for organizations navigating digital transformation — from curriculum audits to cultural alignment.
+                </p>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {['Curriculum Audits', 'Cultural Alignment', 'Digital Transition SOPs'].map(s => (
+                    <span key={s} className="px-3 py-1 bg-teal-500/10 border border-teal-500/20 text-teal-300 text-[9px] font-black uppercase tracking-widest rounded-full">{s}</span>
+                  ))}
+                </div>
+              </div>
+              <button onClick={() => navigate('/advisory')} className="shrink-0 h-14 px-10 bg-teal-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-teal-500/20 text-[10px] hover:bg-teal-400 transition-all">
+                Book Advisory →
+              </button>
+            </div>
+          </motion.div>
+        </section>
 
         {/* PRICING GRID */}
         <section className="mb-32">
@@ -321,7 +371,7 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        {/* KO-FI SECTION - STABLE VERSION */}
+        {/* KO-FI */}
         <section className="mb-32 max-w-4xl mx-auto">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="p-8 md:p-12 rounded-[2.5rem] bg-gradient-to-br from-[#110E16] to-[#0D0B12] border border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
             <div>
@@ -331,7 +381,7 @@ const GroveTiers = ({ vault, onSync }) => {
               </div>
               <h3 className="text-xl font-serif italic text-white mb-2">Buy the Architect a Coffee</h3>
               <p className="text-sm text-zinc-500 font-light max-w-sm italic">
-                I build in solitude to keep the vision pure. Your support keeps the lights on and the ideas flowing from the woods.
+                Your support keeps the lights on and the ideas flowing.
               </p>
             </div>
             <div className="shrink-0 flex flex-col items-center gap-2">
@@ -343,7 +393,7 @@ const GroveTiers = ({ vault, onSync }) => {
           </motion.div>
         </section>
 
-        {/* CONTACT SECTION */}
+        {/* CONTACT */}
         <section className="mb-32 max-w-4xl mx-auto">
           <div className="bg-[#110E16]/40 border border-white/5 p-10 md:p-16 rounded-[3.5rem] text-center">
             <h2 className="text-white font-serif italic text-3xl mb-10">Questions?</h2>
@@ -385,12 +435,12 @@ const GroveTiers = ({ vault, onSync }) => {
               </div>
             </div>
           </div>
-        <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap justify-center gap-6 text-[10px] font-black uppercase tracking-widest text-zinc-600">
-          <button onClick={() => navigate('/about')} className="hover:text-zinc-300 transition-colors">About</button>
-          <button onClick={() => navigate('/advisory')} className="hover:text-zinc-300 transition-colors">Advisory Services</button>
-          <button onClick={() => navigate('/contact-us')} className="hover:text-zinc-300 transition-colors">Contact</button>
-          <a href="mailto:hello@hearthandhorizon.ca" className="hover:text-zinc-300 transition-colors">hello@hearthandhorizon.ca</a>
-        </div>
+          <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap justify-center gap-6 text-[10px] font-black uppercase tracking-widest text-zinc-600">
+            <button onClick={() => navigate('/about')} className="hover:text-zinc-300 transition-colors">About</button>
+            <button onClick={() => navigate('/advisory')} className="hover:text-zinc-300 transition-colors">Advisory Services</button>
+            <button onClick={() => navigate('/contact-us')} className="hover:text-zinc-300 transition-colors">Contact</button>
+            <a href="mailto:hello@hearthandhorizon.ca" className="hover:text-zinc-300 transition-colors">hello@hearthandhorizon.ca</a>
+          </div>
         </footer>
       </div>
     </div>
