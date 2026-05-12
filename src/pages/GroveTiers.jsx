@@ -294,7 +294,7 @@ export default function GroveTiers({ vault, onSync }) {
               <div className="h-[1px] flex-1 bg-zinc-900" />
             </div>
             <p className="text-zinc-600 text-xs font-serif italic leading-relaxed max-w-lg">
-              Choose your level of access. Start free, or join the fire with a Hearthkeeper seat.
+              Start free with Brigid and the Library. Go deeper with a seat in the Founding Forest.
             </p>
           </motion.div>
 
@@ -310,7 +310,7 @@ export default function GroveTiers({ vault, onSync }) {
               <h3 className="text-2xl font-serif italic text-purple-300 mb-2">Seedling</h3>
               <p className="text-zinc-600 text-xs italic leading-relaxed mb-6">Begin your journey. The Whisper Tool, your Horizon title, and a seat at the fire — no card required.</p>
               <ul className="space-y-2 mb-8 flex-1">
-                {["Free Horizon Title Mapping", "Save your result to My Hearth", "Access the Embers community", "Weekly reflection prompts"].map((f) => (
+                {["Free Horizon Title Mapping", "Access the full Library resource grid", "Save your result to My Hearth", "Weekly reflection prompts"].map((f) => (
                   <li key={f} className="flex items-start gap-3 text-[11px] text-zinc-500">
                     <Check size={11} className="text-teal-500 mt-0.5 shrink-0" /> {f}
                   </li>
@@ -326,23 +326,22 @@ export default function GroveTiers({ vault, onSync }) {
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
               className="flex flex-col p-8 rounded-[2rem] bg-[#0E1A14] border border-teal-500/30 relative overflow-hidden">
               <div className="absolute top-4 right-4">
-                <span className="text-[8px] font-black uppercase tracking-[0.4em] text-teal-400 border border-teal-500/30 px-3 py-1 rounded-full bg-teal-500/10">Most Popular</span>
+                <span className="text-[8px] font-black uppercase tracking-[0.4em] text-teal-400 border border-teal-500/30 px-3 py-1 rounded-full bg-teal-500/10">Community</span>
               </div>
               <div className="flex items-center justify-between mb-6 pr-28">
                 <span className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-600 border border-zinc-800 px-3 py-1 rounded-full">Full Access</span>
                 <span className="text-2xl font-black text-white">$9<span className="text-sm font-normal text-zinc-500">/mo</span></span>
               </div>
-              <h3 className="text-2xl font-serif italic text-teal-300 mb-2">Hearthkeeper</h3>
-              <p className="text-zinc-500 text-xs italic leading-relaxed mb-6">Full access to the Library, the Forge, the Horizon board, and all AI-powered career translation tools.</p>
+              <h3 className="text-2xl font-serif italic text-teal-300 mb-2">The Founding Forest</h3>
+              <p className="text-zinc-500 text-xs italic leading-relaxed mb-6">A private community for public-sector professionals in transition. Live sessions, peer cohorts, and direct access to Margaret's frameworks.</p>
               <ul className="space-y-2 mb-8 flex-1">
                 {[
-                  "Everything in Seedling",
-                  "Full Library access (High Forge + Wayfarer's Cache)",
-                  "Brigid's Counsel — AI resume analysis",
-                  "The Rite of Renaming — power verb engine",
-                  "Master Strategy Deck",
-                  "Horizon job discovery board",
-                  "Soul Compass alignment calibration"
+                  "Private community of peers in transition",
+                  "Live group sessions with Margaret",
+                  "Full AI tool suite — Brigid, Rite of Renaming, Soul Compass",
+                  "Master Strategy Deck & Horizon board",
+                  "Early access to new frameworks & resources",
+                  "Direct feedback on your Horizon title"
                 ].map((f) => (
                   <li key={f} className="flex items-start gap-3 text-[11px] text-zinc-500">
                     <Check size={11} className="text-teal-500 mt-0.5 shrink-0" /> {f}
@@ -351,7 +350,7 @@ export default function GroveTiers({ vault, onSync }) {
               </ul>
               <button onClick={() => window.location.href = 'https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03'}
                 className="w-full py-4 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20">
-                <Flame size={11} className="inline mr-2" /> Become a Hearthkeeper →
+                <Flame size={11} className="inline mr-2" /> Join the Founding Forest →
               </button>
             </motion.div>
           </div>

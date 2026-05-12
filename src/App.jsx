@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { Flame, BookOpen, Activity, Compass, LayoutDashboard, Trees, ShieldCheck } from 'lucide-react';
+import { Flame, BookOpen, Compass, LayoutDashboard, Trees, ShieldCheck } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 // Hearth & Horizon Ecosystem Components
@@ -14,7 +14,7 @@ import About from './pages/About';
 import ContactPage from './pages/ContactPage';
 import Advisory from './pages/Advisory';
 // CulturalFit archived — tools consolidated into Library > High Forge
-import EmbersChat from './pages/EmbersChat';
+// EmbersChat archived — community focus shifted to Founding Forest tier
 
 export default function App() {
   const navigate = useNavigate();
@@ -145,7 +145,6 @@ export default function App() {
       { label: 'Hearth', path: '/hearth', icon: Flame },
       { label: 'Library', path: '/library', icon: BookOpen },
       { label: 'Horizon', path: '/horizon', icon: LayoutDashboard },
-      { label: 'Embers', path: '/embers', icon: Activity }
     ];
 
     if (isDesktop) {
@@ -239,7 +238,7 @@ export default function App() {
             <Route path="/hearth" element={<YourHearth vault={vault} onSync={handleSync} onResumeSync={handleResumeSync} isAdmin={isAdmin} />} />
             <Route path="/library" element={<Library vault={vault} onRefresh={handleSync} onSync={handleSync} isAdmin={isAdmin} />} />
             <Route path="/horizon" element={<Canopy vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
-            <Route path="/embers" element={<EmbersChat vault={vault} isAdmin={isAdmin} />} />
+            <Route path="/embers" element={<Navigate to="/grove" replace />} />
             {/* /culture archived — identity tools now in /library High Forge */}
             <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             <Route path="/contact" element={<Contact vault={vault} onRefresh={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} />} />
