@@ -87,7 +87,7 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
   };
 
   return (
-    <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="space-y-16 pb-48">
+    <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} className="space-y-20 pb-56">
 
       {/* NARRATIVE BANNER */}
       <div className="p-5 rounded-[1.5rem] bg-purple-500/[0.03] border border-purple-500/10 flex items-center gap-4">
@@ -97,7 +97,7 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
         </p>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-6">
 
         {/* IDENTITY LEDGER */}
         <CacheSection id="ledger" title="The Identity Ledger" desc="Worksheet PDF & Identity Slides — decouple your worth."
@@ -135,8 +135,8 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
               <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-black">Trailblazer's Blueprint</p>
               <h4 className="text-2xl font-serif italic text-white">ATS-Optimized Resume Template</h4>
               <a href={BLUEPRINT_URL} target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-10 h-14 bg-purple-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-500 transition-all">
-                <FileText size={14} /> Secure Blueprint
+                className="inline-flex items-center gap-3 px-10 h-14 bg-teal-500 text-black rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20">
+                <FileText size={14} /> Open Blueprint
               </a>
             </div>
           </div>
@@ -246,11 +246,11 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
 
                 </motion.div>
               ) : provisionsTab === 'amazon' ? (
-                <motion.div key="amz" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <motion.div key="amz" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
+                  <div className="grid grid-cols-2 gap-4">
                     {AMZ_LISTS.map((list) => (
                       <a key={list.label} href={list.url} target="_blank" rel="noopener noreferrer"
-                        className={`flex items-center justify-between gap-3 bg-black/40 border border-white/10 px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-300 hover:border-teal-500/40 hover:text-teal-400 transition-all ${list.isFeatured ? 'sm:col-span-2 border-teal-500/30 bg-teal-500/5 py-5' : ''}`}>
+                        className={`flex items-center justify-between gap-3 bg-black/40 border border-white/10 px-5 py-5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-300 hover:border-teal-500/40 hover:text-teal-400 transition-all ${list.isFeatured ? 'col-span-2 border-teal-500/30 bg-teal-500/5 py-6' : ''}`}>
                         <span className="flex items-center gap-2">
                           {list.isFeatured ? <BookOpen size={13} className="text-teal-500" /> : <Package size={11} className="text-zinc-500" />}
                           {list.label}
@@ -275,6 +275,12 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
             </AnimatePresence>
           </div>
         </CacheSection>
+      </div>
+
+      {/* SME Signature */}
+      <div className="pt-8 border-t border-zinc-900 text-center space-y-1">
+        <p className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-800">Frameworks curated by</p>
+        <p className="text-[10px] font-serif italic text-zinc-600">Margaret Rideout, M.Ed. — 13+ Years in Program Management & Curriculum Development</p>
       </div>
     </motion.div>
   );

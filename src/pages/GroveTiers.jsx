@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import SanctuaryTransition from '../components/SanctuaryTransition';
 import {
-  Check, Leaf, Mountain, UserPlus, Flame, Sparkles,
-  LogIn, ChevronDown, BookOpen, Code2, FileText, Package
+  Check, Flame, Sparkles,
+  LogIn, ChevronDown
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -193,72 +193,69 @@ const GOODS = [
   },
 ];
 
-function DigitalGoods() {
+function GoodCard({ good }) {
+  const [expanded, setExpanded] = useState(false);
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {GOODS.map((good) => (
-        <motion.div key={good.id} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
-          className="flex flex-col p-8 md:p-10 rounded-[2rem] bg-[#0E0C14] border border-zinc-800">
-          <div className="flex items-center justify-between mb-6">
-            <span className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-600 border border-zinc-800 px-3 py-1 rounded-full">{good.tag}</span>
-            <span className="text-2xl font-black text-white">{good.price}</span>
-          </div>
-          <h3 className="text-2xl font-serif italic text-white mb-3">{good.title}</h3>
-          <p className="text-zinc-500 text-sm italic leading-relaxed mb-6">{good.description}</p>
-          <ul className="space-y-2 mb-8 flex-1">
+    <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+      className="flex flex-col p-8 md:p-10 rounded-[2rem] bg-[#0E0C14] border border-zinc-800">
+      <div className="flex items-center justify-between mb-6">
+        <span className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-600 border border-zinc-800 px-3 py-1 rounded-full">{good.tag}</span>
+        <span className="text-2xl font-black text-white">{good.price}</span>
+      </div>
+      <h3 className="text-2xl font-serif italic text-purple-300 mb-3">{good.title}</h3>
+      <p className="text-zinc-500 text-sm italic leading-relaxed mb-4">{good.description}</p>
+
+      {/* Progressive disclosure */}
+      <button onClick={() => setExpanded(p => !p)}
+        className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-zinc-700 hover:text-zinc-400 transition-colors mb-4 w-fit">
+        <ChevronDown size={11} className={`transition-transform ${expanded ? 'rotate-180' : ''}`} />
+        {expanded ? 'Less detail' : "What's included"}
+      </button>
+
+      <AnimatePresence>
+        {expanded && (
+          <motion.ul initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden space-y-2 mb-6 flex-1">
             {good.features.map((f, i) => (
               <li key={i} className="flex items-start gap-3 text-[11px] text-zinc-500">
                 <span className="text-zinc-700 mt-0.5">—</span> {f}
               </li>
             ))}
-          </ul>
-          <button onClick={() => window.location.href = good.stripeUrl}
-            className="w-full py-4 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20">
-            {good.cta} →
-          </button>
-        </motion.div>
-      ))}
+          </motion.ul>
+        )}
+      </AnimatePresence>
+
+      <div className="flex-1" />
+      <button onClick={() => window.location.href = good.stripeUrl}
+        className="w-full py-4 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20 mt-4">
+        {good.cta} →
+      </button>
+    </motion.div>
+  );
+}
+
+function DigitalGoods() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {GOODS.map((good) => <GoodCard key={good.id} good={good} />)}
     </div>
   );
 }
 
 // ── SECTION 3: About Footer ──────────────────────────────────────────────────
-const TECHNICAL_PROOF = [
-  { icon: BookOpen, label: 'Atsanik Selene', sub: 'Narrative Design' },
-  { icon: Code2, label: 'Archetype Vault', sub: 'Technical Build' },
-  { icon: FileText, label: 'Mapping Engine', sub: 'AI Architecture' },
-  { icon: Package, label: 'Hearth & Horizon', sub: 'Full-Stack Product' },
-];
-
 function AboutFooter() {
   return (
     <div className="space-y-16">
-      {/* Credentials */}
+      {/* SME Signature */}
       <div className="text-center space-y-4">
-        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-zinc-700">Built by</p>
-        <h3 className="text-2xl font-serif italic text-zinc-300">Margaret Pardy</h3>
+        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-zinc-700">Frameworks curated by</p>
+        <h3 className="text-2xl font-serif italic text-zinc-300">Margaret Rideout, M.Ed.</h3>
         <p className="text-zinc-600 text-sm font-serif italic max-w-md mx-auto leading-relaxed">
-          BA, BEd, MEd in Indigenous Studies & Curriculum. 13 years in public education. The tools work because the expertise is real.
+          13+ Years in Program Management & Curriculum Development. The tools work because the expertise is real.
         </p>
         <div className="flex flex-wrap justify-center gap-2 pt-2">
-          {['M.Ed. Curriculum & Pedagogy', '13 Yrs Public Education', 'Indigenous Studies', 'AI-Assisted Career Tools'].map(c => (
+          {['M.Ed. Curriculum & Pedagogy', '13+ Yrs Program Management', 'Indigenous Studies', 'AI-Assisted Career Tools'].map(c => (
             <span key={c} className="text-[8px] font-black uppercase tracking-widest text-zinc-700 border border-zinc-800 px-3 py-1 rounded-full">{c}</span>
-          ))}
-        </div>
-      </div>
-
-      {/* Technical proof row */}
-      <div>
-        <p className="text-[8px] font-black uppercase tracking-[0.5em] text-zinc-800 text-center mb-5">Technical Proof</p>
-        <div className="flex flex-wrap justify-center gap-6">
-          {TECHNICAL_PROOF.map((p) => (
-            <div key={p.label} className="flex items-center gap-2 text-zinc-700 hover:text-zinc-500 transition-colors">
-              <p.icon size={13} />
-              <div>
-                <p className="text-[9px] font-black uppercase tracking-widest leading-none">{p.label}</p>
-                <p className="text-[8px] text-zinc-800">{p.sub}</p>
-              </div>
-            </div>
           ))}
         </div>
       </div>
@@ -333,7 +330,7 @@ export default function GroveTiers({ vault, onSync }) {
         <section className="space-y-10">
           <div className="space-y-2">
             <p className="text-[9px] font-black uppercase tracking-[0.5em] text-zinc-700">The Digital Goods</p>
-            <h2 className="text-3xl font-serif italic text-zinc-200">Go deeper. No call required.</h2>
+            <h2 className="text-3xl font-serif italic text-purple-300">Go deeper. No call required.</h2>
             <p className="text-zinc-600 text-sm italic">Everything you need is packaged. Buy it, use it, keep it.</p>
           </div>
           <DigitalGoods />

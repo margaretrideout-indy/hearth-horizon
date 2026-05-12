@@ -13,8 +13,8 @@ export default function ExpertiseBadge() {
           <GraduationCap size={13} className="text-teal-400" />
         </div>
         <div className="min-w-0">
-          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-500 leading-none mb-0.5">Built by</p>
-          <p className="text-[10px] font-serif italic text-zinc-300 leading-none truncate">Margaret Pardy — M.Ed. · 13 yrs curriculum</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-500 leading-none mb-0.5">Frameworks curated by</p>
+          <p className="text-[10px] font-serif italic text-zinc-300 leading-none truncate">Margaret Rideout, M.Ed. · 13+ Yrs Program Management & Curriculum</p>
         </div>
       </div>
     </div>

@@ -389,8 +389,8 @@ function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
       {/* STRATEGY DECK HERO */}
       <section>
         <div className="mb-6 flex items-center gap-4">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500">The Grand Map</h3>
-          <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
+          <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400">The Grand Map</h3>
+          <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
         </div>
         <div className="p-10 md:p-14 bg-gradient-to-br from-[#16121D] to-[#0D0B10] border border-teal-500/20 rounded-[3rem] relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity">
@@ -418,8 +418,8 @@ function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
       {/* THE SMITHY — accordion tools */}
       <section>
         <div className="mb-6 flex items-center gap-4">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500">The Smithy — Active Tools</h3>
-          <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
+          <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400">The Smithy — Active Tools</h3>
+          <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
         </div>
         <div className="space-y-3">
           {smithyTools.map((tool) => (
@@ -518,7 +518,7 @@ export default function Library({ vault, onRefresh, onSync, isAdmin }) {
 
         {/* HEADER */}
         <header className="mb-16 text-left">
-          <div className="flex items-center gap-3 text-teal-500/80 mb-5">
+          <div className="flex items-center gap-3 text-purple-400/70 mb-5">
             <BookOpen size={18} />
             <span className="text-[10px] font-black uppercase tracking-[0.5em] italic">
               {VOLUME_LABELS[currentVolume].tag}
@@ -527,7 +527,7 @@ export default function Library({ vault, onRefresh, onSync, isAdmin }) {
           <h1 className="text-6xl md:text-8xl font-serif italic text-white tracking-tighter leading-none mb-6">
             The <span className="text-zinc-800 font-sans not-italic font-extralight uppercase">Library</span>
           </h1>
-          <p className="max-w-xl text-zinc-500 text-sm leading-relaxed italic border-l border-teal-500/20 pl-6">
+          <p className="max-w-xl text-zinc-500 text-sm leading-relaxed italic border-l border-purple-500/20 pl-6">
             {VOLUME_LABELS[currentVolume].subtitle}
           </p>
         </header>
@@ -536,6 +536,14 @@ export default function Library({ vault, onRefresh, onSync, isAdmin }) {
           ? <HighForge vault={vault} onSync={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} navigate={navigate} />
           : <WayfarersCache vault={vault} onSync={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} />
         }
+      </div>
+
+      {/* SME Signature */}
+      <div className="max-w-5xl mx-auto px-6 pb-8 text-center space-y-1">
+        <div className="border-t border-zinc-900 pt-8">
+          <p className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-800">Frameworks curated by</p>
+          <p className="text-[10px] font-serif italic text-zinc-600">Margaret Rideout, M.Ed. — 13+ Years in Program Management & Curriculum Development</p>
+        </div>
       </div>
 
       <ExpertiseBadge />
