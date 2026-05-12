@@ -1,35 +1,27 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ExternalLink, ClipboardList, Users, FileText, ArrowRight, Sparkles } from 'lucide-react';
-
-const CALENDLY_URL = "https://calendly.com"; // Replace with your actual Calendly/booking link
-const DISCOVERY_PAYMENT_URL = "https://margaretpardy.gumroad.com"; // Replace with your actual payment link
+import { ClipboardList, Users, FileText, GraduationCap } from 'lucide-react';
+import ExpertiseBadge from '../components/ExpertiseBadge';
 
 const SERVICES = [
   {
     icon: ClipboardList,
-    color: "text-teal-400",
-    border: "border-teal-500/20",
-    bg: "bg-teal-500/5",
     title: "Curriculum Audits",
-    description: "A structured review of institutional learning frameworks, identifying gaps and translating legacy curriculum into market-ready competencies.",
+    description: "A structured review of institutional learning frameworks. Identifies gaps and translates legacy curriculum into market-ready competencies. Delivered as a written report — no ongoing engagement required.",
+    bullets: ["Gap analysis against private-sector benchmarks", "Competency translation matrix", "Actionable recommendations document"],
   },
   {
     icon: Users,
-    color: "text-purple-400",
-    border: "border-purple-500/20",
-    bg: "bg-purple-500/5",
     title: "Cultural Alignment Reviews",
-    description: "Deep-dive assessments that map organizational culture against private-sector expectations, surfacing misalignments before they cost you.",
+    description: "Deep-dive assessments that map organizational culture against private-sector expectations. Surfaces misalignments before they cost you time or talent. Ideal for teams mid-transition.",
+    bullets: ["Culture gap scorecard", "Leadership readiness profile", "30-day alignment roadmap"],
   },
   {
     icon: FileText,
-    color: "text-amber-400",
-    border: "border-amber-500/20",
-    bg: "bg-amber-500/5",
     title: "Digital Transition SOPs",
-    description: "Custom standard operating procedures that bridge institutional processes with modern digital workflows — ready to implement on day one.",
+    description: "Custom standard operating procedures that bridge institutional processes with modern digital workflows. Built to implement on day one — no handholding required.",
+    bullets: ["Role-specific SOP templates", "Digital tool mapping", "Onboarding checklist package"],
   },
 ];
 
@@ -38,106 +30,99 @@ export default function Advisory() {
 
   return (
     <div className="min-h-screen bg-[#0A080D] text-zinc-200 font-sans page-fade-in">
-      <div className="max-w-4xl mx-auto px-6 pt-16 pb-32 space-y-20">
+      <div className="max-w-3xl mx-auto px-6 pt-20 pb-40 space-y-28">
 
         {/* ── HEADER ── */}
-        <header className="space-y-6">
+        <header className="space-y-6 pt-8">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-teal-500/70 mb-4">
-              Corporate & Educational Advisory
+            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-zinc-700 mb-5">
+              SME Knowledge Products
             </p>
-            <h1 className="text-5xl md:text-7xl font-serif italic text-white tracking-tighter leading-none mb-6">
-              Transitioning Professionals{' '}
-              <span className="text-zinc-600 font-sans not-italic font-extralight uppercase">
-                from Institutions to the Digital Frontier.
-              </span>
+            <h1 className="text-4xl md:text-6xl font-serif italic text-white tracking-tighter leading-tight mb-6">
+              The Expertise,<br />
+              <span className="text-teal-400">Packaged.</span>
             </h1>
-            <p className="max-w-2xl text-zinc-500 text-sm leading-relaxed italic border-l border-teal-500/20 pl-6">
-              Specialized SME advisory for organizations and professionals navigating the shift from public-sector legacy to private-sector impact. Strategic. Measured. Human.
+            <p className="max-w-xl text-zinc-500 text-sm leading-relaxed italic border-l border-zinc-800 pl-6">
+              13 years of curriculum architecture and institutional leadership — distilled into digital products. No meetings. No retainers. Buy the output, use it immediately.
             </p>
           </motion.div>
         </header>
 
-        {/* ── SERVICES GRID ── */}
-        <section className="space-y-8">
-          <div className="flex items-center gap-4">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500">Services</h2>
-            <div className="h-[1px] flex-1 bg-gradient-to-r from-teal-500/20 to-transparent" />
+        {/* ── SERVICES ── */}
+        <section className="space-y-6">
+          <div className="flex items-center gap-4 mb-8">
+            <h2 className="text-[9px] font-black uppercase tracking-[0.5em] text-zinc-700">What's Available</h2>
+            <div className="h-[1px] flex-1 bg-zinc-900" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-5">
             {SERVICES.map((s, i) => (
               <motion.div
                 key={s.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className={`p-8 rounded-[2rem] border ${s.border} ${s.bg} flex flex-col gap-5`}
+                transition={{ delay: i * 0.08 }}
+                className="p-8 md:p-10 rounded-[2rem] bg-[#0E0C14] border border-zinc-800 flex flex-col gap-5"
               >
-                <div className={`w-10 h-10 flex items-center justify-center rounded-xl bg-black/40 border border-white/10 ${s.color}`}>
-                  <s.icon size={18} />
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-zinc-900 border border-zinc-800 text-teal-400 shrink-0 mt-0.5">
+                    <s.icon size={18} />
+                  </div>
+                  <div className="space-y-2 flex-1">
+                    <h3 className="text-xl font-serif italic text-purple-300">{s.title}</h3>
+                    <p className="text-[12px] text-zinc-500 leading-relaxed italic">{s.description}</p>
+                  </div>
                 </div>
-                <div className="space-y-2 flex-1">
-                  <h3 className="text-lg font-serif italic text-white">{s.title}</h3>
-                  <p className="text-[11px] text-zinc-500 leading-relaxed italic">{s.description}</p>
+                <ul className="pl-14 space-y-2">
+                  {s.bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-2 text-[11px] text-zinc-600">
+                      <span className="text-teal-500/40 mt-0.5 shrink-0">—</span> {b}
+                    </li>
+                  ))}
+                </ul>
+                <div className="pl-14">
+                  <button
+                    onClick={() => navigate('/')}
+                    className="py-3 px-8 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20">
+                    Get the {s.title.split(' ')[0]} Audit →
+                  </button>
                 </div>
               </motion.div>
             ))}
           </div>
         </section>
 
-        {/* ── DISCOVERY SESSION CTA ── */}
-        <motion.section
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="p-10 md:p-14 bg-gradient-to-br from-[#0F1A16] to-[#0A080D] border border-teal-500/20 rounded-[3rem] relative overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,184,166,0.06),transparent_70%)] pointer-events-none" />
-          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-            <div className="space-y-3 max-w-lg">
-              <div className="flex items-center gap-2">
-                <Sparkles size={14} className="text-teal-400" />
-                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/70">Discovery Session</span>
-              </div>
-              <h3 className="text-2xl md:text-3xl font-serif italic text-white leading-snug">
-                Ready to map the terrain?
-              </h3>
-              <p className="text-zinc-500 text-sm italic leading-relaxed">
-                A focused 60-minute advisory session to assess your current position and chart a precise route forward.
-              </p>
-            </div>
-            <div className="flex flex-col gap-3 shrink-0 w-full md:w-auto">
-              <a
-                href={DISCOVERY_PAYMENT_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-3 h-14 px-10 bg-teal-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-teal-500/20 text-[10px] hover:bg-teal-400 transition-all"
-              >
-                Book Discovery Session <ExternalLink size={13} />
-              </a>
-              <a
-                href={CALENDLY_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 h-12 px-8 bg-white/5 border border-white/10 text-zinc-400 font-black uppercase tracking-widest rounded-2xl text-[10px] hover:border-teal-500/30 hover:text-zinc-200 transition-all"
-              >
-                View Availability <ArrowRight size={12} />
-              </a>
-            </div>
+        {/* ── CREDENTIALS ── */}
+        <section className="py-12 px-10 rounded-[2rem] bg-[#0E0C14] border border-zinc-800 space-y-5">
+          <div className="flex items-center gap-3 mb-2">
+            <GraduationCap size={16} className="text-teal-400" />
+            <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-700">Why These Tools Work</span>
           </div>
-        </motion.section>
+          <p className="text-zinc-400 font-serif italic text-base leading-relaxed">
+            "I spent 13 years inside institutional curricula — designing it, auditing it, and watching professionals struggle to translate it into language the private sector understands."
+          </p>
+          <p className="text-zinc-500 text-sm leading-relaxed italic">
+            Every product here is a distillation of that experience. The frameworks are real. The mappings are tested. The results are immediate.
+          </p>
+          <div className="flex flex-wrap gap-2 pt-2">
+            {['M.Ed. — Curriculum & Pedagogy', 'BA, BEd', 'Indigenous Studies', '13 Yrs Public Education'].map(c => (
+              <span key={c} className="text-[8px] font-black uppercase tracking-widest text-zinc-700 border border-zinc-800 px-3 py-1 rounded-full">{c}</span>
+            ))}
+          </div>
+        </section>
 
-        {/* ── BACK LINK ── */}
+        {/* ── BACK ── */}
         <div className="text-center">
           <button
-            onClick={() => navigate('/grove')}
-            className="text-[10px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-300 transition-colors"
+            onClick={() => navigate('/')}
+            className="text-[9px] font-black uppercase tracking-widest text-zinc-700 hover:text-zinc-400 transition-colors"
           >
-            ← Return to the Grove
+            ← Return to the Sanctuary
           </button>
         </div>
       </div>
+
+      <ExpertiseBadge />
     </div>
   );
 }

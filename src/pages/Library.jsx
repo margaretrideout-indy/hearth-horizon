@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import WayfarersCache from './Contact';
 import { base44 } from '@/api/base44Client';
+import ExpertiseBadge from '../components/ExpertiseBadge';
 
 // ── CONSTANTS ────────────────────────────────────────────────────────────────
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/edit?slide=id.p1#slide=id.p1";
@@ -318,7 +319,7 @@ function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
   ];
 
   return (
-    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="space-y-16 pb-48">
+    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="space-y-24 pb-56">
 
       {/* QUICK-START GUIDE */}
       <section>
@@ -432,7 +433,7 @@ function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
       </section>
 
       {/* THE SANCTUARY */}
-      <section className="space-y-8">
+      <section className="space-y-10">
         <div className="flex items-center gap-4 border-b border-white/5 pb-6">
           <div className="p-3 bg-orange-500/10 rounded-xl text-orange-500"><Heart size={22} /></div>
           <div>
@@ -442,14 +443,14 @@ function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {sanctuaryResources.map((item, idx) => (
-            <Card key={idx} className={`group p-7 bg-[#110E16] border-white/5 rounded-[2rem] flex flex-col justify-between h-full ${item.crisis ? 'ring-1 ring-rose-500/20' : ''}`}>
+            <Card key={idx} className={`group p-8 bg-[#0E0C14] border border-zinc-800 rounded-[2rem] flex flex-col justify-between h-full ${item.crisis ? 'ring-1 ring-rose-500/20' : ''}`}>
               <div className="space-y-4">
                 <div className="flex justify-between items-start">
-                  <div className={`p-3 rounded-xl bg-black/40 border border-white/5 ${item.color}`}><item.icon size={20} /></div>
-                  <span className={`text-[9px] font-black uppercase tracking-tighter px-3 py-1 rounded-full ${item.crisis ? 'bg-rose-500 text-white' : 'text-zinc-600 bg-white/5'}`}>{item.type}</span>
+                  <div className={`p-3 rounded-xl bg-zinc-900 border border-zinc-800 ${item.color}`}><item.icon size={20} /></div>
+                  <span className={`text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${item.crisis ? 'bg-rose-500 text-white border-rose-500' : 'text-zinc-600 bg-transparent border-zinc-800'}`}>{item.type}</span>
                 </div>
-                <h3 className="text-xl font-serif italic text-zinc-200">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-zinc-600">{item.description}</p>
+                <h3 className="text-lg font-serif italic text-purple-300">{item.title}</h3>
+                <p className="text-[12px] leading-relaxed text-zinc-500 italic">{item.description}</p>
                 {item.crisis && (
                   <div className="flex flex-col gap-1 px-4 py-3 rounded-xl bg-rose-500/10 border border-rose-500/20">
                     <span className="text-xl font-black text-rose-500">{item.crisis.line}</span>
@@ -458,7 +459,7 @@ function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
                 )}
               </div>
               <a href={item.link} target="_blank" rel="noopener noreferrer"
-                className={`mt-6 w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${item.crisis ? 'bg-rose-500 text-white hover:bg-rose-600' : 'bg-white/5 border border-white/5 text-zinc-400 hover:text-white'}`}>
+                className={`mt-6 w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${item.crisis ? 'bg-rose-500 text-white hover:bg-rose-600' : 'bg-teal-500 text-black hover:bg-teal-400 shadow-md shadow-teal-500/20'}`}>
                 Open Resource <ExternalLink size={12} />
               </a>
             </Card>
@@ -536,6 +537,8 @@ export default function Library({ vault, onRefresh, onSync, isAdmin }) {
           : <WayfarersCache vault={vault} onSync={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} />
         }
       </div>
+
+      <ExpertiseBadge />
 
       {/* VOLUME NAV */}
       <div className="fixed bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 z-[110] w-fit px-4 max-w-[calc(100vw-2rem)]">

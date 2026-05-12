@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { base44 } from '@/api/base44Client';
+import ExpertiseBadge from '../components/ExpertiseBadge';
 
 // ── THANK YOU OVERLAY ────────────────────────────────────────────────────────
 const ThankYouOverlay = ({ tier, onClose }) => {
@@ -482,7 +483,8 @@ export default function YourHearth({ vault, onSync, onRefresh, onResumeSync }) {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-12 pb-32 page-fade-in relative px-4 md:px-6">
+    <div className="max-w-6xl mx-auto space-y-16 pb-40 page-fade-in relative px-4 md:px-6">
+      <ExpertiseBadge />
 
       <AnimatePresence>
         {showSuccessOverlay && <ThankYouOverlay tier={successTier} onClose={() => setShowSuccessOverlay(false)} />}

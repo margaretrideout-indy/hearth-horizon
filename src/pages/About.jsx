@@ -1,27 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Flame, Heart, BookOpen, Globe, Users, ArrowRight } from 'lucide-react';
+import { Flame, Heart, BookOpen, Users, ArrowRight } from 'lucide-react';
 
 export default function About() {
   return (
     <div className="min-h-screen bg-[#0A080D] text-zinc-300 font-sans">
 
-      {/* Simple nav */}
-      <nav className="fixed top-0 left-0 w-full z-50 bg-[#0A080D]/90 backdrop-blur-xl border-b border-white/5"
+      {/* Nav — synced with Grove */}
+      <nav className="fixed top-0 left-0 w-full z-50 bg-[#0A080D]/95 backdrop-blur-xl border-b border-zinc-900"
         style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-        <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 text-teal-400 hover:text-teal-300 transition-colors">
-            <Flame size={18} />
-            <span className="text-[10px] font-black uppercase tracking-widest">Hearth & Horizon</span>
-          </Link>
-          <div className="flex items-center gap-6">
-            <Link to="/about" className="text-[10px] font-black uppercase tracking-widest text-teal-400">About</Link>
-            <Link to="/contact-us" className="text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">Contact</Link>
+        <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
+          <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-700">Hearth & Horizon</span>
+          <div className="flex items-center gap-4">
+            <Link to="/contact-us" className="text-[9px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-300 transition-colors">Contact</Link>
+            <Link to="/" className="text-[9px] font-black uppercase tracking-widest text-zinc-600 hover:text-teal-400 transition-colors">Enter Sanctuary</Link>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-4xl mx-auto px-6 pt-32 pb-24 space-y-16">
+      <main className="max-w-3xl mx-auto px-6 pt-28 pb-32 space-y-24">
 
         {/* Hero */}
         <header className="space-y-6">
