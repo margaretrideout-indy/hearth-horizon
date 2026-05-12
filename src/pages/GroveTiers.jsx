@@ -170,30 +170,7 @@ function WhisperTool({ onSave }) {
 }
 
 // ── SECTION 2: Digital Goods ─────────────────────────────────────────────────
-const GOODS = [
-  {
-    id: 'audit',
-    tag: 'Instant PDF Report',
-    title: 'The Full Audit',
-    price: '$9',
-    description: 'Your complete Institutional-to-Private Sector Mapping Report. Built on 13 years of curriculum expertise. No call required.',
-    features: ['Full sector archetype profile', 'Top 5 transferable competencies', 'Horizon title + power verb set', 'Private-sector keyword map'],
-    cta: 'Get the Audit',
-    stripeUrl: 'https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03',
-    accent: 'teal',
-  },
-  {
-    id: 'framework',
-    tag: 'Digital Template',
-    title: 'The Archetype Vault',
-    price: '$19',
-    description: 'The complete framework Margaret uses to map public-sector identities. A Notion-ready template you can apply to your own clients or career.',
-    features: ['12 archetype identity profiles', 'Translation lexicon (150+ verb pairs)', 'Ethics Compass calibration guide', 'Sector-by-sector mapping matrix'],
-    cta: 'Buy the Framework',
-    stripeUrl: 'https://buy.stripe.com/aFafZhfG8aebdqI4hIdAk04',
-    accent: 'teal',
-  },
-];
+const GOODS = [];
 
 function GoodCard({ good }) {
   const [expanded, setExpanded] = useState(false);
@@ -319,15 +296,7 @@ export default function GroveTiers({ vault, onSync }) {
           </motion.div>
         </section>
 
-        {/* ── SECTION 2: Digital Goods ── */}
-        <section className="space-y-10">
-          <div className="space-y-2">
-            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-zinc-700">The Digital Goods</p>
-            <h2 className="text-3xl font-serif italic text-purple-300">Go deeper. No call required.</h2>
-            <p className="text-zinc-600 text-sm italic">Everything you need is packaged. Buy it, use it, keep it.</p>
-          </div>
-          <DigitalGoods />
-        </section>
+
 
         {/* ── SECTION 3: About Footer ── */}
         <section className="border-t border-zinc-900 pt-20 space-y-16">
