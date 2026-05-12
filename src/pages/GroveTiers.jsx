@@ -6,7 +6,7 @@ import StickyNav from '@/components/StickyNav';
 import SMEFooter from '@/components/SMEFooter';
 import {
   Check, Flame, Sparkles,
-  LogIn, ChevronDown
+  LogIn, ChevronDown, Heart, Star, Coffee
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -285,6 +285,95 @@ export default function GroveTiers({ vault, onSync }) {
         </section>
 
 
+
+        {/* ── SECTION 2: Tiers ── */}
+        <section className="space-y-10">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="space-y-4">
+            <div className="flex items-center gap-4">
+              <h2 className="text-[9px] font-black uppercase tracking-[0.5em] text-zinc-700">Join the Grove</h2>
+              <div className="h-[1px] flex-1 bg-zinc-900" />
+            </div>
+            <p className="text-zinc-600 text-xs font-serif italic leading-relaxed max-w-lg">
+              Choose your level of access. Start free, or join the fire with a Hearthkeeper seat.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {/* FREE SEEDLING */}
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+              className="flex flex-col p-8 rounded-[2rem] bg-[#0E0C14] border border-zinc-800">
+              <div className="flex items-center justify-between mb-6">
+                <span className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-600 border border-zinc-800 px-3 py-1 rounded-full">Free Forever</span>
+                <span className="text-2xl font-black text-white">$0</span>
+              </div>
+              <h3 className="text-2xl font-serif italic text-purple-300 mb-2">Seedling</h3>
+              <p className="text-zinc-600 text-xs italic leading-relaxed mb-6">Begin your journey. The Whisper Tool, your Horizon title, and a seat at the fire — no card required.</p>
+              <ul className="space-y-2 mb-8 flex-1">
+                {["Free Horizon Title Mapping", "Save your result to My Hearth", "Access the Embers community", "Weekly reflection prompts"].map((f) => (
+                  <li key={f} className="flex items-start gap-3 text-[11px] text-zinc-500">
+                    <Check size={11} className="text-teal-500 mt-0.5 shrink-0" /> {f}
+                  </li>
+                ))}
+              </ul>
+              <button onClick={() => base44.auth.redirectToLogin('/hearth')}
+                className="w-full py-4 bg-zinc-800 border border-zinc-700 text-zinc-300 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-zinc-700 transition-all">
+                <LogIn size={11} className="inline mr-2" /> Enter Free →
+              </button>
+            </motion.div>
+
+            {/* HEARTHKEEPER */}
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+              className="flex flex-col p-8 rounded-[2rem] bg-[#0E1A14] border border-teal-500/30 relative overflow-hidden">
+              <div className="absolute top-4 right-4">
+                <span className="text-[8px] font-black uppercase tracking-[0.4em] text-teal-400 border border-teal-500/30 px-3 py-1 rounded-full bg-teal-500/10">Most Popular</span>
+              </div>
+              <div className="flex items-center justify-between mb-6 pr-28">
+                <span className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-600 border border-zinc-800 px-3 py-1 rounded-full">Full Access</span>
+                <span className="text-2xl font-black text-white">$9<span className="text-sm font-normal text-zinc-500">/mo</span></span>
+              </div>
+              <h3 className="text-2xl font-serif italic text-teal-300 mb-2">Hearthkeeper</h3>
+              <p className="text-zinc-500 text-xs italic leading-relaxed mb-6">Full access to the Library, the Forge, the Horizon board, and all AI-powered career translation tools.</p>
+              <ul className="space-y-2 mb-8 flex-1">
+                {[
+                  "Everything in Seedling",
+                  "Full Library access (High Forge + Wayfarer's Cache)",
+                  "Brigid's Counsel — AI resume analysis",
+                  "The Rite of Renaming — power verb engine",
+                  "Master Strategy Deck",
+                  "Horizon job discovery board",
+                  "Soul Compass alignment calibration"
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-3 text-[11px] text-zinc-500">
+                    <Check size={11} className="text-teal-500 mt-0.5 shrink-0" /> {f}
+                  </li>
+                ))}
+              </ul>
+              <button onClick={() => window.location.href = 'https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03'}
+                className="w-full py-4 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20">
+                <Flame size={11} className="inline mr-2" /> Become a Hearthkeeper →
+              </button>
+            </motion.div>
+          </div>
+
+          {/* KO-FI */}
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+            className="flex flex-col sm:flex-row items-center justify-between gap-5 p-6 rounded-2xl bg-zinc-900/30 border border-zinc-800">
+            <div className="flex items-center gap-4">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
+                <Coffee size={16} className="text-amber-400" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Support the Fire</p>
+                <p className="text-[11px] text-zinc-600 italic mt-0.5">A one-time contribution keeps this platform alive for those who need it most.</p>
+              </div>
+            </div>
+            <a href="https://ko-fi.com/hearthandhorizon" target="_blank" rel="noopener noreferrer"
+              className="shrink-0 px-6 py-3 bg-amber-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-amber-400 transition-all shadow-md shadow-amber-500/20 whitespace-nowrap">
+              <Heart size={11} className="inline mr-1.5" /> Buy a Coffee →
+            </a>
+          </motion.div>
+        </section>
 
         {/* ── SECTION 3: About Footer ── */}
         <section className="border-t border-zinc-900 pt-24 space-y-20">
