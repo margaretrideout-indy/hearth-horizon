@@ -4,13 +4,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import SanctuaryTransition from '../components/SanctuaryTransition';
 import {
   Flame, Heart, Sprout, Globe, ShieldCheck, Check, Leaf, Mountain, UserPlus,
-  Smartphone, Share2, PlusSquare, Sparkles, Send, Zap, FileText, Map, MessageSquare, Briefcase,
-  MoreVertical, Star, Library as LibraryIcon, Compass, ArrowRight, LogIn, ChevronRight,
-  ClipboardList, GraduationCap, Users
+  Smartphone, Share2, Sparkles, Briefcase,
+  MoreVertical, Star, Library as LibraryIcon, Compass, LogIn,
+  GraduationCap, Users, ExternalLink, Code2, BookOpen
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
-// Legacy title → Horizon title mapping
+// ── Legacy → Horizon title mapping ──────────────────────────────────────────
 const LEGACY_MAP = [
   { triggers: ['teacher', 'elementary teacher', 'secondary teacher', 'high school teacher', 'classroom teacher'], horizon: 'Learning & Development Architect' },
   { triggers: ['police officer', 'police', 'constable', 'rcmp officer', 'military officer', 'army officer', 'navy officer', 'soldier', 'veteran', 'armed forces'], horizon: 'Operational Risk & Strategic Lead' },
@@ -61,6 +61,7 @@ function mapLegacyToHorizon(input) {
   return null;
 }
 
+// ── Brigid Sampler ────────────────────────────────────────────────────────────
 function BrigidSampler({ onSave }) {
   const [legacyTitle, setLegacyTitle] = useState('');
   const [horizonTitle, setHorizonTitle] = useState(null);
@@ -98,10 +99,8 @@ function BrigidSampler({ onSave }) {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-      className="max-w-2xl mx-auto mb-24"
-    >
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+      className="max-w-2xl mx-auto">
       <AnimatePresence>
         {showBrigidToast && (
           <motion.div
@@ -126,7 +125,6 @@ function BrigidSampler({ onSave }) {
           </div>
           <h3 className="text-2xl md:text-3xl font-serif italic text-white">Whisper your legacy title to Brigid.</h3>
           <p className="text-[11px] text-zinc-500 italic">She will translate it into the language of your next horizon — instantly.</p>
-
           <div className="relative">
             <input
               ref={inputRef}
@@ -137,7 +135,6 @@ function BrigidSampler({ onSave }) {
               className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-purple-500/40 transition-all placeholder:text-zinc-700 font-serif italic"
             />
           </div>
-
           <AnimatePresence>
             {horizonTitle && (
               <motion.div
@@ -149,9 +146,7 @@ function BrigidSampler({ onSave }) {
                   <span className="text-[8px] font-black uppercase tracking-widest text-purple-500/40">Brigid's Reading</span>
                   <div className="h-[1px] flex-1 bg-gradient-to-l from-purple-500/20 to-transparent" />
                 </div>
-                <motion.div
-                  className={`p-5 rounded-2xl border ${isPoetic ? 'bg-amber-500/[0.03] border-amber-500/20' : 'bg-purple-500/[0.04] border-purple-500/20'}`}
-                >
+                <motion.div className={`p-5 rounded-2xl border ${isPoetic ? 'bg-amber-500/[0.03] border-amber-500/20' : 'bg-purple-500/[0.04] border-purple-500/20'}`}>
                   <p className={`text-[9px] font-black uppercase tracking-widest mb-2 ${isPoetic ? 'text-amber-500/50' : 'text-purple-500/50'}`}>
                     {isPoetic ? "Brigid Speaks" : "Your Horizon Title"}
                   </p>
@@ -181,6 +176,67 @@ function BrigidSampler({ onSave }) {
   );
 }
 
+// ── Project Gallery ───────────────────────────────────────────────────────────
+const PROJECTS = [
+  {
+    title: 'Atsanik Selene',
+    tag: 'Narrative Design',
+    description: 'An Indigenous-led immersive storytelling project weaving language revitalization with digital narrative architecture.',
+    accent: 'teal',
+    icon: BookOpen,
+    link: null,
+  },
+  {
+    title: 'The Archetype Vault',
+    tag: 'Technical Build',
+    description: 'The AI-powered identity engine at the core of Hearth & Horizon — translating institutional careers into private-sector archetypes.',
+    accent: 'purple',
+    icon: Code2,
+    link: null,
+  },
+];
+
+function ProjectGallery({ navigate }) {
+  return (
+    <section className="mb-[4.8rem] py-[3.6rem] px-6 md:px-10 rounded-[2.5rem] bg-[#0E0C14] border border-white/5">
+      <div className="flex items-center gap-4 mb-10">
+        <div className="h-[1px] w-8 bg-teal-500/30" />
+        <span className="text-[9px] font-black uppercase tracking-[0.5em] text-teal-500/60">Project Gallery</span>
+        <div className="h-[1px] flex-1 bg-teal-500/10" />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {PROJECTS.map((p) => {
+          const accentClasses = p.accent === 'teal'
+            ? { border: 'border-teal-500/20', bg: 'bg-teal-500/[0.04]', tag: 'bg-teal-500/10 text-teal-300 border-teal-500/20', icon: 'text-teal-400' }
+            : { border: 'border-purple-500/20', bg: 'bg-purple-500/[0.04]', tag: 'bg-purple-500/10 text-purple-300 border-purple-500/20', icon: 'text-purple-400' };
+          return (
+            <motion.div key={p.title} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
+              className={`p-7 rounded-[2rem] border ${accentClasses.border} ${accentClasses.bg} flex flex-col gap-4`}>
+              <div className="flex items-start justify-between">
+                <p.icon size={18} className={accentClasses.icon} />
+                <span className={`text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${accentClasses.tag}`}>{p.tag}</span>
+              </div>
+              <div>
+                <h4 className="text-white font-serif italic text-xl mb-2">{p.title}</h4>
+                <p className="text-zinc-500 text-[11px] leading-relaxed italic">{p.description}</p>
+              </div>
+              {p.link ? (
+                <a href={p.link} target="_blank" rel="noopener noreferrer"
+                  className="mt-auto inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-zinc-600 hover:text-white transition-colors">
+                  View Project <ExternalLink size={10} />
+                </a>
+              ) : (
+                <span className="mt-auto text-[9px] font-black uppercase tracking-widest text-zinc-700">In the Forge</span>
+              )}
+            </motion.div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+// ── Main Component ────────────────────────────────────────────────────────────
 const GroveTiers = ({ vault, onSync }) => {
   const navigate = useNavigate();
   const [requestStatus, setRequestStatus] = useState(null);
@@ -221,37 +277,39 @@ const GroveTiers = ({ vault, onSync }) => {
   };
 
   const tiers = [
-    { name: "Seedling", price: "FREE", period: "ALWAYS OPEN", desc: "A quiet space for those beginning to look toward a new horizon.", features: ["Seedling Badge", "1 Horizon Analysis/Mo", "Horizon Job Board", "Embers Community Chat", "Public Library"], button: "GET STARTED", onClick: handleSeedling, icon: <Leaf className="w-5 h-5 text-teal-400" /> },
-    { name: "Hearthkeeper", price: "$3", period: "$5/MO AFTER FIRST MONTH", desc: "Removing the noise to keep your creative fires burning bright.", features: ["Everything in Seedling, plus:", "Hearthkeeper Badge", "Unlimited Hearth Syncing", "Full Ecosystem Alignment", "Unlimited Horizon Analysis"], button: "SELECT PLAN", onClick: () => handlePaid('https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03', 'Hearthkeeper'), highlight: true, icon: <Flame className="w-5 h-5 text-amber-400" /> },
-    { name: "Steward", price: "$5", period: "$8/MO AFTER FIRST MONTH", desc: "Full oversight and total access to the entire landscape.", features: ["Everything in Hearthkeeper, plus:", "Founding Forest Badge", "Scholarship Sponsorship", "Priority Resource Requests"], button: "SELECT PLAN", onClick: () => handlePaid('https://buy.stripe.com/aFafZhfG8aebdqI4hIdAk04', 'Steward'), icon: <Mountain className="w-5 h-5 text-teal-400" /> },
-    { name: "Scholarship", price: "WAITLIST", period: "EQUITY BASIS", desc: "For those in deep transition seeking support and sanctuary.", features: ["Full Hearthkeeper Access", "Community Support", "Direct Navigation Aid"], button: requestStatus === 'success' ? "REQUESTED" : "REQUEST SEAT", onClick: () => {}, isSpecial: true, icon: <UserPlus className="w-5 h-5 text-purple-400" /> }
+    { name: "Seedling", price: "FREE", period: "ALWAYS OPEN", features: ["Seedling Badge", "1 Horizon Analysis/Mo", "Horizon Job Board", "Embers Community Chat", "Public Library"], button: "GET STARTED", onClick: handleSeedling, icon: <Leaf className="w-5 h-5 text-teal-400" /> },
+    { name: "Hearthkeeper", price: "$3", period: "$5/MO AFTER FIRST MONTH", features: ["Everything in Seedling, plus:", "Hearthkeeper Badge", "Unlimited Hearth Syncing", "Full Ecosystem Alignment", "Unlimited Horizon Analysis"], button: "SELECT PLAN", onClick: () => handlePaid('https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03', 'Hearthkeeper'), highlight: true, icon: <Flame className="w-5 h-5 text-amber-400" /> },
+    { name: "Steward", price: "$5", period: "$8/MO AFTER FIRST MONTH", features: ["Everything in Hearthkeeper, plus:", "Founding Forest Badge", "Scholarship Sponsorship", "Priority Resource Requests"], button: "SELECT PLAN", onClick: () => handlePaid('https://buy.stripe.com/aFafZhfG8aebdqI4hIdAk04', 'Steward'), icon: <Mountain className="w-5 h-5 text-teal-400" /> },
+    { name: "Scholarship", price: "WAITLIST", period: "EQUITY BASIS", features: ["Full Hearthkeeper Access", "Community Support", "Direct Navigation Aid"], button: requestStatus === 'success' ? "REQUESTED" : "REQUEST SEAT", onClick: () => {}, isSpecial: true, icon: <UserPlus className="w-5 h-5 text-purple-400" /> }
   ];
 
   return (
-    <div className="relative min-h-screen bg-[#0A080D] text-slate-300 font-sans selection:bg-teal-500/30 overflow-x-hidden pb-20 text-left">
+    <div className="relative min-h-screen bg-[#0A080D] text-slate-300 font-sans selection:bg-teal-500/30 overflow-x-hidden pb-20">
       <AnimatePresence>
         {showTransition && <SanctuaryTransition onComplete={() => navigate('/hearth')} />}
       </AnimatePresence>
       <div className="absolute top-0 left-0 w-full h-[100vh] bg-[radial-gradient(circle_at_50%_0%,rgba(20,184,166,0.1),rgba(147,51,234,0.03)_40%,transparent_80%)] pointer-events-none" />
 
-      {/* NAVIGATION */}
+      {/* ── NAV ── */}
       <nav className="fixed top-0 left-0 w-full z-[100] bg-[#0A080D]/90 backdrop-blur-xl border-b border-white/5" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-1 md:gap-4">
-            <button onClick={() => navigate('/library')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all px-3 py-2">
+          <div className="flex items-center gap-1 md:gap-2">
+            <button onClick={() => navigate('/library')} className="text-zinc-500 hover:text-zinc-200 transition-all px-3 py-2">
               <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">Framework</span>
               <LibraryIcon size={16} className="md:hidden" />
             </button>
-            <button onClick={() => navigate('/horizon')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all px-3 py-2">
+            <button onClick={() => navigate('/horizon')} className="text-zinc-500 hover:text-zinc-200 transition-all px-3 py-2">
               <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">Horizon</span>
               <Compass size={16} className="md:hidden" />
             </button>
-            <button onClick={() => navigate('/advisory')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all px-3 py-2">
-              <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">Advisory</span>
-              <Briefcase size={16} className="md:hidden" />
-            </button>
-            <button onClick={() => navigate('/about')} className="flex items-center gap-2 text-zinc-400 hover:text-teal-400 transition-all px-3 py-2">
+            <button onClick={() => navigate('/about')} className="text-zinc-500 hover:text-zinc-200 transition-all px-3 py-2">
               <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">About</span>
+            </button>
+            {/* Book Advisory — teal accent */}
+            <button onClick={() => navigate('/advisory')}
+              className="text-teal-400 hover:text-teal-300 transition-all px-3 py-2 border border-teal-500/20 rounded-full hover:bg-teal-500/10">
+              <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">Book Advisory</span>
+              <Briefcase size={16} className="md:hidden text-teal-400" />
             </button>
           </div>
           <button onClick={() => base44.auth.redirectToLogin('/hearth')} className="flex items-center gap-2 text-white bg-white/5 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/10 hover:border-teal-500/50 transition-all">
@@ -261,80 +319,85 @@ const GroveTiers = ({ vault, onSync }) => {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-6 pt-28 md:pt-36 pb-12 relative z-10">
+      <div className="max-w-5xl mx-auto px-6 pt-28 md:pt-36 pb-12 relative z-10">
 
-        {/* ── HERO ── */}
-        <header className="mb-24 text-center">
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-500/5 border border-teal-500/10 mb-8">
+        {/* ── HERO: 1-sentence headline then Brigid immediately ── */}
+        <header className="mb-[4.8rem] text-center">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-500/5 border border-teal-500/10 mb-6">
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">The Hearth & Horizon Sanctuary</span>
           </motion.div>
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif italic text-white mb-8 tracking-tight leading-tight max-w-4xl mx-auto">
-            Transitioning Professionals from{' '}
-            <span className="text-teal-400">Institutions to the Digital Frontier.</span>
-          </h1>
-          <p className="text-zinc-500 text-sm italic max-w-xl mx-auto mb-10 leading-relaxed">
-            A sanctuary for public-sector professionals navigating a deliberate migration into the private sector.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <button onClick={handleSeedling} className="h-14 px-10 bg-teal-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-teal-500/20 text-[10px] hover:bg-teal-400 transition-all">
-              Begin Your Journey
-            </button>
-            <button onClick={() => navigate('/advisory')} className="h-14 px-10 bg-white/5 border border-white/10 text-zinc-300 font-black uppercase tracking-widest rounded-2xl text-[10px] hover:border-teal-500/30 hover:text-white transition-all">
-              Book Advisory →
-            </button>
-          </div>
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} className="max-w-2xl mx-auto p-8 md:p-12 rounded-[2.5rem] bg-gradient-to-b from-[#110E16] to-[#0D0B12] border border-white/5 shadow-2xl text-center">
-            <p className="text-base text-zinc-400 font-light leading-relaxed italic mb-6">
-              "A professional shift is more than a move — it's a migration of the self."
-            </p>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-white font-serif italic text-lg">Margaret, Founder</span>
-              <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-500">BA, BEd, MEd | Indigenous Studies</span>
-            </div>
-          </motion.div>
+          <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            className="text-3xl sm:text-4xl md:text-5xl font-serif italic text-white mb-4 tracking-tight leading-tight max-w-3xl mx-auto">
+            Translate your public-sector legacy into{' '}
+            <span className="text-teal-400">private-sector power.</span>
+          </motion.h1>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}
+            className="text-zinc-600 text-xs italic mb-10">
+            Type your title below — Brigid will reveal your horizon.
+          </motion.p>
         </header>
 
-        {/* BRIGID SAMPLER */}
-        <BrigidSampler onSave={handleBrigidSave} />
+        {/* ── BRIGID SAMPLER — above the fold ── */}
+        <div className="mb-[4.8rem]">
+          <BrigidSampler onSave={handleBrigidSave} />
+        </div>
 
-        {/* ── SME ADVISORY CALLOUT ── */}
-        <section className="mb-32 max-w-4xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} className="p-10 md:p-14 rounded-[2.5rem] bg-gradient-to-br from-[#0F1A16] to-[#0A080D] border border-teal-500/20 relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,rgba(20,184,166,0.05),transparent_60%)] pointer-events-none" />
-            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-              <div className="space-y-4 max-w-lg">
-                <div className="flex items-center gap-2">
-                  <GraduationCap size={16} className="text-teal-400" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-500/70">SME Advisory</span>
-                </div>
-                <h2 className="text-2xl md:text-3xl font-serif italic text-white leading-snug">
-                  13 Years of Curriculum Leadership.
-                </h2>
-                <p className="text-zinc-500 text-sm italic leading-relaxed">
-                  With an M.Ed. and over a decade managing institutional curricula, Margaret offers strategic advisory for organizations navigating digital transformation — from curriculum audits to cultural alignment.
-                </p>
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {['Curriculum Audits', 'Cultural Alignment', 'Digital Transition SOPs'].map(s => (
-                    <span key={s} className="px-3 py-1 bg-teal-500/10 border border-teal-500/20 text-teal-300 text-[9px] font-black uppercase tracking-widest rounded-full">{s}</span>
-                  ))}
-                </div>
+        {/* ── EXPERT ADVISORY — slate grey bg for visual separation ── */}
+        <section className="mb-[4.8rem] py-[3.6rem] px-6 md:px-10 rounded-[2.5rem] bg-[#0E0C14] border border-white/5">
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+            className="flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
+            <div className="space-y-5 max-w-lg">
+              <div className="flex items-center gap-2">
+                <GraduationCap size={16} className="text-teal-400" />
+                <span className="text-[9px] font-black uppercase tracking-[0.5em] text-teal-500/70">Expert Advisory</span>
               </div>
-              <button onClick={() => navigate('/advisory')} className="shrink-0 h-14 px-10 bg-teal-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-teal-500/20 text-[10px] hover:bg-teal-400 transition-all">
+              <h2 className="text-2xl md:text-3xl font-serif italic text-white leading-snug">
+                13 years of curriculum leadership,<br />
+                <span className="text-teal-400">now available to your organization.</span>
+              </h2>
+              <p className="text-zinc-500 text-sm italic leading-relaxed">
+                With an M.Ed. and over a decade managing institutional curricula across public education, Margaret offers strategic advisory for organizations navigating digital transformation — curriculum audits, cultural alignment reviews, and digital transition SOPs.
+              </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                {['M.Ed. — Curriculum & Pedagogy', 'Curriculum Audits', 'Cultural Alignment', 'Digital Transition SOPs'].map(s => (
+                  <span key={s} className="px-3 py-1 bg-teal-500/10 border border-teal-500/20 text-teal-300 text-[9px] font-black uppercase tracking-widest rounded-full">{s}</span>
+                ))}
+              </div>
+            </div>
+            <div className="shrink-0 flex flex-col items-center gap-3 text-center">
+              <button onClick={() => navigate('/advisory')} className="h-14 px-10 bg-teal-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-teal-500/20 text-[10px] hover:bg-teal-400 transition-all">
                 Book Advisory →
               </button>
+              <span className="text-[9px] text-zinc-600 font-black uppercase tracking-widest">30-min discovery call</span>
             </div>
           </motion.div>
         </section>
 
-        {/* PRICING GRID */}
-        <section className="mb-32">
-          <div className="text-center mb-16">
+        {/* ── PROJECT GALLERY ── */}
+        <ProjectGallery navigate={navigate} />
+
+        {/* ── FOUNDER QUOTE ── */}
+        <section className="mb-[4.8rem]">
+          <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }}
+            className="max-w-2xl mx-auto p-8 md:p-12 rounded-[2.5rem] bg-gradient-to-b from-[#110E16] to-[#0D0B12] border border-white/5 shadow-2xl text-center">
+            <p className="text-base text-zinc-400 font-light leading-relaxed italic mb-6">
+              "A professional shift is more than a move — it's a migration of the self."
+            </p>
+            <span className="text-white font-serif italic text-lg block">Margaret, Founder</span>
+            <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600">BA, BEd, MEd | Indigenous Studies</span>
+          </motion.div>
+        </section>
+
+        {/* ── PRICING GRID ── */}
+        <section className="mb-[4.8rem]">
+          <div className="text-center mb-14">
             <h2 className="text-white font-serif italic text-4xl mb-4">Deepen the Translation</h2>
             <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">Choose your level of support</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {tiers.map((tier, idx) => (
-              <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }} className={`flex flex-col p-8 rounded-[2rem] border transition-all relative overflow-hidden ${tier.highlight ? 'bg-teal-500/[0.02] border-teal-500/30' : 'bg-[#110E16]/60 border-zinc-800'}`}>
+              <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}
+                className={`flex flex-col p-8 rounded-[2rem] border transition-all relative overflow-hidden ${tier.highlight ? 'bg-teal-500/[0.02] border-teal-500/30' : 'bg-[#110E16]/60 border-zinc-800'}`}>
                 {tier.highlight && <div className="absolute top-0 right-0 px-4 py-1 bg-teal-500 text-[#0A080D] text-[8px] font-black uppercase rounded-bl-xl">Most Aligned</div>}
                 <div className="mb-6">{tier.icon}</div>
                 <h4 className="text-white font-bold text-xl mb-1">{tier.name}</h4>
@@ -347,7 +410,8 @@ const GroveTiers = ({ vault, onSync }) => {
                     </li>
                   ))}
                 </ul>
-                <button onClick={tier.onClick} className={`w-full py-4 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${tier.highlight ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'bg-white/5 text-white border border-white/10'}`}>
+                <button onClick={tier.onClick}
+                  className={`w-full py-4 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${tier.highlight ? 'bg-teal-500 text-black shadow-lg shadow-teal-500/20' : 'bg-white/5 text-white border border-white/10'}`}>
                   {tier.button}
                 </button>
               </motion.div>
@@ -355,8 +419,8 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
-        {/* LUMINARY REGISTRY */}
-        <section className="mb-32 max-w-4xl mx-auto text-center">
+        {/* ── LUMINARY REGISTRY ── */}
+        <section className="mb-[4.8rem] max-w-4xl mx-auto text-center">
           <div className="p-[1px] bg-gradient-to-b from-teal-500/20 to-purple-500/20 rounded-[3rem]">
             <div className="bg-[#0D0B12] rounded-[2.9rem] p-12 md:p-16">
               <Star className="text-teal-400 mx-auto mb-6 animate-pulse" size={32} />
@@ -366,14 +430,18 @@ const GroveTiers = ({ vault, onSync }) => {
                   To Matt: Thank you for holding the map steady while I found my way through the trees.
                 </p>
               </div>
-              <button onClick={() => window.location.href = 'https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02'} className="px-10 py-4 bg-teal-500 text-black rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-teal-500/20">Choose Your Contribution</button>
+              <button onClick={() => window.location.href = 'https://buy.stripe.com/eVq4gzdy071Z1I0g0qdAk02'}
+                className="px-10 py-4 bg-teal-500 text-black rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-teal-500/20">
+                Choose Your Contribution
+              </button>
             </div>
           </div>
         </section>
 
-        {/* KO-FI */}
-        <section className="mb-32 max-w-4xl mx-auto">
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="p-8 md:p-12 rounded-[2.5rem] bg-gradient-to-br from-[#110E16] to-[#0D0B12] border border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
+        {/* ── KO-FI ── */}
+        <section className="mb-[4.8rem] max-w-4xl mx-auto">
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
+            className="p-8 md:p-12 rounded-[2.5rem] bg-gradient-to-br from-[#110E16] to-[#0D0B12] border border-white/5 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
             <div>
               <div className="flex items-center gap-3 justify-center md:justify-start mb-4">
                 <div className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
@@ -393,8 +461,8 @@ const GroveTiers = ({ vault, onSync }) => {
           </motion.div>
         </section>
 
-        {/* CONTACT */}
-        <section className="mb-32 max-w-4xl mx-auto">
+        {/* ── CONTACT ── */}
+        <section className="mb-[4.8rem] max-w-4xl mx-auto">
           <div className="bg-[#110E16]/40 border border-white/5 p-10 md:p-16 rounded-[3.5rem] text-center">
             <h2 className="text-white font-serif italic text-3xl mb-10">Questions?</h2>
             {contactStatus === 'success' ? (
@@ -414,6 +482,7 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
         </section>
 
+        {/* ── FOOTER ── */}
         <footer className="max-w-4xl mx-auto text-center border-t border-white/5 pt-20">
           <div className="flex flex-col items-center gap-6">
             <div className="w-16 h-16 rounded-3xl bg-white/5 flex items-center justify-center text-zinc-500"><Smartphone size={32} /></div>
@@ -437,11 +506,12 @@ const GroveTiers = ({ vault, onSync }) => {
           </div>
           <div className="mt-12 pt-8 border-t border-white/5 flex flex-wrap justify-center gap-6 text-[10px] font-black uppercase tracking-widest text-zinc-600">
             <button onClick={() => navigate('/about')} className="hover:text-zinc-300 transition-colors">About</button>
-            <button onClick={() => navigate('/advisory')} className="hover:text-zinc-300 transition-colors">Advisory Services</button>
+            <button onClick={() => navigate('/advisory')} className="hover:text-teal-400 transition-colors">Advisory Services</button>
             <button onClick={() => navigate('/contact-us')} className="hover:text-zinc-300 transition-colors">Contact</button>
             <a href="mailto:hello@hearthandhorizon.ca" className="hover:text-zinc-300 transition-colors">hello@hearthandhorizon.ca</a>
           </div>
         </footer>
+
       </div>
     </div>
   );
