@@ -320,7 +320,7 @@ function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
   ];
 
   return (
-    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="space-y-32 pb-56">
+    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="space-y-40 pb-56">
 
       {/* QUICK-START GUIDE */}
       <section>
@@ -399,7 +399,7 @@ function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
           </div>
           <div className="relative z-10 space-y-5">
             <Badge className="bg-teal-500/10 text-teal-400 uppercase font-black px-4 py-1 border-teal-500/20 text-[9px]">The Grand Map of the Pilgrimage</Badge>
-            <h4 className="text-3xl md:text-4xl text-white font-serif italic leading-tight max-w-lg">Master Strategy Deck</h4>
+            <h4 className="text-3xl md:text-4xl text-purple-200 font-serif italic leading-tight max-w-lg">Master Strategy Deck</h4>
             <p className="text-zinc-400 italic max-w-md text-sm leading-relaxed">The complete architectural blueprint for career migration and resignation protocols.</p>
             {isSeedlingPlus ? (
               <a href={STRATEGY_DECK_URL} target="_blank" rel="noopener noreferrer"
@@ -438,7 +438,7 @@ function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
         <div className="flex items-center gap-4 border-b border-white/5 pb-6">
           <div className="p-3 bg-orange-500/10 rounded-xl text-orange-500"><Heart size={22} /></div>
           <div>
-            <h2 className="text-2xl font-serif italic text-white">The Sanctuary</h2>
+            <h2 className="text-2xl font-serif italic text-purple-200">The Sanctuary</h2>
             <p className="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Mental Health & Resilience</p>
           </div>
         </div>
@@ -480,7 +480,7 @@ function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,184,166,0.05),transparent_70%)] pointer-events-none" />
           <div className="relative z-10 space-y-4">
             <p className="text-[9px] font-black uppercase tracking-[0.5em] text-teal-500/60">The Portal</p>
-            <h3 className="text-2xl md:text-3xl font-serif italic text-white leading-snug max-w-lg mx-auto">
+            <h3 className="text-2xl md:text-3xl font-serif italic text-purple-200 leading-snug max-w-lg mx-auto">
               Your identity is forged.<br />
               <span className="text-teal-400">The mists have cleared.</span>
             </h3>
@@ -518,14 +518,14 @@ export default function Library({ vault, onRefresh, onSync, isAdmin }) {
       <div className="max-w-5xl mx-auto px-6 pt-16 pb-48 relative z-10">
 
         {/* HEADER */}
-        <header className="mb-16 text-left">
+        <header className="mb-24 text-left">
           <div className="flex items-center gap-3 text-purple-400/70 mb-5">
             <BookOpen size={18} />
             <span className="text-[10px] font-black uppercase tracking-[0.5em] italic">
               {VOLUME_LABELS[currentVolume].tag}
             </span>
           </div>
-          <h1 className="text-6xl md:text-8xl font-serif italic text-white tracking-tighter leading-none mb-6">
+          <h1 className="text-6xl md:text-8xl font-serif italic text-purple-200 tracking-tighter leading-none mb-6">
             The <span className="text-zinc-800 font-sans not-italic font-extralight uppercase">Library</span>
           </h1>
           <p className="max-w-xl text-zinc-500 text-sm leading-relaxed italic border-l border-purple-500/20 pl-6">
@@ -540,7 +540,7 @@ export default function Library({ vault, onRefresh, onSync, isAdmin }) {
       </div>
 
       {/* SME Footer */}
-      <div className="max-w-5xl mx-auto px-6 pb-8">
+      <div className="max-w-5xl mx-auto px-6 pb-16">
         <SMEFooter />
       </div>
 

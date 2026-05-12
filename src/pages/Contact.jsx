@@ -277,11 +277,7 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
         </CacheSection>
       </div>
 
-      {/* SME Signature */}
-      <div className="pt-8 border-t border-zinc-900 text-center space-y-1">
-        <p className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-800">Frameworks curated by</p>
-        <p className="text-[10px] font-serif italic text-zinc-600">Margaret Rideout, M.Ed. — 13+ Years in Program Management & Curriculum Development</p>
-      </div>
+
     </motion.div>
   );
 }

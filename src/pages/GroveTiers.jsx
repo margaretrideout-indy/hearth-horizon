@@ -104,14 +104,14 @@ function WhisperTool({ onSave }) {
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
             className="space-y-5"
           >
-            <div className={`p-6 rounded-2xl border ${isPoetic ? 'bg-zinc-900/40 border-zinc-800' : 'bg-[#0E1A14] border-zinc-700'}`}>
-              <p className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 mb-3">
-                {isPoetic ? "Brigid's Note" : "Your Horizon Title — Free Preview"}
+            <div className={`p-8 rounded-2xl border ${isPoetic ? 'bg-zinc-900/40 border-zinc-800' : 'bg-[#0E1A14] border-zinc-700/60'}`}>
+              <p className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 mb-4">
+                {isPoetic ? "A Note from the Forge" : "Your Horizon Title — Free Preview"}
               </p>
               <motion.p
                 key={result}
                 initial={{ opacity: 0, filter: 'blur(6px)' }} animate={{ opacity: 1, filter: 'blur(0px)' }}
-                className={`font-serif italic leading-snug ${isPoetic ? 'text-sm text-zinc-500' : 'text-2xl text-white'}`}
+                className={`font-serif italic leading-snug ${isPoetic ? 'text-sm text-zinc-500' : 'text-2xl text-purple-200'}`}
               >
                 {result}
               </motion.p>
@@ -224,27 +224,10 @@ function DigitalGoods() {
 // ── SECTION 3: About Footer ──────────────────────────────────────────────────
 function AboutFooter() {
   return (
-    <div className="space-y-16">
-      {/* SME Signature */}
-      <div className="text-center space-y-4">
-        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-zinc-700">Frameworks curated by</p>
-        <h3 className="text-2xl font-serif italic text-zinc-300">Margaret Rideout, M.Ed.</h3>
-        <p className="text-zinc-600 text-sm font-serif italic max-w-md mx-auto leading-relaxed">
-          13+ Years in Program Management & Curriculum Development. The tools work because the expertise is real.
-        </p>
-        <div className="flex flex-wrap justify-center gap-2 pt-2">
-          {['M.Ed. Curriculum & Pedagogy', '13+ Yrs Program Management', 'Indigenous Studies', 'AI-Assisted Career Tools'].map(c => (
-            <span key={c} className="text-[8px] font-black uppercase tracking-widest text-zinc-700 border border-zinc-800 px-3 py-1 rounded-full">{c}</span>
-          ))}
-        </div>
-      </div>
-
-      {/* Minimal footer links */}
-      <div className="pt-8 border-t border-zinc-900 flex flex-wrap justify-center gap-6 text-[9px] font-black uppercase tracking-widest text-zinc-800">
-        <button onClick={() => window.location.href = '/about'} className="hover:text-zinc-500 transition-colors">About</button>
-        <button onClick={() => window.location.href = '/contact-us'} className="hover:text-zinc-500 transition-colors">Contact</button>
-        <a href="mailto:hello@hearthandhorizon.ca" className="hover:text-zinc-500 transition-colors">hello@hearthandhorizon.ca</a>
-      </div>
+    <div className="pt-8 border-t border-zinc-900 flex flex-wrap justify-center gap-8 text-[9px] font-black uppercase tracking-widest text-zinc-800">
+      <button onClick={() => window.location.href = '/about'} className="hover:text-zinc-500 transition-colors">About</button>
+      <button onClick={() => window.location.href = '/contact-us'} className="hover:text-zinc-500 transition-colors">Contact</button>
+      <a href="mailto:hello@hearthandhorizon.ca" className="hover:text-zinc-500 transition-colors">hello@hearthandhorizon.ca</a>
     </div>
   );
 }
@@ -277,18 +260,23 @@ export default function GroveTiers({ vault, onSync }) {
       <div className="max-w-3xl mx-auto px-6 pt-32 pb-40 space-y-40">
 
         {/* ── SECTION 1: Hero + Tool ── */}
-        <section className="space-y-12">
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
+        <section className="space-y-16">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800">
               <span className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-600">Free Tool</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif italic text-white leading-tight tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif italic text-purple-200 leading-tight tracking-tight">
               Translate your public-sector legacy into{' '}
               <span className="text-teal-400">private-sector power.</span>
             </h1>
-            <p className="text-zinc-600 text-sm font-serif italic leading-relaxed max-w-lg">
-              Type your current title below. Brigid — our AI engine, trained on 13 years of curriculum expertise — will reveal your horizon identity instantly.
-            </p>
+            <div className="space-y-3 max-w-lg">
+              <p className="text-zinc-500 text-sm font-serif italic leading-relaxed">
+                Type your current title below. Brigid — our mapping engine built on 13 years of curriculum expertise — reveals your private-sector identity instantly.
+              </p>
+              <p className="text-zinc-600 text-xs font-serif italic leading-relaxed">
+                No account required. Free to use. Your result is yours to keep.
+              </p>
+            </div>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
@@ -299,7 +287,7 @@ export default function GroveTiers({ vault, onSync }) {
 
 
         {/* ── SECTION 3: About Footer ── */}
-        <section className="border-t border-zinc-900 pt-20 space-y-16">
+        <section className="border-t border-zinc-900 pt-24 space-y-20">
           <SMEFooter />
           <AboutFooter />
         </section>
