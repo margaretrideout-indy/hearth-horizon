@@ -46,8 +46,10 @@ export default function App() {
   });
 
   const currentTier = vault?.tier?.toLowerCase() || 'none';
+  const isHearthkeeper = isAdmin || ['hearthkeeper', 'steward', 'founding steward'].includes(currentTier);
   const isRegistered = currentTier !== 'none' && currentTier !== 'traveler';
-  const isSeedlingPlus = isAdmin || isRegistered || currentTier === 'admin' || currentTier === 'steward';
+  // isSeedlingPlus kept for backward compat — now maps to isHearthkeeper
+  const isSeedlingPlus = isHearthkeeper;
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -65,8 +67,10 @@ export default function App() {
             "seedling": "Seedling",
             "seedling free": "Seedling",
             "hearthkeeper": "Hearthkeeper",
-            "steward": "Steward",
-            "founding steward": "Steward",
+            // Legacy aliases → Hearthkeeper
+            "steward": "Hearthkeeper",
+            "founding steward": "Hearthkeeper",
+            "embers": "Hearthkeeper",
             "traveler": "Traveler"
           };
 

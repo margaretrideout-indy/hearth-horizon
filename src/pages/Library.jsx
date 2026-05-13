@@ -14,6 +14,7 @@ import WayfarersCache from './Contact';
 import { base44 } from '@/api/base44Client';
 import ExpertiseBadge from '../components/ExpertiseBadge';
 import SMEFooter from '@/components/SMEFooter';
+import DeckOfTheForest from '@/components/library/DeckOfTheForest';
 
 // ── CONSTANTS ────────────────────────────────────────────────────────────────
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/edit?slide=id.p1#slide=id.p1";
@@ -321,6 +322,9 @@ function HighForge({ vault, onSync, isAdmin, isSeedlingPlus, navigate }) {
 
   return (
     <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="space-y-40 pb-56">
+
+      {/* DECK OF THE FOREST */}
+      <DeckOfTheForest isHearthkeeper={isSeedlingPlus} />
 
       {/* QUICK-START GUIDE */}
       <section>
