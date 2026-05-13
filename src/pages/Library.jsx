@@ -14,6 +14,7 @@ import SMEFooter from '@/components/SMEFooter';
 import ExpertiseBadge from '../components/ExpertiseBadge';
 import DeckOfTheForest from '@/components/library/DeckOfTheForest';
 import SeasonCountdown from '@/components/library/SeasonCountdown';
+import SmithyBridge from '@/components/library/SmithyBridge';
 
 // ── CONSTANTS ────────────────────────────────────────────────────────────────
 const STRATEGY_DECK_URL = "https://docs.google.com/presentation/d/1fVgZKmxGaGh9GrqW3lFM_SMA0b9v60WLf533LdYv6ns/edit?slide=id.p1#slide=id.p1";
@@ -143,6 +144,9 @@ function ThePorch({ vault, isHearthkeeper, hasPurchasedCard, navigate }) {
         </div>
         <p className="text-[8px] text-zinc-700 uppercase italic font-bold tracking-widest">As an Amazon Associate I earn from qualifying purchases.</p>
       </section>
+
+      {/* SMITHY BRIDGE — Visual path from provisions to labor */}
+      <SmithyBridge isHearthkeeper={isHearthkeeper} onNavigate={navigate} />
 
       {/* STEP INTO THE SMITHY CTA */}
       <section>
