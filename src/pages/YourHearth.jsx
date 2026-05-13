@@ -159,9 +159,9 @@ function DailyCalibration({ vault, onSync }) {
       <div className="flex justify-between gap-2">
         {PULSE_OPTIONS.map((p) => (
           <button key={p.label} onClick={() => setSelected(selected === p.icon ? null : p.icon)}
-            className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-2xl border transition-all duration-500 ${selected === p.icon ? 'bg-rose-500/15 border-rose-500/30' : 'bg-white/[0.02] border-white/5 hover:bg-white/5'}`}>
+            className={`flex-1 flex flex-col items-center gap-2 py-4 rounded-2xl border transition-all duration-500 ${selected === p.icon ? 'bg-teal-500/10 border-teal-500/30 shadow-[0_0_18px_rgba(20,184,166,0.12)]' : 'bg-white/[0.02] border-white/5 hover:bg-white/5'}`}>
             <span className="text-2xl">{p.icon}</span>
-            <span className={`text-[8px] font-black uppercase tracking-tighter ${selected === p.icon ? 'text-rose-300' : 'text-zinc-600'}`}>{p.label}</span>
+            <span className={`text-[8px] font-black uppercase tracking-tighter ${selected === p.icon ? 'text-teal-300' : 'text-zinc-600'}`}>{p.label}</span>
           </button>
         ))}
       </div>
@@ -315,7 +315,7 @@ export default function YourHearth({ vault, onSync, onRefresh }) {
 
   return (
     <div className="min-h-screen bg-[#0A080D]">
-      <div className="max-w-3xl mx-auto px-6 pt-12 pb-40 space-y-16">
+      <div className="max-w-4xl mx-auto px-6 pt-12 pb-40 space-y-16">
 
         {/* ── PAGE HEADER ── */}
         <motion.header {...fadeUp}
