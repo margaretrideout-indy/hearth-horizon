@@ -5,6 +5,7 @@ import { Flame, Mountain, Compass, Sparkles, Lock, ExternalLink, ArrowRight, X, 
 const NOTION_VAULT_URL = "https://disco-roast-38c.notion.site/horizon-archetypes?v=5827a0df8cab44c8bf283e16456cde78";
 const GUMROAD_URL = "https://margaretpardy.gumroad.com/l/zuyjl";
 const STRIPE_URL = "https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03";
+const STRIPE_CREDIT_URL = "https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03?prefilled_promo_code=ARCHETYPECREDIT";
 
 const ARCHETYPES = [
   {
@@ -61,7 +62,7 @@ const COLOR_MAP = {
 };
 
 // ── GLIMMER MODAL (Wayfarer upgrade prompt) ───────────────────────────────────
-function GlimmerModal({ archetype, onClose }) {
+function GlimmerModal({ archetype, onClose, hasPurchasedCard }) {
   const Icon = archetype.icon;
   const colors = COLOR_MAP[archetype.color];
   return (
@@ -95,14 +96,33 @@ function GlimmerModal({ archetype, onClose }) {
         </p>
 
         <div className="space-y-3 pt-2">
-          <a href={GUMROAD_URL} target="_blank" rel="noopener noreferrer"
-            className="w-full py-4 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-teal-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-teal-500/20">
-            Claim this Card — $9.99 <ExternalLink size={11} />
-          </a>
-          <a href={STRIPE_URL}
-            className="w-full py-4 bg-white/[0.03] border border-white/10 text-zinc-400 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:border-teal-500/20 hover:text-teal-400 transition-all flex items-center justify-center gap-2">
-            <ShieldCheck size={11} /> Upgrade to Hearthkeeper ($24.99 / 180 days)
-          </a>
+          {hasPurchasedCard ? (
+            <>
+              <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-500/[0.06] border border-teal-500/15">
+                <Sparkles size={12} className="text-teal-400 shrink-0" />
+                <p className="text-[10px] font-serif italic text-zinc-400">
+                  "We've applied your Archetype credit to your 6-month season."
+                </p>
+              </div>
+              <a href={STRIPE_CREDIT_URL}
+                className="w-full py-4 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-teal-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-teal-500/20">
+                Complete the Migration —{' '}
+                <span className="line-through text-black/40 ml-1">$24.99</span>
+                <span className="ml-1 flex items-center gap-1">$15.00 <Sparkles size={9} /></span>
+              </a>
+            </>
+          ) : (
+            <>
+              <a href={GUMROAD_URL} target="_blank" rel="noopener noreferrer"
+                className="w-full py-4 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-teal-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-teal-500/20">
+                Claim this Card — $9.99 <ExternalLink size={11} />
+              </a>
+              <a href={STRIPE_URL}
+                className="w-full py-4 bg-white/[0.03] border border-white/10 text-zinc-400 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:border-teal-500/20 hover:text-teal-400 transition-all flex items-center justify-center gap-2">
+                <ShieldCheck size={11} /> Upgrade to Hearthkeeper ($24.99 / 180 days)
+              </a>
+            </>
+          )}
         </div>
       </motion.div>
     </motion.div>
@@ -110,14 +130,14 @@ function GlimmerModal({ archetype, onClose }) {
 }
 
 // ── SINGLE CARD ───────────────────────────────────────────────────────────────
-function ArchetypeCard({ archetype, isHearthkeeper, onGlimmerClick }) {
+function ArchetypeCard({ archetype, isHearthkeeper, onGlimmerClick, hasPurchasedCard }) {
   const [flipped, setFlipped] = useState(false);
   const colors = COLOR_MAP[archetype.color];
   const Icon = archetype.icon;
 
   const handleClick = () => {
     if (isHearthkeeper) setFlipped(f => !f);
-    else onGlimmerClick(archetype);
+    else onGlimmerClick({ archetype, hasPurchasedCard });
   };
 
   return (
@@ -212,14 +232,18 @@ function ArchetypeCard({ archetype, isHearthkeeper, onGlimmerClick }) {
 }
 
 // ── DECK OF THE FOREST ────────────────────────────────────────────────────────
-export default function DeckOfTheForest({ isHearthkeeper }) {
-  const [glimmerTarget, setGlimmerTarget] = useState(null);
+export default function DeckOfTheForest({ isHearthkeeper, hasPurchasedCard }) {
+  const [glimmerTarget, setGlimmerTarget] = useState(null); // { archetype, hasPurchasedCard }
 
   return (
     <section className="space-y-8">
       <AnimatePresence>
         {glimmerTarget && (
-          <GlimmerModal archetype={glimmerTarget} onClose={() => setGlimmerTarget(null)} />
+          <GlimmerModal
+            archetype={glimmerTarget.archetype}
+            hasPurchasedCard={glimmerTarget.hasPurchasedCard}
+            onClose={() => setGlimmerTarget(null)}
+          />
         )}
       </AnimatePresence>
 
@@ -255,6 +279,7 @@ export default function DeckOfTheForest({ isHearthkeeper }) {
             <ArchetypeCard
               archetype={archetype}
               isHearthkeeper={isHearthkeeper}
+              hasPurchasedCard={hasPurchasedCard}
               onGlimmerClick={setGlimmerTarget}
             />
           </motion.div>

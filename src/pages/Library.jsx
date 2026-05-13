@@ -65,7 +65,7 @@ const AMZ_LISTS = [
 ].map(l => ({ ...l, url: `https://www.amazon.ca/hz/wishlist/ls/${l.id}?ref_=wl_share&tag=${MAIN_TAG}` }));
 
 // ── PAGE 1: THE PORCH (Public) ────────────────────────────────────────────────
-function ThePorch({ vault, isHearthkeeper, navigate }) {
+function ThePorch({ vault, isHearthkeeper, hasPurchasedCard, navigate }) {
   return (
     <motion.div
       key="porch"
@@ -76,7 +76,7 @@ function ThePorch({ vault, isHearthkeeper, navigate }) {
       className="space-y-40 pb-56"
     >
       {/* ARCHETYPE DECK */}
-      <DeckOfTheForest isHearthkeeper={isHearthkeeper} />
+      <DeckOfTheForest isHearthkeeper={isHearthkeeper} hasPurchasedCard={hasPurchasedCard} />
 
       {/* WELL-BEING GROVE */}
       <section className="space-y-10">
@@ -559,6 +559,7 @@ export default function Library({ vault, onRefresh, onSync, isAdmin }) {
 
   const currentTier = vault?.tier?.toLowerCase() || 'none';
   const isHearthkeeper = isAdmin || ['hearthkeeper', 'steward', 'founding steward'].includes(currentTier);
+  const hasPurchasedCard = !!vault?.hasPurchasedCard;
   const handleSync = onSync || onRefresh;
 
   const PAGE_META = {
@@ -586,7 +587,7 @@ export default function Library({ vault, onRefresh, onSync, isAdmin }) {
 
         <AnimatePresence mode="wait">
           {page === 'porch' ? (
-            <ThePorch key="porch" vault={vault} isHearthkeeper={isHearthkeeper} navigate={setPage} />
+            <ThePorch key="porch" vault={vault} isHearthkeeper={isHearthkeeper} hasPurchasedCard={hasPurchasedCard} navigate={setPage} />
           ) : isHearthkeeper ? (
             <TheSmithyPage key="smithy" vault={vault} onSync={handleSync} navigate={navigate} />
           ) : (

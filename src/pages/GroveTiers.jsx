@@ -232,6 +232,67 @@ function AboutFooter() {
   );
 }
 
+// ── Bridge Credit CTA ─────────────────────────────────────────────────────────
+// $24.99 standard | $15.00 with archetype card credit
+const STRIPE_FULL = 'https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03';
+const STRIPE_CREDIT = 'https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03?prefilled_promo_code=ARCHETYPECREDIT';
+
+function HearthkeeperCTA({ hasPurchasedCard }) {
+  const [showTip, setShowTip] = useState(false);
+
+  if (hasPurchasedCard) {
+    return (
+      <div className="space-y-3">
+        {/* Bridge credit notice */}
+        <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-500/[0.06] border border-teal-500/15">
+          <Sparkles size={12} className="text-teal-400 shrink-0" />
+          <p className="text-[10px] font-serif italic text-zinc-400 flex-1">
+            Your Archetype purchase has been credited.
+          </p>
+          <div className="relative">
+            <button
+              onMouseEnter={() => setShowTip(true)}
+              onMouseLeave={() => setShowTip(false)}
+              onFocus={() => setShowTip(true)}
+              onBlur={() => setShowTip(false)}
+              className="text-[9px] font-black uppercase tracking-widest text-teal-500/60 hover:text-teal-400 transition-colors"
+            >
+              ?
+            </button>
+            <AnimatePresence>
+              {showTip && (
+                <motion.div
+                  initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
+                  className="absolute bottom-full right-0 mb-2 w-56 p-3 rounded-xl bg-[#1C1622] border border-teal-500/20 text-[10px] font-serif italic text-zinc-400 leading-relaxed z-50 shadow-2xl"
+                >
+                  "We've applied your Archetype credit to your 6-month season."
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        <button onClick={() => window.location.href = STRIPE_CREDIT}
+          className="w-full py-4 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20 flex items-center justify-center gap-2">
+          <Flame size={11} />
+          Complete the Migration —{' '}
+          <span className="line-through text-black/40 ml-1">$24.99</span>
+          <span className="ml-1 flex items-center gap-1">
+            $15.00 <Sparkles size={9} />
+          </span>
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button onClick={() => window.location.href = STRIPE_FULL}
+      className="w-full py-4 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20">
+      <Flame size={11} className="inline mr-2" /> Join the Founding Forest →
+    </button>
+  );
+}
+
 // ── Main ─────────────────────────────────────────────────────────────────────
 export default function GroveTiers({ vault, onSync }) {
   const navigate = useNavigate();
@@ -348,10 +409,7 @@ export default function GroveTiers({ vault, onSync }) {
                   </li>
                 ))}
               </ul>
-              <button onClick={() => window.location.href = 'https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03'}
-                className="w-full py-4 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20">
-                <Flame size={11} className="inline mr-2" /> Join the Founding Forest →
-              </button>
+              <HearthkeeperCTA hasPurchasedCard={!!vault?.hasPurchasedCard} />
             </motion.div>
           </div>
 
