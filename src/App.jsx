@@ -161,7 +161,8 @@ export default function App() {
                 <button
                   key={tab.label}
                   onClick={() => navigate(tab.path)}
-                  className={`flex items-center gap-4 px-6 py-4 rounded-xl mx-2 transition-all active:scale-95 ${isActive ? 'bg-zinc-800 text-teal-400 font-bold' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'}`}
+                  className={`flex items-center gap-4 px-6 py-4 rounded-xl mx-2 transition-all active:scale-95 ${isActive ? 'font-bold active-quill' : 'hover:bg-white/[0.03]'}`}
+                  style={isActive ? { color: 'var(--amber)', background: 'rgba(217,119,6,0.06)' } : { color: 'var(--text-dim)' }}
                 >
                   <tab.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
                   <span className="text-sm tracking-wide">{tab.label}</span>
@@ -174,7 +175,8 @@ export default function App() {
             {isAdmin && (
               <button
                 onClick={() => navigate('/admin')}
-                className={`flex items-center gap-4 px-6 py-3 rounded-xl transition-all active:scale-95 ${location.pathname === '/admin' ? 'bg-zinc-800 text-amber-400 font-bold' : 'text-zinc-600 hover:text-amber-400 hover:bg-zinc-900/50'}`}
+                style={location.pathname === '/admin' ? { color: 'var(--amber)' } : { color: 'var(--text-ghost)' }}
+                className={`flex items-center gap-4 px-6 py-3 rounded-xl transition-all active:scale-95 hover:bg-white/[0.03]`}
               >
                 <ShieldCheck size={18} strokeWidth={2} />
                 <span className="text-xs tracking-wide">Admin</span>
@@ -182,7 +184,8 @@ export default function App() {
             )}
             <button
               onClick={() => navigate('/grove')}
-              className="flex items-center gap-4 px-6 py-3 rounded-xl transition-all active:scale-95 text-zinc-600 hover:text-teal-400 hover:bg-zinc-900/50"
+              style={{ color: 'var(--text-ghost)' }}
+              className="flex items-center gap-4 px-6 py-3 rounded-xl transition-all active:scale-95 hover:bg-white/[0.03]"
             >
               <Trees size={18} strokeWidth={2} />
               <span className="text-xs tracking-wide">Return to Grove</span>
@@ -203,13 +206,17 @@ export default function App() {
         {mobileLinks.map((tab) => {
           const isActive = location.pathname === tab.path;
           const accentColor = tab.path === '/admin'
-            ? (isActive ? 'text-amber-400' : 'text-zinc-600')
-            : (isActive ? 'text-teal-400' : 'text-zinc-600');
+            ? (isActive ? '' : '')
+            : (isActive ? '' : '');
+          const accentStyle = tab.path === '/admin'
+            ? { color: isActive ? 'var(--amber)' : 'var(--text-ghost)' }
+            : { color: isActive ? 'var(--teal)' : 'var(--text-ghost)' };
           return (
             <button
               key={tab.label}
               onClick={() => navigate(tab.path)}
-              className={`flex flex-col items-center justify-center min-w-[48px] flex-1 py-2 transition-all active:scale-90 ${accentColor}`}
+              style={accentStyle}
+            className={`flex flex-col items-center justify-center min-w-[48px] flex-1 py-2 transition-all active:scale-90`}
             >
               <tab.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
               {/* Labels only show on screens larger than mobile (sm:block) */}
@@ -224,11 +231,11 @@ export default function App() {
   };
 
   return (
-    <div className="h-screen w-full bg-[#0A080D] flex overflow-hidden font-sans text-zinc-200">
+    <div className="h-screen w-full flex overflow-hidden font-sans" style={{ background: 'var(--canvas)', color: 'var(--text-muted)' }}>
       {showNav &&
-        <aside className="hidden md:flex flex-col w-64 border-r border-white/5 bg-[#08070B] pt-8">
+        <aside className="hidden md:flex flex-col w-64 border-r pt-8" style={{ background: 'var(--canvas-raised)', borderColor: 'var(--border-subtle)' }}>
           <div className="px-8 mb-10 flex items-center justify-between">
-            <span className="text-xs font-black uppercase tracking-[0.3em] text-zinc-700">Hearth & Horizon</span>
+            <span className="text-xs font-black uppercase tracking-[0.3em]" style={{ color: 'var(--text-ghost)' }}>Hearth & Horizon</span>
           </div>
           <div className="flex-1 overflow-hidden">
             <NavLinks isDesktop />
@@ -262,7 +269,7 @@ export default function App() {
         <nav className="fixed bottom-0 left-0 right-0 z-[100] md:hidden"
           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         >
-          <div className="bg-[#0A080D]/90 backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+          <div className="backdrop-blur-2xl shadow-[0_-10px_40px_rgba(0,0,0,0.6)]" style={{ background: 'rgba(17,16,8,0.92)', borderTop: '1px solid var(--border-subtle)' }}>
             <div className="flex justify-around items-center h-16 px-1">
               <NavLinks />
             </div>
