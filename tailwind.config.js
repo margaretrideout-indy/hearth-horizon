@@ -8,14 +8,6 @@ module.exports = {
   			heading: ['var(--font-heading)'],
   			body: ['var(--font-body)']
   		},
-  		colors: {
-  			canvas:  { DEFAULT: 'var(--canvas)', raised: 'var(--canvas-raised)', card: 'var(--canvas-card)' },
-  			ochre:   { DEFAULT: 'var(--ochre)' },
-  			sage:    { DEFAULT: 'var(--sage)' },
-  			amber:   { DEFAULT: 'var(--amber)' },
-  			sand:    { DEFAULT: 'var(--text-muted)' },
-  			cedar:   { DEFAULT: 'var(--text-dim)' },
-  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

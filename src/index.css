@@ -2,43 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── HEARTH & HORIZON — GROUNDED PALETTE ───────────────────────────────────
-   Warm mineral-charcoal canvas with earthy ochre, sage, and amber ambience.
-   Evokes burnt cedar, quillwork geometry, and high-end Indigenous craft.
-────────────────────────────────────────────────────────────────────────── */
-
 :root {
   /* Canvas */
-  --canvas:          #111008;        /* Primary dark background — deep charred cedar */
-  --canvas-raised:   #181410;        /* Slightly elevated surfaces */
-  --canvas-card:     #1E1A14;        /* Glass card background */
+  --canvas:          #0A080D;
+  --canvas-raised:   #0F0D14;
+  --canvas-card:     #16121D;
 
-  /* Earthy ambient accent palette */
-  --ochre:           #923C22;        /* Red Ochre — fire, ceremony */
-  --sage:            #7D8C71;        /* Sage Green — land, plant medicine */
-  --amber:           #D97706;        /* Amber Gold — harvest, warmth */
-  --teal:            #14B8A6;        /* Teal — carried over, trust signal */
+  /* Accent palette */
+  --teal:            #14B8A6;
+  --rose:            #F43F5E;
+  --purple:          #A855F7;
+  --amber:           #F59E0B;
 
   /* Typography */
-  --text-primary:    #EDE8E1;        /* Warm off-white — cream birchbark */
-  --text-muted:      #D1C7BD;        /* Sand-tinted gray — organic, high-end */
-  --text-dim:        #8C8278;        /* Quiet tone for labels / placeholders */
-  --text-ghost:      #4A4238;        /* Near-invisible — decorative only */
+  --text-primary:    #F4F0FA;
+  --text-muted:      #A1A1AA;
+  --text-dim:        #52525B;
+  --text-ghost:      #27272A;
 
   /* Borders */
-  --border-subtle:   rgba(209,199,189,0.07);  /* Ultra-thin warm card border */
-  --border-active:   rgba(217,119,6,0.30);    /* Amber-lit active border */
-  --border-ochre:    rgba(146,60,34,0.25);    /* Ochre accent border */
-  --border-sage:     rgba(125,140,113,0.20);  /* Sage accent border */
-
-  /* Geometric quillwork pattern — used as background-image on active elements */
-  --quill-diamond: repeating-linear-gradient(
-    45deg,
-    rgba(217,119,6,0.04) 0px,
-    rgba(217,119,6,0.04) 1px,
-    transparent 1px,
-    transparent 10px
-  );
+  --border-subtle:   rgba(255,255,255,0.06);
+  --border-active:   rgba(20,184,166,0.35);
 
   /* Safe-area insets */
   --sat: env(safe-area-inset-top);
@@ -92,7 +76,7 @@
     -webkit-user-select: text !important;
     user-select: text !important;
     font-size: 16px !important;
-    background-color: rgba(30,26,20,0.6) !important;
+    background-color: rgba(22,18,29,0.6) !important;
     color: var(--text-primary) !important;
     border-color: var(--border-subtle) !important;
   }
@@ -108,11 +92,11 @@
 *::-webkit-scrollbar { display: none; }
 
 @media (min-width: 768px) {
-  .custom-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(74,66,56,0.5) transparent; }
+  .custom-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(39,39,42,0.8) transparent; }
   .custom-scrollbar::-webkit-scrollbar { display: block; width: 4px; }
   .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-  .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(74,66,56,0.5); border-radius: 10px; }
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(217,119,6,0.35); }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(39,39,42,0.8); border-radius: 10px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(20,184,166,0.4); }
 }
 
 /* ── ACCESSIBILITY: minimum readable font for tiny labels ─────────────── */
@@ -121,30 +105,17 @@
   letter-spacing: 0.06em !important;
 }
 
-/* ── GLASS CARD — earthy glow variant ───────────────────────────────────── */
+/* ── GLASS CARD ─────────────────────────────────────────────────────────── */
 .glass-card {
-  background: rgba(30, 26, 20, 0.65);
+  background: rgba(22, 18, 29, 0.65);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-subtle);
 }
 
-/* ── ACTIVE / FOCUSED STATES — quillwork geometry ───────────────────────── */
-.active-quill {
-  background-image: var(--quill-diamond);
-  border-color: var(--border-active) !important;
-  box-shadow: 0 0 0 1px rgba(217,119,6,0.15), 0 0 20px rgba(217,119,6,0.06);
-}
-
-/* Ochre ambient glow behind elevated cards */
-.glow-ochre  { box-shadow: 0 0 60px rgba(146,60,34,0.12),  0 0 120px rgba(146,60,34,0.05); }
-.glow-sage   { box-shadow: 0 0 60px rgba(125,140,113,0.10), 0 0 120px rgba(125,140,113,0.04); }
-.glow-amber  { box-shadow: 0 0 60px rgba(217,119,6,0.12),  0 0 120px rgba(217,119,6,0.05); }
-.glow-teal   { box-shadow: 0 0 60px rgba(20,184,166,0.10),  0 0 120px rgba(20,184,166,0.04); }
-
 /* ── BOTTOM NAV BLUR ────────────────────────────────────────────────────── */
 .bottom-nav-blur {
-  background: rgba(17, 16, 8, 0.88);
+  background: rgba(10, 8, 13, 0.88);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
 }
@@ -163,22 +134,4 @@
 .transition-all {
   transition-duration: 280ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ── QUILLWORK DIAMOND BORDER ACCENT (nav/card active) ──────────────────── */
-.border-quill {
-  border-image: repeating-linear-gradient(
-    90deg,
-    rgba(217,119,6,0.35) 0px,
-    rgba(217,119,6,0.35) 2px,
-    transparent 2px,
-    transparent 8px
-  ) 1;
-}
-
-/* ── ORGANIC HEADER UNDERLINE ───────────────────────────────────────────── */
-.underline-ochre {
-  text-decoration: underline;
-  text-decoration-color: rgba(146,60,34,0.35);
-  text-underline-offset: 4px;
 }
