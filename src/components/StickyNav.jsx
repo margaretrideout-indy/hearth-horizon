@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Flame, BookOpen, LayoutDashboard, Activity } from 'lucide-react';
+import { Flame } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
 export default function StickyNav({ showBrigidCta = true }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isAuthed, setIsAuthed] = useState(false);
 
-  const links = [
-    { label: 'Hearth', path: '/hearth', icon: Flame },
-    { label: 'Library', path: '/library', icon: BookOpen },
-    { label: 'Horizon', path: '/horizon', icon: LayoutDashboard },
-    { label: 'Embers', path: '/embers', icon: Activity },
-  ];
+  useEffect(() => {
+    base44.auth.isAuthenticated().then(setIsAuthed);
+  }, []);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-[200] bg-[#0A080D]/90 backdrop-blur-xl border-b border-white/5">
@@ -23,32 +22,31 @@ export default function StickyNav({ showBrigidCta = true }) {
           Hearth & Horizon
         </button>
 
-        <nav className="flex items-center gap-1">
-          {links.map((link) => {
-            const isActive = location.pathname === link.path;
-            return (
+        <div className="flex items-center gap-2">
+          {isAuthed ? (
+            <button
+              onClick={() => navigate('/hearth')}
+              className="flex items-center gap-2 px-4 py-1.5 bg-teal-500 text-black text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-teal-400 transition-all"
+            >
+              <Flame size={10} /> Enter Hearth
+            </button>
+          ) : (
+            <>
               <button
-                key={link.path}
-                onClick={() => navigate(link.path)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${
-                  isActive ? 'text-teal-400 bg-teal-500/10' : 'text-zinc-600 hover:text-zinc-300'
-                }`}
+                onClick={() => base44.auth.redirectToLogin('/hearth')}
+                className="px-4 py-1.5 text-[9px] font-black uppercase tracking-widest text-zinc-400 hover:text-zinc-200 border border-white/10 rounded-lg hover:border-white/20 transition-all"
               >
-                <link.icon size={11} />
-                <span className="hidden sm:inline">{link.label}</span>
+                Sign In
               </button>
-            );
-          })}
-        </nav>
-
-        {showBrigidCta && (
-          <button
-            onClick={() => navigate('/hearth')}
-            className="hidden sm:flex items-center gap-2 px-4 py-1.5 bg-teal-500 text-black text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-teal-400 transition-all"
-          >
-            <Flame size={10} /> Enter Hearth
-          </button>
-        )}
+              <button
+                onClick={() => base44.auth.redirectToLogin('/hearth')}
+                className="px-4 py-1.5 bg-teal-500 text-black text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-teal-400 transition-all"
+              >
+                Sign Up
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );

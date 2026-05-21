@@ -1,37 +1,27 @@
-import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
-import { useAuth } from '@/lib/AuthContext';
-import UserNotRegisteredError from '@/components/UserNotRegisteredError';
+import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import { base44 } from '@/api/base44Client';
 
-const DefaultFallback = () => (
-  <div className="fixed inset-0 flex items-center justify-center">
-    <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-  </div>
-);
-
-export default function ProtectedRoute({ fallback = <DefaultFallback />, unauthenticatedElement }) {
-  const { isAuthenticated, isLoadingAuth, authChecked, authError, checkUserAuth } = useAuth();
+export default function ProtectedRoute({ children }) {
+  const [status, setStatus] = useState('checking'); // 'checking' | 'authed' | 'guest'
 
   useEffect(() => {
-    if (!authChecked && !isLoadingAuth) {
-      checkUserAuth();
-    }
-  }, [authChecked, isLoadingAuth, checkUserAuth]);
+    base44.auth.isAuthenticated().then((authed) => {
+      setStatus(authed ? 'authed' : 'guest');
+    });
+  }, []);
 
-  if (isLoadingAuth || !authChecked) {
-    return fallback;
+  if (status === 'checking') {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-[#0A080D]">
+        <div className="w-6 h-6 rounded-full border-2 border-teal-500/30 border-t-teal-500 animate-spin" />
+      </div>
+    );
   }
 
-  if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    }
-    return unauthenticatedElement;
+  if (status === 'guest') {
+    return <Navigate to="/grove" replace />;
   }
 
-  if (!isAuthenticated) {
-    return unauthenticatedElement;
-  }
-
-  return <Outlet />;
+  return children;
 }

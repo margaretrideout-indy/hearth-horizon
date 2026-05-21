@@ -13,6 +13,7 @@ import Contact from './pages/Contact';
 import About from './pages/About';
 import ContactPage from './pages/ContactPage';
 import Advisory from './pages/Advisory';
+import ProtectedRoute from './components/ProtectedRoute';
 // CulturalFit archived — tools consolidated into Library > High Forge
 // EmbersChat archived — community focus shifted to Founding Forest tier
 
@@ -240,17 +241,19 @@ export default function App() {
       <main className="flex-1 h-full relative overflow-y-auto custom-scrollbar flex flex-col">
         <div className="flex-1 w-full relative">
           <Routes>
-            <Route path="/hearth" element={<YourHearth vault={vault} onSync={handleSync} onResumeSync={handleResumeSync} isAdmin={isAdmin} />} />
-            <Route path="/library" element={<Library vault={vault} onRefresh={handleSync} onSync={handleSync} isAdmin={isAdmin} />} />
-            <Route path="/horizon" element={<Canopy vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
-            <Route path="/embers" element={<Navigate to="/grove" replace />} />
-            {/* /culture archived — identity tools now in /library High Forge */}
+            {/* Public routes */}
             <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
-            <Route path="/contact" element={<Contact vault={vault} onRefresh={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} />} />
-            <Route path="/admin" element={<AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact-us" element={<ContactPage />} />
             <Route path="/advisory" element={<Advisory />} />
+
+            {/* Protected routes — redirect to /grove if not logged in */}
+            <Route path="/hearth" element={<ProtectedRoute><YourHearth vault={vault} onSync={handleSync} onResumeSync={handleResumeSync} isAdmin={isAdmin} /></ProtectedRoute>} />
+            <Route path="/library" element={<ProtectedRoute><Library vault={vault} onRefresh={handleSync} onSync={handleSync} isAdmin={isAdmin} /></ProtectedRoute>} />
+            <Route path="/horizon" element={<ProtectedRoute><Canopy vault={vault} onSync={handleSync} isAdmin={isAdmin} /></ProtectedRoute>} />
+            <Route path="/contact" element={<ProtectedRoute><Contact vault={vault} onRefresh={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute><AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} /></ProtectedRoute>} />
+            <Route path="/embers" element={<Navigate to="/grove" replace />} />
             <Route path="/" element={<Navigate to="/grove" replace />} />
             <Route path="*" element={<Navigate to="/grove" replace />} />
           </Routes>
