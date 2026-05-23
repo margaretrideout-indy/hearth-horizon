@@ -92,13 +92,14 @@ export default function GlobalFooter() {
               { label: 'LinkTree', href: 'https://linktree.com/mzrdt333' },
               { label: 'Support on Ko-fi', href: 'https://ko-fi.com/mzrdt333' },
               { label: 'My Amazon Shop', href: 'https://www.amazon.com/shop/hearthandh0a6-20' },
+              { label: 'Shop anything on Amazon using this link', href: 'https://www.amazon.com/?tag=hearthandh0a6-20' },
             ].map(({ label, href }) => (
               <a
                 key={href}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[11px] text-zinc-600 hover:text-amber-400 transition-colors"
+                className="text-[11px] text-zinc-600 hover:text-teal-400 transition-colors"
               >
                 {label}
               </a>
