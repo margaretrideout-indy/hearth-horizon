@@ -79,6 +79,35 @@ export default function GlobalFooter() {
            <span>·</span>
            <button onClick={() => { import('@/api/base44Client').then(m => m.base44.auth.redirectToLogin(window.location.href)); }} className="hover:text-secondary transition-colors">Already a member? Log in</button>
         </div>
+
+        {/* Affiliate & project links */}
+        <div className="pt-3 border-t border-white/5 space-y-2">
+          <p className="text-[11px] text-zinc-600">
+            Created by Margaret Rideout &nbsp;|&nbsp; Explore My Projects:
+          </p>
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
+            {[
+              { label: 'Atsanik Selene', href: 'https://atsanikselene.base44.app' },
+              { label: 'Indigenized Curriculum Engine', href: 'https://indigenizedcurriculumengine.base44.app' },
+              { label: 'LinkTree', href: 'https://linktree.com/mzrdt333' },
+              { label: 'Support on Ko-fi', href: 'https://ko-fi.com/mzrdt333' },
+              { label: 'My Amazon Shop', href: 'https://www.amazon.com/shop/hearthandh0a6-20' },
+            ].map(({ label, href }) => (
+              <a
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] text-zinc-600 hover:text-amber-400 transition-colors"
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+          <p className="text-[9px] text-zinc-700 italic">
+            *As an Amazon Associate I earn from qualifying purchases.
+          </p>
+        </div>
       </footer>
 
       {modal === 'privacy' && (
