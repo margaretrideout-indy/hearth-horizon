@@ -11,7 +11,7 @@ const MAIN_TAG = "hearthandh0a6-20";
 const BOOKSHOP_URL = "https://bookshop.org/shop/hearthandhorizon";
 const VAULT_URL = "https://margaretpardy.gumroad.com/l/zuyjl"; 
 const ALIGNMENT_URL = "https://margaretpardy.gumroad.com/l/sbxvp";
-const BLUEPRINT_URL = "https://docs.google.com/document/d/1aEFtrexdb3deVUrvbnNX2kC69KPyrQoQF7o-rgYo5nw/edit?usp=sharing";
+const BLUEPRINT_URL = "https://drive.google.com/file/d/1Pk2pAfs6ZklsfeWWASfGkQ1ddbgp1M8U/view?usp=sharing";
 
 const AMZ_LISTS = [
   { label: "Horizon Library", id: "3MQJ7V1EQV93P", isFeatured: true },
@@ -206,26 +206,8 @@ export default function WayfarersCache({ vault, onSync, isAdmin, isSeedlingPlus 
 
             <AnimatePresence mode="wait">
               {provisionsTab === 'vault' ? (
-                <motion.div key="vault" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <motion.div key="vault" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="grid grid-cols-1 gap-4">
                   
-                  {/* ARCHETYPE VAULT */}
-                  <div className="p-6 bg-[#1A1216] border border-pink-500/20 rounded-[2rem] flex flex-col justify-between group">
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <Sparkles size={14} className="text-pink-500" />
-                        <span className="text-[8px] font-black uppercase text-pink-500 tracking-widest">Digital Mirror</span>
-                      </div>
-                      <h4 className="text-xl font-serif italic text-white leading-tight">The Archetype Vault</h4>
-                      <p className="text-zinc-500 text-xs italic leading-relaxed">
-                        Your library of mirrors. Draw your daily spirit and log your resonance.
-                      </p>
-                    </div>
-                    <a href={VAULT_URL} target="_blank" rel="noopener noreferrer"
-                      className="mt-6 flex items-center justify-center gap-2 h-11 bg-pink-500 text-black font-black uppercase tracking-widest rounded-xl text-[8px] hover:bg-pink-400 transition-all">
-                      Secure Vault <ExternalLink size={10} />
-                    </a>
-                  </div>
-
                   {/* ARCHETYPE ALIGNMENT */}
                   <div className="p-6 bg-[#12161A] border border-teal-500/20 rounded-[2rem] flex flex-col justify-between group">
                     <div className="space-y-4">
