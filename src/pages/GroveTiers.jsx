@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import SanctuaryTransition from '../components/SanctuaryTransition';
 import StickyNav from '@/components/StickyNav';
 import SMEFooter from '@/components/SMEFooter';
+import GlobalFooter from '@/components/layout/GlobalFooter';
 import {
   Check, Flame, Sparkles,
   LogIn, ChevronDown, Heart, Star, Coffee
@@ -436,6 +437,7 @@ export default function GroveTiers({ vault, onSync }) {
         <section className="border-t border-zinc-900 pt-24 space-y-20">
           <SMEFooter />
           <AboutFooter />
+          <GlobalFooter />
         </section>
 
       </div>
