@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import MobileSelect from '@/components/ui/MobileSelect';
 import { Switch } from '@/components/ui/switch';
 import { BookOpen, Flame, Loader2, TreePine, Wind, Sun, Sprout } from 'lucide-react';
 import { toast } from 'sonner';
@@ -127,31 +127,12 @@ export default function HearthJournal({ user }) {
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex-1 min-w-[160px]">
               <label className="text-xs uppercase tracking-widest text-muted-foreground/50 mb-1.5 block">How does this feel?</label>
-              <Select value={sentimentTag} onValueChange={setSentimentTag}>
-                <SelectTrigger
-                  className="h-9 border-0"
-                  style={{
-                    background: 'hsla(280, 20%, 10%, 0.6)',
-                    color: activeSentiment.color,
-                    boxShadow: `inset 0 0 0 1px ${activeSentiment.border}`,
-                  }}
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {SENTIMENT_TAGS.map(s => {
-                    const Icon = s.icon;
-                    return (
-                      <SelectItem key={s.value} value={s.value}>
-                        <span className="flex items-center gap-2">
-                          <Icon className="w-3.5 h-3.5" style={{ color: s.color }} />
-                          {s.value}
-                        </span>
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
+              <MobileSelect
+                value={sentimentTag}
+                onChange={setSentimentTag}
+                placeholder="How does this feel?"
+                options={SENTIMENT_TAGS.map(s => ({ value: s.value, label: s.value }))}
+              />
             </div>
 
             <div className="flex items-center gap-2 pt-4">

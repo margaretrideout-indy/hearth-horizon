@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { Flame, BookOpen, Compass, LayoutDashboard, Trees, ShieldCheck, RefreshCw } from 'lucide-react';
+import { Flame, BookOpen, Compass, LayoutDashboard, Trees, ShieldCheck, RefreshCw, ArrowLeft } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import usePullToRefresh from '@/hooks/usePullToRefresh';
 
@@ -144,7 +144,11 @@ export default function App() {
     }
   };
 
+  const mainTabs = ['/hearth', '/library', '/horizon'];
   const showNav = !['/grove', '/', '/contact', '/about', '/contact-us'].includes(location.pathname);
+  const isMainTab = mainTabs.includes(location.pathname);
+  // Non-tab routes inside the app (contact, admin, etc.) get a back button
+  const showBackButton = showNav && !isMainTab;
 
   const { containerRef: ptrRef, isPulling, pullProgress, isRefreshing } = usePullToRefresh(handleSync);
 
@@ -240,42 +244,82 @@ export default function App() {
         </aside>
       }
 
-      <main
-        ref={ptrRef}
-        className="flex-1 h-full relative overflow-y-auto custom-scrollbar flex flex-col overscroll-none"
-        style={{ overscrollBehavior: 'none' }}
-      >
-        {/* Pull-to-refresh indicator */}
-        {(isPulling || isRefreshing) && (
-          <div className="absolute top-0 left-0 right-0 z-50 flex justify-center pt-4 pointer-events-none">
-            <div className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg transition-all ${isRefreshing ? 'bg-teal-500 text-black' : 'bg-zinc-800 text-zinc-400'}`}>
-              <RefreshCw size={10} className={isRefreshing ? 'animate-spin' : ''} style={{ transform: `rotate(${pullProgress * 360}deg)` }} />
-              {isRefreshing ? 'Syncing…' : 'Pull to refresh'}
-            </div>
-          </div>
+      <div className="flex-1 flex flex-col h-full min-w-0">
+        {/* ── Global Mobile Header ── */}
+        {showNav && (
+          <header className="md:hidden flex items-center h-12 px-4 border-b border-white/5 bg-[#0A080D]/95 backdrop-blur-xl shrink-0 z-[90]">
+            {showBackButton ? (
+              <button
+                onClick={() => navigate(-1)}
+                className="flex items-center gap-2 text-zinc-400 hover:text-zinc-200 active:text-zinc-200 transition-colors min-h-[44px] min-w-[44px]"
+              >
+                <ArrowLeft size={18} />
+                <span className="text-xs font-black uppercase tracking-widest">Back</span>
+              </button>
+            ) : (
+              <span className="text-[9px] font-black uppercase tracking-[0.45em] text-zinc-700 mx-auto">
+                Hearth & Horizon
+              </span>
+            )}
+          </header>
         )}
-        <div className="flex-1 w-full relative" style={{ overscrollBehavior: 'none' }}>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
-            <Route path="/about" element={<About />} />
-            {/* /contact-us merged into /about#reach-out */}
-            <Route path="/advisory" element={<Advisory />} />
 
-            {/* Protected routes — redirect to /grove if not logged in */}
-            <Route path="/hearth" element={<ProtectedRoute><YourHearth vault={vault} onSync={handleSync} onResumeSync={handleResumeSync} isAdmin={isAdmin} /></ProtectedRoute>} />
-            <Route path="/library" element={<ProtectedRoute><Library vault={vault} onRefresh={handleSync} onSync={handleSync} isAdmin={isAdmin} /></ProtectedRoute>} />
-            <Route path="/horizon" element={<ProtectedRoute><Canopy vault={vault} onSync={handleSync} isAdmin={isAdmin} /></ProtectedRoute>} />
-            <Route path="/contact" element={<ProtectedRoute><Contact vault={vault} onRefresh={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} /></ProtectedRoute>} />
-            <Route path="/admin" element={<ProtectedRoute><AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} /></ProtectedRoute>} />
-            <Route path="/embers" element={<Navigate to="/grove" replace />} />
-            <Route path="/" element={<Navigate to="/grove" replace />} />
-            <Route path="*" element={<Navigate to="/grove" replace />} />
-          </Routes>
-        </div>
-        {/* Adds padding at bottom so main content doesn't get hidden behind the floating nav */}
-        {showNav && <div className="h-24 md:hidden flex-shrink-0" />}
-      </main>
+        <main
+          ref={ptrRef}
+          className="flex-1 relative overflow-y-auto custom-scrollbar flex flex-col overscroll-none"
+          style={{ overscrollBehavior: 'none' }}
+        >
+          {/* Pull-to-refresh indicator */}
+          {(isPulling || isRefreshing) && (
+            <div className="absolute top-0 left-0 right-0 z-50 flex justify-center pt-4 pointer-events-none">
+              <div className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg transition-all ${isRefreshing ? 'bg-teal-500 text-black' : 'bg-zinc-800 text-zinc-400'}`}>
+                <RefreshCw size={10} className={isRefreshing ? 'animate-spin' : ''} style={{ transform: `rotate(${pullProgress * 360}deg)` }} />
+                {isRefreshing ? 'Syncing…' : 'Pull to refresh'}
+              </div>
+            </div>
+          )}
+
+          {/* ── Tab Stack: Hearth / Library / Horizon rendered persistently ── */}
+          {/* Only mount once the user is confirmed logged in (vault.email set) */}
+          {vault?.email && (
+            <>
+              <div style={{ display: location.pathname === '/hearth' ? 'block' : 'none' }}>
+                <YourHearth vault={vault} onSync={handleSync} onResumeSync={handleResumeSync} isAdmin={isAdmin} />
+              </div>
+              <div style={{ display: location.pathname === '/library' ? 'block' : 'none' }}>
+                <Library vault={vault} onRefresh={handleSync} onSync={handleSync} isAdmin={isAdmin} />
+              </div>
+              <div style={{ display: location.pathname === '/horizon' ? 'block' : 'none' }}>
+                <Canopy vault={vault} onSync={handleSync} isAdmin={isAdmin} />
+              </div>
+            </>
+          )}
+
+          <div className="flex-1 w-full relative" style={{ overscrollBehavior: 'none', display: isMainTab ? 'none' : 'flex', flexDirection: 'column' }}>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/advisory" element={<Advisory />} />
+
+              {/* Tab routes — handled by persistent stack above, just redirect stray direct links */}
+              <Route path="/hearth" element={null} />
+              <Route path="/library" element={null} />
+              <Route path="/horizon" element={null} />
+
+              {/* Other protected routes */}
+              <Route path="/contact" element={<ProtectedRoute><Contact vault={vault} onRefresh={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} /></ProtectedRoute>} />
+              <Route path="/admin" element={<ProtectedRoute><AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} /></ProtectedRoute>} />
+              <Route path="/embers" element={<Navigate to="/grove" replace />} />
+              <Route path="/" element={<Navigate to="/grove" replace />} />
+              <Route path="*" element={<Navigate to="/grove" replace />} />
+            </Routes>
+          </div>
+
+          {/* Bottom padding for mobile nav */}
+          {showNav && <div className="h-24 md:hidden flex-shrink-0" />}
+        </main>
+      </div>
 
       {showNav && (
         <nav className="fixed bottom-0 left-0 right-0 z-[100] md:hidden"

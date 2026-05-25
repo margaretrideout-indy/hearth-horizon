@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import MobileSelect from '@/components/ui/MobileSelect';
 import { Loader2, X, Sunrise } from 'lucide-react';
 
 const TOS_TEXT = "This is a sanctuary of reciprocity. We support, we don't vent. We build, we don't break. Protect the peace of the Hearth.";
@@ -102,17 +102,17 @@ export default function RequestSeatModal({ open, onClose }) {
                 </div>
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Current Field</label>
-                  <Select value={form.field} onValueChange={v => setForm(prev => ({ ...prev, field: v }))}>
-                    <SelectTrigger className="bg-background/30 border-border/40">
-                      <SelectValue placeholder="Select your field…" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Education">Education</SelectItem>
-                      <SelectItem value="Healthcare">Healthcare</SelectItem>
-                      <SelectItem value="Social Services">Social Services</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <MobileSelect
+                    value={form.field}
+                    onChange={v => setForm(prev => ({ ...prev, field: v }))}
+                    placeholder="Select your field…"
+                    options={[
+                      { value: 'Education', label: 'Education' },
+                      { value: 'Healthcare', label: 'Healthcare' },
+                      { value: 'Social Services', label: 'Social Services' },
+                      { value: 'Other', label: 'Other' },
+                    ]}
+                  />
                 </div>
 
                 <Button

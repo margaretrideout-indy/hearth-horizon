@@ -34,6 +34,22 @@
   color-scheme: dark;
 }
 
+@media (prefers-color-scheme: light) {
+  :root {
+    --canvas:          #F5F2EE;
+    --canvas-raised:   #EDE9E3;
+    --canvas-card:     #E4DFD8;
+    --text-primary:    #1A1520;
+    --text-muted:      #4A4555;
+    --text-dim:        #8C8595;
+    --text-ghost:      #C2BDC8;
+    --border-subtle:   rgba(0,0,0,0.07);
+    --border-active:   rgba(20,184,166,0.45);
+    background-color: var(--canvas);
+    color-scheme: light;
+  }
+}
+
 @layer base {
   html, body {
     margin: 0;
