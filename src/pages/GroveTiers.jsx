@@ -84,10 +84,9 @@ const LINKTREE = [
 ];
 
 const CREDENTIALS = [
-  { label: 'Master of Education (M.Ed.)', note: 'Curriculum & Pedagogy' },
+  { label: 'Master of Education (M.Ed.)', note: 'Indigenous Studies: Curriculum & Pedagogy' },
   { label: '13+ Years Leadership', note: 'Program Management' },
   { label: 'BA, BEd', note: 'Foundational Academic Training' },
-  { label: 'Indigenous Studies', note: 'Specialist Focus' },
 ];
 
 // ── WhisperTool ───────────────────────────────────────────────────────────────

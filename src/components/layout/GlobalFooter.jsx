@@ -81,6 +81,8 @@ export default function GlobalFooter() {
           {/* Ecosystem */}
           <div className="space-y-2">
             <p className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-700 mb-3">Ecosystem</p>
+            <Link to="/about" className="block text-[10px] text-zinc-600 hover:text-teal-400 transition-colors">About</Link>
+            <Link to="/advisory" className="block text-[10px] text-zinc-600 hover:text-teal-400 transition-colors">Advisory</Link>
             {PROJECT_LINKS.map(({ label, href }) => (
               <a key={href} href={href} target="_blank" rel="noopener noreferrer"
                 className="block text-[10px] text-zinc-600 hover:text-teal-400 transition-colors">
