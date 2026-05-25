@@ -68,7 +68,7 @@ export default function GlobalFooter() {
           {/* System */}
           <div className="space-y-2">
             <p className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-700 mb-3">System</p>
-            <Link to="/contact" className="block text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Contact Support</Link>
+            <a href="/about#reach-out" className="block text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Contact</a>
             <button onClick={() => setModal('privacy')} className="block text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Privacy Policy</button>
             <button onClick={() => setModal('terms')} className="block text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Terms of Use</button>
             <button

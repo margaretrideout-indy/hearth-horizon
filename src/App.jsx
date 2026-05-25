@@ -11,7 +11,6 @@ import AdminDashboard from './pages/AdminDashboard';
 import Canopy from './pages/Canopy';
 import Contact from './pages/Contact';
 import About from './pages/About';
-import ContactPage from './pages/ContactPage';
 import Advisory from './pages/Advisory';
 import ProtectedRoute from './components/ProtectedRoute';
 // CulturalFit archived — tools consolidated into Library > High Forge
@@ -244,7 +243,7 @@ export default function App() {
             {/* Public routes */}
             <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
             <Route path="/about" element={<About />} />
-            <Route path="/contact-us" element={<ContactPage />} />
+            {/* /contact-us merged into /about#reach-out */}
             <Route path="/advisory" element={<Advisory />} />
 
             {/* Protected routes — redirect to /grove if not logged in */}
