@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Flame, Mail, Globe, Heart, Send, Check } from 'lucide-react';
+import { Flame, Mail, Send, Check } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 export default function ContactPage() {
@@ -11,11 +11,10 @@ export default function ContactPage() {
     e.preventDefault();
     setStatus('sending');
     try {
-      await base44.entities.SeatRequest.create({
-        name: formData.name,
-        email: formData.email,
-        field: 'Other',
-        status: 'pending'
+      await base44.integrations.Core.SendEmail({
+        to: 'margaretpardy@gmail.com',
+        subject: `Hearth & Horizon Contact: ${formData.name}`,
+        body: `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
       });
       setStatus('success');
     } catch {
@@ -41,10 +40,10 @@ export default function ContactPage() {
         </div>
       </nav>
 
-      <main className="max-w-2xl mx-auto px-6 pt-32 pb-24 space-y-12">
+      <main className="max-w-2xl mx-auto px-6 pt-32 pb-24 space-y-10">
 
         {/* Header */}
-        <header className="space-y-5">
+        <header className="space-y-4">
           <div className="flex items-center gap-3 text-teal-500/80">
             <Mail size={16} />
             <span className="text-[10px] font-black uppercase tracking-[0.5em]">Reach Out</span>
@@ -57,32 +56,10 @@ export default function ContactPage() {
           </p>
         </header>
 
-        {/* Direct email */}
-        <section className="p-6 bg-teal-500/[0.04] border border-teal-500/15 rounded-[2rem] flex items-center gap-4">
-          <div className="w-10 h-10 bg-teal-500/10 rounded-xl flex items-center justify-center shrink-0">
-            <Mail size={18} className="text-teal-400" />
-          </div>
-          <div>
-            <p className="text-[9px] font-black uppercase tracking-widest text-zinc-500 mb-1">Direct Email</p>
-            <a href="mailto:hello@hearthandhorizon.ca"
-              className="text-teal-400 font-serif italic hover:underline">
-              hello@hearthandhorizon.ca
-            </a>
-          </div>
-        </section>
-
-        {/* Social links */}
+        {/* Ko-fi */}
         <section className="space-y-3">
           <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600">Find Us Online</p>
           <div className="flex flex-wrap gap-3">
-            <a href="https://bookshop.org/shop/hearthandhorizon" target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-2 px-5 py-3 bg-white/[0.03] border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white hover:border-white/20 transition-all">
-              <Globe size={13} /> Bookshop
-            </a>
-            <a href="https://margaretpardy.gumroad.com" target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-2 px-5 py-3 bg-white/[0.03] border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white hover:border-white/20 transition-all">
-              <Heart size={13} /> Gumroad
-            </a>
             <a href="https://ko-fi.com/I2I51EFK95" target="_blank" rel="noopener noreferrer"
               className="flex items-center gap-2 px-5 py-3 bg-white/[0.03] border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white hover:border-white/20 transition-all">
               <Flame size={13} /> Ko-fi
@@ -91,7 +68,7 @@ export default function ContactPage() {
         </section>
 
         {/* Contact form */}
-        <section className="space-y-6">
+        <section className="space-y-5">
           <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600">Send a Message</p>
 
           {status === 'success' ? (
@@ -120,7 +97,7 @@ export default function ContactPage() {
                 className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-teal-500/50 placeholder:text-zinc-700 resize-none"
               />
               {status === 'error' && (
-                <p className="text-rose-400 text-xs italic">Something went wrong. Try emailing us directly.</p>
+                <p className="text-rose-400 text-xs italic">Something went wrong. Please try again.</p>
               )}
               <button type="submit" disabled={status === 'sending'}
                 className="w-full h-14 bg-teal-500/10 border border-teal-500/20 text-teal-400 font-black uppercase tracking-widest rounded-2xl text-[10px] hover:bg-teal-500 hover:text-black transition-all flex items-center justify-center gap-2 disabled:opacity-50">
