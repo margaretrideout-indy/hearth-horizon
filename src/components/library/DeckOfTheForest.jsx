@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Flame, Mountain, Compass, Sparkles, Lock, ExternalLink, ArrowRight, X, ShieldCheck } from 'lucide-react';
 
-const NOTION_VAULT_URL = "https://disco-roast-38c.notion.site/horizon-archetypes?v=5827a0df8cab44c8bf283e16456cde78";
+const NOTION_VAULT_URL = "https://margaretrideout.gumroad.com/l/sbxvp";
 const GUMROAD_URL = "https://margaretpardy.gumroad.com/l/zuyjl";
 const STRIPE_URL = "https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03";
 const STRIPE_CREDIT_URL = "https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03?prefilled_promo_code=ARCHETYPECREDIT";
