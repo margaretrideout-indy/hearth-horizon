@@ -69,11 +69,11 @@ function ServiceCard({ s, i, navigate }) {
       </AnimatePresence>
 
       <div className="pl-14">
-        <button
-          onClick={() => navigate('/')}
-          className="py-3 px-8 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20">
-          Get the {s.title.split(' ')[0]} Audit →
-        </button>
+        <a
+          href="/about#reach-out"
+          className="inline-block py-3 px-8 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 active:bg-teal-400 transition-all shadow-lg shadow-teal-500/20">
+          Enquire about {s.title} →
+        </a>
       </div>
     </motion.div>
   );
