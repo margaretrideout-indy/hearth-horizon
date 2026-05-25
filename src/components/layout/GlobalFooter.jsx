@@ -44,7 +44,7 @@ const TERMS_CONTENT = (
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 const PROJECT_LINKS = [
-  { label: 'Atsanik Selene', href: 'https://www.atsanik-selene.base44.app' },
+  { label: 'Atsanik Selene', href: 'https://atsanik-selene.base44.app/' },
   { label: 'Indigenized Curriculum Engine', href: 'https://indigenizedcurriculumengine.base44.app' },
 ];
 
