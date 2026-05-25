@@ -74,14 +74,14 @@ function ThePorch({ vault, isHearthkeeper, hasPurchasedCard, navigate }) {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
       transition={{ duration: 0.85, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="space-y-40 pb-56"
+      className="space-y-20 pb-32"
     >
       {/* ARCHETYPE DECK */}
       <DeckOfTheForest isHearthkeeper={isHearthkeeper} hasPurchasedCard={hasPurchasedCard} />
 
       {/* WELL-BEING GROVE */}
-      <section className="space-y-10">
-        <div className="flex items-center gap-4 border-b border-white/5 pb-6">
+      <section className="space-y-6">
+        <div className="flex items-center gap-4 border-b border-white/5 pb-4">
           <div className="p-3 bg-rose-500/10 rounded-xl"><Heart size={20} className="text-rose-400" /></div>
           <div>
             <h2 className="text-2xl font-serif italic text-purple-200">The Well-being Grove</h2>
@@ -90,7 +90,7 @@ function ThePorch({ vault, isHearthkeeper, hasPurchasedCard, navigate }) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {WELL_BEING_RESOURCES.map((item, idx) => (
-            <Card key={idx} className={`group p-8 bg-[#0E0C14] border border-zinc-800 rounded-[2rem] flex flex-col justify-between h-full ${item.crisis ? 'ring-1 ring-rose-500/20' : ''}`}>
+            <Card key={idx} className={`group p-6 bg-[#0E0C14] border border-zinc-800 rounded-[2rem] flex flex-col justify-between h-full ${item.crisis ? 'ring-1 ring-rose-500/20' : ''}`}>
               <div className="space-y-4">
                 <div className="flex justify-between items-start">
                   <div className={`p-3 rounded-xl bg-zinc-900 border border-zinc-800 ${item.color}`}><item.icon size={20} /></div>
@@ -121,8 +121,8 @@ function ThePorch({ vault, isHearthkeeper, hasPurchasedCard, navigate }) {
       </section>
 
       {/* THE OUTFITTER (Affiliates) */}
-      <section className="space-y-10">
-        <div className="flex items-center gap-4 border-b border-white/5 pb-6">
+      <section className="space-y-6">
+        <div className="flex items-center gap-4 border-b border-white/5 pb-4">
           <div className="p-3 bg-purple-500/10 rounded-xl"><Package size={20} className="text-purple-400" /></div>
           <div>
             <h2 className="text-2xl font-serif italic text-purple-200">The Outfitter</h2>
@@ -152,12 +152,12 @@ function ThePorch({ vault, isHearthkeeper, hasPurchasedCard, navigate }) {
       <section>
         <motion.div
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-          className="relative p-10 md:p-14 rounded-[3rem] overflow-hidden border border-teal-500/15 bg-gradient-to-br from-[#0F1A16] to-[#08070B]"
+          className="relative p-8 md:p-10 rounded-[3rem] overflow-hidden border border-teal-500/15 bg-gradient-to-br from-[#0F1A16] to-[#08070B]"
         >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_100%,rgba(20,184,166,0.06),transparent_70%)] pointer-events-none" />
           <div className="absolute top-0 right-0 p-8 opacity-[0.04] pointer-events-none"><TreePine size={160} /></div>
-          <div className="relative z-10 text-center space-y-6">
-            <p className="text-[9px] font-black uppercase tracking-[0.5em] text-teal-500/60">Hearthkeeper Access</p>
+          <div className="relative z-10 text-center space-y-4">
+          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-teal-500/60">Hearthkeeper Access</p>
             <h3 className="text-3xl md:text-4xl font-serif italic text-purple-200 leading-snug max-w-lg mx-auto">
               The trail goes deeper.<br/>
               <span className="text-teal-400">Step into the Smithy.</span>
@@ -450,7 +450,7 @@ function TheSmithyPage({ vault, onSync, navigate }) {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -40 }}
       transition={{ duration: 0.85, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="space-y-16 pb-56"
+      className="space-y-12 pb-32"
     >
       {/* Season countdown */}
       <SeasonCountdown vault={vault} />
@@ -465,13 +465,13 @@ function TheSmithyPage({ vault, onSync, navigate }) {
 
       {/* Strategy Deck Hero */}
       <section>
-        <div className="mb-6 flex items-center gap-4">
+        <div className="mb-4 flex items-center gap-4">
           <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400">The Grand Map</h3>
           <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
         </div>
-        <div className="p-10 md:p-14 bg-gradient-to-br from-[#16121D] to-[#0D0B10] border border-teal-500/20 rounded-[3rem] relative overflow-hidden group">
+        <div className="p-8 md:p-10 bg-gradient-to-br from-[#16121D] to-[#0D0B10] border border-teal-500/20 rounded-[3rem] relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none"><Compass size={140} /></div>
-          <div className="relative z-10 space-y-5">
+          <div className="relative z-10 space-y-3">
             <span className="inline-flex items-center gap-2 px-4 py-1 bg-teal-500/10 border border-teal-500/20 rounded-full text-[9px] font-black uppercase text-teal-400 tracking-widest">
               Hearthkeeper Exclusive
             </span>
@@ -487,7 +487,7 @@ function TheSmithyPage({ vault, onSync, navigate }) {
 
       {/* Wayfarer's Cache Scripts & Resources */}
       <section>
-        <div className="mb-6 flex items-center gap-4">
+        <div className="mb-4 flex items-center gap-4">
           <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400">Tactical Provisions</h3>
           <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
         </div>
@@ -496,7 +496,7 @@ function TheSmithyPage({ vault, onSync, navigate }) {
 
       {/* Active Tools */}
       <section>
-        <div className="mb-6 flex items-center gap-4">
+        <div className="mb-4 flex items-center gap-4">
           <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400">Active Tools</h3>
           <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/20 to-transparent" />
         </div>
@@ -513,9 +513,9 @@ function TheSmithyPage({ vault, onSync, navigate }) {
 
       {/* Horizon Portal CTA */}
       <section>
-        <div className="p-10 bg-gradient-to-br from-[#0F1A16] to-[#08070B] border border-teal-500/20 rounded-[3rem] text-center space-y-6 relative overflow-hidden">
+        <div className="p-8 bg-gradient-to-br from-[#0F1A16] to-[#08070B] border border-teal-500/20 rounded-[3rem] text-center space-y-4 relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,184,166,0.05),transparent_70%)] pointer-events-none" />
-          <div className="relative z-10 space-y-4">
+          <div className="relative z-10 space-y-3">
             <p className="text-[9px] font-black uppercase tracking-[0.5em] text-teal-500/60">The Portal</p>
             <h3 className="text-2xl font-serif italic text-purple-200 leading-snug max-w-lg mx-auto">
               Your identity is forged.<br /><span className="text-teal-400">The mists have cleared.</span>
@@ -573,10 +573,10 @@ export default function Library({ vault, onRefresh, onSync, isAdmin }) {
 
   return (
     <div className="min-h-screen bg-[#0A080D] text-zinc-300 font-sans selection:bg-teal-500/30 overflow-x-hidden relative page-fade-in">
-      <div className="max-w-5xl mx-auto px-6 pt-16 pb-48 relative z-10">
+      <div className="max-w-5xl mx-auto px-6 pt-12 pb-32 relative z-10">
 
         {/* HEADER */}
-        <header className="mb-24 text-left">
+        <header className="mb-12 text-left">
           <div className="flex items-center gap-3 text-purple-400/70 mb-5">
             <BookOpen size={18} />
             <span className="text-[10px] font-black uppercase tracking-[0.5em] italic">{PAGE_META[page].tag}</span>
@@ -601,7 +601,7 @@ export default function Library({ vault, onRefresh, onSync, isAdmin }) {
       </div>
 
       {/* SME Footer */}
-      <div className="max-w-5xl mx-auto px-6 pb-16">
+      <div className="max-w-5xl mx-auto px-6 pb-8">
         <SMEFooter />
       </div>
 
