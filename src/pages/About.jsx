@@ -18,7 +18,7 @@ export default function About() {
         </div>
       </nav>
 
-      <main className="max-w-3xl mx-auto px-6 pt-28 pb-32 space-y-24">
+      <main className="max-w-3xl mx-auto px-6 pt-24 pb-20 space-y-14">
 
         {/* Hero */}
         <header className="space-y-6">
@@ -35,7 +35,7 @@ export default function About() {
         </header>
 
         {/* What the app does */}
-        <section className="space-y-6">
+        <section className="space-y-4">
           <div className="flex items-center gap-3">
             <BookOpen size={18} className="text-teal-400" />
             <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">What We Do</h2>
@@ -69,7 +69,7 @@ export default function About() {
         </section>
 
         {/* Who it's for */}
-        <section className="space-y-6">
+        <section className="space-y-4">
           <div className="flex items-center gap-3">
             <Users size={18} className="text-purple-400" />
             <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400">Who It's For</h2>
@@ -88,22 +88,23 @@ export default function About() {
         </section>
 
         {/* Who builds it */}
-        <section className="space-y-6">
+        <section className="space-y-4">
           <div className="flex items-center gap-3">
             <Heart size={18} className="text-rose-400" />
             <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-rose-400">Who Builds It</h2>
           </div>
-          <div className="p-8 md:p-12 bg-gradient-to-b from-[#110E16] to-[#0D0B12] border border-white/5 rounded-[2.5rem] space-y-4">
+          <div className="p-8 bg-gradient-to-b from-[#110E16] to-[#0D0B12] border border-white/5 rounded-[2.5rem] space-y-4">
             <p className="text-zinc-400 leading-relaxed italic font-serif text-lg">
               "As an Indigenous educator with 13 years in the classroom, I've learned that a professional shift
               is more than a move — it's a migration of the self."
             </p>
-            <div className="flex items-center gap-3 pt-2">
-              <div className="w-8 h-8 rounded-full bg-teal-500/10 border border-teal-500/20 flex items-center justify-center">
+            <div className="flex items-start gap-3 pt-2">
+              <div className="w-8 h-8 rounded-full bg-teal-500/10 border border-teal-500/20 flex items-center justify-center shrink-0 mt-1">
                 <Flame size={14} className="text-teal-400" />
               </div>
-              <div>
-                <p className="text-white font-serif italic">Margaret Pardy</p>
+              <div className="space-y-0.5">
+                <p className="text-white font-serif italic">Margaret Pardy, M.Ed.</p>
+                <p className="text-[10px] text-zinc-400 italic font-serif">Master of Education — Indigenous Studies: Curriculum and Pedagogy</p>
                 <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600">Founder, Hearth & Horizon</p>
               </div>
             </div>
@@ -111,7 +112,7 @@ export default function About() {
         </section>
 
         {/* CTA */}
-        <section className="text-center space-y-6">
+        <section className="text-center space-y-4">
           <Link to="/"
             className="inline-flex items-center gap-3 h-14 px-10 bg-teal-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-teal-500/20 text-[10px] hover:bg-teal-400 transition-all">
             Enter the Sanctuary <ArrowRight size={14} />
