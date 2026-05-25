@@ -10,7 +10,7 @@ const SERVICES = [
   {
     icon: ClipboardList,
     title: "Curriculum Audits",
-    description: "A structured review of institutional learning frameworks. Identifies gaps and translates legacy curriculum into market-ready competencies. Delivered as a written report — no ongoing engagement required.",
+    description: "A structured review of institutional learning frameworks. Identifies gaps and translates legacy curriculum into market-ready competencies. Delivered as a written report, no ongoing engagement required.",
     bullets: ["Gap analysis against private-sector benchmarks", "Competency translation matrix", "Actionable recommendations document"],
   },
   {
@@ -22,7 +22,7 @@ const SERVICES = [
   {
     icon: FileText,
     title: "Digital Transition SOPs",
-    description: "Custom standard operating procedures that bridge institutional processes with modern digital workflows. Built to implement on day one — no handholding required.",
+    description: "Custom standard operating procedures that bridge institutional processes with modern digital workflows. Built to implement on day one, no handholding required.",
     bullets: ["Role-specific SOP templates", "Digital tool mapping", "Onboarding checklist package"],
   },
 ];
@@ -61,7 +61,7 @@ function ServiceCard({ s, i, navigate }) {
             className="overflow-hidden pl-14 space-y-2">
             {s.bullets.map((b) => (
               <li key={b} className="flex items-start gap-2 text-[11px] text-zinc-600">
-                <span className="text-teal-500/40 mt-0.5 shrink-0">—</span> {b}
+                <span className="text-teal-500/40 mt-0.5 shrink-0">·</span> {b}
               </li>
             ))}
           </motion.ul>
@@ -98,7 +98,7 @@ export default function Advisory() {
               <span className="text-teal-400">Packaged.</span>
             </h1>
             <p className="max-w-xl text-zinc-500 text-sm leading-relaxed italic border-l border-zinc-800 pl-6">
-              13 years of curriculum architecture and institutional leadership — distilled into digital products. No meetings. No retainers. Buy the output, use it immediately.
+              13 years of curriculum architecture and institutional leadership, distilled into digital products. No meetings. No retainers. Buy the output, use it immediately.
             </p>
           </motion.div>
         </header>

@@ -29,7 +29,7 @@ function ReachOutSection() {
         <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">Reach Out</h2>
       </div>
       <p className="text-zinc-500 italic text-sm leading-relaxed border-l border-teal-500/20 pl-6">
-        Whether you have a question, a collaboration idea, or just want to share your story — we'd love to hear from you.
+        Whether you have a question, a collaboration idea, or just want to share your story, we'd love to hear from you.
       </p>
 
       {status === 'success' ? (
@@ -123,10 +123,9 @@ export default function About() {
               we call the Horizon. Every feature is designed to honour the whole person, not just their credentials.
             </p>
             <p>
-              The <strong className="text-white">Library</strong> houses both internal calibration tools — Brigid's
-              Counsel, the Soul Compass, and the Rite of Renaming — and external provisions like outreach scripts,
-              community resources, and curated reading. The <strong className="text-white">Embers</strong> community
-              space connects fellow wayfarers so no one navigates the transition alone. And the <strong className="text-white">Hearth</strong> is
+              The <strong className="text-white">Library</strong> houses both internal calibration tools: Brigid's
+              Counsel, the Soul Compass, and the Rite of Renaming, alongside external provisions like outreach scripts,
+              community resources, and curated reading. The <strong className="text-white">Hearth</strong> is
               your personal sanctuary: a private space to reflect, track your emotional weather, and measure your
               readiness for the road ahead.
             </p>
@@ -173,7 +172,7 @@ export default function About() {
               </div>
               <div className="space-y-0.5">
                 <p className="text-white font-serif italic">Margaret Pardy, M.Ed.</p>
-                <p className="text-[10px] text-zinc-400 italic font-serif">Master of Education — Indigenous Studies: Curriculum and Pedagogy</p>
+                <p className="text-[10px] text-zinc-400 italic font-serif">Master of Education, Indigenous Studies: Curriculum and Pedagogy</p>
                 <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600">Founder, Hearth & Horizon</p>
               </div>
             </div>
