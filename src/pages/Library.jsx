@@ -352,7 +352,7 @@ function SoulCompass({ vault, onSync }) {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <p className="text-[10px] text-zinc-600 italic">
         {isSaving ? <span className="text-teal-500/60 animate-pulse">Syncing...</span> : "Calibrate your non-negotiables. Updates Alignment badges in real-time."}
       </p>
@@ -536,7 +536,7 @@ function SmithyGate() {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-      className="min-h-[60vh] flex flex-col items-center justify-center text-center space-y-8 px-6"
+      className="py-24 flex flex-col items-center justify-center text-center space-y-6 px-6"
     >
       <div className="w-20 h-20 rounded-full bg-teal-500/5 border border-teal-500/10 flex items-center justify-center">
         <Lock size={28} className="text-teal-500/30" />
@@ -572,7 +572,7 @@ export default function Library({ vault, onRefresh, onSync, isAdmin }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A080D] text-zinc-300 font-sans selection:bg-teal-500/30 overflow-x-hidden relative page-fade-in">
+    <div className="bg-[#0A080D] text-zinc-300 font-sans selection:bg-teal-500/30 overflow-x-hidden relative page-fade-in">
       <div className="max-w-5xl mx-auto px-6 pt-12 pb-32 relative z-10">
 
         {/* HEADER */}
