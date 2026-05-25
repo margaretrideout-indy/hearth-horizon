@@ -81,9 +81,6 @@
           "created_by": "{{user.email}}"
         },
         {
-          "data.status": "available"
-        },
-        {
           "user_condition": {
             "role": "admin"
           }
