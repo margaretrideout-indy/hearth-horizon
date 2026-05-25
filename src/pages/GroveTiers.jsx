@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   Check, Coffee, ChevronDown, Sparkles,
-  BookOpen, Mail,
+  BookOpen,
   GraduationCap, CheckCircle2, ArrowRight, Heart
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -80,7 +80,7 @@ const TIERS = [
 
 const LINKTREE = [
   { label: 'The Library', sub: 'Tools & Resources', icon: BookOpen, action: (nav) => nav('/library'), color: 'border-purple-500/20 hover:border-purple-500/40' },
-  { label: 'Newsletter', sub: 'Dispatches from the Forge', icon: Mail, action: () => { window.location.href = 'https://hearthandhorizon.substack.com'; }, color: 'border-amber-500/20 hover:border-amber-500/40' },
+  { label: 'The Horizon Board', sub: 'Survey the Path Ahead', icon: ArrowRight, action: (nav) => nav('/horizon'), color: 'border-teal-500/20 hover:border-teal-500/40' },
 ];
 
 const CREDENTIALS = [
