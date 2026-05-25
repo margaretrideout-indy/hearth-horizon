@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   Check, Coffee, ChevronDown, Sparkles,
-  BookOpen,
+  BookOpen, ExternalLink, Link2,
   GraduationCap, CheckCircle2, ArrowRight, Heart
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -105,7 +105,7 @@ function WhisperTool({ onSave }) {
       const lower = val.toLowerCase();
       const match = LEGACY_MAP.find(e => e.triggers.some(t => lower.includes(t)));
       if (match) { setResult(match.horizon); setIsPoetic(false); }
-      else { setResult('A complex history. The full mapping requires the deep audit — enter the Forge below.'); setIsPoetic(true); }
+      else { setResult('A complex history. The full mapping requires the deep audit; enter the Forge below.'); setIsPoetic(true); }
     } else {
       setResult(null);
     }
@@ -126,7 +126,7 @@ function WhisperTool({ onSave }) {
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
             <div className={`p-8 rounded-2xl border ${isPoetic ? 'bg-zinc-900/40 border-zinc-800' : 'bg-[#0E1A14] border-zinc-700/60'}`}>
               <p className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 mb-3">
-                {isPoetic ? 'A Note from the Forge' : 'Your Horizon Title — Free Preview'}
+                {isPoetic ? 'A Note from the Forge' : 'Your Horizon Title - Free Preview'}
               </p>
               <motion.p key={result} initial={{ opacity: 0, filter: 'blur(6px)' }} animate={{ opacity: 1, filter: 'blur(0px)' }}
                 className={`font-serif italic leading-snug ${isPoetic ? 'text-sm text-zinc-500' : 'text-2xl text-purple-200'}`}>
@@ -164,9 +164,9 @@ function WhisperTool({ onSave }) {
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
                   <div className="p-5 rounded-2xl bg-zinc-900/30 border border-zinc-800 space-y-2">
                     <p className="text-[11px] text-zinc-500 italic leading-relaxed font-serif">
-                      "The mapping engine draws from 13 years of Indigenous curriculum architecture and public-sector pedagogy — built to honour the full legacy of the professional before the title."
+                      "The mapping engine draws from 13 years of Indigenous curriculum architecture and public-sector pedagogy, built to honour the full legacy of the professional before the title."
                     </p>
-                    <p className="text-[9px] text-zinc-700 uppercase font-black tracking-widest">— Margaret, M.Ed. | BA, BEd | Indigenous Studies</p>
+                    <p className="text-[9px] text-zinc-700 uppercase font-black tracking-widest">Margaret, M.Ed. | BA, BEd | Indigenous Studies</p>
                   </div>
                 </motion.div>
               )}
@@ -244,7 +244,7 @@ export default function GroveTiers({ vault, onSync }) {
         <section className="space-y-4">
           <SectionLabel>Explore the Ecosystem</SectionLabel>
 
-          {/* Ko-Fi first */}
+          {/* Ko-Fi */}
           <div className="flex items-center justify-between p-5 rounded-2xl bg-zinc-900/30 border border-zinc-800">
             <div className="flex items-center gap-3">
               <Coffee size={15} className="text-amber-400 shrink-0" />
@@ -259,7 +259,7 @@ export default function GroveTiers({ vault, onSync }) {
             </a>
           </div>
 
-          {/* LinkTree below */}
+          {/* Internal nav cards */}
           <div className="grid grid-cols-2 gap-4">
             {LINKTREE.map((item) => (
               <button key={item.label} onClick={() => item.action(navigate)}
@@ -273,6 +273,29 @@ export default function GroveTiers({ vault, onSync }) {
               </button>
             ))}
           </div>
+
+          {/* External links: LinkTree + Amazon Shop */}
+          <div className="grid grid-cols-2 gap-4">
+            <a href="https://linktree.com/mzrdt333" target="_blank" rel="noopener noreferrer"
+              className="group p-5 rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 flex flex-col items-start gap-3 transition-all">
+              <Link2 size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
+              <div className="flex-1">
+                <p className="text-sm font-serif italic text-zinc-300 leading-tight">LinkTree</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">All Our Links</p>
+              </div>
+              <ExternalLink size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
+            </a>
+            <a href="https://www.amazon.com/shop/hearthandh0a6-20" target="_blank" rel="noopener noreferrer"
+              className="group p-5 rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 flex flex-col items-start gap-3 transition-all">
+              <ExternalLink size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
+              <div className="flex-1">
+                <p className="text-sm font-serif italic text-zinc-300 leading-tight">Amazon Shop</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">Curated Tools & Reads</p>
+              </div>
+              <ExternalLink size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
+            </a>
+          </div>
+          <p className="text-[9px] text-zinc-800 italic text-center">*As an Amazon Associate I earn from qualifying purchases.</p>
         </section>
 
         {/* ── FOOTER ── */}
@@ -295,13 +318,13 @@ export default function GroveTiers({ vault, onSync }) {
                   <CheckCircle2 size={11} className="text-teal-500/60 mt-0.5 shrink-0" />
                   <span className="text-[10px] text-zinc-500">
                     <span className="font-black text-zinc-400 uppercase tracking-wide">{c.label}</span>
-                    <span className="text-zinc-600"> — {c.note}</span>
+                    <span className="text-zinc-600">, {c.note}</span>
                   </span>
                 </li>
               ))}
             </ul>
             <p className="text-[11px] text-zinc-600 italic font-serif border-l-2 border-zinc-800 pl-4 leading-relaxed">
-              Every tool and framework is built on lived expertise — not theory.
+              Every tool and framework is built on lived expertise, not theory.
             </p>
           </div>
 

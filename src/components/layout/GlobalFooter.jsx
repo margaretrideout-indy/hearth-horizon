@@ -37,7 +37,7 @@ const TERMS_CONTENT = (
     <p>By using Hearth & Horizon, you agree to engage in good faith and with care for fellow community members.</p>
     <p><strong className="text-zinc-300">Community standards:</strong> Harmful or abusive content will be removed.</p>
     <p><strong className="text-zinc-300">Subscriptions:</strong> Billed monthly via Stripe. Cancel anytime.</p>
-    <p><strong className="text-zinc-300">Liability:</strong> Hearth & Horizon provides career transition tools — not licensed career counselling.</p>
+    <p><strong className="text-zinc-300">Liability:</strong> Hearth & Horizon provides career transition tools, not licensed career counselling.</p>
     <p className="text-xs text-zinc-700">Last updated: April 2026</p>
   </>
 );
@@ -47,7 +47,6 @@ const PROJECT_LINKS = [
   { label: 'Atsanik Selene', href: 'https://atsanikselene.base44.app' },
   { label: 'Indigenized Curriculum Engine', href: 'https://indigenizedcurriculumengine.base44.app' },
   { label: 'LinkTree', href: 'https://linktree.com/mzrdt333' },
-  { label: 'Amazon Shop', href: 'https://www.amazon.com/shop/hearthandh0a6-20' },
 ];
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -61,7 +60,7 @@ export default function GlobalFooter() {
         {/* Brand */}
         <div className="space-y-1">
           <p className="text-[11px] font-black uppercase tracking-[0.4em] text-zinc-700">Hearth & Horizon</p>
-          <p className="text-[10px] text-zinc-700 italic">Dartmouth, NS · Built for the Caregivers of the World.</p>
+          <p className="text-[10px] text-zinc-700 italic">Dartmouth, NS - Built for the Caregivers of the World.</p>
         </div>
 
         {/* Two-column groups */}
@@ -93,8 +92,7 @@ export default function GlobalFooter() {
 
         </div>
 
-        {/* Amazon disclaimer */}
-        <p className="text-[9px] text-zinc-800 italic">*As an Amazon Associate I earn from qualifying purchases.</p>
+
 
       </footer>
 

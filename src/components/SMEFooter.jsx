@@ -34,7 +34,7 @@ export default function SMEFooter() {
             <CheckCircle2 size={13} className="text-teal-500/60 mt-0.5 shrink-0" />
             <div>
               <span className="text-[11px] font-black text-zinc-300 uppercase tracking-wide">{c.label}</span>
-              <span className="text-[10px] text-zinc-600 italic ml-2">— {c.note}</span>
+              <span className="text-[10px] text-zinc-600 italic ml-2">, {c.note}</span>
             </div>
           </li>
         ))}
@@ -42,7 +42,7 @@ export default function SMEFooter() {
 
       {/* Closing statement */}
       <p className="text-[11px] text-zinc-600 italic font-serif border-l-2 border-zinc-800 pl-4 leading-relaxed">
-        Every tool and framework in this platform is built on lived expertise — not theory.
+        Every tool and framework in this platform is built on lived expertise, not theory.
         The methodology works because it was developed inside the systems it now helps people leave.
       </p>
     </div>
