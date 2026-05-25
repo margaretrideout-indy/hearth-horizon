@@ -68,12 +68,12 @@ export default function GlobalFooter() {
           {/* System */}
           <div className="space-y-2">
             <p className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-700 mb-3">System</p>
-            <a href="/about#reach-out" className="block text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Contact</a>
-            <button onClick={() => setModal('privacy')} className="block text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Privacy Policy</button>
-            <button onClick={() => setModal('terms')} className="block text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Terms of Use</button>
+            <a href="/about#reach-out" className="block text-xs text-zinc-600 hover:text-zinc-400 active:text-zinc-400 transition-colors py-2 min-h-[44px] flex items-center">Contact</a>
+            <button onClick={() => setModal('privacy')} className="block w-full text-left text-xs text-zinc-600 hover:text-zinc-400 active:text-zinc-400 transition-colors py-2 min-h-[44px]">Privacy Policy</button>
+            <button onClick={() => setModal('terms')} className="block w-full text-left text-xs text-zinc-600 hover:text-zinc-400 active:text-zinc-400 transition-colors py-2 min-h-[44px]">Terms of Use</button>
             <button
               onClick={() => import('@/api/base44Client').then(m => m.base44.auth.redirectToLogin(window.location.href))}
-              className="block text-[10px] text-zinc-600 hover:text-teal-400 transition-colors">
+              className="block w-full text-left text-xs text-zinc-600 hover:text-teal-400 active:text-teal-400 transition-colors py-2 min-h-[44px]">
               Member Login
             </button>
           </div>
@@ -81,11 +81,11 @@ export default function GlobalFooter() {
           {/* Ecosystem */}
           <div className="space-y-2">
             <p className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-700 mb-3">Ecosystem</p>
-            <Link to="/about" className="block text-[10px] text-zinc-600 hover:text-teal-400 transition-colors">About</Link>
-            <Link to="/advisory" className="block text-[10px] text-zinc-600 hover:text-teal-400 transition-colors">Advisory</Link>
+            <Link to="/about" className="block text-xs text-zinc-600 hover:text-teal-400 active:text-teal-400 transition-colors py-2 min-h-[44px] flex items-center">About</Link>
+            <Link to="/advisory" className="block text-xs text-zinc-600 hover:text-teal-400 active:text-teal-400 transition-colors py-2 min-h-[44px] flex items-center">Advisory</Link>
             {PROJECT_LINKS.map(({ label, href }) => (
               <a key={href} href={href} target="_blank" rel="noopener noreferrer"
-                className="block text-[10px] text-zinc-600 hover:text-teal-400 transition-colors">
+                className="block text-xs text-zinc-600 hover:text-teal-400 active:text-teal-400 transition-colors py-2 min-h-[44px] flex items-center">
                 {label}
               </a>
             ))}

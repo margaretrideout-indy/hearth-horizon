@@ -117,7 +117,7 @@ function WhisperTool({ onSave }) {
         value={title}
         onChange={(e) => handleInput(e.target.value)}
         placeholder="e.g. Special Education Teacher, Charge Nurse, Policy Analyst..."
-        className="w-full bg-[#0E0C14] border border-zinc-800 rounded-2xl px-6 py-5 text-base text-white focus:outline-none focus:border-zinc-600 transition-all placeholder:text-zinc-700 font-serif italic"
+        className="w-full bg-[#0E0C14] border border-zinc-800 rounded-2xl px-6 py-5 text-base text-white focus:outline-none focus:border-zinc-600 transition-all placeholder:text-zinc-700 font-serif italic min-h-[56px]"
       />
 
       <AnimatePresence>
@@ -134,26 +134,26 @@ function WhisperTool({ onSave }) {
             </div>
 
             {!isPoetic && (
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col gap-3">
                 {!saved ? (
                   <button onClick={() => { onSave(title, result); setSaved(true); }}
-                    className="flex-1 py-3 bg-zinc-800 border border-zinc-700 text-zinc-300 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-zinc-700 transition-all">
+                    className="w-full min-h-[48px] py-3 bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-black uppercase tracking-widest rounded-xl active:bg-zinc-700 hover:bg-zinc-700 transition-all">
                     <Check size={11} className="inline mr-2" /> Save to My Hearth — Free
                   </button>
                 ) : (
-                  <p className="flex-1 py-3 text-center text-[10px] font-black uppercase tracking-widest text-zinc-600">
+                  <p className="w-full min-h-[48px] flex items-center justify-center text-xs font-black uppercase tracking-widest text-zinc-600">
                     <Sparkles size={10} className="inline mr-2" />Saved to vault
                   </p>
                 )}
                 <button onClick={() => { window.location.href = STRIPE_URL; }}
-                  className="flex-1 py-3 bg-teal-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20">
+                  className="w-full min-h-[48px] py-3 bg-teal-500 text-black text-xs font-black uppercase tracking-widest rounded-xl active:bg-teal-400 hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20">
                   Get the Full Audit Report →
                 </button>
               </div>
             )}
 
             <button onClick={() => setShowLearnMore(p => !p)}
-              className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-zinc-700 hover:text-zinc-500 transition-colors">
+              className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-400 active:text-zinc-400 transition-colors min-h-[44px]">
               <ChevronDown size={12} className={`transition-transform ${showLearnMore ? 'rotate-180' : ''}`} />
               {showLearnMore ? 'Hide' : 'About the methodology'}
             </button>
@@ -231,7 +231,7 @@ export default function GroveTiers({ vault, onSync }) {
                   ))}
                 </ul>
                 <button onClick={tier.action}
-                  className={`w-full py-3.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${tier.btnStyle}`}>
+                  className={`w-full min-h-[48px] py-3.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${tier.btnStyle}`}>
                   {tier.cta} →
                 </button>
               </div>
@@ -244,14 +244,14 @@ export default function GroveTiers({ vault, onSync }) {
           <SectionLabel>Explore the Ecosystem</SectionLabel>
 
           {/* Internal nav cards */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {LINKTREE.map((item) => (
               <button key={item.label} onClick={() => item.action(navigate)}
-                className={`group p-5 rounded-[1.5rem] bg-[#0E0C14] border ${item.color} flex flex-col items-start gap-3 text-left transition-all`}>
+                className={`group p-5 min-h-[72px] rounded-[1.5rem] bg-[#0E0C14] border ${item.color} flex flex-col items-start gap-3 text-left transition-all active:opacity-75`}>
                 <item.icon size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
                 <div className="flex-1">
                   <p className="text-sm font-serif italic text-zinc-300 leading-tight">{item.label}</p>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">{item.sub}</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">{item.sub}</p>
                 </div>
                 <ArrowRight size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
               </button>
@@ -261,38 +261,38 @@ export default function GroveTiers({ vault, onSync }) {
           {/* External links: LinkTree + Amazon Shop + Gumroad + Bookshop */}
           <div className="grid grid-cols-2 gap-4">
             <a href="https://linktree.com/mzrdt333" target="_blank" rel="noopener noreferrer"
-              className="group p-5 rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 flex flex-col items-start gap-3 transition-all">
+              className="group p-5 min-h-[72px] rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 active:border-zinc-600 active:opacity-75 flex flex-col items-start gap-3 transition-all">
               <Link2 size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
               <div className="flex-1">
                 <p className="text-sm font-serif italic text-zinc-300 leading-tight">LinkTree</p>
-                <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">All Our Links</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">All Our Links</p>
               </div>
               <ExternalLink size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
             </a>
             <a href="https://www.amazon.com/shop/hearthandh0a6-20" target="_blank" rel="noopener noreferrer"
-              className="group p-5 rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 flex flex-col items-start gap-3 transition-all">
+              className="group p-5 min-h-[72px] rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 active:border-zinc-600 active:opacity-75 flex flex-col items-start gap-3 transition-all">
               <ExternalLink size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
               <div className="flex-1">
                 <p className="text-sm font-serif italic text-zinc-300 leading-tight">Amazon Shop</p>
-                <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">Curated Tools & Reads</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">Curated Tools & Reads</p>
               </div>
               <ExternalLink size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
             </a>
             <a href="https://margaretpardy.gumroad.com" target="_blank" rel="noopener noreferrer"
-              className="group p-5 rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 flex flex-col items-start gap-3 transition-all">
+              className="group p-5 min-h-[72px] rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 active:border-zinc-600 active:opacity-75 flex flex-col items-start gap-3 transition-all">
               <Heart size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
               <div className="flex-1">
                 <p className="text-sm font-serif italic text-zinc-300 leading-tight">Gumroad</p>
-                <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">Digital Downloads</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">Digital Downloads</p>
               </div>
               <ExternalLink size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
             </a>
             <a href="https://bookshop.org/shop/hearthandhorizon" target="_blank" rel="noopener noreferrer"
-              className="group p-5 rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 flex flex-col items-start gap-3 transition-all">
+              className="group p-5 min-h-[72px] rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 active:border-zinc-600 active:opacity-75 flex flex-col items-start gap-3 transition-all">
               <BookOpen size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
               <div className="flex-1">
                 <p className="text-sm font-serif italic text-zinc-300 leading-tight">Bookshop.org</p>
-                <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">Recommended Reads</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">Recommended Reads</p>
               </div>
               <ExternalLink size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
             </a>
@@ -309,7 +309,7 @@ export default function GroveTiers({ vault, onSync }) {
               </div>
             </div>
             <a href="https://ko-fi.com/hearthandhorizon" target="_blank" rel="noopener noreferrer"
-              className="px-4 py-2 bg-amber-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-amber-400 transition-all whitespace-nowrap flex items-center gap-1.5">
+              className="px-5 py-3 min-h-[44px] bg-amber-500 text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-amber-400 active:bg-amber-400 transition-all whitespace-nowrap flex items-center gap-1.5">
               <Heart size={10} /> Buy a Coffee
             </a>
           </div>
@@ -321,7 +321,7 @@ export default function GroveTiers({ vault, onSync }) {
           <p className="text-zinc-600 italic font-serif text-sm leading-relaxed max-w-md mx-auto">
             Migration is more than a move. It is a shift of the self. Learn more about the philosophy and the architect behind the engine.
           </p>
-          <a href="/about" className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 transition-colors">
+          <a href="/about" className="inline-flex items-center gap-1 text-xs font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 active:text-teal-400 transition-colors min-h-[44px] py-2">
             Read our Story & Philosophy →
           </a>
         </section>
