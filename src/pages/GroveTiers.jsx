@@ -315,6 +315,17 @@ export default function GroveTiers({ vault, onSync }) {
           </div>
         </section>
 
+        {/* ── PHILOSOPHY BRIDGE ── */}
+        <section className="border-t border-zinc-900 pt-14 text-center space-y-5">
+          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-zinc-700">The Philosophy of Migration</p>
+          <p className="text-zinc-600 italic font-serif text-sm leading-relaxed max-w-md mx-auto">
+            Migration is more than a move. It is a shift of the self. Learn more about the philosophy and the architect behind the engine.
+          </p>
+          <a href="/about" className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 transition-colors">
+            Read our Story & Philosophy →
+          </a>
+        </section>
+
         {/* ── FOOTER ── */}
         <footer className="border-t border-zinc-900 pt-14 space-y-8">
 
