@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { Flame, BookOpen, Compass, LayoutDashboard, Trees, ShieldCheck } from 'lucide-react';
+import { Flame, BookOpen, Compass, LayoutDashboard, Trees, ShieldCheck, RefreshCw } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import usePullToRefresh from '@/hooks/usePullToRefresh';
 
 // Hearth & Horizon Ecosystem Components
 import GroveTiers from './pages/GroveTiers';
@@ -145,6 +146,8 @@ export default function App() {
 
   const showNav = !['/grove', '/', '/contact', '/about', '/contact-us'].includes(location.pathname);
 
+  const { containerRef: ptrRef, isPulling, pullProgress, isRefreshing } = usePullToRefresh(handleSync);
+
   const NavLinks = ({ isDesktop = false }) => {
     const mainLinks = [
       { label: 'Hearth', path: '/hearth', icon: Flame },
@@ -237,8 +240,21 @@ export default function App() {
         </aside>
       }
 
-      <main className="flex-1 h-full relative overflow-y-auto custom-scrollbar flex flex-col">
-        <div className="flex-1 w-full relative">
+      <main
+        ref={ptrRef}
+        className="flex-1 h-full relative overflow-y-auto custom-scrollbar flex flex-col overscroll-none"
+        style={{ overscrollBehavior: 'none' }}
+      >
+        {/* Pull-to-refresh indicator */}
+        {(isPulling || isRefreshing) && (
+          <div className="absolute top-0 left-0 right-0 z-50 flex justify-center pt-4 pointer-events-none">
+            <div className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg transition-all ${isRefreshing ? 'bg-teal-500 text-black' : 'bg-zinc-800 text-zinc-400'}`}>
+              <RefreshCw size={10} className={isRefreshing ? 'animate-spin' : ''} style={{ transform: `rotate(${pullProgress * 360}deg)` }} />
+              {isRefreshing ? 'Syncing…' : 'Pull to refresh'}
+            </div>
+          </div>
+        )}
+        <div className="flex-1 w-full relative" style={{ overscrollBehavior: 'none' }}>
           <Routes>
             {/* Public routes */}
             <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />

@@ -45,6 +45,8 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     overflow: hidden;
     position: fixed;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
   }
 
   #root {

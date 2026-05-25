@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Wind } from 'lucide-react';
+import { ArrowRight, Wind, Settings, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
 import SMEFooter from '@/components/SMEFooter';
+import DeleteAccountDialog from '@/components/hearth/DeleteAccountDialog';
 
 // ── ANIMATION PRESETS ─────────────────────────────────────────────────────────
 const fadeUp = {
@@ -141,13 +142,14 @@ function DailyRitual({ vault, onSync }) {
   const [note, setNote] = useState('');
   const [saved, setSaved] = useState(false);
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!selected) return;
     const pulse = { date: new Date().toISOString(), emoji: selected, text: note };
-    await onSync({ ...vault, pulses: [pulse, ...(vault?.pulses || [])] });
+    // Optimistic update — UI responds instantly
     setSaved(true);
     setSelected(null);
     setNote('');
+    onSync({ ...vault, pulses: [pulse, ...(vault?.pulses || [])] });
     setTimeout(() => setSaved(false), 3000);
   };
 
@@ -307,6 +309,42 @@ function NavTiles({ navigate }) {
   );
 }
 
+// ── SETTINGS SECTION ─────────────────────────────────────────────────────────
+function HearthSettings() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.7 }}
+      className="border-t border-white/5 pt-10 space-y-4">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="flex items-center gap-3 text-zinc-600 hover:text-zinc-400 active:text-zinc-400 transition-colors min-h-[44px]"
+      >
+        <Settings size={14} />
+        <span className="text-[10px] font-black uppercase tracking-[0.4em]">Settings</span>
+        <ChevronDown size={12} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      {open && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          className="overflow-hidden space-y-4"
+        >
+          <div className="p-6 rounded-2xl bg-[#110E16] border border-white/5 space-y-3">
+            <p className="text-[9px] font-black uppercase tracking-[0.45em] text-zinc-600">Account</p>
+            <p className="text-xs font-serif italic text-zinc-600 leading-relaxed">
+              Permanently remove your account data from Hearth & Horizon. This action cannot be undone.
+            </p>
+            <DeleteAccountDialog />
+          </div>
+        </motion.div>
+      )}
+    </motion.div>
+  );
+}
+
 // ── MAIN ──────────────────────────────────────────────────────────────────────
 export default function YourHearth({ vault, onSync, onRefresh }) {
   const navigate = useNavigate();
@@ -347,6 +385,9 @@ export default function YourHearth({ vault, onSync, onRefresh }) {
         <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.6 }}>
           <SMEFooter />
         </motion.div>
+
+        {/* ── SETTINGS ── */}
+        <HearthSettings />
 
       </div>
     </div>
