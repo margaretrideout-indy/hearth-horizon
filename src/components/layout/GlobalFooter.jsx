@@ -46,7 +46,6 @@ const TERMS_CONTENT = (
 const PROJECT_LINKS = [
   { label: 'Atsanik Selene', href: 'https://atsanikselene.base44.app' },
   { label: 'Indigenized Curriculum Engine', href: 'https://indigenizedcurriculumengine.base44.app' },
-  { label: 'LinkTree', href: 'https://linktree.com/mzrdt333' },
 ];
 
 // ── Component ─────────────────────────────────────────────────────────────────
