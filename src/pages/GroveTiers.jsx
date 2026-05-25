@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   Check, Coffee, ChevronDown, Sparkles,
-  BookOpen, CalendarDays, Users, Mail,
+  BookOpen, Mail,
   GraduationCap, CheckCircle2, ArrowRight, Heart
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -80,8 +80,6 @@ const TIERS = [
 
 const LINKTREE = [
   { label: 'The Library', sub: 'Tools & Resources', icon: BookOpen, action: (nav) => nav('/library'), color: 'border-purple-500/20 hover:border-purple-500/40' },
-  { label: 'Book a Session', sub: 'Work with Margaret', icon: CalendarDays, action: () => { window.location.href = 'https://calendly.com/hearthandhorizon'; }, color: 'border-teal-500/20 hover:border-teal-500/40' },
-  { label: 'Community Forum', sub: 'The Founding Forest', icon: Users, action: () => { window.location.href = STRIPE_URL; }, color: 'border-zinc-700 hover:border-zinc-500' },
   { label: 'Newsletter', sub: 'Dispatches from the Forge', icon: Mail, action: () => { window.location.href = 'https://hearthandhorizon.substack.com'; }, color: 'border-amber-500/20 hover:border-amber-500/40' },
 ];
 
@@ -242,24 +240,11 @@ export default function GroveTiers({ vault, onSync }) {
           </div>
         </section>
 
-        {/* ── LINKTREE 2×2 + KO-FI ── */}
-        <section className="space-y-5">
+        {/* ── LINKS + KO-FI ── */}
+        <section className="space-y-4">
           <SectionLabel>Explore the Ecosystem</SectionLabel>
-          <div className="grid grid-cols-2 gap-4">
-            {LINKTREE.map((item) => (
-              <button key={item.label} onClick={() => item.action(navigate)}
-                className={`group p-5 rounded-[1.5rem] bg-[#0E0C14] border ${item.color} flex flex-col items-start gap-3 text-left transition-all`}>
-                <item.icon size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
-                <div className="flex-1">
-                  <p className="text-sm font-serif italic text-zinc-300 leading-tight">{item.label}</p>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">{item.sub}</p>
-                </div>
-                <ArrowRight size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
-              </button>
-            ))}
-          </div>
 
-          {/* Ko-Fi inline */}
+          {/* Ko-Fi first */}
           <div className="flex items-center justify-between p-5 rounded-2xl bg-zinc-900/30 border border-zinc-800">
             <div className="flex items-center gap-3">
               <Coffee size={15} className="text-amber-400 shrink-0" />
@@ -273,10 +258,25 @@ export default function GroveTiers({ vault, onSync }) {
               <Heart size={10} /> Buy a Coffee
             </a>
           </div>
+
+          {/* LinkTree below */}
+          <div className="grid grid-cols-2 gap-4">
+            {LINKTREE.map((item) => (
+              <button key={item.label} onClick={() => item.action(navigate)}
+                className={`group p-5 rounded-[1.5rem] bg-[#0E0C14] border ${item.color} flex flex-col items-start gap-3 text-left transition-all`}>
+                <item.icon size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
+                <div className="flex-1">
+                  <p className="text-sm font-serif italic text-zinc-300 leading-tight">{item.label}</p>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">{item.sub}</p>
+                </div>
+                <ArrowRight size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
+              </button>
+            ))}
+          </div>
         </section>
 
-        {/* ── UNIFIED FOOTER ── */}
-        <footer className="border-t border-zinc-900 pt-14 space-y-10">
+        {/* ── FOOTER ── */}
+        <footer className="border-t border-zinc-900 pt-14 space-y-8">
 
           {/* SME Seal */}
           <div className="py-8 px-7 border border-zinc-800/60 rounded-[2rem] bg-zinc-950/60 space-y-5">
@@ -305,13 +305,7 @@ export default function GroveTiers({ vault, onSync }) {
             </p>
           </div>
 
-          {/* Nav Links */}
-          <div className="flex flex-wrap justify-center gap-8 text-[9px] font-black uppercase tracking-widest text-zinc-700">
-            <button onClick={() => navigate('/about')} className="hover:text-zinc-500 transition-colors">About</button>
-            <button onClick={() => navigate('/contact-us')} className="hover:text-zinc-500 transition-colors">Contact</button>
-            <a href="mailto:hello@hearthandhorizon.ca" className="hover:text-zinc-500 transition-colors">hello@hearthandhorizon.ca</a>
-          </div>
-
+          {/* GlobalFooter handles all nav, policies, project links, Amazon disclaimer */}
           <GlobalFooter />
         </footer>
 
