@@ -2,121 +2,104 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
 
-
+// ── Policy Modal ──────────────────────────────────────────────────────────────
 function PolicyModal({ title, content, onClose }) {
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: 'hsla(280, 30%, 5%, 0.8)', backdropFilter: 'blur(6px)' }}
-      onClick={onClose}
-    >
-      <div
-        className="relative w-full max-w-lg rounded-2xl p-8 space-y-4"
-        style={{
-          background: 'hsl(280, 22%, 14%)',
-          border: '1px solid hsla(280, 30%, 35%, 0.3)',
-          boxShadow: '0 0 40px 0 hsla(280, 40%, 10%, 0.8)',
-        }}
-        onClick={e => e.stopPropagation()}
-      >
-        <button onClick={onClose} className="absolute top-4 right-4 text-muted-foreground/50 hover:text-foreground transition-colors">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: 'hsla(280, 30%, 5%, 0.85)', backdropFilter: 'blur(6px)' }}
+      onClick={onClose}>
+      <div className="relative w-full max-w-lg rounded-2xl p-8 space-y-4"
+        style={{ background: 'hsl(280, 22%, 14%)', border: '1px solid hsla(280, 30%, 35%, 0.3)' }}
+        onClick={e => e.stopPropagation()}>
+        <button onClick={onClose} className="absolute top-4 right-4 text-zinc-600 hover:text-zinc-300 transition-colors">
           <X className="w-4 h-4" />
         </button>
-        <h2 className="font-heading text-xl font-semibold text-foreground">{title}</h2>
-        <div className="text-sm text-muted-foreground leading-relaxed space-y-3">
-          {content}
-        </div>
+        <h2 className="text-base font-serif italic text-purple-200">{title}</h2>
+        <div className="text-sm text-zinc-500 leading-relaxed space-y-3">{content}</div>
       </div>
     </div>
   );
 }
 
+// ── Policy Content ────────────────────────────────────────────────────────────
 const PRIVACY_CONTENT = (
   <>
     <p>Hearth & Horizon is committed to your privacy and the safety of your personal information.</p>
-    <p><strong className="text-foreground">What we collect:</strong> Your email, name, and any profile or journal data you voluntarily provide.</p>
-    <p><strong className="text-foreground">How we use it:</strong> To personalise your experience and support your career transition journey. We never sell your data.</p>
-    <p><strong className="text-foreground">Your journal entries</strong> marked "private" are visible only to you and are never shared without your explicit consent.</p>
-    <p><strong className="text-foreground">Contact:</strong> For any data requests, <Link to="/contact" className="text-secondary underline">contact us here</Link>.</p>
-    <p className="text-xs text-muted-foreground/50">Last updated: April 2026</p>
+    <p><strong className="text-zinc-300">What we collect:</strong> Your email, name, and any profile or journal data you voluntarily provide.</p>
+    <p><strong className="text-zinc-300">How we use it:</strong> To personalise your experience. We never sell your data.</p>
+    <p><strong className="text-zinc-300">Private journal entries</strong> are visible only to you and never shared without explicit consent.</p>
+    <p className="text-xs text-zinc-700">Last updated: April 2026</p>
   </>
 );
 
 const TERMS_CONTENT = (
   <>
-    <p>By using Hearth & Horizon, you agree to engage with this platform in good faith and with care for fellow community members.</p>
-    <p><strong className="text-foreground">Community standards:</strong> The Embers and Grove spaces are places of mutual support. Harmful, abusive, or discriminatory content will be removed.</p>
-    <p><strong className="text-foreground">Subscriptions:</strong> Paid tiers are billed monthly via Stripe. You may cancel at any time from your account settings.</p>
-    <p><strong className="text-foreground">Content ownership:</strong> Your journal entries and reflections remain yours. By sharing to the Embers, you grant the community a read-only view.</p>
-    <p><strong className="text-foreground">Liability:</strong> Hearth & Horizon provides career transition tools and community support. We are not a licensed career counselling service.</p>
-    <p className="text-xs text-muted-foreground/50">Last updated: April 2026</p>
+    <p>By using Hearth & Horizon, you agree to engage in good faith and with care for fellow community members.</p>
+    <p><strong className="text-zinc-300">Community standards:</strong> Harmful or abusive content will be removed.</p>
+    <p><strong className="text-zinc-300">Subscriptions:</strong> Billed monthly via Stripe. Cancel anytime.</p>
+    <p><strong className="text-zinc-300">Liability:</strong> Hearth & Horizon provides career transition tools — not licensed career counselling.</p>
+    <p className="text-xs text-zinc-700">Last updated: April 2026</p>
   </>
 );
 
+// ── Data ──────────────────────────────────────────────────────────────────────
+const PROJECT_LINKS = [
+  { label: 'Atsanik Selene', href: 'https://atsanikselene.base44.app' },
+  { label: 'Indigenized Curriculum Engine', href: 'https://indigenizedcurriculumengine.base44.app' },
+  { label: 'LinkTree', href: 'https://linktree.com/mzrdt333' },
+  { label: 'Amazon Shop', href: 'https://www.amazon.com/shop/hearthandh0a6-20' },
+];
+
+// ── Component ─────────────────────────────────────────────────────────────────
 export default function GlobalFooter() {
-  const [modal, setModal] = useState(null); // 'privacy' | 'terms' | null
+  const [modal, setModal] = useState(null);
 
   return (
     <>
-      <footer
-        className="mt-16 py-6 border-t border-border/20 text-center space-y-2"
-        style={{ position: 'relative', lineHeight: 1.6 }}
-      >
-        <p
-          className="text-xs text-muted-foreground/50"
-          style={{ lineHeight: 1.6 }}
-        >
-          <span className="block">Hearth &amp; Horizon</span>
-          <span className="block">Dartmouth, NS, Canada</span>
-          <span className="block">Built for the Caregivers of the World.</span>
-        </p>
-        <div className="flex flex-wrap justify-center gap-3 text-xs text-muted-foreground/40">
-           <Link to="/contact" className="hover:text-secondary transition-colors">Contact Support</Link>
-           <span>·</span>
-           <button onClick={() => setModal('privacy')} className="hover:text-secondary transition-colors">Privacy Policy</button>
-           <span>·</span>
-           <button onClick={() => setModal('terms')} className="hover:text-secondary transition-colors">Terms</button>
-           <span>·</span>
-           <button onClick={() => { import('@/api/base44Client').then(m => m.base44.auth.redirectToLogin(window.location.href)); }} className="hover:text-secondary transition-colors">Already a member? Log in</button>
+      <footer className="space-y-8 text-center">
+
+        {/* Brand */}
+        <div className="space-y-1">
+          <p className="text-[11px] font-black uppercase tracking-[0.4em] text-zinc-700">Hearth & Horizon</p>
+          <p className="text-[10px] text-zinc-700 italic">Dartmouth, NS · Built for the Caregivers of the World.</p>
         </div>
 
-        {/* Affiliate & project links */}
-        <div className="pt-3 border-t border-white/5 space-y-2">
-          <p className="text-[11px] text-zinc-600">
-            Created by Margaret Rideout &nbsp;|&nbsp; Explore My Projects:
-          </p>
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
-            {[
-              { label: 'Atsanik Selene', href: 'https://atsanikselene.base44.app' },
-              { label: 'Indigenized Curriculum Engine', href: 'https://indigenizedcurriculumengine.base44.app' },
-              { label: 'LinkTree', href: 'https://linktree.com/mzrdt333' },
-              { label: 'Support on Ko-fi', href: 'https://ko-fi.com/mzrdt333' },
-              { label: 'My Amazon Shop', href: 'https://www.amazon.com/shop/hearthandh0a6-20' },
-              { label: 'Shop anything on Amazon using this link', href: 'https://www.amazon.com/?tag=hearthandh0a6-20' },
-            ].map(({ label, href }) => (
-              <a
-                key={href}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[11px] text-zinc-600 hover:text-teal-400 transition-colors"
-              >
+        {/* Two-column groups */}
+        <div className="grid grid-cols-2 gap-8 text-left max-w-sm mx-auto">
+
+          {/* System */}
+          <div className="space-y-2">
+            <p className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-700 mb-3">System</p>
+            <Link to="/contact" className="block text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Contact Support</Link>
+            <button onClick={() => setModal('privacy')} className="block text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Privacy Policy</button>
+            <button onClick={() => setModal('terms')} className="block text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors">Terms of Use</button>
+            <button
+              onClick={() => import('@/api/base44Client').then(m => m.base44.auth.redirectToLogin(window.location.href))}
+              className="block text-[10px] text-zinc-600 hover:text-teal-400 transition-colors">
+              Member Login
+            </button>
+          </div>
+
+          {/* Ecosystem */}
+          <div className="space-y-2">
+            <p className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-700 mb-3">Ecosystem</p>
+            {PROJECT_LINKS.map(({ label, href }) => (
+              <a key={href} href={href} target="_blank" rel="noopener noreferrer"
+                className="block text-[10px] text-zinc-600 hover:text-teal-400 transition-colors">
                 {label}
               </a>
             ))}
           </div>
-          <p className="text-[9px] text-zinc-700 italic">
-            *As an Amazon Associate I earn from qualifying purchases.
-          </p>
+
         </div>
+
+        {/* Amazon disclaimer */}
+        <p className="text-[9px] text-zinc-800 italic">*As an Amazon Associate I earn from qualifying purchases.</p>
+
       </footer>
 
-      {modal === 'privacy' && (
-        <PolicyModal title="Privacy Policy" content={PRIVACY_CONTENT} onClose={() => setModal(null)} />
-      )}
-      {modal === 'terms' && (
-        <PolicyModal title="Terms of Use" content={TERMS_CONTENT} onClose={() => setModal(null)} />
-      )}
+      {modal === 'privacy' && <PolicyModal title="Privacy Policy" content={PRIVACY_CONTENT} onClose={() => setModal(null)} />}
+      {modal === 'terms' && <PolicyModal title="Terms of Use" content={TERMS_CONTENT} onClose={() => setModal(null)} />}
     </>
   );
 }
