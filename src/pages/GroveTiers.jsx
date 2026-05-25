@@ -258,7 +258,7 @@ export default function GroveTiers({ vault, onSync }) {
             ))}
           </div>
 
-          {/* External links: LinkTree + Amazon Shop */}
+          {/* External links: LinkTree + Amazon Shop + Gumroad + Bookshop */}
           <div className="grid grid-cols-2 gap-4">
             <a href="https://linktree.com/mzrdt333" target="_blank" rel="noopener noreferrer"
               className="group p-5 rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 flex flex-col items-start gap-3 transition-all">
@@ -275,6 +275,24 @@ export default function GroveTiers({ vault, onSync }) {
               <div className="flex-1">
                 <p className="text-sm font-serif italic text-zinc-300 leading-tight">Amazon Shop</p>
                 <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">Curated Tools & Reads</p>
+              </div>
+              <ExternalLink size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
+            </a>
+            <a href="https://margaretpardy.gumroad.com" target="_blank" rel="noopener noreferrer"
+              className="group p-5 rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 flex flex-col items-start gap-3 transition-all">
+              <Heart size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
+              <div className="flex-1">
+                <p className="text-sm font-serif italic text-zinc-300 leading-tight">Gumroad</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">Digital Downloads</p>
+              </div>
+              <ExternalLink size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
+            </a>
+            <a href="https://bookshop.org/shop/hearthandhorizon" target="_blank" rel="noopener noreferrer"
+              className="group p-5 rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 flex flex-col items-start gap-3 transition-all">
+              <BookOpen size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
+              <div className="flex-1">
+                <p className="text-sm font-serif italic text-zinc-300 leading-tight">Bookshop.org</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">Recommended Reads</p>
               </div>
               <ExternalLink size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
             </a>

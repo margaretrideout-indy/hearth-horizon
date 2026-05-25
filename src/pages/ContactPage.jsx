@@ -56,17 +56,6 @@ export default function ContactPage() {
           </p>
         </header>
 
-        {/* Ko-fi */}
-        <section className="space-y-3">
-          <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600">Find Us Online</p>
-          <div className="flex flex-wrap gap-3">
-            <a href="https://ko-fi.com/I2I51EFK95" target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-2 px-5 py-3 bg-white/[0.03] border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white hover:border-white/20 transition-all">
-              <Flame size={13} /> Ko-fi
-            </a>
-          </div>
-        </section>
-
         {/* Contact form */}
         <section className="space-y-5">
           <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600">Send a Message</p>
