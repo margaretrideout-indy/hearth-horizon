@@ -243,21 +243,6 @@ export default function GroveTiers({ vault, onSync }) {
         <section className="space-y-4">
           <SectionLabel>Explore the Ecosystem</SectionLabel>
 
-          {/* Ko-Fi */}
-          <div className="flex items-center justify-between p-5 rounded-2xl bg-zinc-900/30 border border-zinc-800">
-            <div className="flex items-center gap-3">
-              <Coffee size={15} className="text-amber-400 shrink-0" />
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Support the Fire</p>
-                <p className="text-[10px] text-zinc-600 italic">A one-time contribution keeps this alive.</p>
-              </div>
-            </div>
-            <a href="https://ko-fi.com/hearthandhorizon" target="_blank" rel="noopener noreferrer"
-              className="px-4 py-2 bg-amber-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-amber-400 transition-all whitespace-nowrap flex items-center gap-1.5">
-              <Heart size={10} /> Buy a Coffee
-            </a>
-          </div>
-
           {/* Internal nav cards */}
           <div className="grid grid-cols-2 gap-4">
             {LINKTREE.map((item) => (
@@ -295,6 +280,21 @@ export default function GroveTiers({ vault, onSync }) {
             </a>
           </div>
           <p className="text-[9px] text-zinc-800 italic text-center">*As an Amazon Associate I earn from qualifying purchases.</p>
+
+          {/* Ko-Fi */}
+          <div className="flex items-center justify-between p-5 rounded-2xl bg-zinc-900/30 border border-zinc-800">
+            <div className="flex items-center gap-3">
+              <Coffee size={15} className="text-amber-400 shrink-0" />
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Support the Fire</p>
+                <p className="text-[10px] text-zinc-600 italic">A one-time contribution keeps this alive.</p>
+              </div>
+            </div>
+            <a href="https://ko-fi.com/hearthandhorizon" target="_blank" rel="noopener noreferrer"
+              className="px-4 py-2 bg-amber-500 text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-amber-400 transition-all whitespace-nowrap flex items-center gap-1.5">
+              <Heart size={10} /> Buy a Coffee
+            </a>
+          </div>
         </section>
 
         {/* ── FOOTER ── */}
