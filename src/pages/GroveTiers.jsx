@@ -259,7 +259,7 @@ export default function GroveTiers({ vault, onSync }) {
 
         {/* ── SECTION 4: THE DEEP GROVE TIERS (PUSHED DOWN) ── */}
         <section className="space-y-5">
-          <SectionLabel>Join the Grove Tiers</SectionLabel>
+          <SectionLabel>Choose Your Space</SectionLabel>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {TIERS.map((tier) => (
               <div key={tier.id} className={`p-7 rounded-[2rem] border ${tier.style} flex flex-col justify-between min-h-[280px]`}>
