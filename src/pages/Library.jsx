@@ -12,7 +12,8 @@ import {
   ShieldCheck, 
   ChevronRight,
   HelpCircle,
-  ArrowUpRight
+  ArrowUpRight,
+  Hammer
 } from 'lucide-react';
 
 // Unified Active Archetype Data
@@ -61,18 +62,25 @@ const ARCHETYPES = [
 
 // Active Destination Storefronts
 const GUMROAD_STORE_URL = "https://margaretrideout.gumroad.com/"; 
-const AMAZON_GENERAL_URL = "https://www.amazon.ca"; // Replace with your master associate tag link
+const AMAZON_GENERAL_URL = "https://www.amazon.ca"; 
 
 export default function Library() {
   const [activeArchetype, setActiveArchetype] = useState('builder');
   const currentArch = ARCHETYPES.find(a => a.id === activeArchetype);
   const IconComponent = currentArch.icon;
 
+  // Function to handle moving deeper into the Smithy
+  const handleNavigateToSmithy = () => {
+    // In your routing setup, this would be: history.push('/smithy') or router.push('/smithy')
+    console.log("Navigating deeper into The Smithy...");
+  };
+
   return (
-    <div className="min-h-screen bg-[#050409] text-zinc-100 font-sans relative overflow-x-hidden selection:bg-purple-500/30 selection:text-purple-200 pb-20">
+    <div className="min-h-screen bg-[#050409] text-zinc-100 font-sans relative overflow-x-hidden selection:bg-purple-500/30 selection:text-purple-200 pb-16">
       {/* Background Ambient Glows */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-purple-900/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-teal-900/5 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-amber-900/5 rounded-full blur-[100px] pointer-events-none" />
 
       {/* ─── HEADER ──────────────────────────────────────────────────────── */}
       <header className="max-w-4xl mx-auto px-6 pt-16 pb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-white/5">
@@ -199,7 +207,7 @@ export default function Library() {
             </div>
           </div>
 
-          {/* Right: The Outfitter - Simplified Master Portal */}
+          {/* Right: The Outfitter - Master Portal */}
           <div className="bg-[#0A0810] border border-zinc-800/60 rounded-[2rem] p-6 flex flex-col justify-between space-y-6">
             <div className="space-y-3">
               <div className="flex items-center gap-3">
@@ -228,11 +236,42 @@ export default function Library() {
               </a>
             </div>
           </div>
-
         </div>
 
+        {/* ─── NEW: GATEWAY TO THE SMITHY ──────────────────────────────────── */}
+        <section className="pt-4">
+          <button 
+            onClick={handleNavigateToSmithy}
+            className="w-full group text-left p-6 md:p-8 rounded-[2rem] bg-gradient-to-r from-[#0C0912] to-[#120B11] border border-amber-500/10 hover:border-amber-500/20 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden"
+          >
+            {/* Subtle internal amber forge glow on hover */}
+            <div className="absolute right-0 top-0 w-[200px] h-[200px] bg-amber-500/[0.01] group-hover:bg-amber-500/[0.03] blur-3xl transition-all pointer-events-none rounded-full" />
+
+            <div className="flex items-start gap-5">
+              <div className="p-3.5 bg-amber-500/10 group-hover:bg-amber-500/20 border border-amber-500/20 rounded-2xl text-amber-400 transition-all shrink-0">
+                <Hammer size={18} className="group-hover:rotate-12 transition-transform duration-300" />
+              </div>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-[8px] font-mono uppercase tracking-[0.3em] text-amber-500/80">Next Station</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500/40 animate-pulse" />
+                </div>
+                <h3 className="text-xl font-serif text-zinc-200 tracking-tight">Step into The Smithy</h3>
+                <p className="text-xs text-zinc-400 font-serif italic max-w-xl leading-relaxed">
+                  Identity translated. Now it is time to forge your tools. Enter the workshop to claim your salary scripts, negotiation playbooks, and strategic communications.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-amber-400 group-hover:text-amber-300 transition-colors shrink-0 self-end sm:self-auto">
+              <span>Stoke the Forge</span>
+              <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+            </div>
+          </button>
+        </section>
+
         {/* ─── AMZ ASSOCIATE LEGAL DISCLAIMER ──────────────────────────────── */}
-        <div className="text-center">
+        <div className="text-center pt-4">
           <p className="text-[8px] font-mono uppercase tracking-widest text-zinc-600">
             As an Amazon Associate I earn from qualifying purchases.
           </p>
