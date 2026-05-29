@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight, Wind, Settings, ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Wind, Settings, ChevronDown, MessageSquare, Moon, Sun, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { base44 } from '@/api/base44Client';
-import SMEFooter from '@/components/SMEFooter';
+import GlobalFooter from '@/components/layout/GlobalFooter';
 import DeleteAccountDialog from '@/components/hearth/DeleteAccountDialog';
 
 // ── ANIMATION PRESETS ─────────────────────────────────────────────────────────
@@ -14,13 +13,26 @@ const fadeUp = {
   transition: { duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }
 };
 
-// ── MIGRATION SEASON DATELINE ─────────────────────────────────────────────────
-function getMigrationSeason() {
-  const month = new Date().getMonth(); // 0-indexed
-  if (month >= 2 && month <= 4) return 'Season of Emergence';
-  if (month >= 5 && month <= 7) return 'Season of Cultivation';
-  if (month >= 8 && month <= 10) return 'Season of Harvest';
-  return 'Season of Stillness';
+// ── MIGRATION SEASON & LUNAR ENGINE ───────────────────────────────────────────
+function getEcosystemMetadata() {
+  const now = new Date();
+  const month = now.getMonth(); // 0-indexed
+  
+  let season = 'Season of Stillness';
+  let seasonalGuidance = 'A time for internal architecture, preserving energy, and deep structural planning.';
+  
+  if (month >= 2 && month <= 4) {
+    season = 'Season of Emergence';
+    seasonalGuidance = 'The frost is breaking. Time to clear legacy jargon and prepare new identities for growth.';
+  } else if (month >= 5 && month <= 7) {
+    season = 'Season of Cultivation';
+    seasonalGuidance = 'Active market testing. Tending to applications, building pipelines, and refining technical skills.';
+  } else if (month >= 8 && month <= 10) {
+    season = 'Season of Harvest';
+    seasonalGuidance = 'Securing alignments, finalizing contracts, and stepping into private-sector infrastructure.';
+  }
+
+  return { season, seasonalGuidance };
 }
 
 // ── IDENTITY RESONANCE (HERO) ─────────────────────────────────────────────────
@@ -57,22 +69,19 @@ function ResonanceHero({ vault, navigate }) {
     <motion.div {...fadeUp}
       className="relative bg-gradient-to-b from-[#1A1525] to-[#0D0B10] border border-teal-500/10 rounded-[3rem] p-12 md:p-20 overflow-hidden shadow-2xl">
 
-      {/* Ambient glow */}
       <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-80 h-80 bg-teal-500/5 blur-[100px] rounded-full pointer-events-none" />
       <div className="absolute -bottom-24 right-0 w-64 h-64 bg-purple-500/5 blur-[80px] rounded-full pointer-events-none" />
 
       <div className="relative z-10 space-y-12">
-        {/* Title — Identity Authority */}
         <div className="space-y-4">
           <span className="text-[9px] font-black uppercase tracking-[0.5em] text-teal-500/40 block">
             Your Horizon Identity
           </span>
-          <h2 className="text-6xl md:text-8xl font-serif italic text-white tracking-tight leading-none">
+          <h2 className="text-5xl md:text-7xl font-serif italic text-white tracking-tight leading-none">
             {horizonTitle}
           </h2>
         </div>
 
-        {/* Power Verbs */}
         {powerVerbs.length > 0 && (
           <div className="space-y-3">
             <span className="text-[9px] font-black uppercase tracking-[0.4em] text-purple-500/40 block">
@@ -88,7 +97,6 @@ function ResonanceHero({ vault, navigate }) {
           </div>
         )}
 
-        {/* Reclaimed Strengths + Ethics */}
         {(resonance.length > 0 || ethics) && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-6 border-t border-white/5">
             {resonance.length > 0 && (
@@ -145,7 +153,6 @@ function DailyRitual({ vault, onSync }) {
   const handleSave = () => {
     if (!selected) return;
     const pulse = { date: new Date().toISOString(), emoji: selected, text: note };
-    // Optimistic update — UI responds instantly
     setSaved(true);
     setSelected(null);
     setNote('');
@@ -164,12 +171,12 @@ function DailyRitual({ vault, onSync }) {
         </p>
       </div>
 
-      <div className="flex justify-between gap-3">
+      <div className="grid grid-cols-5 gap-2">
         {PULSE_OPTIONS.map((p) => (
           <button key={p.label} onClick={() => setSelected(selected === p.icon ? null : p.icon)}
-            className={`flex-1 flex flex-col items-center gap-3 py-5 rounded-2xl border transition-all duration-500 ${selected === p.icon ? 'bg-teal-500/10 border-teal-500/20' : 'bg-transparent border-white/5 hover:border-white/10'}`}>
-            <span className="text-2xl">{p.icon}</span>
-            <span className={`text-[8px] font-black uppercase tracking-widest ${selected === p.icon ? 'text-teal-400' : 'text-zinc-700'}`}>{p.label}</span>
+            className={`flex flex-col items-center gap-3 py-5 rounded-2xl border transition-all duration-500 ${selected === p.icon ? 'bg-teal-500/10 border-teal-500/20' : 'bg-transparent border-white/5 hover:border-white/10'}`}>
+            <span className="text-xl">{p.icon}</span>
+            <span className={`text-[8px] font-black uppercase tracking-widest text-center ${selected === p.icon ? 'text-teal-400' : 'text-zinc-700'}`}>{p.label}</span>
           </button>
         ))}
       </div>
@@ -212,6 +219,52 @@ function DailyRitual({ vault, onSync }) {
   );
 }
 
+// ── THE EMBERS ACCESS TERMINAL ────────────────────────────────────────────────
+function EmbersTerminal({ vault }) {
+  const isSubscriber = vault?.tier === 'founding_forest' || vault?.is_subscribed;
+
+  return (
+    <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.3 }}
+      className="p-8 md:p-10 rounded-[2.5rem] border border-zinc-900 bg-gradient-to-br from-[#0E0C14] to-[#0A080D] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+      
+      <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
+        <MessageSquare size={120} className="text-purple-400" />
+      </div>
+
+      <div className="space-y-2 max-w-xl">
+        <div className="flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+          <span className="text-[8px] font-black uppercase tracking-[0.3em] text-amber-500">The Embers Gathered</span>
+        </div>
+        <h3 className="text-xl font-serif italic text-purple-200">The Community Space</h3>
+        <p className="text-zinc-600 text-xs font-serif italic leading-relaxed">
+          Step outside your isolated work and sync up with your fellow Stewards. Share raw applications, exchange language models, and sit by the collective firewall.
+        </p>
+      </div>
+
+      {isSubscriber ? (
+        <a 
+          href="https://discord.gg/your_private_invite_link" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="w-full md:w-auto px-6 py-4 bg-purple-500 text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-purple-400 transition-all text-center shrink-0 flex items-center justify-center gap-2 shadow-lg shadow-purple-500/5"
+        >
+          <MessageSquare size={12} /> Enter the Council
+        </a>
+      ) : (
+        <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3 shrink-0">
+          <a 
+            href="/grove" 
+            className="px-5 py-3.5 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs font-black uppercase tracking-widest rounded-xl transition-all text-center flex items-center justify-center gap-1.5"
+          >
+            <ShieldCheck size={12} className="text-teal-500" /> Unlock Community
+          </a>
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
 // ── MIGRATION PATH ────────────────────────────────────────────────────────────
 function MigrationPath({ vault, navigate }) {
   const hasResume = !!(vault?.legacyResume || vault?.resume);
@@ -230,7 +283,7 @@ function MigrationPath({ vault, navigate }) {
   const allDone = firstIncompleteIdx === -1;
 
   return (
-    <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.35 }}
+    <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.4 }}
       className="bg-[#110E16] border border-white/5 rounded-[2.5rem] p-10 md:p-14 space-y-10">
 
       <div className="border-b border-white/5 pb-8 space-y-2">
@@ -245,7 +298,6 @@ function MigrationPath({ vault, navigate }) {
           const isCurrent = !step.done && (i === 0 || steps[i - 1].done);
           return (
             <div key={i} className="flex gap-6 group">
-              {/* Vertical line + marker */}
               <div className="flex flex-col items-center">
                 <div className={`w-2 h-2 rounded-full mt-6 shrink-0 transition-all ${step.done ? 'bg-teal-500' : isCurrent ? 'bg-teal-500/40 ring-4 ring-teal-500/10' : 'bg-zinc-800'}`} />
                 {i < steps.length - 1 && (
@@ -253,7 +305,6 @@ function MigrationPath({ vault, navigate }) {
                 )}
               </div>
 
-              {/* Content */}
               <div
                 onClick={() => !step.done && navigate(step.route)}
                 className={`flex-1 py-5 transition-all ${!step.done ? 'cursor-pointer' : ''}`}
@@ -288,8 +339,8 @@ function MigrationPath({ vault, navigate }) {
 // ── QUICK NAVIGATION TILES ────────────────────────────────────────────────────
 function NavTiles({ navigate }) {
   const tiles = [
-    { label: 'The Smithy', sub: 'Refine your language', color: 'purple', route: '/library' },
-    { label: 'The Horizon', sub: 'Survey the path ahead', color: 'teal', route: '/horizon' },
+    { label: 'The Smithy', sub: 'Refine your structural lexicon', color: 'purple', route: '/library' },
+    { label: 'The Horizon', sub: 'Survey high-alignment boards', color: 'teal', route: '/horizon' },
   ];
 
   return (
@@ -314,41 +365,43 @@ function HearthSettings() {
   const [open, setOpen] = useState(false);
 
   return (
-    <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.7 }}
+    <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.6 }}
       className="border-t border-white/5 pt-10 space-y-4">
       <button
         onClick={() => setOpen(o => !o)}
-        className="flex items-center gap-3 text-zinc-600 hover:text-zinc-400 active:text-zinc-400 transition-colors min-h-[44px]"
+        className="flex items-center gap-3 text-zinc-600 hover:text-zinc-400 transition-colors min-h-[44px]"
       >
         <Settings size={14} />
         <span className="text-[10px] font-black uppercase tracking-[0.4em]">Settings</span>
         <ChevronDown size={12} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
 
-      {open && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          className="overflow-hidden space-y-4"
-        >
-          <div className="p-6 rounded-2xl bg-[#110E16] border border-white/5 space-y-3">
-            <p className="text-[9px] font-black uppercase tracking-[0.45em] text-zinc-600">Account</p>
-            <p className="text-xs font-serif italic text-zinc-600 leading-relaxed">
-              Permanently remove your account data from Hearth & Horizon. This action cannot be undone.
-            </p>
-            <DeleteAccountDialog />
-          </div>
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden space-y-4"
+          >
+            <div className="p-6 rounded-2xl bg-[#110E16] border border-white/5 space-y-3">
+              <p className="text-[9px] font-black uppercase tracking-[0.45em] text-zinc-600">Account</p>
+              <p className="text-xs font-serif italic text-zinc-600 leading-relaxed">
+                Permanently remove your account data from Hearth & Horizon. This action cannot be undone.
+              </p>
+              <DeleteAccountDialog />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
 
-// ── MAIN ──────────────────────────────────────────────────────────────────────
-export default function YourHearth({ vault, onSync, onRefresh }) {
+// ── MAIN EXPORT ───────────────────────────────────────────────────────────────
+export default function YourHearth({ vault, onSync }) {
   const navigate = useNavigate();
-  const season = getMigrationSeason();
+  const { season, seasonalGuidance } = getEcosystemMetadata();
   const today = new Date().toLocaleDateString('en-CA', { month: 'long', day: 'numeric', year: 'numeric' });
 
   return (
@@ -356,21 +409,27 @@ export default function YourHearth({ vault, onSync, onRefresh }) {
       <div className="max-w-4xl mx-auto px-6 pt-12 pb-40 space-y-16">
 
         {/* ── PAGE HEADER ── */}
-        <motion.header {...fadeUp}
-          className="text-center space-y-4 py-8">
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-zinc-700">{season} · {today}</p>
-          <div className="space-y-3">
-            <h1 className="text-6xl md:text-7xl font-serif italic text-purple-200 tracking-tighter">
+        <motion.header {...fadeUp} className="text-center space-y-4 py-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#110E16] border border-white/5">
+            <span className="text-[8px] font-black uppercase tracking-[0.4em] text-teal-400">{season}</span>
+            <span className="text-zinc-800 text-xs">·</span>
+            <span className="text-[8px] font-mono uppercase text-zinc-500">{today}</span>
+          </div>
+          <div className="space-y-3 max-w-md mx-auto">
+            <h1 className="text-5xl md:text-6xl font-serif italic text-purple-200 tracking-tighter">
               Your Hearth
             </h1>
-            <p className="text-sm font-serif italic text-zinc-600">
-              A private study. A sanctuary for the migrating soul.
+            <p className="text-xs font-serif italic text-zinc-600 leading-relaxed">
+              {seasonalGuidance}
             </p>
           </div>
         </motion.header>
 
         {/* ── IDENTITY RESONANCE HERO ── */}
         <ResonanceHero vault={vault} navigate={navigate} />
+
+        {/* ── THE EMBERS SYSTEM TERMINAL (NEW) ── */}
+        <EmbersTerminal vault={vault} />
 
         {/* ── THE DAILY RITUAL ── */}
         <DailyRitual vault={vault} onSync={onSync} />
@@ -381,10 +440,10 @@ export default function YourHearth({ vault, onSync, onRefresh }) {
         {/* ── QUICK NAV ── */}
         <NavTiles navigate={navigate} />
 
-        {/* ── SME AUTHORITY SEAL ── */}
-        <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.6 }}>
-          <SMEFooter />
-        </motion.div>
+        {/* ── FOOTER FRAMEWORK ── */}
+        <footer className="space-y-8 border-t border-zinc-950 pt-8">
+          <GlobalFooter />
+        </footer>
 
         {/* ── SETTINGS ── */}
         <HearthSettings />
