@@ -13,6 +13,7 @@ import Canopy from './pages/Canopy';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import Advisory from './pages/Advisory';
+import Embers from './pages/Embers';
 import ProtectedRoute from './components/ProtectedRoute';
 // CulturalFit archived — tools consolidated into Library > High Forge
 // EmbersChat archived — community focus shifted to Founding Forest tier
@@ -301,6 +302,7 @@ export default function App() {
               <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/about" element={<About />} />
               <Route path="/advisory" element={<Advisory />} />
+              <Route path="/embers" element={<Embers />} />
 
               {/* Tab routes — handled by persistent stack above, just redirect stray direct links */}
               <Route path="/hearth" element={null} />
@@ -310,7 +312,6 @@ export default function App() {
               {/* Other protected routes */}
               <Route path="/contact" element={<ProtectedRoute><Contact vault={vault} onRefresh={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} /></ProtectedRoute>} />
               <Route path="/admin" element={<ProtectedRoute><AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} /></ProtectedRoute>} />
-              <Route path="/embers" element={<Navigate to="/grove" replace />} />
               <Route path="/" element={<Navigate to="/grove" replace />} />
               <Route path="*" element={<Navigate to="/grove" replace />} />
             </Routes>
