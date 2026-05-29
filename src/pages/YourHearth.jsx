@@ -1,143 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Wind, Settings, ChevronDown, MessageSquare, Moon, Sun, ShieldCheck } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { ArrowRight, Settings, ChevronDown, MessageSquare, Compass, Library, Shield } from 'lucide-react';
 import GlobalFooter from '@/components/layout/GlobalFooter';
 import DeleteAccountDialog from '@/components/hearth/DeleteAccountDialog';
 
-// ── ANIMATION PRESETS ─────────────────────────────────────────────────────────
-const fadeUp = {
-  initial: { opacity: 0, y: 18 },
+// ── MINIMALIST ANIMATION ──────────────────────────────────────────────────────
+const fadeIn = {
+  initial: { opacity: 0, y: 8 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }
+  transition: { duration: 0.6, ease: [0.215, 0.610, 0.355, 1.000] }
 };
 
-// ── MIGRATION SEASON & LUNAR ENGINE ───────────────────────────────────────────
-function getEcosystemMetadata() {
-  const now = new Date();
-  const month = now.getMonth(); // 0-indexed
-  
-  let season = 'Season of Stillness';
-  let seasonalGuidance = 'A time for internal architecture, preserving energy, and deep structural planning.';
-  
-  if (month >= 2 && month <= 4) {
-    season = 'Season of Emergence';
-    seasonalGuidance = 'The frost is breaking. Time to clear legacy jargon and prepare new identities for growth.';
-  } else if (month >= 5 && month <= 7) {
-    season = 'Season of Cultivation';
-    seasonalGuidance = 'Active market testing. Tending to applications, building pipelines, and refining technical skills.';
-  } else if (month >= 8 && month <= 10) {
-    season = 'Season of Harvest';
-    seasonalGuidance = 'Securing alignments, finalizing contracts, and stepping into private-sector infrastructure.';
-  }
-
-  return { season, seasonalGuidance };
-}
-
-// ── IDENTITY RESONANCE (HERO) ─────────────────────────────────────────────────
-function ResonanceHero({ vault, navigate }) {
-  const horizonTitle = vault?.hearthRecord?.horizon_title || vault?.archetype;
-  const powerVerbs = vault?.hearthRecord?.power_verbs || [];
-  const resonance = vault?.resonance || [];
-  const ethics = vault?.ethics;
-
-  if (!horizonTitle && !resonance.length) {
-    return (
-      <motion.div {...fadeUp}
-        className="bg-[#110E16] border border-teal-500/10 rounded-[3rem] p-16 text-center space-y-8">
-        <div className="w-16 h-16 mx-auto rounded-full bg-teal-500/5 border border-teal-500/10 flex items-center justify-center">
-          <Wind className="text-teal-500/30" size={22} />
-        </div>
-        <div className="space-y-3">
-          <h3 className="text-3xl font-serif italic text-zinc-400">The hearth is waiting.</h3>
-          <p className="text-sm font-serif italic text-zinc-600 max-w-sm mx-auto leading-relaxed">
-            Your professional identity is still being forged. Visit the Library to begin the translation of your legacy.
-          </p>
-        </div>
-        <Button
-          onClick={() => navigate('/library')}
-          className="rounded-full bg-teal-500 text-black font-black uppercase tracking-widest text-[10px] px-8 hover:bg-teal-400"
-        >
-          Begin the Forging
-        </Button>
-      </motion.div>
-    );
-  }
-
-  return (
-    <motion.div {...fadeUp}
-      className="relative bg-gradient-to-b from-[#1A1525] to-[#0D0B10] border border-teal-500/10 rounded-[3rem] p-12 md:p-20 overflow-hidden shadow-2xl">
-
-      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-80 h-80 bg-teal-500/5 blur-[100px] rounded-full pointer-events-none" />
-      <div className="absolute -bottom-24 right-0 w-64 h-64 bg-purple-500/5 blur-[80px] rounded-full pointer-events-none" />
-
-      <div className="relative z-10 space-y-12">
-        <div className="space-y-4">
-          <span className="text-[9px] font-black uppercase tracking-[0.5em] text-teal-500/40 block">
-            Your Horizon Identity
-          </span>
-          <h2 className="text-5xl md:text-7xl font-serif italic text-white tracking-tight leading-none">
-            {horizonTitle}
-          </h2>
-        </div>
-
-        {powerVerbs.length > 0 && (
-          <div className="space-y-3">
-            <span className="text-[9px] font-black uppercase tracking-[0.4em] text-purple-500/40 block">
-              Power Verbs
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {powerVerbs.map((v, i) => (
-                <span key={i} className="px-4 py-1.5 bg-purple-500/10 border border-purple-500/20 text-purple-300 font-black text-[10px] rounded-full uppercase tracking-widest">
-                  {v}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {(resonance.length > 0 || ethics) && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-6 border-t border-white/5">
-            {resonance.length > 0 && (
-              <div className="space-y-4">
-                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-amber-500/40 block">
-                  Reclaimed Strengths
-                </span>
-                <div className="space-y-3">
-                  {resonance.slice(0, 3).map((s, i) => (
-                    <div key={i} className="text-[13px] font-serif italic text-zinc-400 border-l border-zinc-800 pl-4">
-                      {s}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {ethics && (
-              <div className="space-y-4">
-                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-amber-500/40 block">
-                  Ethical Compass
-                </span>
-                <div className="space-y-3">
-                  {Object.entries(ethics).map(([key, val]) => (
-                    <div key={key} className="flex items-center justify-between">
-                      <span className="text-[12px] font-serif italic text-zinc-500 capitalize">{key}</span>
-                      <span className="font-mono text-[11px] text-amber-500/60">{val}%</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </motion.div>
-  );
-}
-
-// ── THE DAILY RITUAL ──────────────────────────────────────────────────────────
-const PULSE_OPTIONS = [
+// ── THE DAILY RITUAL OPTIONS ──────────────────────────────────────────────────
+const PULSES = [
   { icon: "🌱", label: "Growing" },
   { icon: "🔥", label: "Stretched" },
   { icon: "🌊", label: "Flowing" },
@@ -145,308 +21,177 @@ const PULSE_OPTIONS = [
   { icon: "💎", label: "Resilient" }
 ];
 
-function DailyRitual({ vault, onSync }) {
-  const [selected, setSelected] = useState(null);
+export default function YourHearth({ vault, onSync }) {
+  const navigate = useNavigate();
+  const [selectedPulse, setSelectedPulse] = useState(null);
   const [note, setNote] = useState('');
-  const [saved, setSaved] = useState(false);
+  const [pulseSaved, setPulseSaved] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
-  const handleSave = () => {
-    if (!selected) return;
-    const pulse = { date: new Date().toISOString(), emoji: selected, text: note };
-    setSaved(true);
-    setSelected(null);
+  // Structural Data Derivations
+  const horizonTitle = vault?.hearthRecord?.horizon_title || vault?.archetype;
+  const powerVerbs = vault?.hearthRecord?.power_verbs || [];
+  const isSubscriber = vault?.tier === 'founding_forest' || vault?.is_subscribed;
+  const today = new Date().toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' });
+
+  const handlePulseSave = () => {
+    if (!selectedPulse) return;
+    const pulse = { date: new Date().toISOString(), emoji: selectedPulse, text: note };
+    setPulseSaved(true);
+    setSelectedPulse(null);
     setNote('');
     onSync({ ...vault, pulses: [pulse, ...(vault?.pulses || [])] });
-    setTimeout(() => setSaved(false), 3000);
+    setTimeout(() => setPulseSaved(false), 3000);
   };
 
   return (
-    <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.2 }}
-      className="bg-[#110E16] border border-white/5 rounded-[2.5rem] p-10 md:p-14 space-y-10">
+    <div className="min-h-screen bg-[#0A080D] text-zinc-400 font-sans antialiased selection:bg-teal-500/10">
+      <div className="max-w-3xl mx-auto px-6 pt-16 pb-32 space-y-16">
 
-      <div className="border-b border-white/5 pb-8 space-y-2">
-        <span className="text-[9px] font-black uppercase tracking-[0.45em] text-zinc-600 block">The Daily Ritual</span>
-        <p className="text-base font-serif italic text-zinc-500 leading-relaxed">
-          How does the migration feel today?
-        </p>
-      </div>
-
-      <div className="grid grid-cols-5 gap-2">
-        {PULSE_OPTIONS.map((p) => (
-          <button key={p.label} onClick={() => setSelected(selected === p.icon ? null : p.icon)}
-            className={`flex flex-col items-center gap-3 py-5 rounded-2xl border transition-all duration-500 ${selected === p.icon ? 'bg-teal-500/10 border-teal-500/20' : 'bg-transparent border-white/5 hover:border-white/10'}`}>
-            <span className="text-xl">{p.icon}</span>
-            <span className={`text-[8px] font-black uppercase tracking-widest text-center ${selected === p.icon ? 'text-teal-400' : 'text-zinc-700'}`}>{p.label}</span>
-          </button>
-        ))}
-      </div>
-
-      {selected && (
-        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} transition={{ duration: 0.6 }}
-          className="space-y-4 overflow-hidden">
-          <textarea
-            value={note}
-            onChange={e => setNote(e.target.value)}
-            placeholder="A note from the trail..."
-            className="w-full bg-black/20 border border-white/5 rounded-2xl p-6 text-sm font-serif italic text-zinc-300 placeholder:text-zinc-700 resize-none focus:outline-none focus:border-teal-500/20 min-h-[100px]"
-          />
-          <button onClick={handleSave}
-            className="w-full py-4 bg-teal-500/10 border border-teal-500/20 text-teal-400 font-black uppercase text-[10px] tracking-widest rounded-xl hover:bg-teal-500 hover:text-black transition-all">
-            {saved ? '✦ Sealed' : 'Seal the Pulse'}
-          </button>
-        </motion.div>
-      )}
-
-      {vault?.pulses?.length > 0 && !selected && (
-        <div className="pt-2 border-t border-white/5">
-          <p className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-700 mb-4">Last Entry</p>
-          <div className="flex items-start gap-5">
-            <span className="text-xl mt-0.5">{vault.pulses[0].emoji}</span>
-            <div className="flex-1 min-w-0">
-              {vault.pulses[0].text && (
-                <p className="text-sm font-serif italic text-zinc-500 leading-relaxed line-clamp-2">
-                  "{vault.pulses[0].text}"
-                </p>
-              )}
-              <p className="text-[9px] font-mono text-zinc-700 mt-2 uppercase">
-                {new Date(vault.pulses[0].date).toLocaleDateString('en-CA', { month: 'long', day: 'numeric' })}
-              </p>
-            </div>
+        {/* ── ZONE 1: THE PULSE (HEADER & RITUAL COMBINED) ── */}
+        <motion.header {...fadeIn} className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-zinc-900/60 pb-8">
+          <div className="space-y-1">
+            <p className="text-[9px] font-mono uppercase tracking-widest text-zinc-600">{today}</p>
+            <h1 className="text-3xl font-serif italic text-purple-200">Your Hearth</h1>
           </div>
-        </div>
-      )}
-    </motion.div>
-  );
-}
-
-// ── THE EMBERS ACCESS TERMINAL ────────────────────────────────────────────────
-function EmbersTerminal({ vault }) {
-  const isSubscriber = vault?.tier === 'founding_forest' || vault?.is_subscribed;
-
-  return (
-    <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.3 }}
-      className="p-8 md:p-10 rounded-[2.5rem] border border-zinc-900 bg-gradient-to-br from-[#0E0C14] to-[#0A080D] flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
-      
-      <div className="absolute top-0 right-0 p-8 opacity-[0.02] pointer-events-none">
-        <MessageSquare size={120} className="text-purple-400" />
-      </div>
-
-      <div className="space-y-2 max-w-xl">
-        <div className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-          <span className="text-[8px] font-black uppercase tracking-[0.3em] text-amber-500">The Embers Gathered</span>
-        </div>
-        <h3 className="text-xl font-serif italic text-purple-200">The Community Space</h3>
-        <p className="text-zinc-600 text-xs font-serif italic leading-relaxed">
-          Step outside your isolated work and sync up with your fellow Stewards. Share raw applications, exchange language models, and sit by the collective firewall.
-        </p>
-      </div>
-
-      {isSubscriber ? (
-        <a 
-          href="https://discord.gg/your_private_invite_link" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="w-full md:w-auto px-6 py-4 bg-purple-500 text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-purple-400 transition-all text-center shrink-0 flex items-center justify-center gap-2 shadow-lg shadow-purple-500/5"
-        >
-          <MessageSquare size={12} /> Enter the Council
-        </a>
-      ) : (
-        <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3 shrink-0">
-          <a 
-            href="/grove" 
-            className="px-5 py-3.5 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-200 text-xs font-black uppercase tracking-widest rounded-xl transition-all text-center flex items-center justify-center gap-1.5"
-          >
-            <ShieldCheck size={12} className="text-teal-500" /> Unlock Community
-          </a>
-        </div>
-      )}
-    </motion.div>
-  );
-}
-
-// ── MIGRATION PATH ────────────────────────────────────────────────────────────
-function MigrationPath({ vault, navigate }) {
-  const hasResume = !!(vault?.legacyResume || vault?.resume);
-  const hasHorizon = !!vault?.hearthRecord?.horizon_title;
-  const hasEthics = !!vault?.ethics;
-  const hasLexicon = !!(vault?.lexicon?.length || vault?.hearthRecord?.power_verbs?.length);
-
-  const steps = [
-    { label: 'Legacy Archived', sublabel: 'Upload your resume for translation', done: hasResume, route: '/library' },
-    { label: 'Horizon Title Set', sublabel: 'Brigid names your private-sector identity', done: hasHorizon, route: '/library' },
-    { label: 'Lexicon Forged', sublabel: 'Power verbs reclaimed from your history', done: hasLexicon, route: '/library' },
-    { label: 'Ethics Calibrated', sublabel: 'Your non-negotiables are mapped', done: hasEthics, route: '/library' },
-  ];
-
-  const firstIncompleteIdx = steps.findIndex(s => !s.done);
-  const allDone = firstIncompleteIdx === -1;
-
-  return (
-    <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.4 }}
-      className="bg-[#110E16] border border-white/5 rounded-[2.5rem] p-10 md:p-14 space-y-10">
-
-      <div className="border-b border-white/5 pb-8 space-y-2">
-        <span className="text-[9px] font-black uppercase tracking-[0.45em] text-zinc-600 block">Migration Path</span>
-        <p className="text-base font-serif italic text-zinc-500 leading-relaxed">
-          {allDone ? 'The path is complete. The horizon awaits.' : 'Your journey, one threshold at a time.'}
-        </p>
-      </div>
-
-      <div className="space-y-0">
-        {steps.map((step, i) => {
-          const isCurrent = !step.done && (i === 0 || steps[i - 1].done);
-          return (
-            <div key={i} className="flex gap-6 group">
-              <div className="flex flex-col items-center">
-                <div className={`w-2 h-2 rounded-full mt-6 shrink-0 transition-all ${step.done ? 'bg-teal-500' : isCurrent ? 'bg-teal-500/40 ring-4 ring-teal-500/10' : 'bg-zinc-800'}`} />
-                {i < steps.length - 1 && (
-                  <div className={`w-[1px] flex-1 mt-1 mb-0 ${step.done ? 'bg-teal-500/20' : 'bg-zinc-900'}`} style={{ minHeight: 32 }} />
-                )}
-              </div>
-
-              <div
-                onClick={() => !step.done && navigate(step.route)}
-                className={`flex-1 py-5 transition-all ${!step.done ? 'cursor-pointer' : ''}`}
-              >
-                <span className={`text-[11px] font-black uppercase tracking-widest block ${step.done ? 'text-teal-400/70' : isCurrent ? 'text-white' : 'text-zinc-700'}`}>
-                  {step.label}
-                </span>
-                <p className={`text-[11px] font-serif italic mt-0.5 ${isCurrent ? 'text-zinc-500' : 'text-zinc-700'}`}>
-                  {step.sublabel}
-                </p>
-                {isCurrent && (
-                  <span className="inline-flex items-center gap-1 mt-2 text-[9px] font-black uppercase tracking-widest text-teal-500/60">
-                    Continue <ArrowRight size={10} />
-                  </span>
-                )}
-              </div>
+          
+          {/* Quick, Unobtrusive Pulse Check */}
+          <div className="space-y-2">
+            <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 md:text-right">Current State</p>
+            <div className="flex gap-1.5">
+              {PULSES.map((p) => (
+                <button 
+                  key={p.label} 
+                  onClick={() => setSelectedPulse(selectedPulse === p.icon ? null : p.icon)}
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center text-base border transition-all ${selectedPulse === p.icon ? 'bg-teal-500/10 border-teal-500/30' : 'bg-transparent border-zinc-900 hover:border-zinc-800'}`}
+                  title={p.label}
+                >
+                  {p.icon}
+                </button>
+              ))}
             </div>
-          );
-        })}
-      </div>
-
-      <button
-        onClick={() => navigate(allDone ? '/horizon' : '/library')}
-        className="w-full py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all duration-500 flex items-center justify-center gap-3 border border-teal-500/15 text-teal-400 hover:bg-teal-500 hover:text-black hover:border-transparent"
-        style={{ background: allDone ? 'linear-gradient(135deg, #14b8a6, #a855f7)' : 'transparent', color: allDone ? '#0A080D' : undefined, border: allDone ? 'none' : undefined }}>
-        {allDone ? 'Enter the Horizon' : 'Continue in the Library'} <ArrowRight size={13} />
-      </button>
-    </motion.div>
-  );
-}
-
-// ── QUICK NAVIGATION TILES ────────────────────────────────────────────────────
-function NavTiles({ navigate }) {
-  const tiles = [
-    { label: 'The Smithy', sub: 'Refine your structural lexicon', color: 'purple', route: '/library' },
-    { label: 'The Horizon', sub: 'Survey high-alignment boards', color: 'teal', route: '/horizon' },
-  ];
-
-  return (
-    <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.5 }}
-      className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {tiles.map((t) => (
-        <div key={t.label} onClick={() => navigate(t.route)}
-          className={`p-10 rounded-[2.5rem] border cursor-pointer transition-all duration-500 group
-            ${t.color === 'purple'
-              ? 'bg-purple-500/[0.02] border-purple-500/10 hover:border-purple-500/20'
-              : 'bg-teal-500/[0.02] border-teal-500/10 hover:border-teal-500/20'}`}>
-          <h4 className="text-xl font-serif italic text-zinc-300 mb-1">{t.label}</h4>
-          <p className={`text-[10px] font-black uppercase tracking-widest mt-1 ${t.color === 'purple' ? 'text-purple-500/40' : 'text-teal-500/40'}`}>{t.sub} →</p>
-        </div>
-      ))}
-    </motion.div>
-  );
-}
-
-// ── SETTINGS SECTION ─────────────────────────────────────────────────────────
-function HearthSettings() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <motion.div {...fadeUp} transition={{ ...fadeUp.transition, delay: 0.6 }}
-      className="border-t border-white/5 pt-10 space-y-4">
-      <button
-        onClick={() => setOpen(o => !o)}
-        className="flex items-center gap-3 text-zinc-600 hover:text-zinc-400 transition-colors min-h-[44px]"
-      >
-        <Settings size={14} />
-        <span className="text-[10px] font-black uppercase tracking-[0.4em]">Settings</span>
-        <ChevronDown size={12} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
-      </button>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden space-y-4"
-          >
-            <div className="p-6 rounded-2xl bg-[#110E16] border border-white/5 space-y-3">
-              <p className="text-[9px] font-black uppercase tracking-[0.45em] text-zinc-600">Account</p>
-              <p className="text-xs font-serif italic text-zinc-600 leading-relaxed">
-                Permanently remove your account data from Hearth & Horizon. This action cannot be undone.
-              </p>
-              <DeleteAccountDialog />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
-
-// ── MAIN EXPORT ───────────────────────────────────────────────────────────────
-export default function YourHearth({ vault, onSync }) {
-  const navigate = useNavigate();
-  const { season, seasonalGuidance } = getEcosystemMetadata();
-  const today = new Date().toLocaleDateString('en-CA', { month: 'long', day: 'numeric', year: 'numeric' });
-
-  return (
-    <div className="min-h-screen bg-[#0A080D]">
-      <div className="max-w-4xl mx-auto px-6 pt-12 pb-40 space-y-16">
-
-        {/* ── PAGE HEADER ── */}
-        <motion.header {...fadeUp} className="text-center space-y-4 py-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#110E16] border border-white/5">
-            <span className="text-[8px] font-black uppercase tracking-[0.4em] text-teal-400">{season}</span>
-            <span className="text-zinc-800 text-xs">·</span>
-            <span className="text-[8px] font-mono uppercase text-zinc-500">{today}</span>
-          </div>
-          <div className="space-y-3 max-w-md mx-auto">
-            <h1 className="text-5xl md:text-6xl font-serif italic text-purple-200 tracking-tighter">
-              Your Hearth
-            </h1>
-            <p className="text-xs font-serif italic text-zinc-600 leading-relaxed">
-              {seasonalGuidance}
-            </p>
           </div>
         </motion.header>
 
-        {/* ── IDENTITY RESONANCE HERO ── */}
-        <ResonanceHero vault={vault} navigate={navigate} />
+        {/* ── EXPANDABLE PULSE NOTE ── */}
+        <AnimatePresence>
+          {selectedPulse && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+              <div className="bg-[#110E16]/40 border border-zinc-900 rounded-2xl p-4 space-y-3">
+                <textarea
+                  value={note}
+                  onChange={e => setNote(e.target.value)}
+                  placeholder="Record a brief note from the migration trail..."
+                  className="w-full bg-transparent text-xs font-serif italic text-zinc-300 placeholder:text-zinc-700 resize-none focus:outline-none min-h-[70px]"
+                />
+                <button onClick={handlePulseSave} className="w-full py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-teal-400 font-black uppercase text-[9px] tracking-widest rounded-lg transition-all">
+                  {pulseSaved ? '✦ Sealed' : 'Seal Entry'}
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        {/* ── THE EMBERS SYSTEM TERMINAL (NEW) ── */}
-        <EmbersTerminal vault={vault} />
+        {/* ── ZONE 2: THE MIRROR (THE MINIMALIST IDENTITY) ── */}
+        {horizonTitle ? (
+          <motion.section {...fadeIn} transition={{ delay: 0.1 }} className="space-y-4">
+            <div className="p-8 rounded-2xl border border-zinc-900 bg-gradient-to-b from-[#0E0C14] to-[#0A080D]">
+              <span className="text-[8px] font-black uppercase tracking-[0.4em] text-teal-500/50 block mb-2">Your Structural Translation</span>
+              <h2 className="text-3xl md:text-4xl font-serif italic text-white leading-snug">
+                {horizonTitle}
+              </h2>
+              
+              {powerVerbs.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-6">
+                  {powerVerbs.slice(0, 4).map((v, i) => (
+                    <span key={i} className="px-2.5 py-1 bg-zinc-950 border border-zinc-900/60 text-purple-300 font-mono text-[9px] rounded uppercase tracking-wider">
+                      {v}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </motion.section>
+        ) : (
+          <motion.section {...fadeIn} transition={{ delay: 0.1 }} className="p-8 text-center border border-dashed border-zinc-900 rounded-2xl space-y-3">
+            <p className="text-xs font-serif italic text-zinc-600">Your legacy architectural profile is still open.</p>
+            <button onClick={() => navigate('/library')} className="text-[10px] font-black uppercase tracking-widest text-teal-400 hover:text-teal-300 transition-colors inline-flex items-center gap-1">
+              Begin Free Translation <ArrowRight size={10} />
+            </button>
+          </motion.section>
+        )}
 
-        {/* ── THE DAILY RITUAL ── */}
-        <DailyRitual vault={vault} onSync={onSync} />
+        {/* ── ZONE 3: THE THRESHOLDS (INTEGRATED OPERATIONAL GATEWAYS) ── */}
+        <motion.section {...fadeIn} transition={{ delay: 0.2 }} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          
+          {/* Gateway A: The Library */}
+          <div onClick={() => navigate('/library')} className="p-6 rounded-2xl border border-zinc-900 bg-[#110E16]/20 hover:border-zinc-800 transition-all cursor-pointer group space-y-3">
+            <div className="w-7 h-7 rounded-lg bg-purple-950/20 border border-purple-900/30 flex items-center justify-center text-purple-400">
+              <Library size={13} />
+            </div>
+            <div>
+              <h3 className="text-sm font-serif italic text-zinc-300">The Library</h3>
+              <p className="text-[11px] text-zinc-600 font-serif italic mt-0.5">Refine your resume files and alignment models.</p>
+            </div>
+          </div>
 
-        {/* ── MIGRATION PATH ── */}
-        <MigrationPath vault={vault} navigate={navigate} />
+          {/* Gateway B: The Horizon */}
+          <div onClick={() => navigate('/horizon')} className="p-6 rounded-2xl border border-zinc-900 bg-[#110E16]/20 hover:border-zinc-800 transition-all cursor-pointer group space-y-3">
+            <div className="w-7 h-7 rounded-lg bg-teal-950/20 border border-teal-900/30 flex items-center justify-center text-teal-400">
+              <Compass size={13} />
+            </div>
+            <div>
+              <h3 className="text-sm font-serif italic text-zinc-300">The Horizon</h3>
+              <p className="text-[11px] text-zinc-600 font-serif italic mt-0.5">Explore curated, vetted language data & tech roles.</p>
+            </div>
+          </div>
 
-        {/* ── QUICK NAV ── */}
-        <NavTiles navigate={navigate} />
+          {/* Gateway C: The Embers (Community Portal) */}
+          <div 
+            onClick={() => isSubscriber ? window.open("https://discord.gg/your_invite", "_blank") : navigate('/grove')} 
+            className="p-6 rounded-2xl border border-zinc-900 bg-[#110E16]/20 hover:border-zinc-800 transition-all cursor-pointer group space-y-3"
+          >
+            <div className="w-7 h-7 rounded-lg bg-amber-950/20 border border-amber-900/30 flex items-center justify-center text-amber-400">
+              <MessageSquare size={13} />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <h3 className="text-sm font-serif italic text-zinc-300">The Embers</h3>
+                {!isSubscriber && <Shield size={9} className="text-zinc-700" />}
+              </div>
+              <p className="text-[11px] text-zinc-600 font-serif italic mt-0.5">
+                {isSubscriber ? "Enter the private council chat server." : "Unlock access to the Steward cohort."}
+              </p>
+            </div>
+          </div>
+
+        </motion.section>
 
         {/* ── FOOTER FRAMEWORK ── */}
         <footer className="space-y-8 border-t border-zinc-950 pt-8">
           <GlobalFooter />
         </footer>
 
-        {/* ── SETTINGS ── */}
-        <HearthSettings />
+        {/* ── SETTINGS UTILITY ── */}
+        <motion.section {...fadeIn} transition={{ delay: 0.3 }} className="border-t border-zinc-950 pt-6">
+          <button onClick={() => setShowSettings(!showSettings)} className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-zinc-700 hover:text-zinc-500 transition-colors">
+            <Settings size={11} className={`transition-transform ${showSettings ? 'rotate-90' : ''}`} /> Settings
+          </button>
+          
+          <AnimatePresence>
+            {showSettings && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden mt-4">
+                <div className="p-5 rounded-xl border border-zinc-900 bg-zinc-950/40 space-y-2">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Data Management</p>
+                  <p className="text-[11px] font-serif italic text-zinc-600 leading-relaxed max-w-md">
+                    To permanently erase your translated legacy parameters from the database, use the structural deletion protocol below.
+                  </p>
+                  <div className="pt-2"><DeleteAccountDialog /></div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.section>
 
       </div>
     </div>
