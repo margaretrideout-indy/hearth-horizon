@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Upload, FileText, BrainCircuit, Target, BookOpen } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Upload, BrainCircuit, Target, BookOpen, Briefcase, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,10 +10,11 @@ export default function CulturalFit({ vault }) {
   const [profile, setProfile] = useState(null);
   const [ethics, setEthics] = useState({ Reciprocity: 50, Transparency: 50, Agency: 50 });
 
+  // This function now explicitly updates the state to render the result
   const runSynthesis = () => {
     setProfile({
       headline: "Strategic Operations & Systems Architect",
-      summary: "I translate complex legacy processes into scalable, high-fidelity infrastructure.",
+      summary: "I translate complex legacy processes into scalable, high-fidelity infrastructure. My approach balances rigorous operational integrity with empathetic stakeholder stewardship.",
       pillars: ["Stewardship of Data Integrity", "Systematic Architectural Flow", "Community-Centric Cultivation"]
     });
   };
@@ -21,7 +22,6 @@ export default function CulturalFit({ vault }) {
   return (
     <div className="bg-[#08070B] min-h-screen text-zinc-300 py-12 px-6">
       <div className="max-w-4xl mx-auto space-y-12">
-        {/* Ignition: Resume Parser */}
         {!hasUploaded ? (
           <div className="border-2 border-dashed border-teal-800 rounded-[2.5rem] p-16 text-center hover:border-teal-500 cursor-pointer" onClick={() => setHasUploaded(true)}>
             <Upload className="mx-auto mb-6 text-teal-500" size={48} />
@@ -29,13 +29,25 @@ export default function CulturalFit({ vault }) {
           </div>
         ) : (
           <div className="grid md:grid-cols-2 gap-8">
-            {/* The Engine Room: Profile Synthesis */}
+            {/* The Engine Room: Now renders data properly */}
             <div className="p-8 border border-white/5 bg-[#0D0B14] rounded-[2.5rem]">
               <h3 className="text-xl font-serif italic mb-6 flex items-center gap-2"><BrainCircuit className="text-teal-500"/> Lexicon Alchemist</h3>
               {!profile ? (
-                <Button onClick={runSynthesis} className="w-full">Generate Professional Profile</Button>
+                <Button onClick={runSynthesis} className="w-full bg-teal-500/10 hover:bg-teal-500/20 text-teal-500 border border-teal-500/50">
+                  Generate Professional Profile
+                </Button>
               ) : (
-                <div className="space-y-4 text-sm text-zinc-400 italic">"{profile.summary}"</div>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+                  <h4 className="text-teal-400 font-bold uppercase tracking-widest text-xs">{profile.headline}</h4>
+                  <p className="text-sm text-zinc-400 italic">"{profile.summary}"</p>
+                  <div className="space-y-2">
+                    {profile.pillars.map((p, i) => (
+                      <div key={i} className="flex items-center gap-3 text-xs bg-white/5 p-3 rounded-lg border border-white/5">
+                        <Award size={14} className="text-teal-500"/> {p}
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
               )}
             </div>
 
@@ -43,18 +55,20 @@ export default function CulturalFit({ vault }) {
             <div className="p-8 border border-white/5 bg-[#0D0B14] rounded-[2.5rem]">
               <h3 className="text-xl font-serif italic mb-6 flex items-center gap-2"><Target className="text-teal-500"/> Ethics Calibration</h3>
               {Object.entries(ethics).map(([label, val]) => (
-                <input key={label} type="range" className="w-full mb-6 accent-teal-500" value={val} 
-                       onChange={(e) => setEthics({...ethics, [label]: e.target.value})} />
+                <div key={label} className="mb-6">
+                  <div className="flex justify-between text-xs uppercase text-zinc-500 mb-2"><span>{label}</span><span>{val}%</span></div>
+                  <input type="range" className="w-full accent-teal-500" value={val} onChange={(e) => setEthics({...ethics, [label]: e.target.value})} />
+                </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* THE FINAL GATE: Direct access to The Smithy (The Library) */}
+        {/* The Path to the Library */}
         {profile && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <Button onClick={() => navigate('/library')} className="w-full h-20 rounded-3xl bg-teal-500 font-black uppercase tracking-widest hover:bg-teal-400">
-              Enter The Smithy (The Library) <BookOpen className="ml-3" />
+              Proceed to The Smithy (The Library) <BookOpen className="ml-3" />
             </Button>
           </motion.div>
         )}
