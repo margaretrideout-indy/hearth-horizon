@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Hammer, 
   ShieldCheck, 
   ClipboardList, 
   FileText, 
@@ -12,7 +11,8 @@ import {
   Check,
   TreePine,
   ExternalLink,
-  Info
+  Info,
+  Compass
 } from 'lucide-react';
 
 export default function Contact() {
@@ -51,27 +51,48 @@ export default function Contact() {
             description: "Visual anchor slides built to ground your psychological focus during intense migration phases, ensuring your confidence remains absolute when communicating with private sector stakeholders."
           }
         ],
-        actionLabel: 'Access Identity Ledger & Slides',
-        url: 'https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=sharing'
+        links: [
+          {
+            label: 'Access Identity Ledger & Slides',
+            url: 'https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=sharing',
+            primary: true
+          },
+          {
+            label: 'Ground Your Blueprint: Internal Audit Matrix',
+            url: 'https://drive.google.com/file/d/1_OchgdOvWFJ6vBWanoSNwSiwUvo6-dmp/view?usp=drive_link',
+            primary: false,
+            icon: Compass
+          }
+        ]
       }
     },
     {
       id: 'blueprint',
       label: 'The Blueprint',
-      sublabel: 'ATS-optimized resume template — ready to deploy.',
+      sublabel: 'ATS-optimized resume & cover letter frameworks — ready to deploy.',
       icon: FileText,
       color: 'text-teal-400',
       bg: 'bg-teal-500/10',
       content: {
         type: 'blueprint-details',
-        text: 'A clean, single-column framework designed explicitly for technical parsing engines (ATS). By removing structural vulnerabilities like complex tables, sidebars, and embedded icons, this template ensures your translated skill metrics achieve maximum algorithmic visibility.',
+        text: 'Clean, single-column frameworks designed explicitly for technical parsing engines (ATS). By removing structural vulnerabilities like complex tables, sidebars, and embedded icons, these templates ensure your translated skill metrics and migration narrative achieve maximum visibility.',
         translationMatrix: [
           { public: "Classroom Management / Lesson Planning", private: "Caseload Logistics / Curriculum Program Architecture / Learning Experience Design" },
           { public: "Individualized Education Plans (IEPs)", private: "Individualized Data Plans / Regulatory Compliance Mapping / High-Friction Stakeholder Alignment" },
           { public: "Parent-Teacher Conferences / Department Meetings", private: "Cross-Functional Cross-Examination / Multi-Tiered Stakeholder Reporting" }
         ],
-        actionLabel: 'Download ATS-Engine Resume Blueprint',
-        url: 'https://drive.google.com/file/d/1EowCecu8aWhcul8oe8im0I8HhGUTgnwp/view?usp=drive_link'
+        links: [
+          {
+            label: 'Download Resume Blueprint',
+            url: 'https://drive.google.com/file/d/1EowCecu8aWhcul8oe8im0I8HhGUTgnwp/view?usp=drive_link',
+            primary: true
+          },
+          {
+            label: 'Download Matching Cover Letter',
+            url: 'https://drive.google.com/file/d/1D1d8w1LFdP2p5ryNBtCSnKxTtpcWCe4M/view?usp=drive_link',
+            primary: false
+          }
+        ]
       }
     },
     {
@@ -140,7 +161,6 @@ export default function Contact() {
           <h1 className="text-3xl font-serif text-zinc-100 tracking-tight">The Smithy</h1>
         </div>
         
-        {/* Grounded, Non-Robotic Identity Badge */}
         <div className="px-4 py-2 bg-amber-500/5 border border-amber-500/10 rounded-xl flex items-center gap-2">
           <ShieldCheck size={12} className="text-amber-500/60" />
           <span className="text-[8px] font-mono uppercase tracking-wider text-amber-400">Margaret Rideout, M.Ed.</span>
@@ -220,21 +240,31 @@ export default function Contact() {
                                 </div>
                               ))}
                             </div>
-                            <div className="pt-2">
-                              <a
-                                href={item.content.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-4 py-2.5 bg-purple-500/10 border border-purple-500/20 hover:bg-purple-500/20 text-purple-300 hover:text-purple-200 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
-                              >
-                                <span>{item.content.actionLabel}</span>
-                                <ExternalLink size={10} />
-                              </a>
+                            <div className="pt-2 flex flex-wrap gap-3">
+                              {item.content.links.map((link, idx) => {
+                                const LinkIcon = link.icon || ExternalLink;
+                                return (
+                                  <a
+                                    key={idx}
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border ${
+                                      link.primary
+                                        ? 'bg-purple-500/10 border-purple-500/20 hover:bg-purple-500/20 text-purple-300 hover:text-purple-200'
+                                        : 'bg-zinc-900/60 border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-zinc-300'
+                                    }`}
+                                  >
+                                    <span>{link.label}</span>
+                                    <LinkIcon size={10} />
+                                  </a>
+                                );
+                              })}
                             </div>
                           </div>
                         )}
 
-                        {/* ── TYPE 2: BLUEPRINT DETAILS ── */}
+                        {/* ── TYPE 2: BLUEPRINT DETAILS (WITH RESUME + COVER LETTER LINKS) ── */}
                         {item.content.type === 'blueprint-details' && (
                           <div className="space-y-5 pt-2">
                             <p className="text-xs text-zinc-400 font-serif italic leading-relaxed">
@@ -257,16 +287,23 @@ export default function Contact() {
                               </div>
                             </div>
 
-                            <div className="pt-2">
-                              <a
-                                href={item.content.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-4 py-2.5 bg-teal-500/10 border border-teal-500/20 hover:bg-teal-500/20 text-teal-300 hover:text-teal-200 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
-                              >
-                                <span>{item.content.actionLabel}</span>
-                                <ExternalLink size={10} />
-                              </a>
+                            <div className="pt-2 flex flex-wrap gap-3">
+                              {item.content.links.map((link, idx) => (
+                                <a
+                                  key={idx}
+                                  href={link.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border ${
+                                    link.primary
+                                      ? 'bg-teal-500/10 border-teal-500/20 hover:bg-teal-500/20 text-teal-300 hover:text-teal-200'
+                                      : 'bg-zinc-900/60 border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-zinc-300'
+                                  }`}
+                                >
+                                  <span>{link.label}</span>
+                                  <ExternalLink size={10} />
+                                </a>
+                              ))}
                             </div>
                           </div>
                         )}
