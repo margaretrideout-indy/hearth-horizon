@@ -1,4 +1,12 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { base44 } from '@/api/base44Client';
+import { useNavigate } from 'react-router-dom';
+
 export default function CulturalFit({ vault, onComplete }) {
+  const navigate = useNavigate();
   // phase: 'alchemy' (Lexicon/Ethics) -> 'smithy' (Final Review)
   const [phase, setPhase] = useState('alchemy'); 
   const [isTempering, setIsTempering] = useState(false);
@@ -16,9 +24,7 @@ export default function CulturalFit({ vault, onComplete }) {
       <AnimatePresence mode="wait">
         {phase === 'alchemy' ? (
           <motion.div key="alchemy" className="max-w-3xl mx-auto py-20 px-6">
-            <UploadSection /> {/* Ignition */}
-            <LexiconAlchemistSection /> {/* Translation */}
-            <EthicsCalculatorSection /> {/* Alignment */}
+            {/* TODO: UploadSection, LexiconAlchemistSection, EthicsCalculatorSection */}
             
             <Button onClick={handleFinalize} className="w-full h-20 rounded-3xl bg-teal-500 hover:bg-teal-400">
               {isTempering ? "Tempering..." : "Enter the Smithy"}
