@@ -12,7 +12,6 @@ import AdminDashboard from './pages/AdminDashboard';
 import Canopy from './pages/Canopy';
 import Contact from './pages/Contact';
 import About from './pages/About';
-import Advisory from './pages/Advisory';
 import Embers from './pages/Embers';
 import ProtectedRoute from './components/ProtectedRoute';
 // CulturalFit archived — tools consolidated into Library > High Forge
@@ -301,7 +300,7 @@ export default function App() {
               {/* Public routes */}
               <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/about" element={<About />} />
-              <Route path="/advisory" element={<Advisory />} />
+              <Route path="/advisory" element={<Embers />} />
               <Route path="/embers" element={<Embers />} />
 
               {/* Tab routes — handled by persistent stack above, just redirect stray direct links */}
