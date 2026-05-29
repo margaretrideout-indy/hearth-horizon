@@ -1,7 +1,104 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Flame, Heart, BookOpen, Users, ArrowRight, Mail, Send, Check } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Flame, 
+  Heart, 
+  BookOpen, 
+  Users, 
+  ArrowRight, 
+  Mail, 
+  Send, 
+  Check, 
+  ClipboardList, 
+  FileText, 
+  ChevronDown, 
+  GraduationCap, 
+  Compass,
+  TreePine
+} from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import StickyNav from '@/components/StickyNav';
+import SMEFooter from '@/components/SMEFooter';
+import ExpertiseBadge from '../components/ExpertiseBadge';
+
+const ADVISORY_SERVICES = [
+  {
+    icon: ClipboardList,
+    title: "Curriculum Audits",
+    description: "A structured review of institutional learning frameworks. Identifies gaps and translates legacy curriculum into market-ready competencies. Delivered as a written report, no ongoing engagement required.",
+    bullets: ["Gap analysis against private-sector benchmarks", "Competency translation matrix", "Actionable recommendations document"],
+  },
+  {
+    icon: Users,
+    title: "Cultural Alignment Reviews",
+    description: "Deep-dive assessments that map organizational culture against private-sector expectations. Surfaces misalignments before they cost you time or talent. Ideal for teams mid-transition.",
+    bullets: ["Culture gap scorecard", "Leadership readiness profile", "30-day alignment roadmap"],
+  },
+  {
+    icon: FileText,
+    title: "Digital Transition SOPs",
+    description: "Custom standard operating procedures that bridge institutional processes with modern digital workflows. Built to implement on day one, no handholding required.",
+    bullets: ["Role-specific SOP templates", "Digital tool mapping", "Onboarding checklist package"],
+  },
+];
+
+function ServiceCard({ s, i }) {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: i * 0.08 }}
+      className="p-6 md:p-8 rounded-[2rem] bg-[#0E0C14] border border-zinc-800/60 flex flex-col gap-4"
+    >
+      <div className="flex items-start gap-4">
+        <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-zinc-950 border border-zinc-800 text-teal-400 shrink-0 mt-0.5">
+          <s.icon size={18} />
+        </div>
+        <div className="space-y-1.5 flex-1">
+          <h3 className="text-lg font-serif italic text-purple-300">{s.title}</h3>
+          <p className="text-[12px] text-zinc-400 leading-relaxed italic">{s.description}</p>
+        </div>
+      </div>
+
+      <button 
+        onClick={() => setExpanded(p => !p)}
+        className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-400 transition-colors w-fit pl-14"
+      >
+        <ChevronDown size={11} className={`transition-transform ${expanded ? 'rotate-180' : ''}`} />
+        {expanded ? 'Less detail' : "What's included"}
+      </button>
+
+      <AnimatePresence>
+        {expanded && (
+          <motion.ul
+            initial={{ height: 0, opacity: 0 }} 
+            animate={{ height: 'auto', opacity: 1 }} 
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden pl-14 space-y-2"
+          >
+            {s.bullets.map((b) => (
+              <li key={b} className="flex items-start gap-2 text-[11px] text-zinc-500">
+                <span className="text-teal-500/40 mt-0.5 shrink-0">·</span> {b}
+              </li>
+            ))}
+          </motion.ul>
+        )}
+      </AnimatePresence>
+
+      <div className="pl-14 pt-1">
+        <a
+          href="#reach-out"
+          className="inline-block py-2.5 px-5 bg-teal-500/10 border border-teal-500/20 text-teal-300 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-teal-500/20 transition-all"
+        >
+          Enquire about {s.title} →
+        </a>
+      </div>
+    </motion.div>
+  );
+}
 
 function ReachOutSection() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -23,20 +120,20 @@ function ReachOutSection() {
   };
 
   return (
-    <section id="reach-out" className="space-y-4">
+    <section id="reach-out" className="space-y-6 pt-10 border-t border-zinc-900">
       <div className="flex items-center gap-3">
-        <Mail size={18} className="text-teal-400" />
-        <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">Reach Out</h2>
+        <Mail size={16} className="text-teal-400" />
+        <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">Initiate Alignment</h2>
       </div>
       <p className="text-zinc-500 italic text-sm leading-relaxed border-l border-teal-500/20 pl-6">
-        Whether you have a question, a collaboration idea, or just want to share your story, we'd love to hear from you.
+        Whether you have an inquiry regarding a corporate system audit, or you're looking to anchor your cohort's transition workflows—leave a brief message below. Conversations are handled asynchronously, with grounded intention.
       </p>
 
       {status === 'success' ? (
-        <div className="p-10 text-center bg-teal-500/[0.04] border border-teal-500/15 rounded-[2rem] space-y-3">
-          <Check size={28} className="text-teal-400 mx-auto" />
-          <p className="text-white font-serif italic text-xl">Message received.</p>
-          <p className="text-zinc-500 text-sm italic">We'll be in touch soon. Thank you for reaching out.</p>
+        <div className="p-10 text-center bg-teal-500/[0.03] border border-teal-500/15 rounded-[2rem] space-y-3">
+          <Check size={24} className="text-teal-400 mx-auto" />
+          <p className="text-white font-serif italic text-lg">Message sent to the hearth.</p>
+          <p className="text-zinc-500 text-xs italic">We will cross paths in conversation shortly.</p>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -44,25 +141,25 @@ function ReachOutSection() {
             <input
               required placeholder="Your name"
               value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })}
-              className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-teal-500/50 placeholder:text-zinc-700"
+              className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-teal-500/30 placeholder:text-zinc-700 transition-colors"
             />
             <input
               required type="email" placeholder="Your email"
               value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })}
-              className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-teal-500/50 placeholder:text-zinc-700"
+              className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-teal-500/30 placeholder:text-zinc-700 transition-colors"
             />
           </div>
           <textarea
-            required rows={5} placeholder="Your message..."
+            required rows={4} placeholder="Your message or project scope..."
             value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })}
-            className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-teal-500/50 placeholder:text-zinc-700 resize-none"
+            className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-teal-500/30 placeholder:text-zinc-700 resize-none transition-colors"
           />
           {status === 'error' && (
-            <p className="text-rose-400 text-xs italic">Something went wrong. Please try again.</p>
+            <p className="text-rose-400 text-xs italic">Something strayed off path. Please try again.</p>
           )}
           <button type="submit" disabled={status === 'sending'}
-            className="w-full h-14 bg-teal-500/10 border border-teal-500/20 text-teal-400 font-black uppercase tracking-widest rounded-2xl text-[10px] hover:bg-teal-500 hover:text-black transition-all flex items-center justify-center gap-2 disabled:opacity-50">
-            <Send size={14} />
+            className="w-full h-12 bg-teal-500/10 border border-teal-500/20 text-teal-400 font-black uppercase tracking-widest rounded-xl text-[9px] hover:bg-teal-400 hover:text-black transition-all flex items-center justify-center gap-2 disabled:opacity-50">
+            <Send size={12} />
             {status === 'sending' ? 'Sending...' : 'Send Message'}
           </button>
         </form>
@@ -73,135 +170,133 @@ function ReachOutSection() {
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-[#0A080D] text-zinc-300 font-sans">
+    <div className="min-h-screen bg-[#0A080D] text-zinc-300 font-sans relative overflow-x-hidden selection:bg-amber-500/20 selection:text-amber-200">
+      <StickyNav />
+      
+      {/* Soft Glow Ambient Accents */}
+      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-purple-900/[0.03] rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-1/2 right-1/4 w-[500px] h-[500px] bg-teal-900/[0.03] rounded-full blur-[140px] pointer-events-none" />
 
-      {/* Nav — synced with Grove */}
-      <nav className="fixed top-0 left-0 w-full z-50 bg-[#0A080D]/95 backdrop-blur-xl border-b border-zinc-900"
-        style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-        <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
-          <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-700">Hearth & Horizon</span>
-          <div className="flex items-center gap-4">
-            <a href="/about#reach-out" className="text-[9px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-300 transition-colors">Contact</a>
-            <Link to="/" className="text-[9px] font-black uppercase tracking-widest text-zinc-600 hover:text-teal-400 transition-colors">Enter Sanctuary</Link>
-          </div>
-        </div>
-      </nav>
+      <main className="max-w-3xl mx-auto px-6 pt-32 pb-24 space-y-20 relative z-10">
 
-      <main className="max-w-3xl mx-auto px-6 pt-24 pb-20 space-y-14">
-
-        {/* Hero */}
+        {/* ── HERO HEADER ── */}
         <header className="space-y-6">
           <div className="flex items-center gap-3 text-teal-500/80">
-            <Flame size={16} />
-            <span className="text-[10px] font-black uppercase tracking-[0.5em]">Our Mission</span>
+            <TreePine size={14} className="text-amber-500/40" />
+            <span className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-600">The Paradigm Shift</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-serif italic text-white tracking-tighter leading-none">
-            About Hearth & Horizon
+          <h1 className="text-4xl md:text-6xl font-serif text-white tracking-tight leading-tight">
+            Decoupling Capacity from the <span className="text-purple-300 italic">Institutional Grid</span>
           </h1>
-          <p className="text-zinc-400 italic text-lg max-w-2xl leading-relaxed border-l border-teal-500/20 pl-6">
-            A sanctuary for public-sector professionals ready to write their next chapter.
+          <p className="text-zinc-400 italic text-base max-w-2xl leading-relaxed border-l border-teal-500/20 pl-6 font-serif">
+            Hearth & Horizon is a digital sanctuary engineered for public-sector professionals preparing to navigate complex career migrations into the technology and language data ecosystems.
           </p>
         </header>
 
-        {/* What the app does */}
+        {/* ── CORE FRAMEWORK EXPOSITION ── */}
         <section className="space-y-4">
           <div className="flex items-center gap-3">
-            <BookOpen size={18} className="text-teal-400" />
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">What We Do</h2>
+            <BookOpen size={16} className="text-teal-400" />
+            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-teal-400">The Infrastructure</h2>
           </div>
-          <div className="prose prose-invert max-w-none space-y-4 text-zinc-400 leading-relaxed">
+          <div className="prose prose-invert max-w-none space-y-4 text-xs text-zinc-400 leading-relaxed font-sans">
             <p>
-              Hearth & Horizon is a career-migration platform built specifically for public-sector professionals —
-              teachers, nurses, social workers, government administrators, first responders, and everyone in between
-              — who are ready to transition into the private sector. We believe that the skills, values, and depth
-              of experience you've built in service deserve to be recognized, translated, and rewarded in a new context.
+              Public service conditioning installs a persistent myth: that your human utility belongs exclusively to the institution. When migrating across the threshold into the private sector, the primary challenge is not a lack of technical expertise—it is a translation deficit. 
             </p>
             <p>
-              Our platform combines an AI-powered identity engine we call <strong className="text-white">Brigid</strong> with
-              a curated set of practical tools: resume analysis, professional lexicon translation, ethical alignment
-              calibration, ATS-optimized resume templates, salary negotiation scripts, and a personalized job board
-              we call the Horizon. Every feature is designed to honour the whole person, not just their credentials.
+              This environment aggregates structured tooling to return individual sovereignty back to the professional. Through an intuitive identity translation framework we call <strong className="text-zinc-200">Brigid</strong>, we help align, rewrite, and calibrate legacy skill sets against demanding market benchmarks.
             </p>
             <p>
-              The <strong className="text-white">Library</strong> houses both internal calibration tools: Brigid's
-              Counsel, the Soul Compass, and the Rite of Renaming, alongside external provisions like outreach scripts,
-              community resources, and curated reading. The <strong className="text-white">Hearth</strong> is
-              your personal sanctuary: a private space to reflect, track your emotional weather, and measure your
-              readiness for the road ahead.
-            </p>
-            <p>
-              We are not a job board. We are not a résumé service. We are a full migration support system rooted
-              in reciprocity, transparency, and personal sovereignty.
+              Members navigate their transition across core components: <strong className="text-zinc-200">The Horizon</strong>, our dedicated curation of high-alignment opportunities; <strong className="text-zinc-200">The Library</strong>, a calibrated repository of behavioral scripts and operational systems; and <strong className="text-zinc-200">The Hearth</strong>, a private dashboard interface where individuals securely anchor data, calculate scores, and track emotional weather patterns away from the noise of typical job hunts.
             </p>
           </div>
         </section>
 
-        {/* Who it's for */}
+        {/* ── INTENDED RECIPIENTS ── */}
         <section className="space-y-4">
           <div className="flex items-center gap-3">
-            <Users size={18} className="text-purple-400" />
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400">Who It's For</h2>
+            <Users size={16} className="text-purple-400" />
+            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-400">Sectors in Transition</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
-              'Teachers & Educators', 'Nurses & Healthcare Workers', 'Social Workers & Counsellors',
-              'Government & Public Administrators', 'First Responders & Veterans', 'Anyone in Public Service Ready for Change'
+              'Teachers & Education Specialists', 'Nurses & Healthcare Practitioners', 'Social Workers & Human Services Counsellors',
+              'Government & Public Administrators', 'First Responders & Field Services', 'System Administrators Ready for Sovereignty'
             ].map((role, i) => (
-              <div key={i} className="flex items-center gap-3 p-4 bg-white/[0.02] border border-white/5 rounded-2xl">
-                <div className="w-1.5 h-1.5 rounded-full bg-teal-500 shrink-0" />
-                <span className="text-sm text-zinc-300">{role}</span>
+              <div key={i} className="flex items-center gap-3 p-4 bg-white/[0.01] border border-white/5 rounded-xl">
+                <div className="w-1 h-1 rounded-full bg-purple-500/60 shrink-0" />
+                <span className="text-xs text-zinc-400 font-sans">{role}</span>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Who builds it */}
+        {/* ── EXPERT CONTEXT & CREDENTIALS ── */}
         <section className="space-y-4">
           <div className="flex items-center gap-3">
-            <Heart size={18} className="text-rose-400" />
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-rose-400">Who Builds It</h2>
+            <Heart size={16} className="text-rose-400" />
+            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-rose-400">The Architect’s Ledger</h2>
           </div>
-          <div className="p-8 bg-gradient-to-b from-[#110E16] to-[#0D0B12] border border-white/5 rounded-[2.5rem] space-y-4">
-            <p className="text-zinc-400 leading-relaxed italic font-serif text-lg">
-              "As an Indigenous educator with 13 years in the classroom, I've learned that a professional shift
-              is more than a move — it's a migration of the self."
+          <div className="p-6 md:p-8 bg-gradient-to-b from-[#110E16] to-[#0D0B12] border border-white/5 rounded-[2rem] space-y-6">
+            <p className="text-zinc-400 leading-relaxed italic font-serif text-base">
+              "Operating deep inside institutional education systems for over 13 years taught me that transitioning your life work is never just a job search—it is a total migration of the self. This infrastructure is the map I needed when I walked away to build my own independent footprint."
             </p>
-            <div className="flex items-start gap-3 pt-2">
-              <div className="w-8 h-8 rounded-full bg-teal-500/10 border border-teal-500/20 flex items-center justify-center shrink-0 mt-1">
-                <Flame size={14} className="text-teal-400" />
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <div className="p-3.5 rounded-xl bg-zinc-950/40 border border-white/5 flex gap-3 items-start">
+                <GraduationCap size={16} className="text-purple-400 mt-0.5" />
+                <div className="space-y-0.5">
+                  <h4 className="text-[9px] font-mono uppercase tracking-wider text-zinc-500">Academic Anchor</h4>
+                  <p className="text-xs font-serif text-zinc-300">Margaret Pardy, M.Ed.</p>
+                  <p className="text-[10px] text-zinc-500 font-sans leading-tight">Indigenous Studies: Curriculum & Pedagogy</p>
+                </div>
               </div>
-              <div className="space-y-0.5">
-                <p className="text-white font-serif italic">Margaret Pardy, M.Ed.</p>
-                <p className="text-[10px] text-zinc-400 italic font-serif">Master of Education, Indigenous Studies: Curriculum and Pedagogy</p>
-                <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600">Founder, Hearth & Horizon</p>
+
+              <div className="p-3.5 rounded-xl bg-zinc-950/40 border border-white/5 flex gap-3 items-start">
+                <Compass size={16} className="text-teal-400 mt-0.5" />
+                <div className="space-y-0.5">
+                  <h4 className="text-[9px] font-mono uppercase tracking-wider text-zinc-500">System Capacity</h4>
+                  <p className="text-xs font-serif text-zinc-300">13-Year Framework Record</p>
+                  <p className="text-[10px] text-zinc-500 font-sans leading-tight">Programmatic Compliance & Design</p>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="text-center space-y-4">
+        {/* ── STRATEGIC ADVISORY (INTEGRATED PRODUCTS) ── */}
+        <section className="space-y-6">
+          <div className="flex items-center gap-4">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-600">Strategic Advisory</h2>
+            <div className="h-[1px] flex-1 bg-zinc-900" />
+          </div>
+          <p className="text-xs text-zinc-500 font-sans max-w-xl leading-relaxed">
+            For operational ecosystems, enterprise networks, or native startup models looking to intentionally translate public-sector talent pools or build structured digital SOPs.
+          </p>
+          <div className="space-y-4">
+            {ADVISORY_SERVICES.map((s, i) => (
+              <ServiceCard key={s.title} s={s} i={i} />
+            ))}
+          </div>
+        </section>
+
+        {/* ── CTA INTERACTION CHANNELS ── */}
+        <section className="text-center pt-4">
           <Link to="/"
-            className="inline-flex items-center gap-3 h-14 px-10 bg-teal-500 text-black font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-teal-500/20 text-[10px] hover:bg-teal-400 transition-all">
-            Enter the Sanctuary <ArrowRight size={14} />
+            className="inline-flex items-center gap-3 h-12 px-8 bg-teal-500 text-black font-black uppercase tracking-widest rounded-xl shadow-xl shadow-teal-500/20 text-[9px] hover:bg-teal-400 transition-all">
+            Enter the Sanctuary Workspace <ArrowRight size={12} />
           </Link>
         </section>
 
-        {/* Reach Out */}
+        {/* ── CONTACT ENGAGEMENT ENGINE ── */}
         <ReachOutSection />
+
+        {/* ── SME PLATFORM FOOTER ── */}
+        <SMEFooter />
 
       </main>
 
-      <footer className="border-t border-white/5 py-8">
-        <div className="max-w-4xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-zinc-600 text-[10px] uppercase tracking-widest font-black">
-          <span>© {new Date().getFullYear()} Hearth & Horizon</span>
-          <div className="flex items-center gap-6">
-            <Link to="/about" className="hover:text-zinc-300 transition-colors">About</Link>
-            <a href="/about#reach-out" className="hover:text-zinc-300 transition-colors">Contact</a>
-            <Link to="/" className="hover:text-zinc-300 transition-colors">Enter App</Link>
-          </div>
-        </div>
-      </footer>
+      <ExpertiseBadge />
     </div>
   );
 }
