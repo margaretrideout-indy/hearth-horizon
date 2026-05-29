@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   TreePine, 
   Flame, 
@@ -11,18 +11,54 @@ import {
   ExternalLink, 
   Package, 
   ShieldCheck, 
-  ChevronRight
+  ChevronRight,
+  HelpCircle
 } from 'lucide-react';
 
 // Unified Active Archetype Data
 const ARCHETYPES = [
-  { id: 'builder', label: 'The Builder', role: 'Curriculum Designer', subtitle: 'You engineer systems that outlive their architects.', icon: Flame, color: 'text-purple-400', bg: 'bg-purple-500/10', translation: 'Curriculum Designer / Program Manager' },
-  { id: 'navigator', label: 'The Navigator', role: 'Policy Analyst', subtitle: 'You chart courses through institutional fog.', icon: Compass, color: 'text-teal-400', bg: 'bg-teal-500/10', translation: 'Policy Analyst / Regulatory Specialist' },
-  { id: 'steward', label: 'The Steward', role: 'Social Worker', subtitle: 'You hold the weight of others with expertise.', icon: Mountain, color: 'text-purple-400', bg: 'bg-purple-500/10', translation: 'Social Worker / Case Manager' },
-  { id: 'strategist', label: 'The Strategist', role: 'Principal', subtitle: 'You turn institutional vision into outcomes.', icon: Sparkles, color: 'text-amber-400', bg: 'bg-amber-500/10', translation: 'Principal / Director of Education' }
+  { 
+    id: 'builder', 
+    label: 'The Builder', 
+    role: 'Curriculum Designer', 
+    subtitle: 'You engineer educational architectures, curriculum systems, and structural learning frameworks that outlive their architects.', 
+    icon: Flame, 
+    color: 'text-purple-400', 
+    bg: 'bg-purple-500/10', 
+    translation: 'Instructional Designer / Curriculum Program Manager / Content Architect' 
+  },
+  { 
+    id: 'navigator', 
+    label: 'The Navigator', 
+    role: 'Policy Analyst', 
+    subtitle: 'You chart compliance pathways, analyze regulatory frameworks, and guide communities safely through dense institutional fog.', 
+    icon: Compass, 
+    color: 'text-teal-400', 
+    bg: 'bg-teal-500/10', 
+    translation: 'Policy Analyst / Regulatory Specialist / Data Compliance Operations' 
+  },
+  { 
+    id: 'steward', 
+    label: 'The Steward', 
+    role: 'Social Worker / Counselor', 
+    subtitle: 'You manage crisis logistics, hold complex human variables with dignity, and balance high-stakes stakeholder caseloads.', 
+    icon: Mountain, 
+    color: 'text-purple-400', 
+    bg: 'bg-purple-500/10', 
+    translation: 'User Operations Manager / Customer Success Specialist / Language Data Annotator' 
+  },
+  { 
+    id: 'strategist', 
+    label: 'The Strategist', 
+    role: 'Principal / Administrator', 
+    subtitle: 'You operationalize institutional vision, direct cross-functional teams, and manage resource allocation for measurable programmatic outcomes.', 
+    icon: Sparkles, 
+    color: 'text-amber-400', 
+    bg: 'bg-amber-500/10', 
+    translation: 'Operations Director / Agile Program Manager / Tech Delivery Lead' 
+  }
 ];
 
-// Active Amazon Curated Lists Only
 const AMZ_LISTS = [
   { label: "Curiosity Cabinet", url: "https://www.amazon.ca" },
   { label: "Analog Wayfarers", url: "https://www.amazon.ca" },
@@ -59,6 +95,19 @@ export default function Library() {
 
       <main className="max-w-4xl mx-auto px-6 pt-12 space-y-8">
         
+        {/* ─── NEW: INTEGRATED ARCHETYPE EXPLANATION CONTEXT BLOCK ────────── */}
+        <div className="p-6 rounded-3xl bg-[#09070E] border border-purple-500/10 flex flex-col md:flex-row gap-5 items-start">
+          <div className="p-3 bg-purple-500/10 rounded-xl text-purple-400 shrink-0">
+            <HelpCircle size={18} />
+          </div>
+          <div className="space-y-1.5">
+            <h3 className="text-xs font-black uppercase tracking-wider text-purple-300">Understanding Your Archetype</h3>
+            <p className="text-xs text-zinc-400 font-serif italic leading-relaxed">
+              Leaving the public sector often brings a form of identity disorientation. The Forest Archetypes serve to strip away rigid systemic job titles and isolate your true operational genius. Select your closest institutional pattern below to instantly see how your skills natively map onto private-sector tech, operations, and language data ecosystems.
+            </p>
+          </div>
+        </div>
+        
         {/* ─── ZONE 1: ECO-SYSTEM TRANSLATION WORKBENCH ───────────────────── */}
         <section className="bg-[#0A0810] border border-zinc-800/60 rounded-[2rem] p-6 md:p-8 grid grid-cols-1 md:grid-cols-12 gap-8 relative overflow-hidden">
           
@@ -88,26 +137,29 @@ export default function Library() {
           </div>
 
           {/* Right Column: Dynamic Archetype Card */}
-          <div className="md:col-span-8 bg-[#050409]/60 border border-zinc-800/40 rounded-2xl p-6 flex flex-col justify-between min-h-[200px]">
+          <div className="md:col-span-8 bg-[#050409]/60 border border-zinc-800/40 rounded-2xl p-6 flex flex-col justify-between min-h-[220px]">
             <div className="space-y-4">
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center gap-4 flex-wrap">
                 <div className={`p-2.5 ${currentArch.bg} rounded-xl ${currentArch.color}`}>
                   <IconComponent size={16} />
                 </div>
                 <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 bg-white/5 ${currentArch.color} rounded-full border border-white/5`}>
-                  Institutional Focus: {currentArch.role}
+                  Institutional Root: {currentArch.role}
                 </span>
               </div>
-              <div>
+              <div className="space-y-2">
                 <h4 className="text-xl font-serif italic text-zinc-100">{currentArch.label}</h4>
-                <p className="text-xs text-zinc-400 font-serif italic mt-1 leading-relaxed">{currentArch.subtitle}</p>
+                <p className="text-xs text-zinc-400 font-serif italic leading-relaxed">{currentArch.subtitle}</p>
               </div>
             </div>
 
             <div className="mt-6 pt-4 border-t border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <span className="text-[9px] font-mono tracking-wider text-zinc-500 uppercase">
-                Private Sector Realignment: {currentArch.translation}
-              </span>
+              <div className="space-y-1">
+                <span className="text-[8px] font-black uppercase tracking-widest text-teal-400 block">Private Sector Realignment</span>
+                <span className="text-xs font-mono tracking-tight text-zinc-300">
+                  {currentArch.translation}
+                </span>
+              </div>
             </div>
           </div>
         </section>
