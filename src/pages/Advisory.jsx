@@ -1,74 +1,66 @@
-import React, { useState } from 'react';
-import { Flame, Hammer, Compass, PenTool } from 'lucide-react';
+import React from 'react';
+import { Flame, Compass, Hammer } from 'lucide-react';
 import StickyNav from '@/components/StickyNav';
+import SMEFooter from '@/components/SMEFooter';
+import ExpertiseBadge from '../components/ExpertiseBadge';
 
 export default function EmbersCommunity() {
-  const [presence, setPresence] = useState('kindling');
-
   return (
-    <div className="min-h-screen bg-[#0A080D] text-zinc-300 font-sans selection:bg-teal-500/20">
+    <div className="min-h-screen bg-[#0A080D] text-zinc-400 font-sans selection:bg-teal-500/20">
       <StickyNav />
 
-      <main className="max-w-4xl mx-auto px-6 pt-32 pb-24 grid grid-cols-12 gap-12">
+      <main className="max-w-4xl mx-auto px-6 pt-32 pb-24 grid grid-cols-12 gap-16">
         
-        {/* Left Side: The "Steward" Context */}
-        <aside className="col-span-3 space-y-8">
-          <div>
-            <h2 className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-4">Current Presence</h2>
-            <div className="space-y-3">
-              <button 
-                onClick={() => setPresence('kindling')}
-                className={`flex items-center gap-3 text-xs ${presence === 'kindling' ? 'text-amber-400' : 'text-zinc-600'}`}
-              >
-                <Compass size={14} /> Gathering Kindling
-              </button>
-              <button 
-                onClick={() => setPresence('anvil')}
-                className={`flex items-center gap-3 text-xs ${presence === 'anvil' ? 'text-purple-400' : 'text-zinc-600'}`}
-              >
-                <Hammer size={14} /> Striking the Anvil
-              </button>
+        {/* Left Side: Collective Status */}
+        <aside className="col-span-3 pt-2">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-[9px] font-black uppercase tracking-widest text-zinc-700 mb-6">Collective Presence</h2>
+              <div className="space-y-5">
+                <div className="flex items-center gap-3 text-xs text-zinc-500">
+                  <Compass size={14} className="text-amber-700" /> Gathering Kindling
+                </div>
+                <div className="flex items-center gap-3 text-xs text-zinc-500">
+                  <Hammer size={14} className="text-purple-900" /> Striking the Anvil
+                </div>
+              </div>
+            </div>
+            
+            {/* Quick link to the Smithy for resume translation */}
+            <div className="pt-8 border-t border-zinc-900">
+              <a href="/library/smithy" className="text-[9px] font-black uppercase tracking-widest text-teal-600 hover:text-teal-400 transition-colors">
+                Go to The Smithy →
+              </a>
             </div>
           </div>
         </aside>
 
         {/* Right Side: The Ledger */}
-        <section className="col-span-9 border-l border-zinc-900 pl-10">
-          <header className="mb-12">
+        <section className="col-span-9 border-l border-zinc-900 pl-12">
+          <header className="mb-16">
             <h1 className="text-3xl font-serif text-white flex items-center gap-3">
-              The Forest Ledger <Flame size={20} className="text-amber-600/50" />
+              The Forest Ledger <Flame size={20} className="text-amber-800" />
             </h1>
-            <p className="text-sm italic font-serif text-zinc-500 mt-2">
+            <p className="text-sm italic font-serif text-zinc-600 mt-2">
               A workspace for the Founding Forest. Collective progress, one entry at a time.
             </p>
           </header>
 
-          {/* Example Entry showing the "warm" aesthetic */}
-          <div className="space-y-10">
-            <div className="relative">
-              <div className="absolute -left-[43px] mt-1 w-2 h-2 rounded-full bg-zinc-800" />
-              <p className="text-sm font-serif leading-relaxed text-zinc-300 italic">
-                "Spent the morning cross-walking my classroom management strategies with the new language data annotation rubric. The structural parallels are much stronger than I anticipated."
-              </p>
-              <div className="mt-2 text-[10px] font-medium text-teal-700 uppercase tracking-widest">
-                — Elena R. / 10:45 AM
-              </div>
-            </div>
-
-            {/* Input area remains clean but anchored */}
-            <div className="pt-10 border-t border-zinc-900/50">
-              <textarea
-                placeholder="Log your progress..."
-                className="w-full bg-zinc-950/30 border border-zinc-900 rounded-lg p-4 text-sm font-serif italic text-zinc-300 focus:border-teal-900/50 focus:ring-0 transition-colors"
-                rows={3}
-              />
-              <button className="mt-3 text-[10px] font-black uppercase tracking-widest text-teal-600 hover:text-teal-400 flex items-center gap-2">
-                <PenTool size={10} /> Add to Ledger
-              </button>
+          {/* Ledger Stream: A clean, observation-only chronicle */}
+          <div className="space-y-12">
+            {/* 
+              This area remains empty until your Stewards populate it. 
+              It is designed to be a silent, observant chronicle. 
+            */}
+            <div className="py-20 text-center border-y border-zinc-900/50 border-dashed">
+              <p className="text-zinc-800 text-xs italic font-serif">The ledger is quiet today.</p>
             </div>
           </div>
         </section>
       </main>
+
+      <SMEFooter />
+      <ExpertiseBadge />
     </div>
   );
 }
