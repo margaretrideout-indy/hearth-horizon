@@ -51,8 +51,8 @@ export default function Contact() {
             description: "Visual anchor slides built to ground your psychological focus during intense migration phases, ensuring your confidence remains absolute when communicating with private sector stakeholders."
           }
         ],
-        actionLabel: 'Access Identity Ledger & Tracking Frameworks',
-        url: 'https://margaretrideout.gumroad.com/'
+        actionLabel: 'Access Identity Ledger & Slides',
+        url: 'https://docs.google.com/presentation/d/1GBzN0ClbJGQf0YGk405AecSRkQ_VaXQyaq_aRK1PyxM/edit?usp=sharing'
       }
     },
     {
@@ -64,14 +64,14 @@ export default function Contact() {
       bg: 'bg-teal-500/10',
       content: {
         type: 'blueprint-details',
-        text: 'A clean, single-column markdown and documents framework designed explicitly for technical parsing engines (ATS). By removing structural vulnerabilities like complex tables, sidebars, and embedded icons, this template ensures your translated skill metrics achieve maximum algorithmic visibility.',
+        text: 'A clean, single-column framework designed explicitly for technical parsing engines (ATS). By removing structural vulnerabilities like complex tables, sidebars, and embedded icons, this template ensures your translated skill metrics achieve maximum algorithmic visibility.',
         translationMatrix: [
           { public: "Classroom Management / Lesson Planning", private: "Caseload Logistics / Curriculum Program Architecture / Learning Experience Design" },
           { public: "Individualized Education Plans (IEPs)", private: "Individualized Data Plans / Regulatory Compliance Mapping / High-Friction Stakeholder Alignment" },
           { public: "Parent-Teacher Conferences / Department Meetings", private: "Cross-Functional Cross-Examination / Multi-Tiered Stakeholder Reporting" }
         ],
-        actionLabel: 'Download Clean ATS-Engine Blueprint',
-        url: 'https://margaretrideout.gumroad.com/'
+        actionLabel: 'Download ATS-Engine Resume Blueprint',
+        url: 'https://drive.google.com/file/d/1EowCecu8aWhcul8oe8im0I8HhGUTgnwp/view?usp=drive_link'
       }
     },
     {
@@ -130,12 +130,12 @@ export default function Contact() {
       <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-purple-900/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-teal-900/5 rounded-full blur-[140px] pointer-events-none" />
 
-      {/* ─── HEADER (REMOVED FILE PATH PILL) ─────────────────────────────── */}
+      {/* ─── HEADER ──────────────────────────────────────────────────────── */}
       <header className="max-w-4xl mx-auto px-6 pt-16 pb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-white/5">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <TreePine size={14} className="text-amber-500/40" />
-            <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-500">The Sanctuary Architecture</span>
+            <span className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-500">Workspace Execution</span>
           </div>
           <h1 className="text-3xl font-serif text-zinc-100 tracking-tight">The Smithy</h1>
         </div>
@@ -149,7 +149,7 @@ export default function Contact() {
 
       <main className="max-w-4xl mx-auto px-6 pt-12 space-y-8">
         
-        {/* ─── CONTEXT BLOCK ──────────────────────────────────────────────── */}
+        {/* ─── CONTEXT INTRO BLOCK ────────────────────────────────────────── */}
         <div className="p-6 rounded-3xl bg-[#09070E] border border-amber-500/10 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/[0.02] blur-2xl rounded-full pointer-events-none" />
           <p className="text-xs text-zinc-400 font-serif italic leading-relaxed">
@@ -206,7 +206,7 @@ export default function Contact() {
                     >
                       <div className="px-5 pb-6 pt-2 border-t border-white/5 bg-black/20 space-y-5">
                         
-                        {/* ── TYPE 1: DOWNLOADS / LEDGERS ── */}
+                        {/* ── TYPE 1: MIXED / LEDGERS ── */}
                         {item.content.type === 'mixed' && (
                           <div className="space-y-5 pt-2">
                             <p className="text-xs text-zinc-400 font-serif italic leading-relaxed">
@@ -234,7 +234,7 @@ export default function Contact() {
                           </div>
                         )}
 
-                        {/* ── TYPE 2: BLUEPRINT DETAILS WITH TRANSLATION MATRIX ── */}
+                        {/* ── TYPE 2: BLUEPRINT DETAILS ── */}
                         {item.content.type === 'blueprint-details' && (
                           <div className="space-y-5 pt-2">
                             <p className="text-xs text-zinc-400 font-serif italic leading-relaxed">
@@ -271,7 +271,7 @@ export default function Contact() {
                           </div>
                         )}
 
-                        {/* ── TYPE 3: MULTI-SCRIPT SCRIPTS VAULT ── */}
+                        {/* ── TYPE 3: SCRIPTS VAULT ── */}
                         {item.content.type === 'script-vault' && (
                           <div className="space-y-6 pt-2">
                             <p className="text-xs text-zinc-400 font-serif italic leading-relaxed">
