@@ -8,7 +8,7 @@ import {
   Sparkles, 
   Heart,
   ExternalLink, 
-  Package, 
+  ShoppingBag, 
   ShieldCheck, 
   ChevronRight,
   HelpCircle,
@@ -59,15 +59,9 @@ const ARCHETYPES = [
   }
 ];
 
-const AMZ_LISTS = [
-  { label: "Curiosity Cabinet", url: "https://www.amazon.ca" },
-  { label: "Analog Wayfarers", url: "https://www.amazon.ca" },
-  { label: "Digital Hub", url: "https://www.amazon.ca" },
-  { label: "Ergonomic Sanctuary", url: "https://www.amazon.ca" }
-];
-
-// Active Gumroad Storefront Link
+// Active Destination Storefronts
 const GUMROAD_STORE_URL = "https://margaretrideout.gumroad.com/"; 
+const AMAZON_GENERAL_URL = "https://www.amazon.ca"; // Replace with your master associate tag link
 
 export default function Library() {
   const [activeArchetype, setActiveArchetype] = useState('builder');
@@ -164,7 +158,6 @@ export default function Library() {
                 </span>
               </div>
               
-              {/* Pointing directly to your clean Gumroad storefront */}
               <a 
                 href={GUMROAD_STORE_URL}
                 target="_blank"
@@ -206,36 +199,33 @@ export default function Library() {
             </div>
           </div>
 
-          {/* Right: The Outfitter Lists */}
+          {/* Right: The Outfitter - Simplified Master Portal */}
           <div className="bg-[#0A0810] border border-zinc-800/60 rounded-[2rem] p-6 flex flex-col justify-between space-y-6">
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-teal-500/10 border border-teal-500/20 text-teal-400 rounded-xl">
-                  <Package size={14} />
+                  <ShoppingBag size={14} />
                 </div>
                 <div>
                   <h3 className="text-lg font-serif text-zinc-200">The Outfitter</h3>
-                  <p className="text-[8px] font-mono uppercase tracking-wider text-zinc-500">Curated Workspaces & Tools</p>
+                  <p className="text-[8px] font-mono uppercase tracking-wider text-teal-500">Ecosystem Support Link</p>
                 </div>
               </div>
               <p className="text-xs text-zinc-400 font-serif italic leading-relaxed">
-                Affiliate logs featuring reliable analog accessories, work-from-home gear, and software configurations built for remote professionals.
+                Planning a home workspace upgrade or ordering materials for your migration? Use our collective passage link. Any purchase made within 24 hours of opening directly supplies and sustains our digital sanctuary.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
-              {AMZ_LISTS.map((list) => (
-                <a 
-                  key={list.label} 
-                  href={list.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-zinc-400 hover:text-teal-400 hover:border-teal-500/20 transition-all"
-                >
-                  <span>{list.label}</span>
-                  <ExternalLink size={10} className="text-zinc-600" />
-                </a>
-              ))}
+            <div>
+              <a 
+                href={AMAZON_GENERAL_URL} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-2 p-4 bg-teal-500/10 border border-teal-500/20 rounded-xl text-xs font-black uppercase tracking-widest text-teal-300 hover:bg-teal-500/20 hover:text-teal-200 transition-all text-center"
+              >
+                <span>Open Amazon Passage</span>
+                <ExternalLink size={12} />
+              </a>
             </div>
           </div>
 
