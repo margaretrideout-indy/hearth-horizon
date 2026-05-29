@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   TreePine, 
   Flame, 
@@ -13,8 +13,10 @@ import {
   ChevronRight,
   HelpCircle,
   ArrowUpRight,
-  Hammer
+  Hammer,
+  ArrowLeft
 } from 'lucide-react';
+import Contact from './Contact';
 
 // Unified Active Archetype Data
 const ARCHETYPES = [
@@ -66,14 +68,9 @@ const AMAZON_GENERAL_URL = "https://www.amazon.ca";
 
 export default function Library() {
   const [activeArchetype, setActiveArchetype] = useState('builder');
+  const [showSmithy, setShowSmithy] = useState(false);
   const currentArch = ARCHETYPES.find(a => a.id === activeArchetype);
   const IconComponent = currentArch.icon;
-
-  // Function to handle moving deeper into the Smithy
-  const handleNavigateToSmithy = () => {
-    // In your routing setup, this would be: history.push('/smithy') or router.push('/smithy')
-    console.log("Navigating deeper into The Smithy...");
-  };
 
   return (
     <div className="min-h-screen bg-[#050409] text-zinc-100 font-sans relative overflow-x-hidden selection:bg-purple-500/30 selection:text-purple-200 pb-16">
@@ -81,6 +78,39 @@ export default function Library() {
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-purple-900/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-teal-900/5 rounded-full blur-[150px] pointer-events-none" />
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-amber-900/5 rounded-full blur-[100px] pointer-events-none" />
+
+      <AnimatePresence mode="wait">
+
+      {showSmithy ? (
+        /* ─── SMITHY VIEW ─── */
+        <motion.div
+          key="smithy"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -12 }}
+          transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+          {/* Back bar */}
+          <div className="max-w-4xl mx-auto px-6 pt-8 pb-2">
+            <button
+              onClick={() => setShowSmithy(false)}
+              className="flex items-center gap-2 text-zinc-500 hover:text-amber-400 active:text-amber-400 transition-colors min-h-[44px] group"
+            >
+              <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform" />
+              <span className="text-[9px] font-black uppercase tracking-widest">Back to The Library</span>
+            </button>
+          </div>
+          <Contact />
+        </motion.div>
+      ) : (
+        /* ─── LIBRARY VIEW ─── */
+        <motion.div
+          key="library"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
 
       {/* ─── HEADER ──────────────────────────────────────────────────────── */}
       <header className="max-w-4xl mx-auto px-6 pt-16 pb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-b border-white/5">
@@ -241,7 +271,7 @@ export default function Library() {
         {/* ─── NEW: GATEWAY TO THE SMITHY ──────────────────────────────────── */}
         <section className="pt-4">
           <button 
-            onClick={handleNavigateToSmithy}
+            onClick={() => setShowSmithy(true)}
             className="w-full group text-left p-6 md:p-8 rounded-[2rem] bg-gradient-to-r from-[#0C0912] to-[#120B11] border border-amber-500/10 hover:border-amber-500/20 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden"
           >
             {/* Subtle internal amber forge glow on hover */}
@@ -278,6 +308,11 @@ export default function Library() {
         </div>
 
       </main>
+
+        </motion.div>
+      )}
+
+      </AnimatePresence>
     </div>
   );
 }
