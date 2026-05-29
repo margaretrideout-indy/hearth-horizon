@@ -6,13 +6,13 @@ import {
   Compass, 
   Mountain, 
   Sparkles, 
-  PhoneCall, 
   Heart,
   ExternalLink, 
   Package, 
   ShieldCheck, 
   ChevronRight,
-  HelpCircle
+  HelpCircle,
+  ArrowUpRight
 } from 'lucide-react';
 
 // Unified Active Archetype Data
@@ -66,6 +66,9 @@ const AMZ_LISTS = [
   { label: "Ergonomic Sanctuary", url: "https://www.amazon.ca" }
 ];
 
+// Active Gumroad Storefront Link
+const GUMROAD_STORE_URL = "https://margaretrideout.gumroad.com/"; 
+
 export default function Library() {
   const [activeArchetype, setActiveArchetype] = useState('builder');
   const currentArch = ARCHETYPES.find(a => a.id === activeArchetype);
@@ -95,7 +98,7 @@ export default function Library() {
 
       <main className="max-w-4xl mx-auto px-6 pt-12 space-y-8">
         
-        {/* ─── NEW: INTEGRATED ARCHETYPE EXPLANATION CONTEXT BLOCK ────────── */}
+        {/* ─── ARCHETYPE EXPLANATION CONTEXT BLOCK ────────────────────────── */}
         <div className="p-6 rounded-3xl bg-[#09070E] border border-purple-500/10 flex flex-col md:flex-row gap-5 items-start">
           <div className="p-3 bg-purple-500/10 rounded-xl text-purple-400 shrink-0">
             <HelpCircle size={18} />
@@ -153,13 +156,23 @@ export default function Library() {
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="mt-6 pt-4 border-t border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="space-y-1">
                 <span className="text-[8px] font-black uppercase tracking-widest text-teal-400 block">Private Sector Realignment</span>
                 <span className="text-xs font-mono tracking-tight text-zinc-300">
                   {currentArch.translation}
                 </span>
               </div>
+              
+              {/* Pointing directly to your clean Gumroad storefront */}
+              <a 
+                href={GUMROAD_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[9px] font-black uppercase tracking-widest text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1 shrink-0 self-end sm:self-auto pb-1 sm:pb-0"
+              >
+                Explore Full Vault <ArrowUpRight size={11} />
+              </a>
             </div>
           </div>
         </section>
