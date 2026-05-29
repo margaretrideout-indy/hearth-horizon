@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Hammer, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
+import ResumeUpload from '@/components/culture/ResumeUpload';
+import LexiconAlchemistSection from '@/components/culture/LexiconAlchemistSection';
+import EthicsCalculatorSection from '@/components/culture/EthicsCalculatorSection';
 
 export default function CulturalFit({ vault }) {
   const navigate = useNavigate();
