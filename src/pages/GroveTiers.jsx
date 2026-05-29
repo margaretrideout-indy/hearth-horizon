@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   Check, Coffee, ChevronDown, Sparkles,
   BookOpen, ExternalLink, Link2,
-  GraduationCap, CheckCircle2, ArrowRight, Heart
+  GraduationCap, CheckCircle2, ArrowRight, Heart, ShieldAlert
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import SanctuaryTransition from '../components/SanctuaryTransition';
@@ -61,26 +61,26 @@ const TIERS = [
     features: ['Horizon Title Mapping', 'Library Resource Access', 'Personal Vault Storage'],
     cta: 'Enter Free',
     action: () => base44.auth.redirectToLogin('/hearth'),
-    style: 'bg-[#0E0C14] border-zinc-800',
+    style: 'bg-[#0E0C14] border-zinc-800/80',
     btnStyle: 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700',
   },
   {
     id: 'forest',
     title: 'The Founding Forest',
     price: '$9/mo',
-    tag: 'Community',
+    tag: 'Community Core',
     desc: 'Live sessions, peer cohorts, full AI suite.',
     features: ['Live Group Sessions', 'Brigid, Rite & Soul Compass', 'Direct Title Feedback'],
     cta: 'Join The Forest',
     action: () => { window.location.href = STRIPE_URL; },
-    style: 'bg-[#0E1A14] border-teal-500/30',
-    btnStyle: 'bg-teal-500 text-black hover:bg-teal-400 shadow-lg shadow-teal-500/20',
+    style: 'bg-[#0E1A14] border-teal-500/20 shadow-sm shadow-teal-950/20',
+    btnStyle: 'bg-teal-500 text-black hover:bg-teal-400 shadow-md shadow-teal-500/10',
   },
 ];
 
 const LINKTREE = [
-  { label: 'The Library', sub: 'Tools & Resources', icon: BookOpen, action: (nav) => nav('/library'), color: 'border-purple-500/20 hover:border-purple-500/40' },
-  { label: 'The Horizon Board', sub: 'Survey the Path Ahead', icon: ArrowRight, action: (nav) => nav('/horizon'), color: 'border-teal-500/20 hover:border-teal-500/40' },
+  { label: 'The Library', sub: 'Tools & Resources', icon: BookOpen, action: (nav) => nav('/library'), color: 'border-purple-500/10 hover:border-purple-500/30' },
+  { label: 'The Horizon Board', sub: 'Survey the Path Ahead', icon: ArrowRight, action: (nav) => nav('/horizon'), color: 'border-teal-500/10 hover:border-teal-500/30' },
 ];
 
 const CREDENTIALS = [
@@ -89,7 +89,7 @@ const CREDENTIALS = [
   { label: 'BA, BEd', note: 'Foundational Academic Training' },
 ];
 
-// ── WhisperTool ───────────────────────────────────────────────────────────────
+// ── WhisperTool Component ───────────────────────────────────────────────────────
 function WhisperTool({ onSave }) {
   const [title, setTitle] = useState('');
   const [result, setResult] = useState(null);
@@ -104,7 +104,7 @@ function WhisperTool({ onSave }) {
       const lower = val.toLowerCase();
       const match = LEGACY_MAP.find(e => e.triggers.some(t => lower.includes(t)));
       if (match) { setResult(match.horizon); setIsPoetic(false); }
-      else { setResult('A complex history. The full mapping requires the deep audit; enter the Forge below.'); setIsPoetic(true); }
+      else { setResult('A complex history. The full mapping requires the deep audit; enter the Forge below.', setIsPoetic(true)); }
     } else {
       setResult(null);
     }
@@ -117,13 +117,13 @@ function WhisperTool({ onSave }) {
         value={title}
         onChange={(e) => handleInput(e.target.value)}
         placeholder="e.g. Special Education Teacher, Charge Nurse, Policy Analyst..."
-        className="w-full bg-[#0E0C14] border border-zinc-800 rounded-2xl px-6 py-5 text-base text-white focus:outline-none focus:border-zinc-600 transition-all placeholder:text-zinc-700 font-serif italic min-h-[56px]"
+        className="w-full bg-[#0E0C14] border border-zinc-900 rounded-2xl px-6 py-5 text-base text-white focus:outline-none focus:border-zinc-800 transition-all placeholder:text-zinc-800 font-serif italic min-h-[56px]"
       />
 
       <AnimatePresence>
         {result && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
-            <div className={`p-8 rounded-2xl border ${isPoetic ? 'bg-zinc-900/40 border-zinc-800' : 'bg-[#0E1A14] border-zinc-700/60'}`}>
+            <div className={`p-8 rounded-2xl border ${isPoetic ? 'bg-zinc-950 border-zinc-900' : 'bg-[#0E1A14]/40 border-teal-950/40'}`}>
               <p className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-600 mb-3">
                 {isPoetic ? 'A Note from the Forge' : 'Your Horizon Title - Free Preview'}
               </p>
@@ -134,26 +134,26 @@ function WhisperTool({ onSave }) {
             </div>
 
             {!isPoetic && (
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 {!saved ? (
                   <button onClick={() => { onSave(title, result); setSaved(true); }}
-                    className="w-full min-h-[48px] py-3 bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-black uppercase tracking-widest rounded-xl active:bg-zinc-700 hover:bg-zinc-700 transition-all">
-                    <Check size={11} className="inline mr-2" /> Save to My Hearth — Free
+                    className="flex-1 min-h-[48px] py-3 bg-zinc-900 border border-zinc-800 text-zinc-400 text-xs font-black uppercase tracking-widest rounded-xl active:bg-zinc-800 hover:bg-zinc-800 hover:text-zinc-300 transition-all">
+                    <Check size={11} className="inline mr-2" /> Save to My Hearth
                   </button>
                 ) : (
-                  <p className="w-full min-h-[48px] flex items-center justify-center text-xs font-black uppercase tracking-widest text-zinc-600">
+                  <p className="flex-1 min-h-[48px] flex items-center justify-center text-xs font-black uppercase tracking-widest text-zinc-600">
                     <Sparkles size={10} className="inline mr-2" />Saved to vault
                   </p>
                 )}
                 <button onClick={() => { window.location.href = STRIPE_URL; }}
-                  className="w-full min-h-[48px] py-3 bg-teal-500 text-black text-xs font-black uppercase tracking-widest rounded-xl active:bg-teal-400 hover:bg-teal-400 transition-all shadow-lg shadow-teal-500/20">
-                  Get the Full Audit Report →
+                  className="flex-1 min-h-[48px] py-3 bg-teal-900/40 border border-teal-800/40 text-teal-300 text-xs font-black uppercase tracking-widest rounded-xl active:bg-teal-900 hover:bg-teal-900/60 transition-all">
+                  Get Full Audit Report →
                 </button>
               </div>
             )}
 
             <button onClick={() => setShowLearnMore(p => !p)}
-              className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-400 active:text-zinc-400 transition-colors min-h-[44px]">
+              className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-500 active:text-zinc-500 transition-colors min-h-[44px]">
               <ChevronDown size={12} className={`transition-transform ${showLearnMore ? 'rotate-180' : ''}`} />
               {showLearnMore ? 'Hide' : 'About the methodology'}
             </button>
@@ -161,11 +161,11 @@ function WhisperTool({ onSave }) {
             <AnimatePresence>
               {showLearnMore && (
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                  <div className="p-5 rounded-2xl bg-zinc-900/30 border border-zinc-800 space-y-2">
+                  <div className="p-5 rounded-2xl bg-zinc-950/40 border border-zinc-900 space-y-2">
                     <p className="text-[11px] text-zinc-500 italic leading-relaxed font-serif">
                       "The mapping engine draws from 13 years of Indigenous curriculum architecture and public-sector pedagogy, built to honour the full legacy of the professional before the title."
                     </p>
-                    <p className="text-[9px] text-zinc-700 uppercase font-black tracking-widest">Margaret, M.Ed. | BA, BEd | Indigenous Studies</p>
+                    <p className="text-[9px] text-zinc-600 uppercase font-black tracking-widest">Margaret, M.Ed. | BA, BEd | Indigenous Studies</p>
                   </div>
                 </motion.div>
               )}
@@ -177,33 +177,33 @@ function WhisperTool({ onSave }) {
   );
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
+// ── Main Page Component ────────────────────────────────────────────────────────
 export default function GroveTiers({ vault, onSync }) {
   const navigate = useNavigate();
   const [showTransition, setShowTransition] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#0A080D] text-zinc-300 font-sans selection:bg-teal-500/20 overflow-x-hidden">
+    <div className="min-h-screen bg-[#0A080D] text-zinc-400 font-sans selection:bg-teal-500/20 overflow-x-hidden">
       <AnimatePresence>
         {showTransition && <SanctuaryTransition onComplete={() => navigate('/hearth')} />}
       </AnimatePresence>
 
       <StickyNav showBrigidCta={false} />
 
-      <div className="max-w-3xl mx-auto px-6 pt-32 pb-40 space-y-20">
+      <div className="max-w-2xl mx-auto px-6 pt-32 pb-40 space-y-24">
 
-        {/* ── HERO + WHISPER TOOL ── */}
+        {/* ── SECTION 1: HERO + WHISPER TOOL ── */}
         <section className="space-y-8">
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800">
-              <span className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-600">Free Tool</span>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-950 border border-zinc-900">
+              <span className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-600">The Framework Forge</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif italic text-purple-200 leading-tight tracking-tight">
+            <h1 className="text-4xl sm:text-5xl font-serif italic text-purple-200 leading-tight tracking-tight">
               Translate your public-sector legacy into{' '}
-              <span className="text-teal-400">private-sector power.</span>
+              <span className="text-teal-400">private-sector clarity.</span>
             </h1>
-            <p className="text-zinc-500 text-sm font-serif italic leading-relaxed max-w-lg">
-              Type your title below. Brigid—our mapping engine—reveals your private-sector identity instantly. No account required.
+            <p className="text-zinc-600 text-sm font-serif italic leading-relaxed max-w-lg">
+              Type your professional title below. Our architecture maps your structural expertise instantly. No account required.
             </p>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
@@ -211,27 +211,75 @@ export default function GroveTiers({ vault, onSync }) {
           </motion.div>
         </section>
 
-        {/* ── TIERS ── */}
-        <section className="space-y-5">
-          <SectionLabel>Join the Grove</SectionLabel>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {TIERS.map((tier) => (
-              <div key={tier.id} className={`p-7 rounded-[2rem] border ${tier.style} flex flex-col`}>
-                <div className="flex justify-between items-start mb-4">
-                  <span className="text-[8px] font-black uppercase tracking-[0.3em] text-zinc-600 border border-zinc-800 px-2.5 py-1 rounded-full">{tier.tag}</span>
-                  <span className="text-xl font-black text-white">{tier.price}</span>
+        {/* ── SECTION 2: ADVISORY SPOTLIGHT (PROMINENT ELEVATION) ── */}
+        <section className="space-y-4">
+          <SectionLabel>Direct Guidance</SectionLabel>
+          <div className="p-8 rounded-[2rem] border border-purple-950/30 bg-gradient-to-br from-[#0F0D14] to-[#0A080D] space-y-6 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-2xl group-hover:bg-purple-500/10 transition-all duration-700" />
+            <div className="space-y-2">
+              <p className="text-[8px] font-black uppercase tracking-[0.4em] text-purple-400">Strategic Consulting</p>
+              <h3 className="text-2xl font-serif italic text-purple-200">The Advisory Clinic</h3>
+              <p className="text-zinc-500 text-xs font-serif italic leading-relaxed max-w-md">
+                Skip the generic job-search template. Partner with Margaret directly to map out custom structural data plans, resolve organizational identity friction, and architect a transition built entirely upon your real-world expertise.
+              </p>
+            </div>
+            <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-zinc-900/60">
+              <div className="flex items-center gap-2 text-[10px] text-zinc-600 uppercase font-black tracking-wider">
+                <GraduationCap size={12} className="text-teal-500/60" /> M.Ed. Indigenous Studies / 13+ Yrs Leadership
+              </div>
+              <button 
+                onClick={() => navigate('/advisory')} 
+                className="w-full sm:w-auto px-6 py-3 bg-purple-900/40 border border-purple-800/40 text-purple-200 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-purple-900/60 transition-all flex items-center justify-center gap-2"
+              >
+                Explore Advisory Options <ArrowRight size={11} />
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* ── SECTION 3: INTERNAL ECOSYSTEM ── */}
+        <section className="space-y-4">
+          <SectionLabel>Explore the Ecosystem</SectionLabel>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {LINKTREE.map((item) => (
+              <button key={item.label} onClick={() => item.action(navigate)}
+                className={`group p-6 min-h-[84px] rounded-[1.5rem] bg-[#0E0C14] border ${item.color} flex flex-col items-start gap-2 text-left transition-all active:opacity-75`}>
+                <div className="flex w-full items-center justify-between">
+                  <item.icon size={15} className="text-zinc-600 group-hover:text-teal-400 transition-colors" />
+                  <ArrowRight size={11} className="text-zinc-800 group-hover:text-teal-400 transition-colors" />
                 </div>
-                <h3 className="text-lg font-serif italic text-purple-300 mb-1">{tier.title}</h3>
-                <p className="text-zinc-600 text-xs italic mb-5">{tier.desc}</p>
-                <ul className="space-y-1.5 mb-6 flex-1">
-                  {tier.features.map(f => (
-                    <li key={f} className="text-[11px] text-zinc-500 flex items-center gap-2">
-                      <Check size={10} className="text-teal-500 shrink-0" /> {f}
-                    </li>
-                  ))}
-                </ul>
+                <div className="mt-1">
+                  <p className="text-sm font-serif italic text-zinc-300 leading-tight">{item.label}</p>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">{item.sub}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* ── SECTION 4: THE DEEP GROVE TIERS (PUSHED DOWN) ── */}
+        <section className="space-y-5">
+          <SectionLabel>Join the Grove Tiers</SectionLabel>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {TIERS.map((tier) => (
+              <div key={tier.id} className={`p-7 rounded-[2rem] border ${tier.style} flex flex-col justify-between min-h-[280px]`}>
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-[8px] font-black uppercase tracking-[0.25em] text-zinc-600 border border-zinc-900 px-2 py-0.5 rounded-full">{tier.tag}</span>
+                    <span className="text-lg font-black text-white">{tier.price}</span>
+                  </div>
+                  <h3 className="text-base font-serif italic text-purple-300 mb-1">{tier.title}</h3>
+                  <p className="text-zinc-600 text-[11px] italic mb-4">{tier.desc}</p>
+                  <ul className="space-y-2 mb-6">
+                    {tier.features.map(f => (
+                      <li key={f} className="text-[10px] text-zinc-500 flex items-center gap-2">
+                        <Check size={9} className="text-teal-500 shrink-0" /> {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
                 <button onClick={tier.action}
-                  className={`w-full min-h-[48px] py-3.5 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${tier.btnStyle}`}>
+                  className={`w-full min-h-[44px] py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${tier.btnStyle}`}>
                   {tier.cta} →
                 </button>
               </div>
@@ -239,124 +287,50 @@ export default function GroveTiers({ vault, onSync }) {
           </div>
         </section>
 
-        {/* ── LINKS + KO-FI ── */}
-        <section className="space-y-4">
-          <SectionLabel>Explore the Ecosystem</SectionLabel>
-
-          {/* Internal nav cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {LINKTREE.map((item) => (
-              <button key={item.label} onClick={() => item.action(navigate)}
-                className={`group p-5 min-h-[72px] rounded-[1.5rem] bg-[#0E0C14] border ${item.color} flex flex-col items-start gap-3 text-left transition-all active:opacity-75`}>
-                <item.icon size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
-                <div className="flex-1">
-                  <p className="text-sm font-serif italic text-zinc-300 leading-tight">{item.label}</p>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">{item.sub}</p>
-                </div>
-                <ArrowRight size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
-              </button>
-            ))}
-          </div>
-
-          {/* External links: LinkTree + Amazon Shop + Gumroad + Bookshop */}
-          <div className="grid grid-cols-2 gap-4">
-            <a href="https://linktree.com/mzrdt333" target="_blank" rel="noopener noreferrer"
-              className="group p-5 min-h-[72px] rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 active:border-zinc-600 active:opacity-75 flex flex-col items-start gap-3 transition-all">
-              <Link2 size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
-              <div className="flex-1">
-                <p className="text-sm font-serif italic text-zinc-300 leading-tight">LinkTree</p>
-                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">All Our Links</p>
-              </div>
-              <ExternalLink size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
-            </a>
-            <a href="https://www.amazon.com/shop/hearthandh0a6-20" target="_blank" rel="noopener noreferrer"
-              className="group p-5 min-h-[72px] rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 active:border-zinc-600 active:opacity-75 flex flex-col items-start gap-3 transition-all">
-              <ExternalLink size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
-              <div className="flex-1">
-                <p className="text-sm font-serif italic text-zinc-300 leading-tight">Amazon Shop</p>
-                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">Curated Tools & Reads</p>
-              </div>
-              <ExternalLink size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
-            </a>
-            <a href="https://margaretpardy.gumroad.com" target="_blank" rel="noopener noreferrer"
-              className="group p-5 min-h-[72px] rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 active:border-zinc-600 active:opacity-75 flex flex-col items-start gap-3 transition-all">
-              <Heart size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
-              <div className="flex-1">
-                <p className="text-sm font-serif italic text-zinc-300 leading-tight">Gumroad</p>
-                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">Digital Downloads</p>
-              </div>
-              <ExternalLink size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
-            </a>
-            <a href="https://bookshop.org/shop/hearthandhorizon" target="_blank" rel="noopener noreferrer"
-              className="group p-5 min-h-[72px] rounded-[1.5rem] bg-[#0E0C14] border border-zinc-800 hover:border-zinc-600 active:border-zinc-600 active:opacity-75 flex flex-col items-start gap-3 transition-all">
-              <BookOpen size={16} className="text-zinc-500 group-hover:text-teal-400 transition-colors" />
-              <div className="flex-1">
-                <p className="text-sm font-serif italic text-zinc-300 leading-tight">Bookshop.org</p>
-                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mt-0.5">Recommended Reads</p>
-              </div>
-              <ExternalLink size={11} className="text-zinc-700 group-hover:text-teal-400 transition-colors" />
-            </a>
-          </div>
-          <p className="text-[9px] text-zinc-800 italic text-center">*As an Amazon Associate I earn from qualifying purchases.</p>
-
-          {/* Ko-Fi */}
-          <div className="flex items-center justify-between p-5 rounded-2xl bg-zinc-900/30 border border-zinc-800">
+        {/* ── SECTION 5: OUTSIDE THE CANOPY (EXTERNAL & TIP JAR CLEANUP) ── */}
+        <section className="space-y-4 pt-4 border-t border-zinc-950">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-950/40 border border-zinc-900 text-zinc-600">
             <div className="flex items-center gap-3">
-              <Coffee size={15} className="text-amber-400 shrink-0" />
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Support the Fire</p>
-                <p className="text-[10px] text-zinc-600 italic">A one-time contribution keeps this alive.</p>
-              </div>
+              <Coffee size={14} className="text-zinc-700" />
+              <p className="text-[10px] font-serif italic">Want to support the infrastructure? Optional digital logs to keep the fire lit.</p>
             </div>
-            <a href="https://ko-fi.com/hearthandhorizon" target="_blank" rel="noopener noreferrer"
-              className="px-5 py-3 min-h-[44px] bg-amber-500 text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-amber-400 active:bg-amber-400 transition-all whitespace-nowrap flex items-center gap-1.5">
-              <Heart size={10} /> Buy a Coffee
+            <a href="https://ko-fi.com/hearthandhorizon" target="_blank" rel="noopener noreferrer" className="text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-amber-500 transition-colors px-3 py-1">
+              Ko-Fi Box
             </a>
           </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <a href="https://linktree.com/mzrdt333" target="_blank" rel="noopener noreferrer" className="p-3 text-center rounded-xl bg-zinc-950/20 border border-zinc-900 hover:border-zinc-800 transition-colors group">
+              <p className="text-[10px] font-serif italic text-zinc-500 group-hover:text-zinc-400">Master LinkTree</p>
+            </a>
+            <a href="https://www.amazon.com/shop/hearthandh0a6-20" target="_blank" rel="noopener noreferrer" className="p-3 text-center rounded-xl bg-zinc-950/20 border border-zinc-900 hover:border-zinc-800 transition-colors group">
+              <p className="text-[10px] font-serif italic text-zinc-500 group-hover:text-zinc-400">Amazon Reads</p>
+            </a>
+            <a href="https://margaretpardy.gumroad.com" target="_blank" rel="noopener noreferrer" className="p-3 text-center rounded-xl bg-zinc-950/20 border border-zinc-900 hover:border-zinc-800 transition-colors group">
+              <p className="text-[10px] font-serif italic text-zinc-500 group-hover:text-zinc-400">Gumroad Vault</p>
+            </a>
+            <a href="https://bookshop.org/shop/hearthandhorizon" target="_blank" rel="noopener noreferrer" className="p-3 text-center rounded-xl bg-zinc-950/20 border border-zinc-900 hover:border-zinc-800 transition-colors group">
+              <p className="text-[10px] font-serif italic text-zinc-500 group-hover:text-zinc-400">Bookshop Registry</p>
+            </a>
+          </div>
+          <p className="text-[8px] text-zinc-800 italic text-center tracking-wide">*As an Amazon Associate I earn from qualifying purchases.</p>
         </section>
 
-        {/* ── PHILOSOPHY BRIDGE ── */}
-        <section className="border-t border-zinc-900 pt-14 text-center space-y-5">
-          <p className="text-[9px] font-black uppercase tracking-[0.5em] text-zinc-700">The Philosophy of Migration</p>
-          <p className="text-zinc-600 italic font-serif text-sm leading-relaxed max-w-md mx-auto">
-            Migration is more than a move. It is a shift of the self. Learn more about the philosophy and the architect behind the engine.
-          </p>
-          <a href="/about" className="inline-flex items-center gap-1 text-xs font-black uppercase tracking-widest text-zinc-500 hover:text-teal-400 active:text-teal-400 transition-colors min-h-[44px] py-2">
-            Read our Story & Philosophy →
-          </a>
-        </section>
-
-        {/* ── FOOTER ── */}
-        <footer className="border-t border-zinc-900 pt-14 space-y-8">
-
-          {/* SME Seal */}
-          <div className="py-8 px-7 border border-zinc-800/60 rounded-[2rem] bg-zinc-950/60 space-y-5">
+        {/* ── SECTION 6: CREDENTIAL CONFIDENCE & NARRATIVE FOOTER ── */}
+        <footer className="space-y-8 border-t border-zinc-950 pt-8">
+          <div className="py-6 px-6 border border-zinc-900 bg-zinc-950/20 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-teal-500/10 border border-teal-500/20 flex items-center justify-center shrink-0">
-                <GraduationCap size={13} className="text-teal-400" />
-              </div>
+              <GraduationCap size={16} className="text-teal-600/60" />
               <div>
-                <p className="text-[8px] font-black uppercase tracking-[0.45em] text-zinc-600">Quality Seal</p>
-                <p className="text-sm font-serif italic text-zinc-300 leading-none mt-0.5">Margaret Rideout, M.Ed.</p>
+                <p className="text-xs font-serif italic text-zinc-400">Designed by Margaret Rideout, M.Ed.</p>
+                <p className="text-[9px] text-zinc-600 uppercase tracking-wider">Indigenous Curriculum & Program Architecture Specialist</p>
               </div>
             </div>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {CREDENTIALS.map((c) => (
-                <li key={c.label} className="flex items-start gap-2">
-                  <CheckCircle2 size={11} className="text-teal-500/60 mt-0.5 shrink-0" />
-                  <span className="text-[10px] text-zinc-500">
-                    <span className="font-black text-zinc-400 uppercase tracking-wide">{c.label}</span>
-                    <span className="text-zinc-600">, {c.note}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <p className="text-[11px] text-zinc-600 italic font-serif border-l-2 border-zinc-800 pl-4 leading-relaxed">
-              Every tool and framework is built on lived expertise, not theory.
-            </p>
+            <div className="text-[10px] font-serif italic text-zinc-600 leading-relaxed md:max-w-xs md:text-right border-l md:border-l-0 md:border-r border-zinc-900 pl-3 md:pl-0 md:pr-3">
+              "Every tool in the Hearth is mapped from 13+ years of public governance and classroom delivery, translating deep human legacy into corporate readiness."
+            </div>
           </div>
 
-          {/* GlobalFooter handles all nav, policies, project links, Amazon disclaimer */}
           <GlobalFooter />
         </footer>
 
@@ -365,12 +339,12 @@ export default function GroveTiers({ vault, onSync }) {
   );
 }
 
-// ── Tiny helper ───────────────────────────────────────────────────────────────
+// ── Shared UI Utilities ───────────────────────────────────────────────────────
 function SectionLabel({ children }) {
   return (
-    <div className="flex items-center gap-4">
-      <h2 className="text-[9px] font-black uppercase tracking-[0.5em] text-zinc-700 whitespace-nowrap">{children}</h2>
-      <div className="h-[1px] flex-1 bg-zinc-900" />
+    <div className="flex items-center gap-4 py-2">
+      <h2 className="text-[8px] font-black uppercase tracking-[0.4em] text-zinc-700 whitespace-nowrap">{children}</h2>
+      <div className="h-[1px] flex-1 bg-zinc-950" />
     </div>
   );
 }
