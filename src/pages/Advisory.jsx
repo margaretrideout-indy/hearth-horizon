@@ -1,17 +1,19 @@
-import React from 'react';
-import { Flame, Compass, Hammer } from 'lucide-react';
+import React, { useState } from 'react';
+import { Flame, Compass, Hammer, PenTool } from 'lucide-react';
 import StickyNav from '@/components/StickyNav';
 import SMEFooter from '@/components/SMEFooter';
 import ExpertiseBadge from '../components/ExpertiseBadge';
 
 export default function EmbersCommunity() {
+  const [log, setLog] = useState('');
+
   return (
     <div className="min-h-screen bg-[#0A080D] text-zinc-400 font-sans selection:bg-teal-500/20">
       <StickyNav />
 
       <main className="max-w-4xl mx-auto px-6 pt-32 pb-24 grid grid-cols-12 gap-16">
         
-        {/* Left Side: Collective Status */}
+        {/* Left Side: Static Context */}
         <aside className="col-span-3 pt-2">
           <div className="space-y-6">
             <div>
@@ -26,7 +28,6 @@ export default function EmbersCommunity() {
               </div>
             </div>
             
-            {/* Quick link to the Smithy for resume translation */}
             <div className="pt-8 border-t border-zinc-900">
               <a href="/library/smithy" className="text-[9px] font-black uppercase tracking-widest text-teal-600 hover:text-teal-400 transition-colors">
                 Go to The Smithy →
@@ -46,15 +47,25 @@ export default function EmbersCommunity() {
             </p>
           </header>
 
-          {/* Ledger Stream: A clean, observation-only chronicle */}
           <div className="space-y-12">
-            {/* 
-              This area remains empty until your Stewards populate it. 
-              It is designed to be a silent, observant chronicle. 
-            */}
+            {/* Ledger content will appear here */}
             <div className="py-20 text-center border-y border-zinc-900/50 border-dashed">
               <p className="text-zinc-800 text-xs italic font-serif">The ledger is quiet today.</p>
             </div>
+          </div>
+
+          {/* Re-introduced Composer: Intentional, Ledger-Style */}
+          <div className="mt-20 pt-10 border-t border-zinc-900/50">
+            <textarea
+              value={log}
+              onChange={(e) => setLog(e.target.value)}
+              placeholder="Log your progress or share a milestone..."
+              className="w-full bg-zinc-950/30 border border-zinc-900 rounded-lg p-4 text-sm font-serif italic text-zinc-300 focus:border-teal-900/50 focus:ring-0 transition-colors"
+              rows={3}
+            />
+            <button className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-teal-600 hover:text-teal-400 transition-colors">
+              <PenTool size={10} /> Add to Ledger
+            </button>
           </div>
         </section>
       </main>
