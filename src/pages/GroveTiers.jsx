@@ -172,7 +172,7 @@ export default function GroveTiers({ vault, onSync }) {
           
           {/* Toggle Switch */}
           <div className="flex items-center justify-center gap-3 pb-2">
-            <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${!isYearly ? 'text-teal-400' : 'text-zinc-600'}`}>With the Moon</span>
+            <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${!isYearly ? 'text-teal-400' : 'text-zinc-600'}`}>Monthly</span>
             <button 
               onClick={() => setIsYearly(!isYearly)}
               className="w-12 h-6 rounded-full bg-zinc-950 border border-zinc-800 p-0.5 transition-colors relative flex items-center focus:outline-none"
@@ -185,7 +185,7 @@ export default function GroveTiers({ vault, onSync }) {
               />
             </button>
             <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${isYearly ? 'text-teal-400' : 'text-zinc-600'} flex items-center gap-1.5`}>
-              With the Sun <span className="text-[8px] bg-teal-950 text-teal-400 px-1.5 py-0.5 rounded-full border border-teal-900">Save 33%</span>
+              Yearly (best value!) <span className="text-[8px] bg-teal-950 text-teal-400 px-1.5 py-0.5 rounded-full border border-teal-900">Save 33%</span>
             </span>
           </div>
 
