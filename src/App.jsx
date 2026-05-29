@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { Flame, BookOpen, Compass, LayoutDashboard, Trees, ShieldCheck, RefreshCw, ArrowLeft } from 'lucide-react';
+import { Flame, BookOpen, Compass, LayoutDashboard, Trees, ShieldCheck, RefreshCw, ArrowLeft, MessageCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import usePullToRefresh from '@/hooks/usePullToRefresh';
 
@@ -156,6 +156,7 @@ export default function App() {
       { label: 'Hearth', path: '/hearth', icon: Flame },
       { label: 'Library', path: '/library', icon: BookOpen },
       { label: 'Horizon', path: '/horizon', icon: LayoutDashboard },
+      { label: 'Embers', path: '/embers', icon: MessageCircle },
     ];
 
     if (isDesktop) {
