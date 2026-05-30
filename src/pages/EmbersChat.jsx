@@ -142,7 +142,7 @@ export default function EmbersChat({ vault, isAdmin }) {
               {/* Message body */}
               <div className="ml-9">
                 {msg.reply_to_author && (
-                  <div className="text-[9px] text-amber-700/50 font-serif italic mb-1.5 flex items-center gap-1">
+                  <div className="text-[9px] text-amber-500 font-serif italic mb-1.5 flex items-center gap-1">
                     <CornerDownRight size={8} /> replying to {msg.reply_to_author}
                   </div>
                 )}
