@@ -47,7 +47,7 @@ export default function EmbersChat({ vault, isAdmin }) {
         author_email: me?.email || '',
         content: input,
         reply_to_id: replyTo?.id || null,
-        // Ensure the parent author name is stored for public visibility
+        // Ensure the author name is saved to the record for public display
         reply_to_author: replyTo?.author_name || null
       });
       setInput('');
@@ -100,9 +100,9 @@ export default function EmbersChat({ vault, isAdmin }) {
               </div>
               
               <div className="ml-9">
-                {/* Visible to everyone: The reply header */}
+                {/* Always visible to all users */}
                 {msg.reply_to_author && (
-                  <div className="text-[9px] text-amber-800/60 mb-2 flex items-center gap-1 font-serif italic bg-black/20 w-fit px-2 py-0.5 rounded">
+                  <div className="text-[9px] text-amber-800/70 mb-2 flex items-center gap-1 font-serif italic bg-black/20 w-fit px-2 py-0.5 rounded border border-amber-900/10">
                     <CornerDownRight size={8} /> replying to {msg.reply_to_author}
                   </div>
                 )}
@@ -115,7 +115,6 @@ export default function EmbersChat({ vault, isAdmin }) {
         </div>
       </div>
 
-      {/* Footer code remains identical to previous implementation */}
       <footer className="absolute bottom-0 inset-x-0 bg-[#08070A]/95 backdrop-blur-md border-t border-zinc-900/60 p-4">
         <div className="max-w-2xl mx-auto px-6">
           {!isLoggedIn ? (
