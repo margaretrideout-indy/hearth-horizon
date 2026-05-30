@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clipboard, Check, Upload, BrainCircuit, Target, RefreshCw, BookOpen, Compass, Trash2 } from 'lucide-react';
+import { Clipboard, Check, Upload, BrainCircuit, BookOpen, Compass, Trash2, RefreshCw } from 'lucide-react';
+import GlobalFooter from '@/components/layout/GlobalFooter';
 import { Button } from '@/components/ui/button';
 
 // Helper for clipboard
@@ -11,14 +13,23 @@ const copyToClipboard = (text, setCopied) => {
 };
 
 export default function Hearth({ vault }) {
+  const navigate = useNavigate();
+  const fileInputRef = useRef(null);
   const [hasUploaded, setHasUploaded] = useState(false);
   const [copiedStates, setCopiedStates] = useState({});
   const [alchemyData, setAlchemyData] = useState(null);
 
+  const handleFileUpload = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setHasUploaded(true);
+      // Logic for backend parsing would go here
+    }
+  };
+
   const runAlchemy = () => {
     setAlchemyData({
       headline: "STRATEGIC OPERATIONS & SYSTEMS ARCHITECT",
-      summary: "I translate complex legacy processes into scalable, high-fidelity infrastructure.",
+      summary: "I translate complex legacy processes into scalable, high-fidelity infrastructure. My approach balances rigorous operational integrity with empathetic stakeholder stewardship.",
       bullets: [
         "Architected enterprise-level systems, improving throughput by 40%.",
         "Led cross-functional stewardship of data integrity and security protocols.",
@@ -45,16 +56,22 @@ export default function Hearth({ vault }) {
             </h2>
             {hasUploaded && (
               <Button variant="ghost" size="sm" onClick={() => {setHasUploaded(false); setAlchemyData(null);}} className="text-zinc-600 hover:text-red-400">
-                <Trash2 size={14} className="mr-2" /> Reset
+                <Trash2 size={14} className="mr-2" /> Reset Resume
               </Button>
             )}
           </div>
 
           {!hasUploaded ? (
-            <div className="border-2 border-dashed border-zinc-800 rounded-[2rem] p-16 text-center hover:border-teal-500 transition-colors cursor-pointer" onClick={() => setHasUploaded(true)}>
-              <Upload className="mx-auto mb-4 text-zinc-700" size={32} />
-              <p className="text-sm">Upload your resume for sync and analysis</p>
-            </div>
+            <>
+              <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileUpload} accept=".pdf,.doc,.docx" />
+              <div 
+                className="border-2 border-dashed border-zinc-800 rounded-[2rem] p-16 text-center hover:border-teal-500 transition-colors cursor-pointer" 
+                onClick={() => fileInputRef.current.click()}
+              >
+                <Upload className="mx-auto mb-4 text-zinc-700" size={32} />
+                <p className="text-sm">Upload your resume for sync and analysis</p>
+              </div>
+            </>
           ) : (
             <div className="grid md:grid-cols-2 gap-8">
               {/* ANALYZER VIEW */}
@@ -66,7 +83,7 @@ export default function Hearth({ vault }) {
                   </Button>
                 ) : (
                   <div className="space-y-4">
-                     <p className="text-sm italic">"{alchemyData.summary}"</p>
+                     <p className="text-sm italic text-zinc-400">"{alchemyData.summary}"</p>
                   </div>
                 )}
               </div>
@@ -74,11 +91,13 @@ export default function Hearth({ vault }) {
               {/* GENERATOR VIEW */}
               <div className="p-8 bg-[#0D0B14] rounded-2xl border border-white/5 space-y-6">
                 <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500">Generated Assets</h3>
-                {alchemyData && (
+                {alchemyData ? (
                   <div className="space-y-4">
                     <AssetItem label="Headline" text={alchemyData.headline} copied={copiedStates.headline} onCopy={() => copyToClipboard(alchemyData.headline, () => setCopiedStates({headline: true}))} />
-                    <AssetItem label="Bullet Points" text={alchemyData.bullets.join('\n')} copied={copiedStates.bullets} onCopy={() => copyToClipboard(alchemyData.bullets.join('\n'), () => setCopiedStates({bullets: true}))} />
+                    <AssetItem label="Impact Points" text={alchemyData.bullets.join('\n\n')} copied={copiedStates.bullets} onCopy={() => copyToClipboard(alchemyData.bullets.join('\n\n'), () => setCopiedStates({bullets: true}))} />
                   </div>
+                ) : (
+                  <p className="text-xs text-zinc-700 italic">Analysis pending...</p>
                 )}
               </div>
             </div>
@@ -90,19 +109,20 @@ export default function Hearth({ vault }) {
           <NavigationCard title="The Library" description="Refine your templates and scripts." icon={<BookOpen />} onClick={() => navigate('/library')} />
           <NavigationCard title="The Horizon" description="Sync your work to the job board." icon={<Compass />} onClick={() => navigate('/horizon')} />
         </section>
+
+        <GlobalFooter />
       </div>
     </div>
   );
 }
 
-// Sub-components to keep the main code clean
 const AssetItem = ({ label, text, copied, onCopy }) => (
   <div className="bg-zinc-900/50 p-4 rounded-lg border border-zinc-800 flex justify-between items-start">
-    <div className="text-[11px]">
+    <div className="text-[11px] w-[85%]">
       <p className="text-teal-500 font-bold mb-1">{label}</p>
-      <p className="text-zinc-300">{text.length > 50 ? text.substring(0, 50) + '...' : text}</p>
+      <p className="text-zinc-300 whitespace-pre-line leading-relaxed">{text}</p>
     </div>
-    <button onClick={onCopy} className="text-zinc-600 hover:text-white">
+    <button onClick={onCopy} className="text-zinc-600 hover:text-white mt-1">
       {copied ? <Check size={14} /> : <Clipboard size={14} />}
     </button>
   </div>
