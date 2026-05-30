@@ -1,21 +1,29 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Upload, BrainCircuit, Target, BookOpen, Compass, FileText, Trash2, RefreshCw } from 'lucide-react';
-import GlobalFooter from '@/components/layout/GlobalFooter';
+import { Clipboard, Check, Upload, BrainCircuit, Target, RefreshCw, BookOpen, Compass, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export default function Hearth({ vault, onSync }) {
-  const navigate = useNavigate();
+// Helper for clipboard
+const copyToClipboard = (text, setCopied) => {
+  navigator.clipboard.writeText(text);
+  setCopied(true);
+  setTimeout(() => setCopied(false), 2000);
+};
+
+export default function Hearth({ vault }) {
   const [hasUploaded, setHasUploaded] = useState(false);
-  const [profile, setProfile] = useState(null);
-  const [ethics, setEthics] = useState({ Reciprocity: 50, Transparency: 50, Agency: 50 });
+  const [copiedStates, setCopiedStates] = useState({});
+  const [alchemyData, setAlchemyData] = useState(null);
 
   const runAlchemy = () => {
-    setProfile({
+    setAlchemyData({
       headline: "STRATEGIC OPERATIONS & SYSTEMS ARCHITECT",
-      summary: "I translate complex legacy processes into scalable infrastructure.",
-      pillars: ["Data Integrity", "Architectural Flow", "Community Cultivation"]
+      summary: "I translate complex legacy processes into scalable, high-fidelity infrastructure.",
+      bullets: [
+        "Architected enterprise-level systems, improving throughput by 40%.",
+        "Led cross-functional stewardship of data integrity and security protocols.",
+        "Cultivated community-centric workflows across distributed operations."
+      ]
     });
   };
 
@@ -23,19 +31,21 @@ export default function Hearth({ vault, onSync }) {
     <div className="min-h-screen bg-[#0A080D] text-zinc-300 py-16 px-6">
       <div className="max-w-4xl mx-auto space-y-16">
         
-        {/* ── HEADER: BASECAMP ── */}
-        <header className="space-y-2">
+        {/* ── BASECAMP HEADER ── */}
+        <header className="space-y-2 border-b border-zinc-900 pb-8">
           <h1 className="text-3xl font-serif italic text-purple-200">The Hearth</h1>
-          <p className="text-sm text-zinc-600">Your central command for career alignment and transition.</p>
+          <p className="text-sm text-zinc-600">Your Basecamp for career transformation.</p>
         </header>
 
         {/* ── ALCHEMY SUITE ── */}
         <section className="space-y-8">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-serif italic text-white flex items-center gap-2"><BrainCircuit className="text-teal-500"/> Alchemy Suite</h2>
+            <h2 className="text-lg font-serif italic text-white flex items-center gap-2">
+              <BrainCircuit className="text-teal-500"/> Alchemy Suite
+            </h2>
             {hasUploaded && (
-              <Button variant="ghost" size="sm" onClick={() => setHasUploaded(false)} className="text-zinc-600 hover:text-red-400">
-                <Trash2 size={14} className="mr-2" /> Reset Resume
+              <Button variant="ghost" size="sm" onClick={() => {setHasUploaded(false); setAlchemyData(null);}} className="text-zinc-600 hover:text-red-400">
+                <Trash2 size={14} className="mr-2" /> Reset
               </Button>
             )}
           </div>
@@ -47,27 +57,29 @@ export default function Hearth({ vault, onSync }) {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 gap-8">
+              {/* ANALYZER VIEW */}
               <div className="p-8 bg-[#0D0B14] rounded-2xl border border-white/5 space-y-6">
-                {!profile ? (
+                <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500">Analyzer</h3>
+                {!alchemyData ? (
                   <Button onClick={runAlchemy} className="w-full bg-teal-900/30 border border-teal-500/30 text-teal-400 hover:bg-teal-500/10">
                     <RefreshCw size={14} className="mr-2" /> Run Alchemy Analysis
                   </Button>
                 ) : (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-                    <p className="text-teal-400 text-[10px] font-bold uppercase tracking-widest">{profile.headline}</p>
-                    <p className="text-sm italic text-zinc-400">"{profile.summary}"</p>
-                  </motion.div>
+                  <div className="space-y-4">
+                     <p className="text-sm italic">"{alchemyData.summary}"</p>
+                  </div>
                 )}
               </div>
 
-              <div className="p-8 bg-[#0D0B14] rounded-2xl border border-white/5">
-                <h3 className="text-xs uppercase tracking-widest font-bold mb-6 flex items-center gap-2"><Target size={14} className="text-teal-500"/> Ethics Calibration</h3>
-                {Object.entries(ethics).map(([label, val]) => (
-                  <div key={label} className="mb-6">
-                    <div className="flex justify-between text-[10px] uppercase text-zinc-500 mb-2"><span>{label}</span><span>{val}%</span></div>
-                    <input type="range" className="w-full accent-teal-500" value={val} onChange={(e) => setEthics({...ethics, [label]: e.target.value})} />
+              {/* GENERATOR VIEW */}
+              <div className="p-8 bg-[#0D0B14] rounded-2xl border border-white/5 space-y-6">
+                <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500">Generated Assets</h3>
+                {alchemyData && (
+                  <div className="space-y-4">
+                    <AssetItem label="Headline" text={alchemyData.headline} copied={copiedStates.headline} onCopy={() => copyToClipboard(alchemyData.headline, () => setCopiedStates({headline: true}))} />
+                    <AssetItem label="Bullet Points" text={alchemyData.bullets.join('\n')} copied={copiedStates.bullets} onCopy={() => copyToClipboard(alchemyData.bullets.join('\n'), () => setCopiedStates({bullets: true}))} />
                   </div>
-                ))}
+                )}
               </div>
             </div>
           )}
@@ -75,20 +87,31 @@ export default function Hearth({ vault, onSync }) {
 
         {/* ── NAVIGATION ── */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div onClick={() => navigate('/library')} className="p-8 border border-zinc-900 rounded-3xl cursor-pointer hover:border-zinc-700 hover:bg-zinc-900/20 transition-all group">
-            <BookOpen className="mb-4 text-purple-400 group-hover:scale-110 transition-transform" />
-            <h3 className="font-serif italic text-zinc-300">The Library</h3>
-            <p className="text-xs text-zinc-600 mt-1">Refine your templates and scripts.</p>
-          </div>
-          <div onClick={() => navigate('/horizon')} className="p-8 border border-zinc-900 rounded-3xl cursor-pointer hover:border-zinc-700 hover:bg-zinc-900/20 transition-all group">
-            <Compass className="mb-4 text-teal-400 group-hover:scale-110 transition-transform" />
-            <h3 className="font-serif italic text-zinc-300">The Horizon</h3>
-            <p className="text-xs text-zinc-600 mt-1">Sync your work to the job board.</p>
-          </div>
+          <NavigationCard title="The Library" description="Refine your templates and scripts." icon={<BookOpen />} onClick={() => navigate('/library')} />
+          <NavigationCard title="The Horizon" description="Sync your work to the job board." icon={<Compass />} onClick={() => navigate('/horizon')} />
         </section>
-
-        <GlobalFooter />
       </div>
     </div>
   );
 }
+
+// Sub-components to keep the main code clean
+const AssetItem = ({ label, text, copied, onCopy }) => (
+  <div className="bg-zinc-900/50 p-4 rounded-lg border border-zinc-800 flex justify-between items-start">
+    <div className="text-[11px]">
+      <p className="text-teal-500 font-bold mb-1">{label}</p>
+      <p className="text-zinc-300">{text.length > 50 ? text.substring(0, 50) + '...' : text}</p>
+    </div>
+    <button onClick={onCopy} className="text-zinc-600 hover:text-white">
+      {copied ? <Check size={14} /> : <Clipboard size={14} />}
+    </button>
+  </div>
+);
+
+const NavigationCard = ({ title, description, icon, onClick }) => (
+  <div onClick={onClick} className="p-8 border border-zinc-900 rounded-3xl cursor-pointer hover:border-zinc-700 hover:bg-zinc-900/20 transition-all group">
+    <div className="mb-4 text-purple-400 group-hover:scale-110 transition-transform">{icon}</div>
+    <h3 className="font-serif italic text-zinc-300">{title}</h3>
+    <p className="text-xs text-zinc-600 mt-1">{description}</p>
+  </div>
+);
