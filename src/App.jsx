@@ -300,7 +300,6 @@ export default function App() {
               {/* Public routes */}
               <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/about" element={<About />} />
-              <Route path="/advisory" element={<EmbersChat vault={vault} isAdmin={isAdmin} />} />
               <Route path="/embers" element={<EmbersChat vault={vault} isAdmin={isAdmin} />} />
               {/* Tab routes — handled by persistent stack above, just redirect stray direct links */}
               <Route path="/hearth" element={null} />
