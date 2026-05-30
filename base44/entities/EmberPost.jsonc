@@ -14,6 +14,14 @@
       "type": "string",
       "description": "Message content"
     },
+    "reply_to_id": {
+      "type": "string",
+      "description": "ID of the post this is replying to"
+    },
+    "reply_to_author": {
+      "type": "string",
+      "description": "Author name of the post this is replying to"
+    },
     "is_pinned": {
       "type": "boolean",
       "default": false,
@@ -48,7 +56,7 @@
     "update": {
       "$or": [
         {
-          "data.author_email": "{{user.email}}"
+          "created_by": "{{user.email}}"
         },
         {
           "user_condition": {
@@ -60,7 +68,7 @@
     "delete": {
       "$or": [
         {
-          "data.author_email": "{{user.email}}"
+          "created_by": "{{user.email}}"
         },
         {
           "user_condition": {
