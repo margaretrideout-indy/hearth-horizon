@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -142,6 +143,14 @@ const DiscoveryToggle = ({ value, onChange }) => (
 
 // ─── Main component ──────────────────────────────────────────────────────────
 export default function Canopy({ vault, onSync, isAdmin }) {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.alchemyData || location.state?.ethics) {
+      console.log('[Horizon] Received Alchemy state:', location.state);
+    }
+  }, [location.state]);
+
   const [aiJobs, setAiJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [mode, setMode] = useState(null);

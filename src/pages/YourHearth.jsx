@@ -96,7 +96,12 @@ export default function Hearth({ vault }) {
 
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <NavigationCard title="The Library" description="Refine your templates." icon={<BookOpen />} onClick={() => navigate('/library')} />
-          <NavigationCard title="The Horizon" description="Sync your work to the job board." icon={<Compass />} onClick={() => navigate('/horizon')} />
+          <NavigationCard 
+            title="The Horizon" 
+            description="Sync your work to the job board." 
+            icon={<Compass />} 
+            onClick={() => navigate('/horizon', { state: { alchemyData, ethics } })} 
+          />
         </section>
       </div>
     </div>

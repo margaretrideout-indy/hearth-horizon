@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { Flame, BookOpen, Compass, LayoutDashboard, Trees, ShieldCheck, RefreshCw, ArrowLeft, MessageCircle, FlaskConical } from 'lucide-react';
+import { Flame, BookOpen, Compass, LayoutDashboard, Trees, ShieldCheck, RefreshCw, ArrowLeft, MessageCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import usePullToRefresh from '@/hooks/usePullToRefresh';
 
@@ -13,7 +13,6 @@ import Canopy from './pages/Canopy';
 import Contact from './pages/Contact';
 import About from './pages/About';
 import EmbersChat from './pages/EmbersChat';
-import CulturalFit from './pages/CulturalFit';
 import ProtectedRoute from './components/ProtectedRoute';
 // Embers.jsx archived — community hearth is now EmbersChat.jsx
 
@@ -158,7 +157,6 @@ export default function App() {
       { label: 'Library', path: '/library', icon: BookOpen },
       { label: 'Horizon', path: '/horizon', icon: LayoutDashboard },
       { label: 'Embers', path: '/embers', icon: MessageCircle },
-      { label: 'Alchemy', path: '/alchemy', icon: FlaskConical },
     ];
 
     if (isDesktop) {
@@ -304,8 +302,6 @@ export default function App() {
               <Route path="/about" element={<About />} />
               <Route path="/advisory" element={<EmbersChat vault={vault} isAdmin={isAdmin} />} />
               <Route path="/embers" element={<EmbersChat vault={vault} isAdmin={isAdmin} />} />
-              <Route path="/alchemy" element={<CulturalFit vault={vault} onSync={handleSync} />} />
-
               {/* Tab routes — handled by persistent stack above, just redirect stray direct links */}
               <Route path="/hearth" element={null} />
               <Route path="/library" element={null} />
