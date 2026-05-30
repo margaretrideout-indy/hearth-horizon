@@ -2,8 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Users, Search, RefreshCw, Plus, X,
-  ArrowLeft, Wind, Activity, Check
+  Users, Search, RefreshCw,
+  ArrowLeft, Wind, Activity
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
@@ -92,7 +92,7 @@ export default function AdminDashboard() {
   if (!authChecked || !isAuthorized) return null;
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-[#0D0B14] text-white p-4 md:p-12 pb-32">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-[#0D0B14] text-white p-4 md:p-12 pb-32 max-w-5xl mx-auto">
       
       {/* ── Header ── */}
       <header className="flex flex-col md:flex-row justify-between items-start gap-8 mb-16">
@@ -122,10 +122,8 @@ export default function AdminDashboard() {
         <VitalityCard label="Posts" value={posts.length} icon={<Wind size={18} />} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        {/* ── Main Registry ── */}
-        <div className="lg:col-span-8 bg-[#1C1622]/50 p-6 md:p-10 rounded-[3rem] border border-white/5 backdrop-blur-sm">
+      {/* ── Main Registry ── */}
+      <div className="max-w-4xl mx-auto bg-[#1C1622]/50 p-6 md:p-10 rounded-[3rem] border border-white/5 backdrop-blur-sm">
           <div className="flex justify-between items-center mb-10">
             <h2 className="text-2xl font-serif italic">Dweller Registry</h2>
             <button onClick={syncData} className="w-11 h-11 bg-white/5 flex items-center justify-center rounded-xl border border-white/5 hover:text-[#39FFCA] transition-colors">
@@ -159,25 +157,6 @@ export default function AdminDashboard() {
             </table>
           </div>
         </div>
-
-        {/* ── Sidebar: Live Pulse ── */}
-        <div className="lg:col-span-4 bg-[#1C1622]/50 p-8 rounded-[3rem] border border-white/5">
-          <h2 className="text-[10px] font-black uppercase tracking-widest text-[#39FFCA] mb-8 flex items-center gap-2">
-            <Activity size={14} /> Live Pulse
-          </h2>
-          <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
-            {logs.map((log, idx) => (
-              <div key={idx} className="bg-black/30 p-4 rounded-2xl border border-white/[0.04]">
-                <div className="flex justify-between items-start mb-1">
-                  <span className={`text-[9px] font-black uppercase ${ACTION_COLORS[log.action_type] || 'text-zinc-500'}`}>{log.action_type}</span>
-                  <span className="text-[8px] text-zinc-800 font-mono">{new Date(log.created_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                </div>
-                <p className="text-[10px] text-zinc-600 truncate">{log.user_email}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
     </motion.div>
   );
 }
