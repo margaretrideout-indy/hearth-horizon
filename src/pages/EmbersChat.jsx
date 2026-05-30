@@ -8,7 +8,7 @@ export default function EmbersChat({ vault, isAdmin }) {
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [replyTo, setReplyTo] = useState(null); // New state for thread context
+  const [replyTo, setReplyTo] = useState(null);
   const [user, setUser] = useState(null);
   const scrollRef = useRef(null);
 
@@ -46,7 +46,7 @@ export default function EmbersChat({ vault, isAdmin }) {
         author_name: displayName,
         author_email: me?.email || '',
         content: input,
-        reply_to_id: replyTo?.id || null // Link to parent post
+        reply_to_id: replyTo?.id || null 
       });
       setInput('');
       setReplyTo(null);
@@ -69,27 +69,37 @@ export default function EmbersChat({ vault, isAdmin }) {
       </header>
 
       <div ref={scrollRef} className="h-full overflow-y-auto pt-28 pb-48 custom-scrollbar">
-        <div className="max-w-2xl mx-auto px-6 space-y-12">
+        <div className="max-w-2xl mx-auto px-6 space-y-4">
           {posts.map((msg, idx) => (
             <motion.article
               key={msg.id || idx}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              className={`group relative ${msg.reply_to_id ? 'ml-8 border-l border-zinc-900/50 pl-6' : ''}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`group relative p-6 rounded-2xl transition-all ${
+                msg.reply_to_id 
+                  ? 'bg-zinc-900/20 border border-amber-900/5 ml-10' 
+                  : 'bg-transparent'
+              }`}
             >
-              <div className="flex items-baseline gap-2.5 mb-2">
-                <span className="text-[10px] font-black uppercase tracking-wider text-zinc-600">{msg.author_name}</span>
-                {msg.created_date && (
-                  <span className="text-[9px] text-zinc-800">{format(new Date(msg.created_date), 'MMM d · h:mm a')}</span>
-                )}
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center text-[8px] font-bold text-amber-700">
+                  {msg.author_name.charAt(0)}
+                </div>
+                <span className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+                  {msg.author_name}
+                </span>
+                <span className="text-[9px] text-zinc-700">
+                  {msg.created_date && format(new Date(msg.created_date), 'MMM d, h:mm a')}
+                </span>
                 <button 
                   onClick={() => setReplyTo(msg)}
-                  className="ml-auto opacity-0 group-hover:opacity-100 text-[9px] text-zinc-700 hover:text-amber-700 transition-opacity"
+                  className="ml-auto opacity-0 group-hover:opacity-100 text-[9px] text-amber-800 hover:text-amber-400 transition-opacity"
                 >
                   Reply
                 </button>
               </div>
-              <p className="font-serif italic text-zinc-400 leading-relaxed text-[15px]">
+              
+              <p className="font-serif italic text-zinc-300 leading-relaxed text-sm ml-9">
                 {msg.reply_to_id && <CornerDownRight size={10} className="inline mr-2 text-zinc-700" />}
                 {msg.content}
               </p>
