@@ -301,10 +301,10 @@ export default function App() {
               <Route path="/grove" element={<GroveTiers vault={vault} onSync={handleSync} isAdmin={isAdmin} />} />
               <Route path="/about" element={<About />} />
               <Route path="/embers" element={<EmbersChat vault={vault} isAdmin={isAdmin} />} />
-              {/* Tab routes — handled by persistent stack above, just redirect stray direct links */}
-              <Route path="/hearth" element={null} />
-              <Route path="/library" element={null} />
-              <Route path="/horizon" element={null} />
+              {/* Tab routes — redirect guests to Grove, authenticated users handled by persistent stack */}
+              <Route path="/hearth" element={vault?.email ? null : <Navigate to="/grove" replace />} />
+              <Route path="/library" element={vault?.email ? null : <Navigate to="/grove" replace />} />
+              <Route path="/horizon" element={vault?.email ? null : <Navigate to="/grove" replace />} />
 
               {/* Other protected routes */}
               <Route path="/contact" element={<ProtectedRoute><Contact vault={vault} onRefresh={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} /></ProtectedRoute>} />
