@@ -61,6 +61,7 @@ Deno.serve(async (req) => {
 
       const update: Record<string, any> = {
         subscription_tier: subscriptionTier,
+        tier: 'hearthkeeper',
         seedling_upload_count: 0,
       };
       if (isFoundingMember) {

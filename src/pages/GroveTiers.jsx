@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, ChevronDown, Sparkles, ArrowRight } from 'lucide-react';
+import { Check, ChevronDown, Sparkles, ArrowRight, Loader2 } from 'lucide-react';
 import StickyNav from '@/components/StickyNav';
 import GlobalFooter from '@/components/layout/GlobalFooter';
+import { base44 } from '@/api/base44Client';
 
 // ── Legacy Title Map (Unchanged for Architecture Integrity) ──────────────────
 const LEGACY_MAP = [
@@ -140,6 +141,23 @@ function WhisperTool({ onSave }) {
 export default function GroveTiers({ vault, onSync }) {
   const navigate = useNavigate();
   const [isYearly, setIsYearly] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+
+  const handleCheckout = async () => {
+    setCheckoutLoading(true);
+    try {
+      const res = await base44.functions.invoke('createCheckoutSession', { plan: isYearly ? 'yearly' : 'monthly' });
+      if (res.data?.url) {
+        window.location.href = res.data.url;
+      }
+    } catch (err) {
+      console.error('Checkout error', err);
+      // Fallback to static monthly link if session creation fails
+      window.location.href = STRIPE_MONTHLY_URL;
+    } finally {
+      setCheckoutLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#0A080D] text-zinc-400 font-sans selection:bg-teal-500/20 overflow-x-hidden">
@@ -226,10 +244,11 @@ export default function GroveTiers({ vault, onSync }) {
             </ul>
 
             <button 
-              onClick={() => window.location.href = isYearly ? STRIPE_YEARLY_URL : STRIPE_MONTHLY_URL}
-              className="w-full min-h-[48px] py-3.5 bg-teal-500 text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 active:bg-teal-400 transition-all shadow-md shadow-teal-500/5 flex items-center justify-center gap-1"
+              onClick={handleCheckout}
+              disabled={checkoutLoading}
+              className="w-full min-h-[48px] py-3.5 bg-teal-500 text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 active:bg-teal-400 transition-all shadow-md shadow-teal-500/5 flex items-center justify-center gap-1 disabled:opacity-60"
             >
-              Enter the Forest Canopy <ArrowRight size={11} />
+              {checkoutLoading ? <Loader2 size={14} className="animate-spin" /> : <>Enter the Forest Canopy <ArrowRight size={11} /></>}
             </button>
           </div>
         </section>

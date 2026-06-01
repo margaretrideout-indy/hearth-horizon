@@ -6,7 +6,7 @@ import usePullToRefresh from '@/hooks/usePullToRefresh';
 
 // Hearth & Horizon Ecosystem Components
 import GroveTiers from './pages/GroveTiers';
-import YourHearth from './pages/YourHearth';
+import YourHearth from './pages/YourHearth.jsx';
 import Library from './pages/Library';
 import AdminDashboard from './pages/AdminDashboard';
 import Canopy from './pages/Canopy';
