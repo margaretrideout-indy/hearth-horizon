@@ -146,7 +146,7 @@ export default function Hearth({ vault }) {
                   onClick={() => fileInputRef.current?.click()}
                   className="border-2 border-dashed border-zinc-800/80 rounded-[2.5rem] p-16 hover:border-teal-500/30 transition-all cursor-pointer bg-zinc-950/20 hover:bg-zinc-950/40 text-center space-y-4 group"
                 >
-                  <input type="file" ref__={fileInputRef} className="hidden" onChange={handleFileUpload} accept=".pdf,.doc,.docx" />
+                  <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileUpload} accept=".pdf,.doc,.docx" />
                   <div className="w-16 h-16 mx-auto rounded-full bg-zinc-900/50 flex items-center justify-center border border-zinc-800 group-hover:border-teal-500/20 group-hover:scale-105 transition-all">
                     <Upload className="text-zinc-500 group-hover:text-teal-400 transition-colors" size={24} />
                   </div>
