@@ -44,8 +44,8 @@ const LEGACY_MAP = [
   { triggers: ['volunteer', 'event coordinator', 'events'], horizon: 'Experience Design & Community Activation Strategist' },
 ];
 
-const STRIPE_MONTHLY_URL = 'https://buy.stripe.com/eVqdR9bpScmj86ocOedAk03'; 
-const STRIPE_YEARLY_URL = 'https://buy.stripe.com/your_stripe_yearly_link';
+const STRIPE_MONTHLY_URL = 'https://buy.stripe.com/28E7sLalOdqndqI6pQdAk07';
+const STRIPE_YEARLY_URL = 'https://buy.stripe.com/bJe3cvdy09a772kdSidAk08';
 
 const FOREST_FEATURES = [
   "Premium Archetype Vault Access (Notion Framework)",
