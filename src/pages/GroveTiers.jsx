@@ -184,72 +184,114 @@ export default function GroveTiers({ vault, onSync }) {
           </motion.div>
         </section>
 
-        {/* ── THE SINGLE SUSTAINABLE MEMBERSHIP ── */}
+        {/* ── TRAVELER + FOUNDING FOREST TIERS ── */}
         <section className="space-y-6">
           <SectionLabel>Choose Your Space</SectionLabel>
-          
-          {/* Toggle Switch */}
+
+          {/* Toggle (only relevant for paid card) */}
           <div className="flex items-center justify-center gap-3 pb-2">
             <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${!isYearly ? 'text-teal-400' : 'text-zinc-600'}`}>Monthly</span>
-            <button 
+            <button
               onClick={() => setIsYearly(!isYearly)}
               className="w-12 h-6 rounded-full bg-zinc-950 border border-zinc-800 p-0.5 transition-colors relative flex items-center focus:outline-none"
             >
-              <motion.div 
-                layout 
+              <motion.div
+                layout
                 className="w-4 h-4 rounded-full bg-teal-500 shadow-md"
                 animate={{ x: isYearly ? 24 : 0 }}
                 transition={{ type: "spring", stiffness: 500, damping: 30 }}
               />
             </button>
             <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${isYearly ? 'text-teal-400' : 'text-zinc-600'} flex items-center gap-1.5`}>
-              Yearly (best value!) <span className="text-[8px] bg-teal-950 text-teal-400 px-1.5 py-0.5 rounded-full border border-teal-900">Save 33%</span>
+              Yearly <span className="text-[8px] bg-teal-950 text-teal-400 px-1.5 py-0.5 rounded-full border border-teal-900">Save 33%</span>
             </span>
           </div>
 
-          {/* Single Unified Card */}
-          <div className="p-8 rounded-[2rem] border border-teal-500/10 bg-[#0E1A14]/30 space-y-6 relative overflow-hidden">
-            <div className="flex justify-between items-start">
-              <div>
-                <span className="text-[8px] font-black uppercase tracking-[0.25em] text-teal-400 border border-teal-950 bg-[#0E1A14] px-2.5 py-1 rounded-full">
-                  Full Canopy Access
-                </span>
-                <h3 className="text-xl font-serif italic text-purple-200 mt-3">The Founding Forest membership</h3>
-                <p className="text-zinc-600 text-xs italic mt-1">A complete operational infrastructure for your career migration.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {/* ── LEFT: THE TRAVELER (FREE) ── */}
+            <div className="p-8 rounded-[2rem] border border-zinc-900 bg-zinc-950/20 space-y-6 flex flex-col justify-between">
+              <div className="space-y-4">
+                <div>
+                  <span className="text-[8px] font-black uppercase tracking-[0.25em] text-zinc-500 border border-zinc-800 bg-zinc-950 px-2.5 py-1 rounded-full">
+                    Free Entry
+                  </span>
+                  <h3 className="text-xl font-serif italic text-zinc-300 mt-3">The Traveler</h3>
+                  <p className="text-zinc-600 text-xs italic mt-1">Claim your provisions. Lay the groundwork for your career migration.</p>
+                </div>
+                <div className="text-2xl font-black text-white">$0</div>
+                <ul className="space-y-2.5 pt-2 border-t border-zinc-900/60">
+                  {[
+                    'Interactive title generator saved to your profile',
+                    'Download all Resume & Cover Letter blueprints',
+                    'Full outreach & salary negotiation scripts',
+                    'Read-only access to the Embers campfire community',
+                  ].map(f => (
+                    <li key={f} className="text-xs text-zinc-500 flex items-start gap-2.5 leading-relaxed">
+                      <Check size={11} className="text-zinc-600 mt-1 shrink-0" /> <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className="text-right">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={isYearly ? 'yearly' : 'monthly'}
-                    initial={{ opacity: 0, y: -4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 4 }}
-                    className="text-2xl font-black text-white"
-                  >
-                    {isYearly ? '$79.99' : '$9.99'}
-                  </motion.div>
-                </AnimatePresence>
-                <span className="text-[9px] text-zinc-600 uppercase tracking-widest block mt-0.5">
-                  {isYearly ? 'per year' : 'per month'}
-                </span>
-              </div>
+              <button
+                onClick={() => base44.auth.redirectToLogin('/library')}
+                className="w-full min-h-[48px] py-3.5 bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-zinc-800 hover:text-white transition-all flex items-center justify-center gap-1.5"
+              >
+                Claim Free Passage
+              </button>
             </div>
 
-            <ul className="space-y-2.5 pt-2 border-t border-zinc-900/60">
-              {FOREST_FEATURES.map(f => (
-                <li key={f} className="text-xs text-zinc-500 flex items-start gap-2.5 leading-relaxed">
-                  <Check size={11} className="text-teal-500 mt-1 shrink-0" /> <span>{f}</span>
-                </li>
-              ))}
-            </ul>
+            {/* ── RIGHT: THE FOUNDING FOREST (PAID) ── */}
+            <div className="p-8 rounded-[2rem] border border-teal-500/10 bg-[#0E1A14]/30 space-y-6 flex flex-col justify-between relative overflow-hidden">
+              <div className="space-y-4">
+                <div>
+                  <span className="text-[8px] font-black uppercase tracking-[0.25em] text-teal-400 border border-teal-950 bg-[#0E1A14] px-2.5 py-1 rounded-full">
+                    Full Canopy Access
+                  </span>
+                  <h3 className="text-xl font-serif italic text-purple-200 mt-3">The Founding Forest</h3>
+                  <p className="text-zinc-600 text-xs italic mt-1">A complete operational infrastructure for your career migration.</p>
+                </div>
+                <div className="flex items-end gap-1.5">
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={isYearly ? 'yearly' : 'monthly'}
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 4 }}
+                      className="text-2xl font-black text-white"
+                    >
+                      {isYearly ? '$79.99' : '$9.99'}
+                    </motion.span>
+                  </AnimatePresence>
+                  <span className="text-[9px] text-zinc-600 uppercase tracking-widest mb-1">
+                    {isYearly ? '/ year' : '/ month'}
+                  </span>
+                </div>
+                <ul className="space-y-2.5 pt-2 border-t border-zinc-900/60">
+                  <li className="text-xs text-zinc-400 flex items-start gap-2.5 leading-relaxed font-bold">
+                    <Check size={11} className="text-teal-500 mt-1 shrink-0" /> Everything in Traveler, plus:
+                  </li>
+                  {[
+                    'The Alchemist Engine: Unlimited AI career translations',
+                    'The Horizon Board: Personalized job listings matched to you',
+                    'Embers Posting: Write & reply in the community fireplace',
+                    'Premium Archetype Vault (Notion) & async resume audits',
+                  ].map(f => (
+                    <li key={f} className="text-xs text-zinc-500 flex items-start gap-2.5 leading-relaxed">
+                      <Check size={11} className="text-teal-500 mt-1 shrink-0" /> <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <button
+                onClick={handleCheckout}
+                disabled={checkoutLoading}
+                className="w-full min-h-[48px] py-3.5 bg-teal-500 text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 active:bg-teal-400 transition-all shadow-md shadow-teal-500/5 flex items-center justify-center gap-1 disabled:opacity-60"
+              >
+                {checkoutLoading ? <Loader2 size={14} className="animate-spin" /> : <>Enter the Canopy <ArrowRight size={11} /></>}
+              </button>
+            </div>
 
-            <button 
-              onClick={handleCheckout}
-              disabled={checkoutLoading}
-              className="w-full min-h-[48px] py-3.5 bg-teal-500 text-black text-xs font-black uppercase tracking-widest rounded-xl hover:bg-teal-400 active:bg-teal-400 transition-all shadow-md shadow-teal-500/5 flex items-center justify-center gap-1 disabled:opacity-60"
-            >
-              {checkoutLoading ? <Loader2 size={14} className="animate-spin" /> : <>Enter the Forest Canopy <ArrowRight size={11} /></>}
-            </button>
           </div>
         </section>
 

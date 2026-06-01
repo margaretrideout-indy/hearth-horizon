@@ -281,13 +281,15 @@ export default function App() {
 
           {/* ── Tab Stack: Hearth / Library / Horizon rendered persistently ── */}
           {/* Only mount once the user is confirmed logged in (vault.email set) */}
+          {/* Library is public — always mounted */}
+          <div style={{ display: location.pathname === '/library' ? 'block' : 'none' }}>
+            <Library vault={vault} onRefresh={handleSync} onSync={handleSync} isAdmin={isAdmin} />
+          </div>
+
           {vault?.email && (
             <>
               <div style={{ display: location.pathname === '/hearth' ? 'block' : 'none' }}>
                 <YourHearth vault={vault} onSync={handleSync} onResumeSync={handleResumeSync} isAdmin={isAdmin} />
-              </div>
-              <div style={{ display: location.pathname === '/library' ? 'block' : 'none' }}>
-                <Library vault={vault} onRefresh={handleSync} onSync={handleSync} isAdmin={isAdmin} />
               </div>
               <div style={{ display: location.pathname === '/horizon' ? 'block' : 'none' }}>
                 <Canopy vault={vault} onSync={handleSync} isAdmin={isAdmin} />
@@ -303,7 +305,7 @@ export default function App() {
               <Route path="/embers" element={<EmbersChat vault={vault} isAdmin={isAdmin} />} />
               {/* Tab routes — redirect guests to Grove, authenticated users handled by persistent stack */}
               <Route path="/hearth" element={vault?.email ? null : <Navigate to="/grove" replace />} />
-              <Route path="/library" element={vault?.email ? null : <Navigate to="/grove" replace />} />
+              <Route path="/library" element={null} />
               <Route path="/horizon" element={vault?.email ? null : <Navigate to="/grove" replace />} />
 
               {/* Other protected routes */}

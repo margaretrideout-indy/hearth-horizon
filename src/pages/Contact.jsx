@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { toast } from 'sonner';
+import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ShieldCheck, 
@@ -15,9 +17,20 @@ import {
   Compass
 } from 'lucide-react';
 
+const LOCKED_TOAST = () => toast('🔒 Unlock the Full Blueprint', {
+  description: 'Sign up for a free account to copy and download all our execution tools.',
+  action: { label: 'Sign Up Free', onClick: () => base44.auth.redirectToLogin('/contact') },
+  duration: 5000,
+});
+
 export default function Contact() {
   const [expandedSection, setExpandedSection] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
+  const [isAuthed, setIsAuthed] = useState(false);
+
+  useEffect(() => {
+    base44.auth.isAuthenticated().then(setIsAuthed);
+  }, []);
 
   const toggleSection = (sectionId) => {
     setExpandedSection(expandedSection === sectionId ? null : sectionId);
@@ -25,9 +38,14 @@ export default function Contact() {
   };
 
   const handleCopy = (text, elementId) => {
+    if (!isAuthed) { LOCKED_TOAST(); return; }
     navigator.clipboard.writeText(text);
     setCopiedId(elementId);
     setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleDownload = (e, url) => {
+    if (!isAuthed) { e.preventDefault(); LOCKED_TOAST(); }
   };
 
   const SMITHY_ITEMS = [
@@ -249,6 +267,7 @@ export default function Contact() {
                                     href={link.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    onClick={(e) => handleDownload(e, link.url)}
                                     className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border ${
                                       link.primary
                                         ? 'bg-purple-500/10 border-purple-500/20 hover:bg-purple-500/20 text-purple-300 hover:text-purple-200'
@@ -294,6 +313,7 @@ export default function Contact() {
                                   href={link.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
+                                  onClick={(e) => handleDownload(e, link.url)}
                                   className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border ${
                                     link.primary
                                       ? 'bg-teal-500/10 border-teal-500/20 hover:bg-teal-500/20 text-teal-300 hover:text-teal-200'
