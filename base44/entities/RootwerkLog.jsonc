@@ -42,16 +42,19 @@
   ],
   "rls": {
     "create": {
-      "data.user_id": "{{user.id}}"
+      "created_by": "{{user.email}}"
     },
     "read": {
-      "data.user_id": "{{user.id}}"
+      "created_by": "{{user.email}}"
     },
     "update": {
-      "data.user_id": "{{user.id}}"
+      "created_by": "{{user.email}}"
     },
     "delete": {
-      "data.user_id": "{{user.id}}"
+      "created_by": "{{user.email}}"
+    },
+    "write": {
+      "created_by": "{{user.email}}"
     }
   }
 }

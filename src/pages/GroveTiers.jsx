@@ -306,7 +306,7 @@ export default function GroveTiers({ vault, onSync }) {
               </p>
             </div>
             <button 
-              onClick={() => navigate('/advisory')} 
+              onClick={() => navigate('/about')} 
               className="w-full sm:w-auto px-5 py-3 border border-zinc-800 text-zinc-400 text-xs font-black uppercase tracking-widest rounded-xl hover:border-zinc-700 hover:text-zinc-300 transition-all shrink-0 text-center"
             >
               View Services
