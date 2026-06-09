@@ -207,6 +207,17 @@ export default function Canopy({ vault, onSync, isAdmin }) {
                 : <>The Horizon <span className="text-zinc-400 font-sans not-italic font-extralight uppercase">Awaits</span></>
               }
             </h1>
+            {vault?.alchemist_headline && (
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex items-center gap-3 px-4 py-2 bg-teal-500/5 border border-teal-500/15 rounded-2xl w-fit"
+              >
+                <Sparkles size={11} className="text-teal-400 shrink-0" />
+                <span className="text-[10px] font-mono text-teal-300/80 italic">Synced: "{vault.alchemist_headline}"</span>
+              </motion.div>
+            )}
           </motion.div>
 
           <div className="flex items-center gap-3">

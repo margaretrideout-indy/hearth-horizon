@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BrainCircuit, Target, BookOpen, Compass, 
-  Trash2, ChevronRight, Loader2, Sparkles, ClipboardPaste
+  Trash2, ChevronRight, Loader2, Sparkles, ClipboardPaste,
+  Copy, Check, Save
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { base44 } from '@/api/base44Client';
+import { toast } from 'sonner';
+import LogbookPanel from '@/components/hearth/LogbookPanel';
 
 export default function Hearth({ vault }) {
   const navigate = useNavigate();
@@ -18,6 +21,8 @@ export default function Hearth({ vault }) {
   const [alchemyData, setAlchemyData] = useState(null);
   const [transmuteStep, setTransmuteStep] = useState(0);
   const [error, setError] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
+  const [savedToVault, setSavedToVault] = useState(false);
 
   const transmutingSteps = [
     "Stoking the hearth coals...",
@@ -58,6 +63,24 @@ export default function Hearth({ vault }) {
     setTypedExperience('');
     setAlchemyData(null);
     setError(null);
+    setSavedToVault(false);
+  };
+
+  const handleCopy = (text, id) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleSaveToVault = async () => {
+    if (!alchemyData) return;
+    await base44.auth.updateMe({
+      alchemist_headline: alchemyData.headline,
+      alchemist_bullets: alchemyData.bullets,
+      alchemist_summary: alchemyData.summary,
+    });
+    setSavedToVault(true);
+    toast.success('Saved to your Vault!');
   };
 
   return (
@@ -81,6 +104,9 @@ export default function Hearth({ vault }) {
             A sanctuary to slow down, calibrate your boundaries, and translate your professional path into a high-autonomy private-sector identity.
           </p>
         </header>
+
+        {/* LOGBOOK */}
+        <LogbookPanel />
 
         {error && (
           <div className="bg-red-950/30 border border-red-900/60 text-red-400 text-xs rounded-2xl px-5 py-4">
@@ -275,18 +301,45 @@ export default function Hearth({ vault }) {
                   <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Generated Assets</h3>
                   
                   <div className="space-y-4">
-                    <div className="bg-zinc-900/40 p-4 rounded-xl border border-zinc-800/80 space-y-1">
-                      <span className="text-[9px] font-black uppercase tracking-widest text-teal-400">Strategic Headline</span>
+                    <div className="bg-zinc-900/40 p-4 rounded-xl border border-zinc-800/80 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-teal-400">Strategic Headline</span>
+                        <button
+                          onClick={() => handleCopy(alchemyData.headline, 'headline')}
+                          className="flex items-center gap-1 text-[8px] font-black uppercase tracking-wider text-zinc-600 hover:text-teal-400 transition-colors"
+                        >
+                          {copiedId === 'headline' ? <><Check size={9} className="text-emerald-400" /><span className="text-emerald-400">Copied</span></> : <><Copy size={9} />Copy</>}
+                        </button>
+                      </div>
                       <p className="text-[11px] font-bold text-white tracking-wider font-mono">{alchemyData.headline}</p>
                     </div>
                     <div className="bg-zinc-900/40 p-4 rounded-xl border border-zinc-800/80 space-y-3">
-                      <span className="text-[9px] font-black uppercase tracking-widest text-teal-400">Reframed Accomplishments</span>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-teal-400">Reframed Accomplishments</span>
+                        <button
+                          onClick={() => handleCopy(alchemyData.bullets?.join('\n'), 'bullets')}
+                          className="flex items-center gap-1 text-[8px] font-black uppercase tracking-wider text-zinc-600 hover:text-teal-400 transition-colors"
+                        >
+                          {copiedId === 'bullets' ? <><Check size={9} className="text-emerald-400" /><span className="text-emerald-400">Copied</span></> : <><Copy size={9} />Copy All</>}
+                        </button>
+                      </div>
                       <ul className="space-y-2 text-[11px] text-zinc-400 list-disc pl-4 leading-relaxed font-serif italic">
                         {alchemyData.bullets?.map((b, idx) => (
                           <li key={idx}>{b}</li>
                         ))}
                       </ul>
                     </div>
+                    <button
+                      onClick={handleSaveToVault}
+                      disabled={savedToVault}
+                      className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all disabled:opacity-60 ${
+                        savedToVault
+                          ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                          : 'bg-zinc-900/60 border-zinc-800 hover:border-teal-500/30 hover:text-teal-400 text-zinc-500'
+                      }`}
+                    >
+                      {savedToVault ? <><Check size={10} /> Saved to Vault</> : <><Save size={10} /> Save to Vault</>}
+                    </button>
                   </div>
                 </div>
               </div>
