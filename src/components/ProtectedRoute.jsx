@@ -20,7 +20,7 @@ export default function ProtectedRoute({ children }) {
   }
 
   if (status === 'guest') {
-    return <Navigate to="/grove" replace />;
+    return <Navigate to={`/login?next=${encodeURIComponent(window.location.pathname)}`} replace />;
   }
 
   return children;

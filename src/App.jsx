@@ -14,6 +14,10 @@ import Contact from './pages/Contact';
 import About from './pages/About';
 import EmbersChat from './pages/EmbersChat';
 import ProtectedRoute from './components/ProtectedRoute';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 // Embers.jsx archived — community hearth is now EmbersChat.jsx
 
 export default function App() {
@@ -144,7 +148,7 @@ export default function App() {
   };
 
   const mainTabs = ['/hearth', '/library', '/horizon'];
-  const showNav = !['/grove', '/', '/contact', '/about', '/contact-us'].includes(location.pathname);
+  const showNav = !['/grove', '/', '/contact', '/about', '/contact-us', '/login', '/register', '/forgot-password', '/reset-password'].includes(location.pathname);
   const isMainTab = mainTabs.includes(location.pathname);
   // Non-tab routes inside the app (contact, admin, etc.) get a back button
   const showBackButton = showNav && !isMainTab;
@@ -311,6 +315,11 @@ export default function App() {
               {/* Other protected routes */}
               <Route path="/contact" element={<ProtectedRoute><Contact vault={vault} onRefresh={handleSync} isAdmin={isAdmin} isSeedlingPlus={isSeedlingPlus} /></ProtectedRoute>} />
               <Route path="/admin" element={<ProtectedRoute><AdminDashboard vault={vault} onSync={handleSync} isAdmin={isAdmin} /></ProtectedRoute>} />
+              {/* Auth routes — always public, no nav chrome */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/" element={<Navigate to="/grove" replace />} />
               <Route path="*" element={<Navigate to="/grove" replace />} />
             </Routes>

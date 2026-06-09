@@ -234,7 +234,7 @@ export default function GroveTiers({ vault, onSync }) {
                 </ul>
               </div>
               <button
-                onClick={() => base44.auth.redirectToLogin('/library')}
+                onClick={() => window.location.href = '/register'}
                 className="w-full min-h-[48px] py-3.5 bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-zinc-800 hover:text-white transition-all flex items-center justify-center gap-1.5"
               >
                 Claim Free Passage

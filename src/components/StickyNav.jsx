@@ -33,13 +33,13 @@ export default function StickyNav({ showBrigidCta = true }) {
           ) : (
             <>
               <button
-                onClick={() => base44.auth.redirectToLogin('/hearth')}
-                className="px-4 py-1.5 text-[9px] font-black uppercase tracking-widest text-zinc-400 hover:text-zinc-200 border border-white/10 rounded-lg hover:border-white/20 transition-all"
+                onClick={() => window.location.href = '/login'}
+                  className="px-4 py-1.5 text-[9px] font-black uppercase tracking-widest text-zinc-400 hover:text-zinc-200 border border-white/10 rounded-lg hover:border-white/20 transition-all"
               >
                 Sign In
               </button>
               <button
-                onClick={() => base44.auth.redirectToLogin('/hearth')}
+                onClick={() => window.location.href = '/register'}
                 className="px-4 py-1.5 bg-teal-500 text-black text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-teal-400 transition-all"
               >
                 Sign Up
